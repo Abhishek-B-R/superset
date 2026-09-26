@@ -83,6 +83,20 @@ describe("formatRelativeTime", () => {
 		).toBe("3d ago");
 	});
 
+	test("a timestamp that leads the clock still reads as the past", () => {
+		// A comment's createdAt comes from the server, so it can sit a few
+		// hundred ms ahead of the device; "in 0s" is the wrong tense for it.
+		const justPosted = new Date(NOW.getTime() + 400);
+		expect(formatCompactRelativeTime(justPosted, NOW)).toBe("0s ago");
+		expect(formatCompactRelativeTime(NOW, NOW)).toBe("0s ago");
+	});
+
+	test("a real future time keeps the future tense", () => {
+		expect(
+			formatCompactRelativeTime(new Date(NOW.getTime() + 2 * 3600 * 1000), NOW),
+		).toBe("in 2h");
+	});
+
 	test("follows the active locale", () => {
 		i18n.activate("ja");
 		try {

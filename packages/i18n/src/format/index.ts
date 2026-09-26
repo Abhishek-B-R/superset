@@ -139,7 +139,9 @@ export function formatRelativeTime(
 			return formatter.format(Math.round(diffMs / ms), unit);
 		}
 	}
-	return formatter.format(0, "second");
+	// -0, not 0: a server timestamp routinely leads the device clock by a few
+	// hundred ms, and `numeric: "always"` renders a positive zero as "in 0s".
+	return formatter.format(-0, "second");
 }
 
 // Compact age for dense UI: "3d", "2w", "5m". Locale-aware via
