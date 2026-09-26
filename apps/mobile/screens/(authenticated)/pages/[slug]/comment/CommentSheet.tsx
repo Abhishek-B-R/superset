@@ -70,7 +70,7 @@ export function CommentSheet() {
 	};
 
 	return (
-		<View className="gap-2 px-4 pt-4">
+		<View className="gap-2 px-4 pt-4 pb-3">
 			{pick.anchor?.text ? (
 				<View className="border-muted-foreground/30 flex-row border-l-2 pl-2.5">
 					<Text

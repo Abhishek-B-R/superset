@@ -70,7 +70,7 @@ export const CommentComposer = forwardRef<
 				placeholder={placeholder}
 				placeholderTextColor={theme.mutedForeground}
 				selectionColor={theme.foreground}
-				className="text-foreground max-h-28 min-h-9 text-[16px]"
+				className="text-foreground max-h-28 min-h-9 pl-3 text-[16px]"
 			/>
 
 			<View className="flex-row items-center justify-between">
