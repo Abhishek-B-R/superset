@@ -46,10 +46,12 @@ import { observable } from "@trpc/server/observable";
 import { app } from "electron";
 import { env } from "main/env.main";
 import { exitImmediately, quitApp } from "main/index";
+import { installUpdate, isUpdateReadyToInstall } from "main/lib/auto-updater";
 import { hasCustomRingtone } from "main/lib/custom-ringtones";
 import { getHostServiceCoordinator } from "main/lib/host-service-coordinator";
 import { applyAppLanguage, languageEvents } from "main/lib/language";
 import { localDb } from "main/lib/local-db";
+import { relaunchApp } from "main/lib/relaunch-app";
 import {
 	DEFAULT_AUTO_APPLY_DEFAULT_PRESET,
 	DEFAULT_CONFIRM_ON_QUIT,
@@ -926,8 +928,12 @@ export const createSettingsRouter = () => {
 
 		/** Relaunch through the normal quit path so cleanup and DB flushes run. */
 		relaunchApp: publicProcedure.mutation(() => {
-			app.relaunch();
-			quitApp();
+			relaunchApp({
+				isUpdateReadyToInstall,
+				installUpdate,
+				relaunch: () => app.relaunch(),
+				quit: quitApp,
+			});
 			return { success: true };
 		}),
 
