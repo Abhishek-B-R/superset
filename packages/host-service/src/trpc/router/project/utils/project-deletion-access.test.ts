@@ -47,7 +47,7 @@ function seed({
 function contextFor(
 	db: HostDb,
 	userId: string | undefined,
-	allowed: boolean,
+	allowed: boolean | Error,
 	calls: unknown[] = [],
 ) {
 	return {
@@ -59,6 +59,7 @@ function contextFor(
 				authorizeProjectDeletion: {
 					query: async (input: unknown) => {
 						calls.push(input);
+						if (allowed instanceof Error) throw allowed;
 						return { allowed };
 					},
 				},
@@ -137,4 +138,14 @@ test("an anonymous caller is refused", async () => {
 	await expect(
 		requireProjectDeletionAccess(contextFor(db, undefined, true), PROJECT_ID),
 	).rejects.toMatchObject({ code: "FORBIDDEN" });
+});
+
+test("an unreachable API refuses with a typed error instead of a 500", async () => {
+	const db = seed({ creator: null, workspaceCreators: [] });
+	await expect(
+		requireProjectDeletionAccess(
+			contextFor(db, "bob", new Error("fetch failed")),
+			PROJECT_ID,
+		),
+	).rejects.toMatchObject({ code: "PRECONDITION_FAILED" });
 });

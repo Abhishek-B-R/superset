@@ -825,10 +825,11 @@ export const projectRouter = router({
 
 	/**
 	 * Project-delete saga. Local is reality — the local deletes are the
-	 * commit point, run first, and are fully offline-capable:
+	 * commit point, run first:
 	 *
 	 *   1. Ownership check: an id this host doesn't serve is a no-op —
-	 *      never a legacy cloud delete.
+	 *      never a legacy cloud delete. The creator of an unused project
+	 *      passes offline; anyone else needs the API to confirm ownership.
 	 *
 	 *   2. Best-effort `git worktree remove` for each worktree workspace so
 	 *      subsequent worktree commands aren't confused. Local workspaces

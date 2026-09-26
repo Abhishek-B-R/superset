@@ -54,10 +54,19 @@ export async function requireProjectDeletionAccess(
 		eligibility.otherUsersWorkspaceCount === 0
 	)
 		return;
-	const access = await ctx.api.host.authorizeProjectDeletion.query(
-		{ organizationId: ctx.organizationId, machineId: getHostId(), userId },
-		{ signal: AbortSignal.timeout(10_000) },
-	);
+	const access = await ctx.api.host.authorizeProjectDeletion
+		.query(
+			{ organizationId: ctx.organizationId, machineId: getHostId(), userId },
+			{ signal: AbortSignal.timeout(10_000) },
+		)
+		.catch((error: unknown) => {
+			throw new TRPCError({
+				code: "PRECONDITION_FAILED",
+				message:
+					"Couldn't confirm you're an owner of this device. Check your connection and try again.",
+				cause: error,
+			});
+		});
 	if (access.allowed) return;
 	throw new TRPCError({
 		code: "FORBIDDEN",
