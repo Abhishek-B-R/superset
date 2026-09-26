@@ -43,6 +43,7 @@ import { listLiveLocalWorkspaces } from "./utils/create-local-workspace";
 import { getGitHubRemotes } from "./utils/git-remote";
 import { listGitHubRepositories } from "./utils/github-repositories";
 import { persistLocalProject } from "./utils/persist-project";
+import { requireProjectDeletionAccess } from "./utils/project-deletion-access";
 import {
 	cloneRepoInto,
 	type ResolvedRepo,
@@ -106,6 +107,7 @@ export const projectRouter = router({
 				worktreeBaseDir: row.worktreeBaseDir,
 				icon: row.icon,
 				color: row.color,
+				createdByUserId: row.createdByUserId,
 				createdAt: row.createdAt,
 				updatedAt: row.updatedAt || row.createdAt,
 			}));
@@ -848,6 +850,7 @@ export const projectRouter = router({
 				.findFirst({ where: eq(projects.id, input.projectId) })
 				.sync();
 			if (!localProject) return { success: true, repoPath: null };
+			await requireProjectDeletionAccess(ctx, input.projectId);
 
 			// The project-row delete below cascades tombstones away — removing a
 			// project intentionally drops its workspace history. Sweep worktrees

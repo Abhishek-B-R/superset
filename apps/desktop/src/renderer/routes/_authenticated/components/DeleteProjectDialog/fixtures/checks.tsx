@@ -11,12 +11,25 @@ let remoteOnline = true;
 let localReachable = true;
 let failShared = false;
 let revoked = false;
+let creators: Record<string, string | null> = {};
+let workspaces: {
+	projectId: string;
+	hostId: string;
+	createdByUserId: string | null;
+}[] = [];
 const requests: string[] = [];
 mock.module("renderer/lib/auth-client", () => ({
 	authClient: { useSession: () => ({ data: { user: { id: "member" } } }) },
 }));
 mock.module("renderer/lib/cloud-trpc", () => ({
 	cloudTrpc: {
+		organization: {
+			listMembers: {
+				useQuery: () => ({
+					data: [{ userId: "member", role: isOwner ? "owner" : "member" }],
+				}),
+			},
+		},
 		host: {
 			listMembers: {
 				useQuery: () => ({
@@ -34,8 +47,8 @@ mock.module("renderer/lib/cloud-trpc", () => ({
 	},
 }));
 mock.module(
-	"renderer/routes/_authenticated/hooks/useIsOrganizationOwner",
-	() => ({ useIsOrganizationOwner: () => isOwner }),
+	"renderer/routes/_authenticated/providers/HostWorkspacesProvider",
+	() => ({ useHostWorkspaces: () => ({ workspaces, isReady: true }) }),
 );
 mock.module("renderer/hooks/host-service/useHostTargetUrl", () => ({
 	useHostUrls: (ids: string[]) =>
@@ -81,6 +94,8 @@ afterEach(() => {
 	localReachable = true;
 	failShared = false;
 	revoked = false;
+	creators = {};
+	workspaces = [];
 });
 
 test("member confirmation counts and mutation exclude shared devices", async () => {
@@ -89,6 +104,7 @@ test("member confirmation counts and mutation exclude shared devices", async () 
 			projectId: "project",
 			projectName: "Project",
 			hostIds: ["personal", "shared"],
+			creatorByHostId: creators,
 		}),
 	);
 	expect(result.current.selectedHostIds).toEqual(["personal"]);
@@ -104,6 +120,7 @@ test("organization owner retains multi-device deletion", async () => {
 			projectId: "project",
 			projectName: "Project",
 			hostIds: ["personal", "shared"],
+			creatorByHostId: creators,
 			selectedHostIds: ["personal", "shared"],
 		}),
 	);
@@ -119,6 +136,7 @@ test("member with no owned serving device sends no deletion", async () => {
 			projectId: "project",
 			projectName: "Project",
 			hostIds: ["shared"],
+			creatorByHostId: creators,
 		}),
 	);
 	await act(async () => {
@@ -134,6 +152,7 @@ test("an owner does not delete remote copies by default", async () => {
 			projectId: "project",
 			projectName: "Project",
 			hostIds: ["personal", "shared"],
+			creatorByHostId: creators,
 		}),
 	);
 	await act(async () => {
@@ -149,6 +168,7 @@ test("offline remote remains excluded even with a relay URL and explicit selecti
 			projectId: "project",
 			projectName: "Project",
 			hostIds: ["shared"],
+			creatorByHostId: creators,
 			selectedHostIds: ["shared"],
 		}),
 	);
@@ -164,6 +184,7 @@ test("revoking host ownership while open prevents the selected deletion", async 
 			projectId: "project",
 			projectName: "Project",
 			hostIds: ["personal"],
+			creatorByHostId: creators,
 			selectedHostIds: ["personal"],
 		}),
 	);
@@ -183,6 +204,7 @@ test("partial failure keeps confirmation open and does not navigate away", async
 			projectId: "project",
 			projectName: "Project",
 			hostIds: ["personal", "shared"],
+			creatorByHostId: creators,
 			selectedHostIds: ["personal", "shared"],
 			onDeleted,
 		}),
@@ -200,6 +222,7 @@ test("a remote-only owned project can be deleted without a local copy", async ()
 			projectId: "project",
 			projectName: "Project",
 			hostIds: ["shared"],
+			creatorByHostId: creators,
 		}),
 	);
 	await act(async () => {
@@ -214,6 +237,7 @@ test("double submission sends one deletion per device", async () => {
 			projectId: "project",
 			projectName: "Project",
 			hostIds: ["personal"],
+			creatorByHostId: creators,
 		}),
 	);
 	await act(async () => {
@@ -234,6 +258,7 @@ test("an open dialog never retargets when the selected local device disconnects"
 		projectId: "project",
 		projectName: "Project",
 		hostIds: ["personal", "shared"],
+		creatorByHostId: creators,
 	};
 	const view = render(<DeleteProjectDialog {...props} />);
 	expect(
@@ -256,4 +281,83 @@ test("an open dialog never retargets when the selected local device disconnects"
 			}) as HTMLButtonElement
 		).disabled,
 	).toBe(true);
+});
+
+test("the creator deletes an unused copy on a device they do not own", async () => {
+	creators = { shared: "member" };
+	workspaces = [
+		{ projectId: "project", hostId: "shared", createdByUserId: "member" },
+	];
+	const { result } = renderHook(() =>
+		useDeleteProject({
+			projectId: "project",
+			projectName: "Project",
+			hostIds: ["shared"],
+			creatorByHostId: creators,
+		}),
+	);
+	expect(result.current.selectedHostIds).toEqual(["shared"]);
+	await act(async () => {
+		expect(await result.current.deleteProject()).toBe(true);
+	});
+	expect(requests).toEqual(["shared"]);
+});
+
+test("the creator cannot delete a copy someone else is using", async () => {
+	creators = { shared: "member" };
+	workspaces = [
+		{ projectId: "project", hostId: "shared", createdByUserId: "other" },
+	];
+	const { result } = renderHook(() =>
+		useDeleteProject({
+			projectId: "project",
+			projectName: "Project",
+			hostIds: ["shared"],
+			selectedHostIds: ["shared"],
+			creatorByHostId: creators,
+		}),
+	);
+	expect(result.current.targets[0]).toMatchObject({
+		canDelete: false,
+		inUseByOthers: true,
+	});
+	await act(async () => {
+		expect(await result.current.deleteProject()).toBe(false);
+	});
+	expect(requests).toEqual([]);
+});
+
+test("an owner sees how many of other people's workspaces a copy would delete", () => {
+	isOwner = true;
+	workspaces = [
+		{ projectId: "project", hostId: "shared", createdByUserId: "other" },
+		{ projectId: "project", hostId: "shared", createdByUserId: null },
+		{ projectId: "elsewhere", hostId: "shared", createdByUserId: "other" },
+	];
+	const { result } = renderHook(() =>
+		useDeleteProject({
+			projectId: "project",
+			projectName: "Project",
+			hostIds: ["shared"],
+			creatorByHostId: creators,
+		}),
+	);
+	expect(result.current.targets[0]).toMatchObject({
+		canDelete: true,
+		otherUsersWorkspaceCount: 2,
+	});
+});
+
+test("an offline local copy does not take the default from a sole online remote", () => {
+	isOwner = true;
+	localReachable = false;
+	const { result } = renderHook(() =>
+		useDeleteProject({
+			projectId: "project",
+			projectName: "Project",
+			hostIds: ["personal", "shared"],
+			creatorByHostId: creators,
+		}),
+	);
+	expect(result.current.defaultSelectedHostIds).toEqual(["shared"]);
 });

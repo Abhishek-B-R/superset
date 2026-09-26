@@ -1,19 +1,41 @@
 import { authClient } from "renderer/lib/auth-client";
 import { cloudTrpc } from "renderer/lib/cloud-trpc";
-import { useIsOrganizationOwner } from "../useIsOrganizationOwner";
-import { selectProjectDeletionHosts } from "./useProjectDeletionHosts.utils";
+import { useHostWorkspaces } from "renderer/routes/_authenticated/providers/HostWorkspacesProvider";
+import { resolveProjectDeletionAccess } from "./useProjectDeletionHosts.utils";
 
-export function useProjectDeletionHosts(hostIds: string[]) {
+export function useProjectDeletionHosts({
+	projectId,
+	hostIds,
+	creatorByHostId,
+}: {
+	projectId: string;
+	hostIds: string[];
+	creatorByHostId: Record<string, string | null>;
+}) {
 	const { data: session } = authClient.useSession();
-	const isOrganizationOwner = useIsOrganizationOwner();
+	const userId = session?.user?.id;
+	const { data: organizationMembers } =
+		cloudTrpc.organization.listMembers.useQuery({ includeDeactivated: false });
 	const { data: memberships } = cloudTrpc.host.listMembers.useQuery(undefined);
+	const { workspaces, isReady: workspacesReady } = useHostWorkspaces();
+	const access = resolveProjectDeletionAccess({
+		projectId,
+		hostIds,
+		creatorByHostId,
+		userId,
+		isOrganizationOwner:
+			organizationMembers?.find((member) => member.userId === userId)?.role ===
+			"owner",
+		memberships: memberships ?? [],
+		workspaces,
+	});
 	return {
-		isReady: !!session?.user?.id && memberships !== undefined,
-		hostIds: selectProjectDeletionHosts({
-			hostIds,
-			userId: session?.user?.id,
-			isOrganizationOwner,
-			memberships: memberships ?? [],
-		}),
+		isReady:
+			!!userId &&
+			organizationMembers !== undefined &&
+			memberships !== undefined &&
+			workspacesReady,
+		access,
+		hostIds: access.filter((host) => host.canDelete).map((host) => host.hostId),
 	};
 }

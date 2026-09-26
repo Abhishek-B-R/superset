@@ -11,15 +11,19 @@ interface DeleteProjectSectionProps {
 	projectName: string;
 	/** Hosts serving this project — the delete fans out to each. */
 	hostIds: string[];
+	creatorByHostId: Record<string, string | null>;
 }
 
 export function DeleteProjectSection({
 	projectId,
 	projectName,
 	hostIds,
+	creatorByHostId,
 }: DeleteProjectSectionProps) {
 	const navigate = useNavigate();
-	const canDelete = useProjectDeletionHosts(hostIds).hostIds.length > 0;
+	const canDelete =
+		useProjectDeletionHosts({ projectId, hostIds, creatorByHostId }).hostIds
+			.length > 0;
 	const [isOpen, setIsOpen] = useState(false);
 
 	return (
@@ -46,7 +50,8 @@ export function DeleteProjectSection({
 					</TooltipTrigger>
 					<TooltipContent side="left">
 						<Trans>
-							Only organization owners or device owners can delete this project.
+							Only an owner, or the creator while no one else is using it, can
+							delete this project.
 						</Trans>
 					</TooltipContent>
 				</Tooltip>
@@ -57,6 +62,7 @@ export function DeleteProjectSection({
 					projectId={projectId}
 					projectName={projectName}
 					hostIds={hostIds}
+					creatorByHostId={creatorByHostId}
 					onDeleted={() => navigate({ to: "/settings/projects" })}
 				>
 					<Button

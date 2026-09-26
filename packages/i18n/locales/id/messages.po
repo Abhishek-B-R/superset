@@ -248,6 +248,10 @@ msgstr "{0, plural, one {Hapus # workspace?} other {Hapus # workspace?}}"
 msgid "{0, plural, one {Deleted # workspace} other {Deleted # workspaces}}"
 msgstr "{0, plural, one {Menghapus # workspace} other {Menghapus # workspace}}"
 
+#. placeholder {0}: target.otherUsersWorkspaceCount
+msgid "{0, plural, one {Deletes # workspace other people are using} other {Deletes # workspaces other people are using}}"
+msgstr "{0, plural, other {Menghapus # ruang kerja yang digunakan orang lain}}"
+
 #. placeholder {0}: item.hiddenCount
 msgid "{0, plural, one {Diff truncated — # more line on the host} other {Diff truncated — # more lines on the host}}"
 msgstr "{0, plural, one {Diff dipotong — # baris lagi ada di host} other {Diff dipotong — # baris lagi ada di host}}"
@@ -7658,6 +7662,9 @@ msgstr "Di aplikasi desktop Superset, buka <0>Pengaturan → Tampilan → Tema</
 msgid "In the Superset desktop app, open Settings → Remote Access and turn on “Allow remote access to this device via relay”."
 msgstr "Di aplikasi desktop Superset, buka Pengaturan → Akses Jarak Jauh dan aktifkan “Izinkan akses jarak jauh ke perangkat ini melalui relay”."
 
+msgid "In use by other people"
+msgstr "Digunakan oleh orang lain"
+
 msgid "In-app PR merge"
 msgstr "Merge PR di dalam aplikasi"
 
@@ -10216,6 +10223,9 @@ msgstr "Online Sekarang"
 msgid "Only an organization owner can change the plan. Ask yours to upgrade."
 msgstr "Hanya pemilik organisasi yang bisa mengubah paket. Minta pemilik Anda untuk upgrade."
 
+msgid "Only an owner, or the creator while no one else is using it, can delete this project."
+msgstr "Hanya pemilik, atau pembuatnya selama tidak ada orang lain yang menggunakannya, yang dapat menghapus proyek ini."
+
 msgid "Only available on macOS."
 msgstr "Hanya tersedia di macOS."
 
@@ -10230,9 +10240,6 @@ msgstr "Hanya pemilik host yang bisa menghapus host ini"
 
 msgid "Only organization owners can modify these settings."
 msgstr "Hanya pemilik organisasi yang bisa mengubah pengaturan ini."
-
-msgid "Only organization owners or device owners can delete this project."
-msgstr "Hanya pemilik organisasi atau pemilik perangkat yang dapat menghapus proyek ini."
 
 msgid "Only owners can change membership."
 msgstr "Hanya pemilik yang bisa mengubah keanggotaan."

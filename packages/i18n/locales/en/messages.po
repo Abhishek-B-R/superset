@@ -248,6 +248,10 @@ msgstr "{0, plural, one {Delete # workspace?} other {Delete # workspaces?}}"
 msgid "{0, plural, one {Deleted # workspace} other {Deleted # workspaces}}"
 msgstr "{0, plural, one {Deleted # workspace} other {Deleted # workspaces}}"
 
+#. placeholder {0}: target.otherUsersWorkspaceCount
+msgid "{0, plural, one {Deletes # workspace other people are using} other {Deletes # workspaces other people are using}}"
+msgstr "{0, plural, one {Deletes # workspace other people are using} other {Deletes # workspaces other people are using}}"
+
 #. placeholder {0}: item.hiddenCount
 msgid "{0, plural, one {Diff truncated — # more line on the host} other {Diff truncated — # more lines on the host}}"
 msgstr "{0, plural, one {Diff truncated — # more line on the host} other {Diff truncated — # more lines on the host}}"
@@ -7658,6 +7662,9 @@ msgstr "In the Superset desktop app, open <0>Settings → Appearance → Theme</
 msgid "In the Superset desktop app, open Settings → Remote Access and turn on “Allow remote access to this device via relay”."
 msgstr "In the Superset desktop app, open Settings → Remote Access and turn on “Allow remote access to this device via relay”."
 
+msgid "In use by other people"
+msgstr "In use by other people"
+
 msgid "In-app PR merge"
 msgstr "In-app PR merge"
 
@@ -10216,6 +10223,9 @@ msgstr "Online Now"
 msgid "Only an organization owner can change the plan. Ask yours to upgrade."
 msgstr "Only an organization owner can change the plan. Ask yours to upgrade."
 
+msgid "Only an owner, or the creator while no one else is using it, can delete this project."
+msgstr "Only an owner, or the creator while no one else is using it, can delete this project."
+
 msgid "Only available on macOS."
 msgstr "Only available on macOS."
 
@@ -10230,9 +10240,6 @@ msgstr "Only host owners can delete this host"
 
 msgid "Only organization owners can modify these settings."
 msgstr "Only organization owners can modify these settings."
-
-msgid "Only organization owners or device owners can delete this project."
-msgstr "Only organization owners or device owners can delete this project."
 
 msgid "Only owners can change membership."
 msgstr "Only owners can change membership."

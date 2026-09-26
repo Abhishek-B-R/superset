@@ -248,6 +248,10 @@ msgstr "{0, plural, one {刪除#個工作區？} other {刪除#個工作區？}}
 msgid "{0, plural, one {Deleted # workspace} other {Deleted # workspaces}}"
 msgstr "{0, plural, one {已刪除#個工作區} other {已刪除#個工作區}}"
 
+#. placeholder {0}: target.otherUsersWorkspaceCount
+msgid "{0, plural, one {Deletes # workspace other people are using} other {Deletes # workspaces other people are using}}"
+msgstr "{0, plural, other {將刪除其他人正在使用的 # 個工作區}}"
+
 #. placeholder {0}: item.hiddenCount
 msgid "{0, plural, one {Diff truncated — # more line on the host} other {Diff truncated — # more lines on the host}}"
 msgstr "{0, plural, one {差異已截斷 — 主機上還有#行} other {差異已截斷 — 主機上還有#行}}"
@@ -7658,6 +7662,9 @@ msgstr "在Superset桌面應用程式中開啟<0>設定 → 外觀 → 主題</0
 msgid "In the Superset desktop app, open Settings → Remote Access and turn on “Allow remote access to this device via relay”."
 msgstr "在Superset桌面應用程式中開啟「設定 → 遠端存取」，開啟「允許遠端工作區通過中繼存取此裝置」。"
 
+msgid "In use by other people"
+msgstr "其他人正在使用"
+
 msgid "In-app PR merge"
 msgstr "應用程式內合併PR"
 
@@ -10216,6 +10223,9 @@ msgstr "目前線上"
 msgid "Only an organization owner can change the plan. Ask yours to upgrade."
 msgstr "只有組織擁有者才能變更方案，請聯絡擁有者升級。"
 
+msgid "Only an owner, or the creator while no one else is using it, can delete this project."
+msgstr "只有擁有者，或在無人使用時的建立者，才能刪除此專案。"
+
 msgid "Only available on macOS."
 msgstr "僅在macOS上可用。"
 
@@ -10230,9 +10240,6 @@ msgstr "只有主機擁有者才能刪除此主機"
 
 msgid "Only organization owners can modify these settings."
 msgstr "只有組織擁有者可以修改這些設定。"
-
-msgid "Only organization owners or device owners can delete this project."
-msgstr "只有組織擁有者或裝置擁有者可以刪除此專案。"
 
 msgid "Only owners can change membership."
 msgstr "只有擁有者可以更改成員。"

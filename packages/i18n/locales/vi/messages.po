@@ -248,6 +248,10 @@ msgstr "{0, plural, one {Xóa # workspace?} other {Xóa # workspace?}}"
 msgid "{0, plural, one {Deleted # workspace} other {Deleted # workspaces}}"
 msgstr "{0, plural, one {Đã xóa # workspace} other {Đã xóa # workspace}}"
 
+#. placeholder {0}: target.otherUsersWorkspaceCount
+msgid "{0, plural, one {Deletes # workspace other people are using} other {Deletes # workspaces other people are using}}"
+msgstr "{0, plural, other {Xóa # không gian làm việc mà người khác đang dùng}}"
+
 #. placeholder {0}: item.hiddenCount
 msgid "{0, plural, one {Diff truncated — # more line on the host} other {Diff truncated — # more lines on the host}}"
 msgstr "{0, plural, one {Diff bị cắt bớt — còn # dòng trên host} other {Diff bị cắt bớt — còn # dòng trên host}}"
@@ -7658,6 +7662,9 @@ msgstr "Trong ứng dụng Superset trên máy tính, mở <0>Cài đặt → Gi
 msgid "In the Superset desktop app, open Settings → Remote Access and turn on “Allow remote access to this device via relay”."
 msgstr "Trong ứng dụng Superset trên máy tính, mở Cài đặt → Truy cập từ xa và bật “Cho phép truy cập từ xa vào thiết bị này qua relay”."
 
+msgid "In use by other people"
+msgstr "Người khác đang dùng"
+
 msgid "In-app PR merge"
 msgstr "Merge PR ngay trong ứng dụng"
 
@@ -10216,6 +10223,9 @@ msgstr "Đang trực tuyến"
 msgid "Only an organization owner can change the plan. Ask yours to upgrade."
 msgstr "Chỉ chủ sở hữu tổ chức mới đổi được gói. Hãy nhờ chủ sở hữu nâng cấp."
 
+msgid "Only an owner, or the creator while no one else is using it, can delete this project."
+msgstr "Chỉ chủ sở hữu, hoặc người tạo khi không có ai khác đang dùng, mới có thể xóa dự án này."
+
 msgid "Only available on macOS."
 msgstr "Chỉ có trên macOS."
 
@@ -10230,9 +10240,6 @@ msgstr "Chỉ chủ sở hữu host mới xóa được host này"
 
 msgid "Only organization owners can modify these settings."
 msgstr "Chỉ chủ sở hữu tổ chức mới sửa được các cài đặt này."
-
-msgid "Only organization owners or device owners can delete this project."
-msgstr "Chỉ chủ sở hữu tổ chức hoặc chủ sở hữu thiết bị mới có thể xóa dự án này."
 
 msgid "Only owners can change membership."
 msgstr "Chỉ chủ sở hữu mới thay đổi được thành viên."

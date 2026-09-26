@@ -12,6 +12,8 @@ const local = {
 	isLocal: true,
 	isOnline: true,
 	canDelete: true,
+	inUseByOthers: false,
+	otherUsersWorkspaceCount: 0,
 } satisfies ProjectDeletionTarget;
 const remote: ProjectDeletionTarget = {
 	...local,
@@ -22,6 +24,11 @@ const remote: ProjectDeletionTarget = {
 describe("project deletion selection", () => {
 	test("local copy is the only default even when more devices are owned", () => {
 		expect(defaultProjectDeletionSelection([remote, local])).toEqual(["local"]);
+	});
+	test("an offline local copy leaves the default to a sole online remote", () => {
+		expect(
+			defaultProjectDeletionSelection([remote, { ...local, isOnline: false }]),
+		).toEqual(["remote"]);
 	});
 	test("a sole eligible remote copy is selected", () => {
 		expect(

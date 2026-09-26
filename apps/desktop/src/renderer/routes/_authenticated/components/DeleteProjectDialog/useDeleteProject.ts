@@ -15,6 +15,7 @@ interface UseDeleteProjectOptions {
 	projectId: string;
 	projectName: string;
 	hostIds: string[];
+	creatorByHostId: Record<string, string | null>;
 	selectedHostIds?: string[];
 	onDeleted?: () => void;
 }
@@ -23,27 +24,36 @@ export function useDeleteProject({
 	projectId,
 	projectName,
 	hostIds,
+	creatorByHostId,
 	selectedHostIds,
 	onDeleted,
 }: UseDeleteProjectOptions) {
 	const { t } = useLingui();
-	const { hostIds: deletionHostIds, isReady: permissionsReady } =
-		useProjectDeletionHosts(hostIds);
+	const { access, isReady: permissionsReady } = useProjectDeletionHosts({
+		projectId,
+		hostIds,
+		creatorByHostId,
+	});
 	const { hosts } = useKnownHosts();
 	const hostUrls = useHostUrls(hostIds);
-	const targets = hostUrls.map((host) => ({
-		...host,
-		name:
-			hosts.find((known) => known.machineId === host.hostId)?.name ??
-			(host.isLocal ? t({ message: "This device" }) : host.hostId),
-		canDelete: deletionHostIds.includes(host.hostId),
-		isOnline:
-			host.url !== null &&
-			(host.isLocal ||
-				hosts.some(
-					(known) => known.machineId === host.hostId && known.isOnline,
-				)),
-	}));
+	const targets = hostUrls.map((host) => {
+		const hostAccess = access.find((entry) => entry.hostId === host.hostId);
+		return {
+			...host,
+			name:
+				hosts.find((known) => known.machineId === host.hostId)?.name ??
+				(host.isLocal ? t({ message: "This device" }) : host.hostId),
+			canDelete: hostAccess?.canDelete ?? false,
+			inUseByOthers: hostAccess?.inUseByOthers ?? false,
+			otherUsersWorkspaceCount: hostAccess?.otherUsersWorkspaceCount ?? 0,
+			isOnline:
+				host.url !== null &&
+				(host.isLocal ||
+					hosts.some(
+						(known) => known.machineId === host.hostId && known.isOnline,
+					)),
+		};
+	});
 	const selection = selectedHostIds ?? defaultProjectDeletionSelection(targets);
 	const reachableHosts = selectedProjectDeletionTargets(targets, selection);
 	const [isDeleting, setIsDeleting] = useState(false);

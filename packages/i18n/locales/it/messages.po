@@ -248,6 +248,10 @@ msgstr "{0, plural, one {Eliminare # workspace?} other {Eliminare # workspace?}}
 msgid "{0, plural, one {Deleted # workspace} other {Deleted # workspaces}}"
 msgstr "{0, plural, one {Eliminato # workspace} other {Eliminati # workspace}}"
 
+#. placeholder {0}: target.otherUsersWorkspaceCount
+msgid "{0, plural, one {Deletes # workspace other people are using} other {Deletes # workspaces other people are using}}"
+msgstr "{0, plural, one {Elimina # workspace usato da altre persone} other {Elimina # workspace usati da altre persone}}"
+
 #. placeholder {0}: item.hiddenCount
 msgid "{0, plural, one {Diff truncated — # more line on the host} other {Diff truncated — # more lines on the host}}"
 msgstr "{0, plural, one {Diff troncato — # riga in più sull'host} other {Diff troncato — # righe in più sull'host}}"
@@ -7658,6 +7662,9 @@ msgstr "Nell'app desktop di Superset, apri <0>Impostazioni → Aspetto → Tema<
 msgid "In the Superset desktop app, open Settings → Remote Access and turn on “Allow remote access to this device via relay”."
 msgstr "Nell'app desktop di Superset, apri Impostazioni → Accesso remoto e attiva “Consenti l'accesso remoto a questo dispositivo tramite relay”."
 
+msgid "In use by other people"
+msgstr "In uso da altre persone"
+
 msgid "In-app PR merge"
 msgstr "Merge delle PR nell'app"
 
@@ -10216,6 +10223,9 @@ msgstr "Online ora"
 msgid "Only an organization owner can change the plan. Ask yours to upgrade."
 msgstr "Solo un proprietario dell'organizzazione può cambiare piano. Chiedi al tuo di eseguire l'upgrade."
 
+msgid "Only an owner, or the creator while no one else is using it, can delete this project."
+msgstr "Solo un proprietario, o il creatore finché nessun altro lo usa, può eliminare questo progetto."
+
 msgid "Only available on macOS."
 msgstr "Disponibile solo su macOS."
 
@@ -10230,9 +10240,6 @@ msgstr "Solo i proprietari dell'host possono eliminarlo"
 
 msgid "Only organization owners can modify these settings."
 msgstr "Solo i proprietari dell'organizzazione possono modificare queste impostazioni."
-
-msgid "Only organization owners or device owners can delete this project."
-msgstr "Solo i proprietari dell’organizzazione o dei dispositivi possono eliminare questo progetto."
 
 msgid "Only owners can change membership."
 msgstr "Solo i proprietari possono modificare gli accessi."

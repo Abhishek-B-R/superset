@@ -33,11 +33,16 @@ export function useDashboardSidebarProjectSectionActions({
 	// hostIds order is arbitrary and may lead with an offline remote.
 	const { projects: hostProjects } = useHostProjects();
 	const { machineId } = useLocalHostService();
+	const hostProject = hostProjects.find(
+		(item) => item.projectKey === project.id,
+	);
 	const projectHostIds = useMemo(
-		() =>
-			hostProjects.find((item) => item.projectKey === project.id)?.hostIds ??
-			[],
-		[hostProjects, project.id],
+		() => hostProject?.hostIds ?? [],
+		[hostProject],
+	);
+	const projectCreatorByHostId = useMemo(
+		() => hostProject?.creatorByHostId ?? {},
+		[hostProject],
 	);
 	const servingHostId = useMemo(() => {
 		if (machineId && projectHostIds.includes(machineId)) return machineId;
@@ -63,7 +68,11 @@ export function useDashboardSidebarProjectSectionActions({
 		toggleSectionCollapsed,
 	} = useDashboardSidebarState();
 	const canDeleteProject =
-		useProjectDeletionHosts(projectHostIds).hostIds.length > 0;
+		useProjectDeletionHosts({
+			projectId: project.id,
+			hostIds: projectHostIds,
+			creatorByHostId: projectCreatorByHostId,
+		}).hostIds.length > 0;
 	const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 	// Hiding or deleting the project you are inside would leave the view
 	// pointing at a workspace the sidebar no longer shows (or that no longer
@@ -304,6 +313,7 @@ export function useDashboardSidebarProjectSectionActions({
 		leaveProjectIfActive,
 		openDeleteDialog,
 		projectHostIds,
+		projectCreatorByHostId,
 		setIsDeleteDialogOpen,
 		handleNewSection,
 		handleNewWorkspace,

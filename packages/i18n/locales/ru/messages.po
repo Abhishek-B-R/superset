@@ -248,6 +248,10 @@ msgstr "{0, plural, one {Удалить # рабочую область?} few {�
 msgid "{0, plural, one {Deleted # workspace} other {Deleted # workspaces}}"
 msgstr "{0, plural, one {Удалена # рабочая область} few {Удалено # рабочие области} many {Удалено # рабочих областей} other {Удалено # рабочей области}}"
 
+#. placeholder {0}: target.otherUsersWorkspaceCount
+msgid "{0, plural, one {Deletes # workspace other people are using} other {Deletes # workspaces other people are using}}"
+msgstr "{0, plural, one {Удалит # рабочую область, которой пользуются другие} few {Удалит # рабочие области, которыми пользуются другие} many {Удалит # рабочих областей, которыми пользуются другие} other {Удалит # рабочей области, которыми пользуются другие}}"
+
 #. placeholder {0}: item.hiddenCount
 msgid "{0, plural, one {Diff truncated — # more line on the host} other {Diff truncated — # more lines on the host}}"
 msgstr "{0, plural, one {Diff обрезан — ещё # строка на хосте} few {Diff обрезан — ещё # строки на хосте} many {Diff обрезан — ещё # строк на хосте} other {Diff обрезан — ещё # строки на хосте}}"
@@ -7658,6 +7662,9 @@ msgstr "В приложении Superset откройте <0>Настройки 
 msgid "In the Superset desktop app, open Settings → Remote Access and turn on “Allow remote access to this device via relay”."
 msgstr "В десктопном приложении Superset откройте Настройки → Удалённый доступ и включите «Разрешить удалённый доступ к этому устройству через реле»."
 
+msgid "In use by other people"
+msgstr "Используется другими людьми"
+
 msgid "In-app PR merge"
 msgstr "Слияние PR внутри приложения"
 
@@ -10216,6 +10223,9 @@ msgstr "Сейчас в сети"
 msgid "Only an organization owner can change the plan. Ask yours to upgrade."
 msgstr "Менять тариф может только владелец организации. Попросите его перейти на Pro."
 
+msgid "Only an owner, or the creator while no one else is using it, can delete this project."
+msgstr "Удалить этот проект может только владелец или его создатель, если им больше никто не пользуется."
+
 msgid "Only available on macOS."
 msgstr "Доступно только в macOS."
 
@@ -10230,9 +10240,6 @@ msgstr "Удалить этот хост могут только владель�
 
 msgid "Only organization owners can modify these settings."
 msgstr "Изменять эти настройки могут только владельцы организации."
-
-msgid "Only organization owners or device owners can delete this project."
-msgstr "Удалить этот проект могут только владельцы организации или устройств."
 
 msgid "Only owners can change membership."
 msgstr "Изменять состав участников могут только владельцы."

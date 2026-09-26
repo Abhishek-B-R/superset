@@ -5,12 +5,16 @@ export interface ProjectDeletionTarget {
 	isLocal: boolean;
 	isOnline: boolean;
 	canDelete: boolean;
+	inUseByOthers: boolean;
+	otherUsersWorkspaceCount: number;
 }
 
 export function defaultProjectDeletionSelection(
 	targets: ProjectDeletionTarget[],
 ): string[] {
-	const available = targets.filter((target) => target.canDelete);
+	const available = targets.filter(
+		(target) => target.canDelete && target.isOnline,
+	);
 	const local = available.find((target) => target.isLocal);
 	if (local) return [local.hostId];
 	const only = available[0];

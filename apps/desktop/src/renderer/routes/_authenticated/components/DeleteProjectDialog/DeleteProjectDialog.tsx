@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { Plural, Trans } from "@lingui/react/macro";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -20,6 +20,7 @@ interface DeleteProjectDialogProps {
 	projectId: string;
 	projectName: string;
 	hostIds: string[];
+	creatorByHostId: Record<string, string | null>;
 	onDeleted?: () => void;
 	/** Optional trigger, rendered `asChild`. */
 	children?: ReactNode;
@@ -31,6 +32,7 @@ export function DeleteProjectDialog({
 	projectId,
 	projectName,
 	hostIds,
+	creatorByHostId,
 	onDeleted,
 	children,
 }: DeleteProjectDialogProps) {
@@ -48,6 +50,7 @@ export function DeleteProjectDialog({
 		projectId,
 		projectName,
 		hostIds,
+		creatorByHostId,
 		selectedHostIds: selection,
 		onDeleted,
 	});
@@ -124,9 +127,22 @@ export function DeleteProjectDialog({
 									}
 								/>
 								<span className="min-w-0 flex-1 break-words">
-									{target.name}
+									<span className="block">{target.name}</span>
+									{target.canDelete && target.otherUsersWorkspaceCount > 0 ? (
+										<span className="block text-xs text-muted-foreground">
+											<Plural
+												value={target.otherUsersWorkspaceCount}
+												one="Deletes # workspace other people are using"
+												other="Deletes # workspaces other people are using"
+											/>
+										</span>
+									) : null}
 								</span>
-								{!target.canDelete ? (
+								{target.inUseByOthers ? (
+									<span className="text-xs text-muted-foreground">
+										<Trans>In use by other people</Trans>
+									</span>
+								) : !target.canDelete ? (
 									<span className="text-xs text-muted-foreground">
 										<Trans>Owner access required</Trans>
 									</span>

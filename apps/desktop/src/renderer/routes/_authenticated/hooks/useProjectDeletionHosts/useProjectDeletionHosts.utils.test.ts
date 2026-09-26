@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { selectProjectDeletionHosts } from "./useProjectDeletionHosts.utils";
+import { resolveProjectDeletionAccess } from "./useProjectDeletionHosts.utils";
 
 const hostIds = ["personal", "shared", "someone-else", "unknown"];
 const memberships = [
@@ -8,56 +8,88 @@ const memberships = [
 	{ hostId: "someone-else", userId: "other", role: "owner" },
 	{ hostId: "unrelated", userId: "member", role: "owner" },
 ];
+const base = {
+	projectId: "project",
+	hostIds,
+	creatorByHostId: {},
+	userId: "member",
+	isOrganizationOwner: false,
+	memberships,
+	workspaces: [],
+};
+const deletable = (access: ReturnType<typeof resolveProjectDeletionAccess>) =>
+	access.filter((host) => host.canDelete).map((host) => host.hostId);
 
 describe("project deletion devices", () => {
-	test("members only delete replicas on devices they own", () => {
-		expect(
-			selectProjectDeletionHosts({
-				hostIds,
-				userId: "member",
-				isOrganizationOwner: false,
-				memberships,
-			}),
-		).toEqual(["personal"]);
+	test("members delete copies on devices they own", () => {
+		expect(deletable(resolveProjectDeletionAccess(base))).toEqual(["personal"]);
 	});
-	test("organization owners retain deletion across serving devices", () => {
+	test("organization owners delete across serving devices", () => {
 		expect(
-			selectProjectDeletionHosts({
-				hostIds,
-				userId: "owner",
-				isOrganizationOwner: true,
-				memberships,
-			}),
+			deletable(
+				resolveProjectDeletionAccess({ ...base, isOrganizationOwner: true }),
+			),
 		).toEqual(hostIds);
 	});
-	test("missing membership data does not grant a member deletion", () => {
+	test("no session means no deletable devices", () => {
 		expect(
-			selectProjectDeletionHosts({
-				hostIds,
-				userId: "member",
-				isOrganizationOwner: false,
-				memberships: [],
-			}),
+			deletable(
+				resolveProjectDeletionAccess({
+					...base,
+					userId: undefined,
+					isOrganizationOwner: true,
+				}),
+			),
 		).toEqual([]);
 	});
-	test("missing session does not grant deletion", () => {
-		expect(
-			selectProjectDeletionHosts({
-				hostIds,
-				userId: undefined,
-				isOrganizationOwner: true,
-				memberships,
-			}),
-		).toEqual([]);
+	test("the creator deletes a copy only they are using", () => {
+		const access = resolveProjectDeletionAccess({
+			...base,
+			creatorByHostId: { shared: "member" },
+			workspaces: [
+				{ projectId: "project", hostId: "shared", createdByUserId: "member" },
+				{
+					projectId: "project",
+					hostId: "shared",
+					createdByUserId: "other",
+					archivedAt: 1,
+				},
+				{ projectId: "project", hostId: "personal", createdByUserId: "other" },
+			],
+		});
+		expect(deletable(access)).toEqual(["personal", "shared"]);
 	});
-	test("no serving devices never falls back to the local device", () => {
+	test("another user's workspace blocks the creator but not an owner", () => {
+		const access = resolveProjectDeletionAccess({
+			...base,
+			creatorByHostId: { shared: "member", personal: "member" },
+			workspaces: [
+				{ projectId: "project", hostId: "shared", createdByUserId: "other" },
+				{ projectId: "project", hostId: "personal", createdByUserId: null },
+			],
+		});
+		expect(access.find((host) => host.hostId === "shared")).toEqual({
+			hostId: "shared",
+			canDelete: false,
+			inUseByOthers: true,
+			otherUsersWorkspaceCount: 1,
+		});
+		expect(access.find((host) => host.hostId === "personal")).toEqual({
+			hostId: "personal",
+			canDelete: true,
+			inUseByOthers: false,
+			otherUsersWorkspaceCount: 1,
+		});
+	});
+	test("a project with no recorded creator needs an owner", () => {
 		expect(
-			selectProjectDeletionHosts({
-				hostIds: [],
-				userId: "member",
-				isOrganizationOwner: false,
-				memberships,
-			}),
+			deletable(
+				resolveProjectDeletionAccess({
+					...base,
+					hostIds: ["shared"],
+					creatorByHostId: { shared: null },
+				}),
+			),
 		).toEqual([]);
 	});
 });
