@@ -3,20 +3,20 @@ import { execFileSync } from "node:child_process";
 import { rmSync } from "node:fs";
 import { basename } from "node:path";
 import { eq } from "drizzle-orm";
-import { createBasicScenario } from "../../../../../test/helpers/scenarios";
-import { projects, terminalSessions, workspaces } from "../../../../db/schema";
-import { PullRequestRuntimeManager } from "../../../../runtime/pull-requests/pull-requests";
+import { projects, terminalSessions, workspaces } from "../../src/db/schema";
+import { PullRequestRuntimeManager } from "../../src/runtime/pull-requests/pull-requests";
+import * as agents from "../../src/trpc/router/agents";
+import * as naming from "../../src/trpc/router/workspace-creation/utils/ai-workspace-names";
+import { resumeInterruptedWorkspaceNaming } from "../../src/trpc/router/workspace-creation/utils/workspace-naming-job";
 import {
 	archiveLocalWorkspace,
 	deleteLocalWorkspace,
 	getLocalWorkspace,
 	unarchiveLocalWorkspace,
 	updateLocalWorkspace,
-} from "../../../../workspaces/local-workspace-store";
-import { cancelWorkspaceTitleJob } from "../../../../workspaces/workspace-title-jobs";
-import * as agents from "../../agents";
-import * as naming from "./ai-workspace-names";
-import { resumeInterruptedWorkspaceNaming } from "./workspace-naming-job";
+} from "../../src/workspaces/local-workspace-store";
+import { cancelWorkspaceTitleJob } from "../../src/workspaces/workspace-title-jobs";
+import { createBasicScenario } from "../helpers/scenarios";
 
 const savedEnv = { ...process.env };
 let stopPrStartup: ReturnType<typeof spyOn>;
