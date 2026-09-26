@@ -1572,6 +1572,9 @@ msgstr "高级选项"
 msgid "After"
 msgstr "变更后"
 
+msgid "After delay (3s)"
+msgstr "延迟后（3 秒）"
+
 msgid "Against base"
 msgstr "对比基准分支"
 
@@ -2312,6 +2315,9 @@ msgstr "自动（跟随系统）"
 msgid "Auto follows your system language. You can change it later in Settings."
 msgstr "自动模式会跟随你的系统语言。之后可以在设置中更改。"
 
+msgid "Auto Save"
+msgstr "自动保存"
+
 msgid "auto-generated"
 msgstr "自动生成"
 
@@ -2607,6 +2613,9 @@ msgstr "跳出"
 
 msgid "Box"
 msgstr "Box"
+
+msgid "Boxes run where the environment was made; a snapshot only exists in its region."
+msgstr "沙盒在环境创建的位置运行；快照只存在于其所在区域。"
 
 msgid "Branch"
 msgstr "分支"
@@ -4003,6 +4012,9 @@ msgstr "控制这台机器如何从外部访问"
 
 msgid "Control what each click — plain or with a modifier — does to a file or URL. Each row binds one modifier combination to an action."
 msgstr "控制每种点击（普通点击或配合修饰键）对文件或URL的行为。每一行将一种修饰键组合绑定到一个操作。"
+
+msgid "Controls when manually edited files are saved"
+msgstr "控制手动编辑的文件何时保存"
 
 msgid "Conversation"
 msgstr "对话"
@@ -9161,6 +9173,9 @@ msgstr "导航"
 msgid "Navigation Menu"
 msgstr "导航菜单"
 
+msgid "Nearest to you."
+msgstr "离你最近的区域。"
+
 msgid "Need app-level wiring (form state, chart data, app shell)"
 msgstr "需要应用层的接线（表单状态、图表数据、应用外壳）"
 
@@ -10150,6 +10165,9 @@ msgstr "在你无法连接的主机上"
 msgid "On click"
 msgstr "点击时"
 
+msgid "On focus change"
+msgstr "焦点更改时"
+
 msgid "On our radar. Order and scope may change."
 msgstr "在我们的视野内。顺序和范围可能会变。"
 
@@ -10161,6 +10179,9 @@ msgstr "按此速度"
 
 msgid "On this page"
 msgstr "本页内容"
+
+msgid "On window change"
+msgstr "窗口更改时"
 
 msgid "On your machine. Repos, worktrees, terminal output, and agent sessions stay local by default; cloud sync covers account and organization metadata only. Superset doesn't proxy any API calls."
 msgstr "在你自己的机器上。仓库、worktree、终端输出和智能体会话默认都留在本地；云端同步只涉及账户和组织的元数据。Superset不代理任何API调用。"
@@ -11968,6 +11989,9 @@ msgstr "下次运行 Claude Code 时刷新。"
 
 msgid "Refreshes when OpenCode next runs."
 msgstr "下次运行 OpenCode 时刷新。"
+
+msgid "Region"
+msgstr "区域"
 
 msgid "Register any CLI agent alongside the built-ins, each with its own name, icon, and launch command."
 msgstr "在内置智能体之外注册任意CLI智能体，各自拥有名称、图标和启动命令。"

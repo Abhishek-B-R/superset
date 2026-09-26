@@ -72,6 +72,7 @@ export async function GET(
 			method,
 			tokens.accessToken,
 			callback.params,
+			tokens.raw,
 		);
 
 		const result = await upsertConnection({

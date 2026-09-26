@@ -1572,6 +1572,9 @@ msgstr "Advanced options"
 msgid "After"
 msgstr "After"
 
+msgid "After delay (3s)"
+msgstr "After delay (3s)"
+
 msgid "Against base"
 msgstr "Against base"
 
@@ -2312,6 +2315,9 @@ msgstr "Auto (system)"
 msgid "Auto follows your system language. You can change it later in Settings."
 msgstr "Auto follows your system language. You can change it later in Settings."
 
+msgid "Auto Save"
+msgstr "Auto Save"
+
 msgid "auto-generated"
 msgstr "auto-generated"
 
@@ -2607,6 +2613,9 @@ msgstr "Bounce"
 
 msgid "Box"
 msgstr "Box"
+
+msgid "Boxes run where the environment was made; a snapshot only exists in its region."
+msgstr "Boxes run where the environment was made; a snapshot only exists in its region."
 
 msgid "Branch"
 msgstr "Branch"
@@ -4003,6 +4012,9 @@ msgstr "Control how your local machine is reachable from elsewhere"
 
 msgid "Control what each click — plain or with a modifier — does to a file or URL. Each row binds one modifier combination to an action."
 msgstr "Control what each click — plain or with a modifier — does to a file or URL. Each row binds one modifier combination to an action."
+
+msgid "Controls when manually edited files are saved"
+msgstr "Controls when manually edited files are saved"
 
 msgid "Conversation"
 msgstr "Conversation"
@@ -9161,6 +9173,9 @@ msgstr "Navigation"
 msgid "Navigation Menu"
 msgstr "Navigation Menu"
 
+msgid "Nearest to you."
+msgstr "Nearest to you."
+
 msgid "Need app-level wiring (form state, chart data, app shell)"
 msgstr "Need app-level wiring (form state, chart data, app shell)"
 
@@ -10150,6 +10165,9 @@ msgstr "On a host you can't reach"
 msgid "On click"
 msgstr "On click"
 
+msgid "On focus change"
+msgstr "On focus change"
+
 msgid "On our radar. Order and scope may change."
 msgstr "On our radar. Order and scope may change."
 
@@ -10161,6 +10179,9 @@ msgstr "On this pace"
 
 msgid "On this page"
 msgstr "On this page"
+
+msgid "On window change"
+msgstr "On window change"
 
 msgid "On your machine. Repos, worktrees, terminal output, and agent sessions stay local by default; cloud sync covers account and organization metadata only. Superset doesn't proxy any API calls."
 msgstr "On your machine. Repos, worktrees, terminal output, and agent sessions stay local by default; cloud sync covers account and organization metadata only. Superset doesn't proxy any API calls."
@@ -11968,6 +11989,9 @@ msgstr "Refreshes when Claude Code next runs."
 
 msgid "Refreshes when OpenCode next runs."
 msgstr "Refreshes when OpenCode next runs."
+
+msgid "Region"
+msgstr "Region"
 
 msgid "Register any CLI agent alongside the built-ins, each with its own name, icon, and launch command."
 msgstr "Register any CLI agent alongside the built-ins, each with its own name, icon, and launch command."

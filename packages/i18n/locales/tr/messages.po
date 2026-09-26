@@ -1572,6 +1572,9 @@ msgstr "Gelişmiş seçenekler"
 msgid "After"
 msgstr "Sonra"
 
+msgid "After delay (3s)"
+msgstr "Gecikmeden sonra (3 sn)"
+
 msgid "Against base"
 msgstr "Temele göre"
 
@@ -2312,6 +2315,9 @@ msgstr "Otomatik (sistem)"
 msgid "Auto follows your system language. You can change it later in Settings."
 msgstr "Otomatik, sistem dilinizi izler. Daha sonra Ayarlar'dan değiştirebilirsiniz."
 
+msgid "Auto Save"
+msgstr "Otomatik Kaydetme"
+
 msgid "auto-generated"
 msgstr "otomatik oluşturulur"
 
@@ -2607,6 +2613,9 @@ msgstr "Hemen çıkma"
 
 msgid "Box"
 msgstr "Kutu"
+
+msgid "Boxes run where the environment was made; a snapshot only exists in its region."
+msgstr "Kutular ortamın oluşturulduğu yerde çalışır; bir anlık görüntü yalnızca kendi bölgesinde bulunur."
 
 msgid "Branch"
 msgstr "Dal"
@@ -4003,6 +4012,9 @@ msgstr "Yerel makinenize dışarıdan nasıl erişileceğini kontrol edin"
 
 msgid "Control what each click — plain or with a modifier — does to a file or URL. Each row binds one modifier combination to an action."
 msgstr "Her tıklamanın — düz ya da değiştirici tuşlu — bir dosyaya veya URL'ye ne yapacağını denetleyin. Her satır bir değiştirici birleşimini bir eyleme bağlar."
+
+msgid "Controls when manually edited files are saved"
+msgstr "Elle düzenlenen dosyaların ne zaman kaydedileceğini belirler"
 
 msgid "Conversation"
 msgstr "Konuşma"
@@ -9161,6 +9173,9 @@ msgstr "Gezinme"
 msgid "Navigation Menu"
 msgstr "Gezinme menüsü"
 
+msgid "Nearest to you."
+msgstr "Size en yakın olan."
+
 msgid "Need app-level wiring (form state, chart data, app shell)"
 msgstr "Uygulama düzeyinde bağlantı gerekir (form durumu, grafik verisi, uygulama kabuğu)"
 
@@ -10150,6 +10165,9 @@ msgstr "Erişemediğin bir ana makinede"
 msgid "On click"
 msgstr "Tıklandığında"
 
+msgid "On focus change"
+msgstr "Odak değiştiğinde"
+
 msgid "On our radar. Order and scope may change."
 msgstr "Radarımızda. Sıra ve kapsam değişebilir."
 
@@ -10161,6 +10179,9 @@ msgstr "Bu hızla"
 
 msgid "On this page"
 msgstr "Bu sayfada"
+
+msgid "On window change"
+msgstr "Pencere değiştiğinde"
 
 msgid "On your machine. Repos, worktrees, terminal output, and agent sessions stay local by default; cloud sync covers account and organization metadata only. Superset doesn't proxy any API calls."
 msgstr "Sizin makinenizde. Depolar, worktree'ler, terminal çıktısı ve ajan oturumları varsayılan olarak yerelde kalır; bulut eşitlemesi yalnızca hesap ve kuruluş meta verilerini kapsar. Superset hiçbir API çağrısını vekil olarak iletmez."
@@ -11968,6 +11989,9 @@ msgstr "Claude Code bir sonraki çalıştığında yenilenir."
 
 msgid "Refreshes when OpenCode next runs."
 msgstr "OpenCode bir sonraki çalıştığında yenilenir."
+
+msgid "Region"
+msgstr "Bölge"
 
 msgid "Register any CLI agent alongside the built-ins, each with its own name, icon, and launch command."
 msgstr "Herhangi bir CLI ajanını, kendi adı, simgesi ve başlatma komutuyla yerleşiklerin yanına kaydedin."

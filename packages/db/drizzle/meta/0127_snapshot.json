@@ -1,5 +1,5 @@
 {
-  "id": "1676849b-c2ad-4368-aa0b-551b54118d41",
+  "id": "047ca413-8542-41bd-982f-d4f8621f322b",
   "prevId": "659f7bad-92cd-4d37-a3ca-235cde254c3c",
   "version": "7",
   "dialect": "postgresql",
@@ -7189,6 +7189,13 @@
           "primaryKey": false,
           "notNull": true
         },
+        "region": {
+          "name": "region",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'sfo1'"
+        },
         "bundle_sha": {
           "name": "bundle_sha",
           "type": "text",
@@ -8128,195 +8135,6 @@
       },
       "isRLSEnabled": false
     },
-    "public.page_reports": {
-      "name": "page_reports",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "page_id": {
-          "name": "page_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "reported_version": {
-          "name": "reported_version",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "reason": {
-          "name": "reason",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "details": {
-          "name": "details",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "status": {
-          "name": "status",
-          "type": "page_report_status",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "'open'"
-        },
-        "reported_by_user_id": {
-          "name": "reported_by_user_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "reporter_email": {
-          "name": "reporter_email",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "reporter_ip_hash": {
-          "name": "reporter_ip_hash",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "reviewed_by_user_id": {
-          "name": "reviewed_by_user_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "reviewed_at": {
-          "name": "reviewed_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "review_note": {
-          "name": "review_note",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {
-        "page_reports_status_created_at_idx": {
-          "name": "page_reports_status_created_at_idx",
-          "columns": [
-            {
-              "expression": "status",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "\"created_at\" desc",
-              "asc": true,
-              "isExpression": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "page_reports_page_id_idx": {
-          "name": "page_reports_page_id_idx",
-          "columns": [
-            {
-              "expression": "page_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "page_reports_reporter_ip_hash_idx": {
-          "name": "page_reports_reporter_ip_hash_idx",
-          "columns": [
-            {
-              "expression": "reporter_ip_hash",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
-      "foreignKeys": {
-        "page_reports_page_id_pages_id_fk": {
-          "name": "page_reports_page_id_pages_id_fk",
-          "tableFrom": "page_reports",
-          "tableTo": "pages",
-          "columnsFrom": [
-            "page_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "page_reports_reported_by_user_id_users_id_fk": {
-          "name": "page_reports_reported_by_user_id_users_id_fk",
-          "tableFrom": "page_reports",
-          "tableTo": "users",
-          "schemaTo": "auth",
-          "columnsFrom": [
-            "reported_by_user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "set null",
-          "onUpdate": "no action"
-        },
-        "page_reports_reviewed_by_user_id_users_id_fk": {
-          "name": "page_reports_reviewed_by_user_id_users_id_fk",
-          "tableFrom": "page_reports",
-          "tableTo": "users",
-          "schemaTo": "auth",
-          "columnsFrom": [
-            "reviewed_by_user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "set null",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
     "public.page_versions": {
       "name": "page_versions",
       "schema": "",
@@ -8500,24 +8318,6 @@
           "primaryKey": false,
           "notNull": false
         },
-        "taken_down_at": {
-          "name": "taken_down_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "taken_down_by_user_id": {
-          "name": "taken_down_by_user_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "taken_down_note": {
-          "name": "taken_down_note",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
         "watched_by_agent": {
           "name": "watched_by_agent",
           "type": "text",
@@ -8632,20 +8432,6 @@
           "schemaTo": "auth",
           "columnsFrom": [
             "created_by_user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "set null",
-          "onUpdate": "no action"
-        },
-        "pages_taken_down_by_user_id_users_id_fk": {
-          "name": "pages_taken_down_by_user_id_users_id_fk",
-          "tableFrom": "pages",
-          "tableTo": "users",
-          "schemaTo": "auth",
-          "columnsFrom": [
-            "taken_down_by_user_id"
           ],
           "columnsTo": [
             "id"
@@ -11226,15 +11012,6 @@
       "values": [
         "delete",
         "approve"
-      ]
-    },
-    "public.page_report_status": {
-      "name": "page_report_status",
-      "schema": "public",
-      "values": [
-        "open",
-        "upheld",
-        "dismissed"
       ]
     },
     "public.page_visibility": {
