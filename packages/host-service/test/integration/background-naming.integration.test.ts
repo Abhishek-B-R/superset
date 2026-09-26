@@ -15,7 +15,10 @@ import {
 	unarchiveLocalWorkspace,
 	updateLocalWorkspace,
 } from "../../src/workspaces/local-workspace-store";
-import { cancelWorkspaceTitleJob } from "../../src/workspaces/workspace-title-jobs";
+import {
+	cancelWorkspaceTitleJob,
+	commitWorkspaceTitleJob,
+} from "../../src/workspaces/workspace-title-jobs";
 import { createBasicScenario } from "../helpers/scenarios";
 
 const savedEnv = { ...process.env };
@@ -70,6 +73,7 @@ for (const kind of ["session", "worktree"] as const) {
 			naming,
 			"generateWorkspaceNamesFromPrompt",
 		).mockReturnValue(deferred.promise);
+		const headless = spyOn(naming, "canNameWithAgent").mockReturnValue(true);
 		const row = () => getLocalWorkspace(scenario.host.db, id);
 		const create = (
 			extra: {
@@ -106,6 +110,7 @@ for (const kind of ["session", "worktree"] as const) {
 			id,
 			deferred,
 			generator,
+			headless,
 			row,
 			create,
 			hook,
@@ -114,6 +119,7 @@ for (const kind of ["session", "worktree"] as const) {
 				deferred.resolve(null);
 				await new Promise((resolve) => setTimeout(resolve, 0));
 				generator.mockRestore();
+				headless.mockRestore();
 				await scenario.dispose();
 				if (kind === "session" && path)
 					rmSync(path, { recursive: true, force: true });
@@ -353,6 +359,48 @@ for (const kind of ["session", "worktree"] as const) {
 			expect(failed.mock.calls[0]?.[0]?.name).toBe("Fix login");
 		});
 		failed.mockRestore();
+	});
+
+	test(`${kind}: an agent with no headless mode keeps the prompt title with no retries or failure notice`, async () => {
+		const f = await fixture();
+		const failed = spyOn(f.host.eventBus, "broadcastWorkspaceNamingFailed");
+		f.headless.mockReturnValue(false);
+		await withAgent(f, null, async () => {
+			await until(() => f.row()?.name === "Fix login");
+			expect(f.row()?.autoNamingPrompt).toBeNull();
+			await f.hook("Stop", "reply");
+			await settle();
+			expect(f.generator).toHaveBeenCalledTimes(1);
+			expect(f.generator.mock.calls[0]?.[1]).toBeUndefined();
+			expect(failed).not.toHaveBeenCalled();
+		});
+		failed.mockRestore();
+	});
+
+	test(`${kind}: a title edit waits for an in-flight branch-rename commit and wins`, async () => {
+		const f = await fixture();
+		await withAgent(f, "pending", async () => {
+			await until(() => f.generator.mock.calls.length === 1);
+			const gate = Promise.withResolvers<void>();
+			const committing = Promise.withResolvers<void>();
+			const commit = commitWorkspaceTitleJob(f.host.db, f.id, async () => {
+				committing.resolve();
+				await gate.promise;
+				updateLocalWorkspace(f.host, f.id, {
+					name: "AI title",
+					autoNaming: { prompt: null, attempts: 1, branch: null, agent: null },
+				});
+			});
+			await committing.promise;
+			const edit = f.host.trpc.workspace.update.mutate({
+				id: f.id,
+				name: "Mine",
+			});
+			await settle();
+			gate.resolve();
+			await Promise.all([commit, edit]);
+			expect(f.row()?.name).toBe("Mine");
+		});
 	});
 
 	test(`${kind}: a rename between attempts ends automatic naming`, async () => {

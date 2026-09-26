@@ -14,6 +14,7 @@ import {
 } from "../../../../workspaces/workspace-title-jobs";
 import { gitStatusStore } from "../../git/utils/git-status-store";
 import {
+	canNameWithAgent,
 	type GeneratedWorkspaceNames,
 	generateWorkspaceNamesFromPrompt,
 	resolveGeneratedBranchName,
@@ -115,7 +116,12 @@ export function scheduleWorkspaceNaming(
 		const row = pendingRow(ctx, workspaceId);
 		if (!row) return;
 		const prompt = row.autoNamingPrompt;
-		const agent = row.autoNamingAgent ?? undefined;
+		// An agent with no headless mode names nothing; its workspace keeps
+		// the prompt title without retries or a failure notice.
+		const agent =
+			row.autoNamingAgent && canNameWithAgent(ctx.db, row.autoNamingAgent)
+				? row.autoNamingAgent
+				: undefined;
 		const project = row.projectId
 			? getLocalProject(ctx.db, row.projectId)
 			: undefined;

@@ -498,9 +498,15 @@ export const gitRouter = router({
 			const worktreePath = resolveWorktreePath(ctx, input.workspaceId);
 			const git = await ctx.git(worktreePath);
 			// Background naming may have renamed the branch after the caller
-			// read it; the row holds the branch the workspace has now.
-			const oldName =
-				getLocalWorkspace(ctx.db, input.workspaceId)?.branch ?? input.oldName;
+			// read it. Only then does the caller's name no longer exist, and
+			// the row holds the branch the workspace has now. The row can lag
+			// a checkout, so an existing name is always taken as given.
+			const callerBranchExists =
+				(await git.raw(["branch", "--list", input.oldName])).trim() !== "";
+			const oldName = callerBranchExists
+				? input.oldName
+				: (getLocalWorkspace(ctx.db, input.workspaceId)?.branch ??
+					input.oldName);
 
 			// Check if branch has been pushed to remote
 			try {

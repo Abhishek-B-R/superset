@@ -200,6 +200,11 @@ const NAMING_SMALL_MODELS: Record<string, string> = {
 	vibe: "devstral-small",
 };
 
+/** Whether this agent has a headless CLI that can name a workspace. */
+export function canNameWithAgent(db: HostDb, agent: string): boolean {
+	return resolveNonInteractiveCommand(db, agent) !== null;
+}
+
 function resolveNonInteractiveCommand(
 	db: HostDb,
 	agent: string,
