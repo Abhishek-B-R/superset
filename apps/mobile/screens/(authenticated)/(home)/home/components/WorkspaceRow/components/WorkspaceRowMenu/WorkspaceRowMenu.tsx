@@ -11,6 +11,7 @@ export function WorkspaceRowMenu({
 	onToggleUnread,
 	onRename,
 	onDelete,
+	onCopyLink,
 	onCopyId,
 	onShare,
 	children,
@@ -23,6 +24,7 @@ export function WorkspaceRowMenu({
 	onToggleUnread: () => void;
 	onRename: () => void;
 	onDelete: () => void;
+	onCopyLink: () => void;
 	onCopyId: () => void;
 	onShare: () => void;
 	children: ReactNode;
@@ -69,9 +71,14 @@ export function WorkspaceRowMenu({
 					</Link.MenuAction>
 				) : null}
 				<Link.Menu inline>
-					<Link.MenuAction icon="doc.on.doc" onPress={onCopyId}>
-						{t({ message: "Copy ID" })}
-					</Link.MenuAction>
+					<Link.Menu title={t({ message: "Copy" })} icon="doc.on.doc">
+						<Link.MenuAction onPress={onCopyLink}>
+							{t({ message: "Copy link" })}
+						</Link.MenuAction>
+						<Link.MenuAction onPress={onCopyId}>
+							{t({ message: "Copy ID" })}
+						</Link.MenuAction>
+					</Link.Menu>
 					<Link.MenuAction icon="square.and.arrow.up" onPress={onShare}>
 						{t({ message: "Share" })}
 					</Link.MenuAction>

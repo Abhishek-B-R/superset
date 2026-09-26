@@ -360,6 +360,9 @@ export function WorkspaceScreen() {
 		id ? id in state.pinnedAt : false,
 	);
 	const togglePin = usePinnedWorkspacesStore((state) => state.togglePin);
+	const manuallyUnread = useUnreadWorkspacesStore((state) =>
+		id ? id in state.manualUnread : false,
+	);
 	const setManualUnread = useUnreadWorkspacesStore(
 		(state) => state.setManualUnread,
 	);
@@ -437,6 +440,34 @@ export function WorkspaceScreen() {
 		if (activeRow.lastEventAt === null) return;
 		markTerminalSeen(activeRow.terminalId, activeRow.lastEventAt);
 	}, [activeRow, markTerminalSeen]);
+
+	// Desktop's isUnread: the manual mark, or any session still wanting a
+	// look — toggling back to read has to clear both, or the dot survives it.
+	const isUnread =
+		manuallyUnread ||
+		rows.some(
+			(row) => row.attention === "review" || row.attention === "failed",
+		);
+	const toggleUnread = useCallback(() => {
+		if (!id) return;
+		if (!isUnread) {
+			setManualUnread(id);
+			return;
+		}
+		clearManualUnread(id);
+		for (const row of rows) {
+			if (row.lastEventAt !== null) {
+				markTerminalSeen(row.terminalId, row.lastEventAt);
+			}
+		}
+	}, [
+		id,
+		isUnread,
+		setManualUnread,
+		clearManualUnread,
+		rows,
+		markTerminalSeen,
+	]);
 
 	// Brand marks as file URIs: the composer draws them, and neither SwiftUI nor
 	// the bridge can read a Metro asset reference.
@@ -856,10 +887,12 @@ export function WorkspaceScreen() {
 							{pinned ? t({ message: "Unpin" }) : t({ message: "Pin" })}
 						</Stack.Toolbar.MenuAction>
 						<Stack.Toolbar.MenuAction
-							icon="bell.badge"
-							onPress={() => id && setManualUnread(id)}
+							icon={isUnread ? "bell" : "bell.badge"}
+							onPress={toggleUnread}
 						>
-							{t({ message: "Mark as Unread" })}
+							{isUnread
+								? t({ message: "Mark as Read" })
+								: t({ message: "Mark as Unread" })}
 						</Stack.Toolbar.MenuAction>
 						<Stack.Toolbar.Menu inline>
 							<Stack.Toolbar.Menu

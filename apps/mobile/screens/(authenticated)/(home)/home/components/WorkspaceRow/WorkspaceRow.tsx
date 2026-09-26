@@ -64,6 +64,7 @@ export function WorkspaceRow({
 		renameWorkspace,
 		deleteWorkspace,
 		copyId,
+		copyLink,
 		shareWorkspace,
 		isUnread,
 		toggleUnread,
@@ -90,6 +91,7 @@ export function WorkspaceRow({
 			onTogglePin={() => togglePin(workspace.id)}
 			onRename={() => void renameWorkspace()}
 			onDelete={deleteWorkspace}
+			onCopyLink={copyLink}
 			onCopyId={copyId}
 			onShare={shareWorkspace}
 		>

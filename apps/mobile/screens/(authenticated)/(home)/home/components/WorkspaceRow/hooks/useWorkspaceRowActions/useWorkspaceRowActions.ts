@@ -116,6 +116,11 @@ export function useWorkspaceRowActions(
 	const copyId = () =>
 		void Clipboard.setStringAsync(workspace.id).then(onCopied);
 
+	const copyLink = () =>
+		void Clipboard.setStringAsync(workspaceShareUrl(workspace.id)).then(
+			onCopied,
+		);
+
 	const shareWorkspace = () =>
 		void Share.share({ url: workspaceShareUrl(workspace.id) });
 
@@ -123,6 +128,7 @@ export function useWorkspaceRowActions(
 		renameWorkspace,
 		deleteWorkspace,
 		copyId,
+		copyLink,
 		shareWorkspace,
 		isUnread,
 		toggleUnread,
