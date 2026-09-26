@@ -25,12 +25,13 @@ jobs:
           stale-pr-message: >-
             This PR has had no activity for 53 days and will close
             in 7 days unless there is new activity.
-            Please leave a comment if you would like to keep it open.
-            If it closes, you are welcome to reopen it when you are ready
-            to continue. Thank you for contributing!
+            If this contribution is still important or relevant, please
+            leave a comment to keep it open. If it closes, you are welcome
+            to reopen it or ask a maintainer to reopen it.
+            Thank you for contributing!
           close-pr-message: >-
             This PR was automatically closed due to inactivity to help
             keep the review queue manageable. This does not mean the
-            contribution was rejected. You are welcome to reopen it
-            when you are ready to continue, or leave a comment asking
-            a maintainer to reopen it. Thank you for contributing!
+            contribution was rejected. If this contribution is still
+            important or relevant, please reopen it or leave a comment
+            asking a maintainer to reopen it. Thank you for contributing!
