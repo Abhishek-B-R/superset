@@ -4,7 +4,7 @@ import { pageReports, pages, pageVersions } from "@superset/db/schema";
 import type { TRPCRouterRecord } from "@trpc/server";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
-import { and, desc, eq, lt, sql } from "drizzle-orm";
+import { and, desc, eq, inArray, lt, sql } from "drizzle-orm";
 import { env } from "../../env";
 import { adminProcedure, publicProcedure, userError } from "../../trpc";
 import {
@@ -97,11 +97,12 @@ export const pageReportRouter = {
 					id: pages.id,
 					visibility: pages.visibility,
 					sharedVersion: pages.sharedVersion,
+					takenDownAt: pages.takenDownAt,
 				})
 				.from(pages)
 				.where(eq(pages.slug, input.slug))
 				.limit(1);
-			if (!page || page.visibility !== "everyone") {
+			if (!page || page.visibility !== "everyone" || page.takenDownAt) {
 				throw userError({
 					code: "NOT_FOUND",
 					message: "Page not found",
@@ -194,36 +195,65 @@ export const pageReportRouter = {
 	takedown: adminProcedure
 		.input(takedownPageSchema)
 		.mutation(async ({ ctx, input }) => {
-			const [page] = await db
-				.update(pages)
-				.set({
-					takenDownAt: new Date(),
-					takenDownByUserId: ctx.session.user.id,
-					takenDownNote: input.note,
-				})
-				.where(eq(pages.id, input.id))
-				.returning({ id: pages.id });
-			if (!page) {
-				throw userError({
-					code: "NOT_FOUND",
-					message: "Page not found",
-					i18nKey: "serverError.page.pageNotFound",
+			const takenDownAt = new Date();
+			const taken = await db.transaction(async (tx) => {
+				const [page] = await tx
+					.update(pages)
+					.set({
+						takenDownAt,
+						takenDownByUserId: ctx.session.user.id,
+						takenDownNote: input.note ?? null,
+					})
+					.where(eq(pages.id, input.id))
+					.returning({ id: pages.id });
+				if (!page) {
+					throw userError({
+						code: "NOT_FOUND",
+						message: "Page not found",
+						i18nKey: "serverError.page.pageNotFound",
+					});
+				}
+				const upheld = await tx
+					.update(pageReports)
+					.set({
+						status: "upheld",
+						reviewedAt: takenDownAt,
+						reviewedByUserId: ctx.session.user.id,
+					})
+					.where(
+						and(
+							eq(pageReports.pageId, page.id),
+							eq(pageReports.status, "open"),
+						),
+					)
+					.returning({ id: pageReports.id });
+				return { pageId: page.id, upheldIds: upheld.map((row) => row.id) };
+			});
+
+			// Deleting the manifest is what actually ends public access, so it runs
+			// after the commit and undoes the commit if it fails. It cannot move
+			// inside the transaction: writePageManifest reads the page on its own
+			// connection, would still see a live page, and would write a fresh
+			// manifest instead of deleting one.
+			try {
+				await writePageManifest(taken.pageId);
+			} catch (error) {
+				await db.transaction(async (tx) => {
+					await tx
+						.update(pages)
+						.set({ takenDownAt: null, takenDownByUserId: null })
+						.where(eq(pages.id, taken.pageId));
+					if (taken.upheldIds.length > 0) {
+						await tx
+							.update(pageReports)
+							.set({ status: "open", reviewedAt: null, reviewedByUserId: null })
+							.where(inArray(pageReports.id, taken.upheldIds));
+					}
 				});
+				throw error;
 			}
 
-			await writePageManifest(page.id);
-			await db
-				.update(pageReports)
-				.set({
-					status: "upheld",
-					reviewedAt: new Date(),
-					reviewedByUserId: ctx.session.user.id,
-				})
-				.where(
-					and(eq(pageReports.pageId, page.id), eq(pageReports.status, "open")),
-				);
-
-			return { id: page.id };
+			return { id: taken.pageId };
 		}),
 
 	restore: adminProcedure
@@ -234,7 +264,7 @@ export const pageReportRouter = {
 				.set({
 					takenDownAt: null,
 					takenDownByUserId: null,
-					takenDownNote: input.note,
+					takenDownNote: input.note ?? null,
 				})
 				.where(eq(pages.id, input.id))
 				.returning({ id: pages.id });

@@ -2,6 +2,7 @@
 
 import { useLingui as useTranslation } from "@lingui/react";
 import { Trans, useLingui } from "@lingui/react/macro";
+import type { PageReportReason } from "@superset/db/enums";
 import { Button } from "@superset/ui/button";
 import {
 	Dialog,
@@ -26,7 +27,7 @@ import { useMutation } from "@tanstack/react-query";
 import { Flag } from "lucide-react";
 import { useState } from "react";
 import { useTRPC } from "@/trpc/react";
-import { REPORT_REASONS, type ReportReason } from "./constants";
+import { REPORT_REASONS } from "./constants";
 
 interface ReportPageDialogProps {
 	slug: string;
@@ -38,7 +39,7 @@ export function ReportPageDialog({ slug, signedIn }: ReportPageDialogProps) {
 	const { _: translate } = useTranslation();
 	const trpc = useTRPC();
 	const [open, setOpen] = useState(false);
-	const [reason, setReason] = useState<ReportReason | "">("");
+	const [reason, setReason] = useState<PageReportReason | "">("");
 	const [details, setDetails] = useState("");
 	const [email, setEmail] = useState("");
 
@@ -116,7 +117,9 @@ export function ReportPageDialog({ slug, signedIn }: ReportPageDialogProps) {
 								</Label>
 								<Select
 									value={reason}
-									onValueChange={(value) => setReason(value as ReportReason)}
+									onValueChange={(value) =>
+										setReason(value as PageReportReason)
+									}
 								>
 									<SelectTrigger id="report-reason">
 										<SelectValue

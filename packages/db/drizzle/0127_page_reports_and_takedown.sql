@@ -1,10 +1,9 @@
-CREATE TYPE "public"."page_report_reason" AS ENUM('malware_or_phishing', 'spam_or_scam', 'impersonation', 'sexual_content', 'violence_or_harassment', 'illegal_content', 'copyright', 'other');--> statement-breakpoint
 CREATE TYPE "public"."page_report_status" AS ENUM('open', 'upheld', 'dismissed');--> statement-breakpoint
 CREATE TABLE "page_reports" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"page_id" uuid NOT NULL,
 	"reported_version" integer,
-	"reason" "page_report_reason" NOT NULL,
+	"reason" text NOT NULL,
 	"details" text,
 	"status" "page_report_status" DEFAULT 'open' NOT NULL,
 	"reported_by_user_id" uuid,

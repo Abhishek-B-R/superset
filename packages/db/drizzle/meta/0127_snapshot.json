@@ -1,5 +1,5 @@
 {
-  "id": "be5a3458-2293-49df-b691-071cd7b8d48f",
+  "id": "1676849b-c2ad-4368-aa0b-551b54118d41",
   "prevId": "659f7bad-92cd-4d37-a3ca-235cde254c3c",
   "version": "7",
   "dialect": "postgresql",
@@ -8153,8 +8153,7 @@
         },
         "reason": {
           "name": "reason",
-          "type": "page_report_reason",
-          "typeSchema": "public",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
@@ -11227,20 +11226,6 @@
       "values": [
         "delete",
         "approve"
-      ]
-    },
-    "public.page_report_reason": {
-      "name": "page_report_reason",
-      "schema": "public",
-      "values": [
-        "malware_or_phishing",
-        "spam_or_scam",
-        "impersonation",
-        "sexual_content",
-        "violence_or_harassment",
-        "illegal_content",
-        "copyright",
-        "other"
       ]
     },
     "public.page_report_status": {

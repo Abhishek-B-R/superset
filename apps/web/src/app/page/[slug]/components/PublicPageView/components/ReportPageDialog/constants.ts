@@ -1,32 +1,21 @@
 import type { MessageDescriptor } from "@lingui/core";
 import { msg } from "@lingui/core/macro";
+import type { PageReportReason } from "@superset/db/enums";
 
-export type ReportReason =
-	| "malware_or_phishing"
-	| "spam_or_scam"
-	| "impersonation"
-	| "sexual_content"
-	| "violence_or_harassment"
-	| "illegal_content"
-	| "copyright"
-	| "other";
+const REPORT_REASON_LABELS: Record<PageReportReason, MessageDescriptor> = {
+	malware_or_phishing: msg({ message: "Malware or phishing" }),
+	spam_or_scam: msg({ message: "Spam or a scam" }),
+	impersonation: msg({ message: "Impersonates someone" }),
+	sexual_content: msg({ message: "Sexual content" }),
+	violence_or_harassment: msg({ message: "Violence or harassment" }),
+	illegal_content: msg({ message: "Illegal content" }),
+	copyright: msg({ message: "Copyright or trademark" }),
+	other: msg({ message: "Something else" }),
+};
 
-export const REPORT_REASONS: {
-	value: ReportReason;
-	label: MessageDescriptor;
-}[] = [
-	{
-		value: "malware_or_phishing",
-		label: msg({ message: "Malware or phishing" }),
-	},
-	{ value: "spam_or_scam", label: msg({ message: "Spam or a scam" }) },
-	{ value: "impersonation", label: msg({ message: "Impersonates someone" }) },
-	{ value: "sexual_content", label: msg({ message: "Sexual content" }) },
-	{
-		value: "violence_or_harassment",
-		label: msg({ message: "Violence or harassment" }),
-	},
-	{ value: "illegal_content", label: msg({ message: "Illegal content" }) },
-	{ value: "copyright", label: msg({ message: "Copyright or trademark" }) },
-	{ value: "other", label: msg({ message: "Something else" }) },
-];
+export const REPORT_REASONS = (
+	Object.entries(REPORT_REASON_LABELS) as [
+		PageReportReason,
+		MessageDescriptor,
+	][]
+).map(([value, label]) => ({ value, label }));

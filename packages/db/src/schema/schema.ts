@@ -19,6 +19,7 @@ import {
 	uuid,
 } from "drizzle-orm/pg-core";
 import { organizations, users } from "./auth";
+import type { PageReportReason } from "./enums";
 import {
 	agentCredentialKindValues,
 	automationPromptSourceValues,
@@ -37,7 +38,6 @@ import {
 	pageCommentAnchorKindValues,
 	pageCommentAuthorKindValues,
 	pageCommentIntentValues,
-	pageReportReasonValues,
 	pageReportStatusValues,
 	pageVisibilityValues,
 	taskPriorityValues,
@@ -103,10 +103,6 @@ export const pageCommentIntent = pgEnum(
 	pageCommentIntentValues,
 );
 
-export const pageReportReason = pgEnum(
-	"page_report_reason",
-	pageReportReasonValues,
-);
 export const pageReportStatus = pgEnum(
 	"page_report_status",
 	pageReportStatusValues,
@@ -1553,7 +1549,7 @@ export const pageReports = pgTable(
 			.notNull()
 			.references(() => pages.id, { onDelete: "cascade" }),
 		reportedVersion: integer("reported_version"),
-		reason: pageReportReason().notNull(),
+		reason: text().notNull().$type<PageReportReason>(),
 		details: text(),
 		status: pageReportStatus().notNull().default("open"),
 		reportedByUserId: uuid("reported_by_user_id").references(() => users.id, {

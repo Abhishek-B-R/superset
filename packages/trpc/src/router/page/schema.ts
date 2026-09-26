@@ -210,7 +210,7 @@ export const reportPageSchema = z.object({
 export const listPageReportsSchema = z.object({
 	status: z.enum(pageReportStatusValues).optional(),
 	limit: z.number().int().positive().max(200).default(50),
-	cursor: z.string().optional(),
+	cursor: z.string().datetime().optional(),
 });
 
 export const reviewPageReportSchema = z.object({
