@@ -48,7 +48,7 @@ mock.module("renderer/lib/cloud-trpc", () => ({
 }));
 mock.module(
 	"renderer/routes/_authenticated/providers/HostWorkspacesProvider",
-	() => ({ useHostWorkspaces: () => ({ workspaces, isReady: true }) }),
+	() => ({ useHostWorkspaces: () => ({ workspaces, isReady: false }) }),
 );
 mock.module("renderer/hooks/host-service/useHostTargetUrl", () => ({
 	useHostUrls: (ids: string[]) =>
@@ -98,6 +98,17 @@ afterEach(() => {
 	workspaces = [];
 });
 
+test("unrelated workspace readiness does not hold the dialog", () => {
+	const { result } = renderHook(() =>
+		useDeleteProject({
+			projectId: "project",
+			projectName: "Project",
+			hostIds: ["personal"],
+			creatorByHostId: creators,
+		}),
+	);
+	expect(result.current.permissionsReady).toBe(true);
+});
 test("member confirmation counts and mutation exclude shared devices", async () => {
 	const { result } = renderHook(() =>
 		useDeleteProject({

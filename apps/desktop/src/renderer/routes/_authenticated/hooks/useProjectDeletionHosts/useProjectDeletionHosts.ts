@@ -17,7 +17,7 @@ export function useProjectDeletionHosts({
 	const { data: organizationMembers } =
 		cloudTrpc.organization.listMembers.useQuery({ includeDeactivated: false });
 	const { data: memberships } = cloudTrpc.host.listMembers.useQuery(undefined);
-	const { workspaces, isReady: workspacesReady } = useHostWorkspaces();
+	const { workspaces } = useHostWorkspaces();
 	const access = resolveProjectDeletionAccess({
 		projectId,
 		hostIds,
@@ -33,8 +33,7 @@ export function useProjectDeletionHosts({
 		isReady:
 			!!userId &&
 			organizationMembers !== undefined &&
-			memberships !== undefined &&
-			workspacesReady,
+			memberships !== undefined,
 		access,
 		hostIds: access.filter((host) => host.canDelete).map((host) => host.hostId),
 	};
