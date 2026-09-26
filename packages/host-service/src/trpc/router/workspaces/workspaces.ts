@@ -629,10 +629,13 @@ export const workspacesRouter = router({
 			if (input.id && input.checkout !== "local") {
 				const existing = getLocalWorkspace(ctx.db, input.id);
 				if (existing) {
+					// A retry repeats its request; one that names a different
+					// branch is a new create that happens to reuse the id.
 					if (
 						existing.projectId !== input.projectId ||
 						existing.type !== "worktree" ||
-						existing.archivedAt != null
+						existing.archivedAt != null ||
+						(input.branch !== undefined && existing.branch !== input.branch)
 					) {
 						throw new TRPCError({
 							code: "CONFLICT",

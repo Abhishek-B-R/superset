@@ -635,6 +635,20 @@ for (const kind of ["session", "worktree"] as const) {
 				}
 			});
 		}
+		test("worktree: a same-ID create that names a different branch is rejected, not treated as a retry", async () => {
+			const f = await fixture();
+			try {
+				await f.create({ branch: "explicit-a" });
+				await expect(f.create({ branch: "explicit-b" })).rejects.toThrow(
+					"Workspace ID is already in use",
+				);
+				expect((await f.create({ branch: "explicit-a" })).workspace.id).toBe(
+					f.id,
+				);
+			} finally {
+				await f.cleanup();
+			}
+		});
 		for (const protection of ["renamed", "switched", "published"] as const) {
 			test(`worktree: background naming preserves a ${protection} branch`, async () => {
 				const f = await fixture();

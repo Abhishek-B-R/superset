@@ -2,7 +2,13 @@ import { deriveWorkspaceTitleFromPrompt } from "@superset/shared/workspace-launc
 import { and, eq, isNotNull, isNull } from "drizzle-orm";
 import { workspaces } from "../../../../db/schema";
 import { getLocalProject } from "../../../../projects/local-project-store";
+import { createGitEnvResolver } from "../../../../runtime/git/git";
 import type { HostServiceContext } from "../../../../types";
+import { getHostWorkerPool } from "../../../../workers/host-worker-pool";
+import {
+	gitAutomaticBranchRenamableTask,
+	gitRenameBranchTask,
+} from "../../../../workers/tasks/git";
 import {
 	getLocalWorkspace,
 	updateLocalWorkspace,
@@ -13,6 +19,7 @@ import {
 	queueWorkspaceTitleJob,
 } from "../../../../workspaces/workspace-title-jobs";
 import { gitStatusStore } from "../../git/utils/git-status-store";
+import { resolveGithubRepo } from "../shared/project-helpers";
 import {
 	canNameWithAgent,
 	type GeneratedWorkspaceNames,
@@ -25,6 +32,7 @@ import { findGitHubReferences, resolveNamingLinks } from "./naming-links";
 import { deduplicateBranchName } from "./sanitize-branch";
 
 const MAX_NAMING_ATTEMPTS = 3;
+const GIT_TASK_TIMEOUT_MS = 10_000;
 
 export interface NamingDecision {
 	/** Title to apply now; null keeps the current one. */
@@ -73,6 +81,18 @@ export function decideNaming(input: {
 	};
 }
 
+/** The project's live GitHub remote, for resolving bare `#123`; null when it has none. */
+async function projectGithubRepo(
+	ctx: HostServiceContext,
+	projectId: string | undefined,
+): Promise<{ owner: string; name: string } | null> {
+	if (!projectId) return null;
+	return resolveGithubRepo(ctx, projectId).then(
+		(repo) => ({ owner: repo.owner, name: repo.name }),
+		() => null,
+	);
+}
+
 function pendingRow(ctx: HostServiceContext, workspaceId: string) {
 	const row = getLocalWorkspace(ctx.db, workspaceId);
 	return row && row.archivedAt == null && row.autoNamingPrompt
@@ -80,25 +100,40 @@ function pendingRow(ctx: HostServiceContext, workspaceId: string) {
 		: null;
 }
 
-async function canRenameAutomaticBranch(
-	ctx: HostServiceContext,
-	worktreePath: string,
-	branch: string,
-): Promise<boolean> {
-	const git = await ctx.git(worktreePath, { timeout: { block: 750 } });
-	const [head, upstream, remoteBranches] = await Promise.all([
-		git.raw(["branch", "--show-current"]),
-		git.raw(["for-each-ref", "--format=%(upstream)", `refs/heads/${branch}`]),
-		git.raw(["for-each-ref", "--format=%(refname)", "refs/remotes"]),
-	]);
-	return (
-		head.trim() === branch &&
-		!upstream.trim() &&
-		!remoteBranches
-			.split("\n")
-			.some((ref) => ref.replace(/^refs\/remotes\/[^/]+\//, "") === branch)
-	);
-}
+/**
+ * Off-loop git for the naming job: credential env resolves on the loop (it
+ * needs the provider), the git subprocesses run in the host worker pool.
+ * A mutable object so tests can patch single operations.
+ */
+export const namingGitOps = {
+	async canRenameAutomaticBranch(
+		ctx: HostServiceContext,
+		worktreePath: string,
+		branch: string,
+	): Promise<boolean> {
+		const gitEnv = await createGitEnvResolver(ctx.credentials)(worktreePath);
+		const { renamable } = await getHostWorkerPool().run(
+			gitAutomaticBranchRenamableTask,
+			{ worktreePath, branch, gitEnv },
+			{ timeoutMs: GIT_TASK_TIMEOUT_MS },
+		);
+		return renamable;
+	},
+
+	async renameBranch(
+		ctx: HostServiceContext,
+		worktreePath: string,
+		from: string,
+		to: string,
+	): Promise<void> {
+		const gitEnv = await createGitEnvResolver(ctx.credentials)(worktreePath);
+		await getHostWorkerPool().run(
+			gitRenameBranchTask,
+			{ worktreePath, from, to, gitEnv },
+			{ timeoutMs: GIT_TASK_TIMEOUT_MS },
+		);
+	},
+};
 
 /**
  * Runs one naming attempt for a workspace whose name is still automatic
@@ -130,9 +165,7 @@ export function scheduleWorkspaceNaming(
 					ctx,
 					findGitHubReferences(
 						prompt,
-						project?.repoOwner && project.repoName
-							? { owner: project.repoOwner, name: project.repoName }
-							: null,
+						await projectGithubRepo(ctx, project?.id),
 					),
 				)
 			: undefined;
@@ -156,14 +189,12 @@ export function scheduleWorkspaceNaming(
 		// so the attempt counts as failed and the next turn tries again.
 		const canRenameBranch =
 			branchStillAutomatic && names?.branchName
-				? await canRenameAutomaticBranch(
-						ctx,
-						current.worktreePath,
-						oldBranch,
-					).catch((error) => {
-						console.warn("[workspace-title] branch probe failed", error);
-						return null;
-					})
+				? await namingGitOps
+						.canRenameAutomaticBranch(ctx, current.worktreePath, oldBranch)
+						.catch((error) => {
+							console.warn("[workspace-title] branch probe failed", error);
+							return null;
+						})
 				: false;
 		if (!isCurrent() || !pendingRow(ctx, workspaceId)) return;
 
@@ -244,8 +275,7 @@ async function renameAutomaticBranch(
 	);
 	await commitWorkspaceTitleJob(ctx.db, workspaceId, async () => {
 		if (!isCurrent() || !pendingRow(ctx, workspaceId)) return;
-		const git = await ctx.git(input.worktreePath, { timeout: { block: 750 } });
-		await git.raw(["branch", "-m", oldBranch, target]);
+		await namingGitOps.renameBranch(ctx, input.worktreePath, oldBranch, target);
 		gitStatusStore.recordChange(workspaceId, undefined);
 		updateLocalWorkspace(ctx, workspaceId, {
 			name: input.title,
