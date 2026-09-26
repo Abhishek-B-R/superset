@@ -30,20 +30,27 @@ test("title jobs bound concurrency and pending work without blocking callers", a
 	expect(maximum).toBe(2);
 });
 
-test("duplicate jobs are deduplicated and cancelled queued jobs never start", async () => {
+test("a job queued behind a pending one runs once after it, latest wins; cancelled jobs never start", async () => {
 	const db = {} as HostDb;
 	const gate = Promise.withResolvers<void>();
 	const run = mock(() => gate.promise);
+	const stale = mock(async () => {});
+	const followUp = mock(async () => {});
 	queueWorkspaceTitleJob(db, "first", run);
 	queueWorkspaceTitleJob(db, "second", run);
 	queueWorkspaceTitleJob(db, "queued", run);
-	queueWorkspaceTitleJob(db, "first", run);
+	queueWorkspaceTitleJob(db, "first", stale);
+	queueWorkspaceTitleJob(db, "first", followUp);
 	queueWorkspaceTitleJob(db, "queued", run);
 	cancelWorkspaceTitleJob(db, "queued");
 	await tick();
+	expect(followUp).not.toHaveBeenCalled();
 	gate.resolve();
 	await tick();
+	await tick();
 	expect(run).toHaveBeenCalledTimes(2);
+	expect(stale).not.toHaveBeenCalled();
+	expect(followUp).toHaveBeenCalledTimes(1);
 });
 
 test("an old job cannot become current again when a replacement is queued", async () => {
@@ -118,13 +125,13 @@ test("disposal remains bounded when a generator ignores abort", async () => {
 	});
 	await tick();
 	try {
-		await disposeWorkspaceTitleJobs(db);
+		await disposeWorkspaceTitleJobs(db, 20);
 		expect(current?.()).toBe(false);
 	} finally {
 		gate.resolve();
 		await tick();
 	}
-}, 2000);
+});
 
 test("cancellation aborts generation but holds capacity until cleanup finishes", async () => {
 	const db = {} as HostDb;
@@ -192,90 +199,4 @@ test("cancelling a pending generator does not wait for the provider", async () =
 	generated.resolve();
 	await tick();
 	expect(commit).not.toHaveBeenCalled();
-});
-
-for (const action of ["start", "cancel", "dispose"] as const) {
-	test(`first-work naming waits without occupying a running slot and handles ${action}`, async () => {
-		const db = {} as HostDb;
-		const run = mock(async () => {});
-		const unsubscribe = mock(() => {});
-		let start: (() => void) | undefined;
-		queueWorkspaceTitleJob(db, "waiting", run, (activate) => {
-			start = activate;
-			return unsubscribe;
-		});
-		const immediate = mock(async () => {});
-		queueWorkspaceTitleJob(db, "immediate", immediate);
-		await tick();
-		expect(immediate).toHaveBeenCalledTimes(1);
-		expect(run).not.toHaveBeenCalled();
-		if (action === "cancel") cancelWorkspaceTitleJob(db, "waiting");
-		if (action === "dispose") await disposeWorkspaceTitleJobs(db);
-		start?.();
-		start?.();
-		await tick();
-		expect(run).toHaveBeenCalledTimes(action === "start" ? 1 : 0);
-		expect(unsubscribe).toHaveBeenCalledTimes(1);
-	});
-}
-
-test("abandoned first-work waiters cannot block ready jobs or fresh waiters", async () => {
-	const db = {} as HostDb;
-	const starts: Array<() => void> = [];
-	const unsubscribed = new Set<number>();
-	const ran: number[] = [];
-	for (let i = 0; i < 100; i++) {
-		queueWorkspaceTitleJob(
-			db,
-			`waiting-${i}`,
-			async () => {
-				ran.push(i);
-			},
-			(start) => {
-				starts.push(start);
-				return () => {
-					unsubscribed.add(i);
-				};
-			},
-		);
-	}
-	const ready = mock(async () => {});
-	queueWorkspaceTitleJob(db, "ready", ready);
-	await tick();
-	expect(ready).toHaveBeenCalledTimes(1);
-	expect(starts).toHaveLength(100);
-	expect(unsubscribed.size).toBe(68);
-	starts[0]?.();
-	starts[99]?.();
-	await tick();
-	expect(ran).toEqual([99]);
-	await disposeWorkspaceTitleJobs(db);
-	expect(unsubscribed.size).toBe(100);
-});
-
-test("first-work bursts respect runnable capacity independently of waiting admission", async () => {
-	const db = {} as HostDb;
-	const gate = Promise.withResolvers<void>();
-	const run = mock(() => gate.promise);
-	for (let i = 0; i < 34; i++) queueWorkspaceTitleJob(db, `ready-${i}`, run);
-	const starts: Array<() => void> = [];
-	const unsubscribe = mock(() => {});
-	const overflow = mock(async () => {});
-	for (let i = 0; i < 32; i++) {
-		queueWorkspaceTitleJob(db, `waiting-${i}`, overflow, (start) => {
-			starts.push(start);
-			return unsubscribe;
-		});
-	}
-	expect(starts).toHaveLength(32);
-	for (const start of starts) start();
-	await tick();
-	expect(run).toHaveBeenCalledTimes(2);
-	expect(overflow).not.toHaveBeenCalled();
-	expect(unsubscribe).toHaveBeenCalledTimes(32);
-	gate.resolve();
-	await tick();
-	expect(run).toHaveBeenCalledTimes(34);
-	expect(overflow).not.toHaveBeenCalled();
-	await disposeWorkspaceTitleJobs(db);
 });

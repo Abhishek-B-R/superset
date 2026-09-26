@@ -53,6 +53,7 @@ import {
 	execGh as defaultExecGh,
 	type ExecGh,
 } from "./trpc/router/workspace-creation/utils/exec-gh";
+import { resumeInterruptedWorkspaceNaming } from "./trpc/router/workspace-creation/utils/workspace-naming-job";
 import type {
 	ApiClient,
 	BrowserBridgeConfig,
@@ -291,6 +292,22 @@ export function createApp(options: CreateAppOptions): CreateAppResult {
 	// process crashed out of — and a sandbox is provisioned fresh with exactly
 	// one project and one workspace, seeded by us, that no earlier build ever
 	// touched. There is nothing to recover, so the sweeps can only invent.
+	const hostContext = (): HostServiceContext =>
+		({
+			git,
+			credentials: providers.credentials,
+			github,
+			execGh,
+			api,
+			db,
+			runtime,
+			eventBus,
+			terminalAgentStore,
+			organizationId: config.organizationId,
+			isAuthenticated: true,
+			browserBridge: config.browserBridge,
+		}) as HostServiceContext;
+
 	void (async () => {
 		if (process.env.SUPERSET_HOST_RUN_MODE === "sandbox") return;
 		await runProjectBackfill({
@@ -316,6 +333,11 @@ export function createApp(options: CreateAppOptions): CreateAppResult {
 		}).catch((err) => {
 			console.warn("[host-service] archived-workspace reconcile failed:", err);
 		});
+		try {
+			resumeInterruptedWorkspaceNaming(hostContext());
+		} catch (err) {
+			console.warn("[host-service] naming resume failed:", err);
+		}
 		// Re-share the default account's Claude/Codex config into the selected
 		// provider profiles. Last: it touches no host state the sweeps above
 		// repair, and a slow filesystem must not delay them.
@@ -515,21 +537,7 @@ export function createApp(options: CreateAppOptions): CreateAppResult {
 
 	/** Same context the launcher above builds: a resume runs an agent. */
 	const resumeCrashedAgents = async () => {
-		const ctx = {
-			git,
-			credentials: providers.credentials,
-			github,
-			execGh,
-			api,
-			db,
-			runtime,
-			eventBus,
-			terminalAgentStore,
-			organizationId: config.organizationId,
-			isAuthenticated: true,
-			browserBridge: config.browserBridge,
-		} as HostServiceContext;
-		await resumeCrashedAgentSessions(resumeSessionDepsFor(ctx));
+		await resumeCrashedAgentSessions(resumeSessionDepsFor(hostContext()));
 	};
 
 	return {

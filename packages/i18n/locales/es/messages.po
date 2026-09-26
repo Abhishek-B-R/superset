@@ -4466,6 +4466,9 @@ msgstr "No se pudo cargar tu perfil, así que la edición está desactivada."
 msgid "Couldn't merge pull request"
 msgstr "No se pudo fusionar la pull request"
 
+msgid "Couldn't name \"{name}\" automatically"
+msgstr "No se pudo nombrar «{name}» automáticamente"
+
 msgid "Couldn't parse this diff: {patchParseError}"
 msgstr "No se pudo analizar este diff: {patchParseError}"
 
@@ -7929,6 +7932,9 @@ msgstr "La URL del issue debe coincidir con {repoMismatch}."
 
 msgid "Issue…"
 msgstr "Issue…"
+
+msgid "It keeps the title from your prompt."
+msgstr "Conserva el título de tu instrucción."
 
 msgid "It may be asleep"
 msgstr "Puede que esté en reposo"

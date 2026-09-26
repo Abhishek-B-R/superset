@@ -26,11 +26,9 @@ import {
 	defaultSessionsRoot,
 	safeResolveSessionPath,
 } from "../shared/session-paths";
-import {
-	generateWorkspaceTitleInBackground,
-	sanitizeBranchCandidate,
-} from "../utils/ai-workspace-names";
+import { sanitizeBranchCandidate } from "../utils/ai-workspace-names";
 import { deduplicateBranchName } from "../utils/sanitize-branch";
+import { scheduleWorkspaceNaming } from "../utils/workspace-naming-job";
 
 const createSessionInputSchema = z.object({
 	// Optimistic-UI idempotency key; becomes the row id.
@@ -140,6 +138,8 @@ export const createSession = protectedProcedure
 				type: "session",
 				createdByUserId: ctx.userId ?? null,
 				tags: input.tags,
+				autoNamingPrompt: wantAi ? composerPrompt : null,
+				autoNamingAgent: wantAi ? (namingAgent ?? null) : null,
 			});
 		} catch (err) {
 			// The folder was allocated this call and holds only the scaffold —
@@ -168,17 +168,7 @@ export const createSession = protectedProcedure
 			throw err;
 		}
 
-		if (wantAi) {
-			generateWorkspaceTitleInBackground({
-				ctx,
-				workspace: row,
-				prompt: composerPrompt,
-				agent: namingAgent,
-				waitForStart: namingAgent
-					? (start) => ctx.terminalAgentStore.onWorkStarted(row.id, start)
-					: undefined,
-			});
-		}
+		if (wantAi) scheduleWorkspaceNaming(ctx, row.id);
 
 		const terminalsResult: Array<{ terminalId: string; label: string }> = [];
 		const [agentsResult, commandResult] = await Promise.all([

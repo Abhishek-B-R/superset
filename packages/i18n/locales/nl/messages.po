@@ -4466,6 +4466,9 @@ msgstr "Je profiel kon niet worden geladen, daarom is bewerken uitgeschakeld."
 msgid "Couldn't merge pull request"
 msgstr "Kan pull request niet mergen"
 
+msgid "Couldn't name \"{name}\" automatically"
+msgstr "Kon \"{name}\" niet automatisch een naam geven"
+
 msgid "Couldn't parse this diff: {patchParseError}"
 msgstr "Kan deze diff niet parsen: {patchParseError}"
 
@@ -7929,6 +7932,9 @@ msgstr "Issue-URL moet overeenkomen met {repoMismatch}."
 
 msgid "Issue…"
 msgstr "Issue…"
+
+msgid "It keeps the title from your prompt."
+msgstr "De titel uit je prompt blijft staan."
 
 msgid "It may be asleep"
 msgstr "Hij staat mogelijk in sluimerstand"

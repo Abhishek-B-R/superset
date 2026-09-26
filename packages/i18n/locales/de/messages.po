@@ -4466,6 +4466,9 @@ msgstr "Dein Profil konnte nicht geladen werden, deshalb ist das Bearbeiten deak
 msgid "Couldn't merge pull request"
 msgstr "Pull Request konnte nicht zusammengeführt werden"
 
+msgid "Couldn't name \"{name}\" automatically"
+msgstr "„{name}“ konnte nicht automatisch benannt werden"
+
 msgid "Couldn't parse this diff: {patchParseError}"
 msgstr "Dieser Diff konnte nicht geparst werden: {patchParseError}"
 
@@ -7929,6 +7932,9 @@ msgstr "Die Issue-URL muss zu {repoMismatch} passen."
 
 msgid "Issue…"
 msgstr "Issue…"
+
+msgid "It keeps the title from your prompt."
+msgstr "Der Titel aus deinem Prompt bleibt erhalten."
 
 msgid "It may be asleep"
 msgstr "Möglicherweise im Ruhezustand"

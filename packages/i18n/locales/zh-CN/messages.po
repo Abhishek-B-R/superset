@@ -4466,6 +4466,9 @@ msgstr "无法加载你的资料，编辑已停用。"
 msgid "Couldn't merge pull request"
 msgstr "无法合并拉取请求"
 
+msgid "Couldn't name \"{name}\" automatically"
+msgstr "无法自动命名“{name}”"
+
 msgid "Couldn't parse this diff: {patchParseError}"
 msgstr "无法解析这个差异：{patchParseError}"
 
@@ -7929,6 +7932,9 @@ msgstr "议题URL必须匹配{repoMismatch}。"
 
 msgid "Issue…"
 msgstr "议题…"
+
+msgid "It keeps the title from your prompt."
+msgstr "将保留根据你的提示生成的标题。"
 
 msgid "It may be asleep"
 msgstr "设备可能处于睡眠状态"

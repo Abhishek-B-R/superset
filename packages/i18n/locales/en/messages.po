@@ -4466,6 +4466,9 @@ msgstr "Couldn't load your profile, so editing is disabled."
 msgid "Couldn't merge pull request"
 msgstr "Couldn't merge pull request"
 
+msgid "Couldn't name \"{name}\" automatically"
+msgstr "Couldn't name \"{name}\" automatically"
+
 msgid "Couldn't parse this diff: {patchParseError}"
 msgstr "Couldn't parse this diff: {patchParseError}"
 
@@ -7929,6 +7932,9 @@ msgstr "Issue URL must match {repoMismatch}."
 
 msgid "Issue…"
 msgstr "Issue…"
+
+msgid "It keeps the title from your prompt."
+msgstr "It keeps the title from your prompt."
 
 msgid "It may be asleep"
 msgstr "It may be asleep"

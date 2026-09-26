@@ -4466,6 +4466,9 @@ msgstr "Nie udało się wczytać Twojego profilu, więc edycja jest wyłączona.
 msgid "Couldn't merge pull request"
 msgstr "Nie udało się scalić pull requesta"
 
+msgid "Couldn't name \"{name}\" automatically"
+msgstr "Nie udało się automatycznie nazwać „{name}”"
+
 msgid "Couldn't parse this diff: {patchParseError}"
 msgstr "Nie udało się przetworzyć tych różnic: {patchParseError}"
 
@@ -7929,6 +7932,9 @@ msgstr "URL zgłoszenia musi pasować do {repoMismatch}."
 
 msgid "Issue…"
 msgstr "Zgłoszenie…"
+
+msgid "It keeps the title from your prompt."
+msgstr "Zachowa tytuł z Twojego polecenia."
 
 msgid "It may be asleep"
 msgstr "Może być uśpiony"

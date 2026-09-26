@@ -4466,6 +4466,9 @@ msgstr "Non è stato possibile caricare il tuo profilo, quindi la modifica è di
 msgid "Couldn't merge pull request"
 msgstr "Impossibile unire la pull request"
 
+msgid "Couldn't name \"{name}\" automatically"
+msgstr "Impossibile assegnare automaticamente un nome a \"{name}\""
+
 msgid "Couldn't parse this diff: {patchParseError}"
 msgstr "Impossibile analizzare questo diff: {patchParseError}"
 
@@ -7929,6 +7932,9 @@ msgstr "L'URL della issue deve corrispondere a {repoMismatch}."
 
 msgid "Issue…"
 msgstr "Issue…"
+
+msgid "It keeps the title from your prompt."
+msgstr "Mantiene il titolo del tuo prompt."
 
 msgid "It may be asleep"
 msgstr "Potrebbe essere in stop"

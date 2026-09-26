@@ -4466,6 +4466,9 @@ msgstr "プロフィールを読み込めなかったため、編集は無効で
 msgid "Couldn't merge pull request"
 msgstr "プルリクエストをマージできませんでした"
 
+msgid "Couldn't name \"{name}\" automatically"
+msgstr "「{name}」に自動で名前を付けられませんでした"
+
 msgid "Couldn't parse this diff: {patchParseError}"
 msgstr "この差分を解析できませんでした: {patchParseError}"
 
@@ -7929,6 +7932,9 @@ msgstr "IssueのURLは{repoMismatch}と一致する必要があります。"
 
 msgid "Issue…"
 msgstr "Issue…"
+
+msgid "It keeps the title from your prompt."
+msgstr "プロンプトから付けたタイトルのままになります。"
 
 msgid "It may be asleep"
 msgstr "スリープ中かもしれません"

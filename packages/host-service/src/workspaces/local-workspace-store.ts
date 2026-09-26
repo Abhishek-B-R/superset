@@ -241,6 +241,9 @@ export interface InsertLocalWorkspaceValues {
 	taskId?: string | null;
 	createdByUserId?: string | null;
 	tags?: string[];
+	autoNamingPrompt?: string | null;
+	autoNamingBranch?: string | null;
+	autoNamingAgent?: string | null;
 }
 
 /**
@@ -265,6 +268,9 @@ export function insertLocalWorkspace(
 				type: values.type ?? "worktree",
 				taskId: values.taskId ?? null,
 				createdByUserId: values.createdByUserId ?? null,
+				autoNamingPrompt: values.autoNamingPrompt ?? null,
+				autoNamingBranch: values.autoNamingBranch ?? null,
+				autoNamingAgent: values.autoNamingAgent ?? null,
 				createdAt: now,
 				updatedAt: now,
 			})
@@ -297,6 +303,17 @@ export function insertLocalWorkspace(
 export interface UpdateLocalWorkspacePatch {
 	name?: string;
 	branch?: string;
+	/**
+	 * Only the AI naming job sets this, which marks its own name/branch
+	 * writes as automatic. Every other name/branch write is a user edit and
+	 * ends automatic naming for that side.
+	 */
+	autoNaming?: {
+		prompt: string | null;
+		attempts: number;
+		branch: string | null;
+		agent: string | null;
+	};
 	worktreePath?: string;
 	taskId?: string | null;
 	projectId?: string;
@@ -316,7 +333,10 @@ export function updateLocalWorkspace(
 ): HostWorkspaceRow | undefined {
 	const existing = getLocalWorkspace(ctx.db, id);
 	if (!existing) return undefined;
-	const { tags, ...columns } = patch;
+	const { tags, autoNaming, ...columns } = patch;
+	const userEdit =
+		autoNaming === undefined &&
+		(patch.name !== undefined || patch.branch !== undefined);
 	const normalizedTags =
 		tags === undefined ? undefined : normalizeWorkspaceTags(tags);
 	// Tag replacement is delete-then-insert; the transaction keeps a throw
@@ -325,6 +345,18 @@ export function updateLocalWorkspace(
 		tx.update(workspaces)
 			.set({
 				...columns,
+				...(autoNaming
+					? {
+							autoNamingPrompt: autoNaming.prompt,
+							autoNamingAttempts: autoNaming.attempts,
+							autoNamingBranch: autoNaming.branch,
+							autoNamingAgent: autoNaming.agent,
+						}
+					: {}),
+				...(userEdit && patch.name !== undefined
+					? { autoNamingPrompt: null }
+					: {}),
+				...(userEdit ? { autoNamingBranch: null } : {}),
 				updatedAt: Date.now(),
 			})
 			.where(eq(workspaces.id, id))
@@ -362,8 +394,7 @@ export function updateLocalWorkspace(
 			}
 		}
 	});
-	if (patch.name !== undefined || patch.branch !== undefined)
-		cancelWorkspaceTitleJob(ctx.db, id);
+	if (userEdit) cancelWorkspaceTitleJob(ctx.db, id);
 	const row = getLocalWorkspace(ctx.db, id);
 	if (row) emitWorkspaceChanged(ctx, "updated", row);
 	return row;

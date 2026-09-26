@@ -4466,6 +4466,9 @@ msgstr "Tvůj profil se nepodařilo načíst, úpravy jsou proto vypnuté."
 msgid "Couldn't merge pull request"
 msgstr "Pull request se nepodařilo sloučit"
 
+msgid "Couldn't name \"{name}\" automatically"
+msgstr "Nepodařilo se automaticky pojmenovat „{name}“"
+
 msgid "Couldn't parse this diff: {patchParseError}"
 msgstr "Tento diff se nepodařilo zpracovat: {patchParseError}"
 
@@ -7929,6 +7932,9 @@ msgstr "URL issue musí odpovídat {repoMismatch}."
 
 msgid "Issue…"
 msgstr "Issue…"
+
+msgid "It keeps the title from your prompt."
+msgstr "Zůstane mu název z vašeho zadání."
 
 msgid "It may be asleep"
 msgstr "Možná je uspaný"

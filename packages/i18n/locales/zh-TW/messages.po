@@ -4466,6 +4466,9 @@ msgstr "無法載入你的個人檔案，編輯已停用。"
 msgid "Couldn't merge pull request"
 msgstr "無法合併拉取請求"
 
+msgid "Couldn't name \"{name}\" automatically"
+msgstr "無法自動命名「{name}」"
+
 msgid "Couldn't parse this diff: {patchParseError}"
 msgstr "無法解析這個差異：{patchParseError}"
 
@@ -7929,6 +7932,9 @@ msgstr "議題URL必須匹配{repoMismatch}。"
 
 msgid "Issue…"
 msgstr "議題…"
+
+msgid "It keeps the title from your prompt."
+msgstr "將保留根據你的提示產生的標題。"
 
 msgid "It may be asleep"
 msgstr "裝置可能處於睡眠狀態"

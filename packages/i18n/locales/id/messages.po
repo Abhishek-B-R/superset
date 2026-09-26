@@ -4466,6 +4466,9 @@ msgstr "Profil Anda tidak dapat dimuat, sehingga penyuntingan dinonaktifkan."
 msgid "Couldn't merge pull request"
 msgstr "Tidak bisa merge pull request"
 
+msgid "Couldn't name \"{name}\" automatically"
+msgstr "Tidak dapat menamai \"{name}\" secara otomatis"
+
 msgid "Couldn't parse this diff: {patchParseError}"
 msgstr "Tidak bisa mengurai diff ini: {patchParseError}"
 
@@ -7929,6 +7932,9 @@ msgstr "URL issue harus cocok dengan {repoMismatch}."
 
 msgid "Issue…"
 msgstr "Issue…"
+
+msgid "It keeps the title from your prompt."
+msgstr "Judul dari prompt Anda tetap dipakai."
 
 msgid "It may be asleep"
 msgstr "Mungkin sedang tidur"

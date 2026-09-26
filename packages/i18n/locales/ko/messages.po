@@ -4466,6 +4466,9 @@ msgstr "프로필을 불러오지 못해 편집이 비활성화되었습니다."
 msgid "Couldn't merge pull request"
 msgstr "풀 리퀘스트를 머지하지 못했습니다"
 
+msgid "Couldn't name \"{name}\" automatically"
+msgstr "\"{name}\"의 이름을 자동으로 지정하지 못했습니다"
+
 msgid "Couldn't parse this diff: {patchParseError}"
 msgstr "이 차이를 해석하지 못했습니다: {patchParseError}"
 
@@ -7929,6 +7932,9 @@ msgstr "이슈 URL이 {repoMismatch}과(와) 일치해야 합니다."
 
 msgid "Issue…"
 msgstr "이슈…"
+
+msgid "It keeps the title from your prompt."
+msgstr "프롬프트에서 가져온 제목이 유지됩니다."
 
 msgid "It may be asleep"
 msgstr "절전 모드일 수 있습니다"

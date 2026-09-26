@@ -26,6 +26,7 @@ import {
 	type HostWorkspaceRow,
 	insertLocalWorkspace,
 	toCloudShape,
+	updateLocalWorkspace,
 } from "../../../workspaces/local-workspace-store";
 import {
 	createCallerFactory,
@@ -73,7 +74,6 @@ import { normalizeWorktreePath } from "../workspace-creation/shared/worktree-lis
 import { safeResolveWorktreePath } from "../workspace-creation/shared/worktree-paths";
 import {
 	applyAiWorkspaceRename,
-	generateWorkspaceTitleInBackground,
 	sanitizeBranchCandidate,
 } from "../workspace-creation/utils/ai-workspace-names";
 import { resolveProjectBranchPrefix } from "../workspace-creation/utils/branch-prefix";
@@ -92,6 +92,7 @@ import {
 	resolveNewBranchStartPoint,
 } from "../workspace-creation/utils/resolve-new-branch-start-point";
 import { deduplicateBranchName } from "../workspace-creation/utils/sanitize-branch";
+import { scheduleWorkspaceNaming } from "../workspace-creation/utils/workspace-naming-job";
 
 const createInputSchema = z
 	.object({
@@ -625,7 +626,7 @@ export const workspacesRouter = router({
 			const localProject = requireLocalProject(ctx, input.projectId);
 			const repoPath = requireProjectRepoPath(localProject);
 
-			if (input.id) {
+			if (input.id && input.checkout !== "local") {
 				const existing = getLocalWorkspace(ctx.db, input.id);
 				if (existing) {
 					if (
@@ -683,7 +684,7 @@ export const workspacesRouter = router({
 			let worktreePath: string | undefined;
 			let alreadyExists = false;
 			let workspaceRow: CloudWorkspace;
-			let automaticBranch: { prefix?: string; suffix: string } | undefined;
+			let automaticBranch = false;
 
 			if (input.checkout === "local") {
 				const releaseCreateLock = await acquireWorkspaceCreateLock(
@@ -1063,7 +1064,7 @@ export const workspacesRouter = router({
 					const suffix = (input.id ?? randomUUID()).slice(0, 8);
 					const candidate =
 						typedNameSlug || `${generateFriendlyBranchName()}-${suffix}`;
-					if (!input.name) automaticBranch = { prefix, suffix };
+					automaticBranch = !input.name;
 					const prefixed = prefix ? `${prefix}/${candidate}` : candidate;
 					resolvedBranch = deduplicateBranchName(prefixed, existing);
 					plan = {
@@ -1229,28 +1230,16 @@ export const workspacesRouter = router({
 			}
 
 			if (!alreadyExists && wantAi) {
-				generateWorkspaceTitleInBackground({
-					ctx,
-					workspace: workspaceRow,
-					prompt: composerPrompt,
-					agent: namingAgent,
-					waitForStart: namingAgent
-						? (start) =>
-								ctx.terminalAgentStore.onWorkStarted(workspaceRow.id, start)
-						: undefined,
-					namingInstructions: localProject.namingInstructions,
-					branchRename:
-						automaticBranch && worktreePath
-							? {
-									ctx,
-									repoPath,
-									worktreePath,
-									oldBranchName: workspaceRow.branch,
-									branchPrefix: automaticBranch.prefix,
-									suffix: automaticBranch.suffix,
-								}
-							: undefined,
+				updateLocalWorkspace(ctx, workspaceRow.id, {
+					autoNaming: {
+						prompt: composerPrompt,
+						attempts: 0,
+						branch:
+							automaticBranch && worktreePath ? workspaceRow.branch : null,
+						agent: namingAgent ?? null,
+					},
 				});
+				scheduleWorkspaceNaming(ctx, workspaceRow.id);
 			}
 
 			const terminalsResult: Array<{ terminalId: string; label?: string }> = [];

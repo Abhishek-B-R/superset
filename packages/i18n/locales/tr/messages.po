@@ -4466,6 +4466,9 @@ msgstr "Profilin yüklenemedi, bu yüzden düzenleme devre dışı."
 msgid "Couldn't merge pull request"
 msgstr "Pull request birleştirilemedi"
 
+msgid "Couldn't name \"{name}\" automatically"
+msgstr "\"{name}\" otomatik olarak adlandırılamadı"
+
 msgid "Couldn't parse this diff: {patchParseError}"
 msgstr "Bu fark ayrıştırılamadı: {patchParseError}"
 
@@ -7929,6 +7932,9 @@ msgstr "Issue URL'si {repoMismatch} ile eşleşmeli."
 
 msgid "Issue…"
 msgstr "Issue…"
+
+msgid "It keeps the title from your prompt."
+msgstr "İsteminizdeki başlık korunur."
 
 msgid "It may be asleep"
 msgstr "Uykuda olabilir"
