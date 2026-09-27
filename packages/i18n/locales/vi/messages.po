@@ -104,6 +104,10 @@ msgstr "{0, plural, one {# cổng đang hoạt động — ẩn chi tiết} othe
 msgid "{0, plural, one {# active port — show details} other {# active ports — show details}}"
 msgstr "{0, plural, one {# cổng đang hoạt động — hiện chi tiết} other {# cổng đang hoạt động — hiện chi tiết}}"
 
+#. placeholder {0}: person.runningAgentCount
+msgid "{0, plural, one {# agent} other {# agents}}"
+msgstr "{0, plural, other {# agent}}"
+
 #. placeholder {0}: workspace.diffStats.fileCount
 msgid "{0, plural, one {# changed file} other {# changed files}}"
 msgstr "{0, plural, one {# tệp thay đổi} other {# tệp thay đổi}}"
@@ -212,6 +216,10 @@ msgstr "{0, plural, other {# agent con}}"
 #. placeholder {0}: TASKS.length
 msgid "{0, plural, one {# task} other {# tasks}}"
 msgstr "{0, plural, one {# tác vụ} other {# tác vụ}}"
+
+#. placeholder {0}: person.runningTerminalCount
+msgid "{0, plural, one {# terminal running} other {# terminals running}}"
+msgstr "{0, plural, other {# terminal đang chạy}}"
 
 #. placeholder {0}: entry.items.length
 msgid "{0, plural, one {# tool call} other {# tool calls}}"
@@ -663,6 +671,9 @@ msgstr "{days} ngày {hours} giờ"
 msgid "{days}d ago"
 msgstr "{days} ngày trước"
 
+msgid "{daysLeft, plural, one {# day left} other {# days left}}"
+msgstr "{daysLeft, plural, other {Còn # ngày}}"
+
 msgid "{daysRemaining, plural, one {Your account is deactivated and will be permanently deleted in # day. Reactivate to restore it exactly as you left it.} other {Your account is deactivated and will be permanently deleted in # days. Reactivate to restore it exactly as you left it.}}"
 msgstr "{daysRemaining, plural, one {Tài khoản của bạn đã bị vô hiệu hóa và sẽ bị xóa vĩnh viễn sau # ngày. Kích hoạt lại để khôi phục đúng như lúc bạn rời đi.} other {Tài khoản của bạn đã bị vô hiệu hóa và sẽ bị xóa vĩnh viễn sau # ngày. Kích hoạt lại để khôi phục đúng như lúc bạn rời đi.}}"
 
@@ -807,9 +818,6 @@ msgstr "{noun, select, person {Hãy chỉ định ít nhất một người, ho�
 
 msgid "{noun, select, repository {Specify at least one repository.} channel {Specify at least one channel.} reaction {Specify at least one reaction.} dataSource {Specify at least one data source.} team {Specify at least one team.} project {Specify at least one project.} calendar {Specify at least one calendar.} other {Specify at least one entry.}}"
 msgstr "{noun, select, repository {Hãy chỉ định ít nhất một repo.} channel {Hãy chỉ định ít nhất một kênh.} reaction {Hãy chỉ định ít nhất một reaction.} dataSource {Hãy chỉ định ít nhất một nguồn dữ liệu.} team {Hãy chỉ định ít nhất một nhóm.} project {Hãy chỉ định ít nhất một dự án.} calendar {Hãy chỉ định ít nhất một lịch.} other {Hãy chỉ định ít nhất một mục.}}"
-
-msgid "{offlineHostCount, plural, one {# device is offline and keeps its copy.} other {# devices are offline and keep their copy.}}"
-msgstr "{offlineHostCount, plural, one {# thiết bị đang ngoại tuyến và sẽ giữ lại bản sao của mình.} other {# thiết bị đang ngoại tuyến và sẽ giữ lại bản sao của mình.}}"
 
 msgid "{openCount} open"
 msgstr "{openCount} còn mở"
@@ -966,9 +974,6 @@ msgstr "{workspaceName}: host không khả dụng"
 
 msgid "{workspaceName}: teardown failed"
 msgstr "{workspaceName}: teardown thất bại"
-
-msgid "{worktreeCount, plural, one {This removes the project and its # workspace from every reachable device, and deletes that worktree from disk.} other {This removes the project and its # workspaces from every reachable device, and deletes their worktrees from disk.}}"
-msgstr "{worktreeCount, plural, one {Thao tác này sẽ gỡ dự án và # workspace của nó khỏi mọi thiết bị có thể kết nối, đồng thời xóa worktree đó khỏi ổ đĩa.} other {Thao tác này sẽ gỡ dự án và # workspace của nó khỏi mọi thiết bị có thể kết nối, đồng thời xóa các worktree đó khỏi ổ đĩa.}}"
 
 msgid "{years}y ago"
 msgstr "{years} năm trước"
@@ -1377,6 +1382,9 @@ msgstr "Kích hoạt, mức độ sử dụng sau khi bắt đầu dùng, và li
 
 msgid "Active"
 msgstr "Đang hoạt động"
+
+msgid "active {lastActive}"
+msgstr "hoạt động {lastActive}"
 
 msgid "Active agent sessions."
 msgstr "Các phiên agent đang hoạt động."
@@ -4498,6 +4506,9 @@ msgstr "Không thể khởi động lại terminal"
 msgid "Couldn't restart the host service"
 msgstr "Không thể khởi động lại dịch vụ host"
 
+msgid "Couldn't restore \"{projectName}\""
+msgstr "Không thể khôi phục \"{projectName}\""
+
 msgid "Couldn't save"
 msgstr "Không lưu được"
 
@@ -5088,13 +5099,13 @@ msgstr "Đã xóa \"{deletedName}\""
 msgid "Deleted \"{hostName}\""
 msgstr "Đã xóa \"{hostName}\""
 
-msgid "Deleted \"{projectName}\""
-msgstr "Đã xóa \"{projectName}\""
+#. placeholder {0}: deletedUrls.length
+#. placeholder {1}: selected.length
+msgid "Deleted \"{projectName}\" from {0} of {1} devices. The others keep their copy."
+msgstr "Đã xóa \"{projectName}\" khỏi {0}/{1} thiết bị. Các thiết bị còn lại vẫn giữ bản sao."
 
-#. placeholder {0}: results.length - failed.length
-#. placeholder {1}: hostIds.length
-msgid "Deleted \"{projectName}\" from {0} of {1} devices — unreachable devices keep their copy"
-msgstr "Đã xóa \"{projectName}\" trên {0}/{1} thiết bị — các thiết bị không kết nối được vẫn giữ bản sao"
+msgid "Deleted \"{projectName}\". You can restore it from Settings → Projects for 30 days."
+msgstr "Đã xóa \"{projectName}\". Bạn có thể khôi phục trong Cài đặt → Dự án trong 30 ngày."
 
 msgid "Deleted {name}"
 msgstr "Đã xóa {name}"
@@ -5231,6 +5242,9 @@ msgstr "Bản dựng phát triển"
 
 msgid "Device: {selectedLabel}"
 msgstr "Thiết bị: {selectedLabel}"
+
+msgid "Devices"
+msgstr "Thiết bị"
 
 msgid "DevTools"
 msgstr "DevTools"
@@ -7276,6 +7290,9 @@ msgstr "Ẩn khỏi thanh"
 
 msgid "Hide from chart"
 msgstr "Ẩn khỏi biểu đồ"
+
+msgid "Hide from sidebar"
+msgstr "Ẩn khỏi thanh bên"
 
 msgid "Hide from Sidebar"
 msgstr "Ẩn khỏi thanh bên"
@@ -9598,9 +9615,6 @@ msgstr "Chưa có lịch sử"
 msgid "No host is available for this port"
 msgstr "Không có host nào khả dụng cho cổng này"
 
-msgid "No host serving this project is reachable right now"
-msgstr "Hiện không kết nối được host nào đang phục vụ dự án này"
-
 msgid "No hosts match \"{q}\"."
 msgstr "Không có host nào khớp \"{q}\"."
 
@@ -10225,11 +10239,11 @@ msgstr "Chỉ chủ sở hữu host mới đổi được vị trí này."
 msgid "Only host owners can delete this host"
 msgstr "Chỉ chủ sở hữu host mới xóa được host này"
 
-msgid "Only organization owners can delete this project."
-msgstr "Chỉ chủ sở hữu tổ chức mới xóa được dự án này."
-
 msgid "Only organization owners can modify these settings."
 msgstr "Chỉ chủ sở hữu tổ chức mới sửa được các cài đặt này."
+
+msgid "Only organization owners or the device's owner can delete this project."
+msgstr "Chỉ chủ sở hữu tổ chức hoặc chủ sở hữu thiết bị mới có thể xóa dự án này."
 
 msgid "Only owners can change membership."
 msgstr "Chỉ chủ sở hữu mới thay đổi được thành viên."
@@ -10266,6 +10280,9 @@ msgstr "Chỉ người tạo trang này mới có thể thay đổi."
 
 msgid "Only the thread's author or the page's owner can delete it"
 msgstr "Chỉ tác giả của luồng hoặc chủ sở hữu trang mới xóa được"
+
+msgid "Only want it out of your sidebar? Hide it instead. Nobody else is affected."
+msgstr "Chỉ muốn bỏ nó khỏi thanh bên của bạn? Hãy ẩn nó. Không ảnh hưởng đến ai khác."
 
 msgid "Only you"
 msgstr "Chỉ mình bạn"
@@ -10814,6 +10831,9 @@ msgstr "Thiết bị khác"
 msgid "Other Hosts"
 msgstr "Host khác"
 
+msgid "Other people are using this project. Type <0>{projectName}</0> to confirm."
+msgstr "Người khác đang dùng dự án này. Nhập <0>{projectName}</0> để xác nhận."
+
 msgid "Other Team Members"
 msgstr "Các thành viên khác"
 
@@ -10871,6 +10891,9 @@ msgstr "Thuộc sở hữu của {0} — chỉ họ mới sửa được tự đ
 
 msgid "Owner"
 msgstr "Chủ sở hữu"
+
+msgid "Owner access required"
+msgstr "Cần quyền chủ sở hữu"
 
 msgid "Owns every PTY session and survives app restarts."
 msgstr "Sở hữu mọi phiên PTY và tồn tại qua các lần khởi động lại ứng dụng."
@@ -11885,6 +11908,9 @@ msgstr "PR gần đây"
 msgid "Recent pull requests"
 msgstr "Pull request gần đây"
 
+msgid "Recently deleted"
+msgstr "Đã xóa gần đây"
+
 msgid "Recently Shipped"
 msgstr "Vừa ra mắt"
 
@@ -12486,6 +12512,9 @@ msgstr "Khôi phục phiên bản này?"
 
 msgid "Restored"
 msgstr "Đã khôi phục"
+
+msgid "Restored \"{projectName}\""
+msgstr "Đã khôi phục \"{projectName}\""
 
 msgid "Restoring your session"
 msgstr "Đang khôi phục phiên của bạn"
@@ -13980,6 +14009,9 @@ msgstr "Một số theme đã bị bỏ qua"
 msgid "Some triggers need additional configuration"
 msgstr "Một số trigger cần cấu hình thêm"
 
+msgid "Someone"
+msgstr "Ai đó"
+
 #. js-lingui-explicit-id
 msgid "serverError.page.entryPathHeldByColleague"
 msgstr "Người khác đã xuất bản {entryPath} từ workspace này. Hãy xuất bản kèm id trang cụ thể để thêm phiên bản vào trang của họ, hoặc di chuyển tệp."
@@ -15232,9 +15264,6 @@ msgstr "Nhánh remote đã rẽ nhánh khác. Hãy pull trước khi tiếp tụ
 msgid "The repositories a cloud workspace checks out, and which one's .superset/config.json it acts on. The workspace opens on the config location, or on the first repository by name."
 msgstr "Các repository mà workspace cloud checkout, và .superset/config.json của repository nào được áp dụng. Workspace mở tại vị trí cấu hình, hoặc tại repository đầu tiên theo tên."
 
-msgid "The repository folder itself is kept."
-msgstr "Thư mục kho lưu trữ vẫn được giữ nguyên."
-
 msgid "The request failed."
 msgstr "Yêu cầu thất bại."
 
@@ -15540,8 +15569,8 @@ msgstr "Thao tác này xóa mọi worktree đã chọn khỏi đĩa và xóa b�
 msgid "This removes the host, its access, and its workspaces. Files on the machine stay. A running host may reappear. This can’t be undone."
 msgstr "Thao tác này gỡ host, quyền truy cập và các workspace của nó. Tệp trên máy vẫn giữ nguyên. Host đang chạy có thể xuất hiện lại. Không thể hoàn tác."
 
-msgid "This removes the project from every reachable device."
-msgstr "Thao tác này sẽ gỡ dự án khỏi mọi thiết bị có thể kết nối."
+msgid "This removes the project and its workspaces for everyone on the selected devices, and stops their terminals and agents."
+msgstr "Thao tác này xóa dự án và các workspace của nó cho mọi người trên các thiết bị đã chọn, đồng thời dừng terminal và agent của họ."
 
 msgid "This removes the worktree from disk and closes the workspace."
 msgstr "Thao tác này xóa worktree khỏi ổ đĩa và đóng workspace."
@@ -17058,9 +17087,6 @@ msgstr "Worktree"
 msgid "Worktrees are removed from disk; workspaces on the project's checkout only close. Files in the checkout stay as they are."
 msgstr "Các worktree bị xóa khỏi ổ đĩa; các workspace trên checkout của dự án chỉ được đóng. Tệp trong checkout vẫn giữ nguyên."
 
-msgid "Worktrees with uncommitted changes are left on disk."
-msgstr "Các worktree có thay đổi chưa commit sẽ được giữ lại trên ổ đĩa."
-
 msgid "Would you like to reassign it?"
 msgstr "Bạn có muốn gán lại không?"
 
@@ -17157,6 +17183,9 @@ msgstr "Bạn đang xem phiên bản {version}, chỉ đọc"
 
 msgid "You can attach up to {MAX_ATTACHMENTS} files"
 msgstr "Bạn có thể đính kèm tối đa {MAX_ATTACHMENTS} tệp"
+
+msgid "You can restore it from Settings → Projects for 30 days. The repository folder is never deleted."
+msgstr "Bạn có thể khôi phục trong Cài đặt → Dự án trong 30 ngày. Thư mục repository không bao giờ bị xóa."
 
 #. placeholder {0}: COMPANY.DOMAIN
 msgid "You can't change this subscription in the app. Your organization's plan is managed by its owner at {0}."

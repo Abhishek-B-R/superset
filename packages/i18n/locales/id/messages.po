@@ -104,6 +104,10 @@ msgstr "{0, plural, one {# port aktif — sembunyikan detail} other {# port akti
 msgid "{0, plural, one {# active port — show details} other {# active ports — show details}}"
 msgstr "{0, plural, one {# port aktif — tampilkan detail} other {# port aktif — tampilkan detail}}"
 
+#. placeholder {0}: person.runningAgentCount
+msgid "{0, plural, one {# agent} other {# agents}}"
+msgstr "{0, plural, other {# agen}}"
+
 #. placeholder {0}: workspace.diffStats.fileCount
 msgid "{0, plural, one {# changed file} other {# changed files}}"
 msgstr "{0, plural, one {# file berubah} other {# file berubah}}"
@@ -212,6 +216,10 @@ msgstr "{0, plural, other {# subagen}}"
 #. placeholder {0}: TASKS.length
 msgid "{0, plural, one {# task} other {# tasks}}"
 msgstr "{0, plural, one {# tugas} other {# tugas}}"
+
+#. placeholder {0}: person.runningTerminalCount
+msgid "{0, plural, one {# terminal running} other {# terminals running}}"
+msgstr "{0, plural, other {# terminal berjalan}}"
 
 #. placeholder {0}: entry.items.length
 msgid "{0, plural, one {# tool call} other {# tool calls}}"
@@ -663,6 +671,9 @@ msgstr "{days}h {hours}j"
 msgid "{days}d ago"
 msgstr "{days}h lalu"
 
+msgid "{daysLeft, plural, one {# day left} other {# days left}}"
+msgstr "{daysLeft, plural, other {Sisa # hari}}"
+
 msgid "{daysRemaining, plural, one {Your account is deactivated and will be permanently deleted in # day. Reactivate to restore it exactly as you left it.} other {Your account is deactivated and will be permanently deleted in # days. Reactivate to restore it exactly as you left it.}}"
 msgstr "{daysRemaining, plural, one {Akun Anda dinonaktifkan dan akan dihapus permanen dalam # hari. Aktifkan kembali untuk memulihkannya persis seperti yang Anda tinggalkan.} other {Akun Anda dinonaktifkan dan akan dihapus permanen dalam # hari. Aktifkan kembali untuk memulihkannya persis seperti yang Anda tinggalkan.}}"
 
@@ -807,9 +818,6 @@ msgstr "{noun, select, person {Tentukan minimal satu orang, atau pilih {choice}.
 
 msgid "{noun, select, repository {Specify at least one repository.} channel {Specify at least one channel.} reaction {Specify at least one reaction.} dataSource {Specify at least one data source.} team {Specify at least one team.} project {Specify at least one project.} calendar {Specify at least one calendar.} other {Specify at least one entry.}}"
 msgstr "{noun, select, repository {Tentukan minimal satu repositori.} channel {Tentukan minimal satu kanal.} reaction {Tentukan minimal satu reaksi.} dataSource {Tentukan minimal satu sumber data.} team {Tentukan minimal satu tim.} project {Tentukan minimal satu proyek.} calendar {Tentukan minimal satu kalender.} other {Tentukan minimal satu entri.}}"
-
-msgid "{offlineHostCount, plural, one {# device is offline and keeps its copy.} other {# devices are offline and keep their copy.}}"
-msgstr "{offlineHostCount, plural, one {# perangkat sedang offline dan tetap menyimpan salinannya.} other {# perangkat sedang offline dan tetap menyimpan salinannya.}}"
 
 msgid "{openCount} open"
 msgstr "{openCount} terbuka"
@@ -966,9 +974,6 @@ msgstr "{workspaceName}: host tidak tersedia"
 
 msgid "{workspaceName}: teardown failed"
 msgstr "{workspaceName}: teardown gagal"
-
-msgid "{worktreeCount, plural, one {This removes the project and its # workspace from every reachable device, and deletes that worktree from disk.} other {This removes the project and its # workspaces from every reachable device, and deletes their worktrees from disk.}}"
-msgstr "{worktreeCount, plural, one {Ini menghapus proyek beserta # workspace-nya dari setiap perangkat yang dapat dijangkau, dan menghapus worktree tersebut dari disk.} other {Ini menghapus proyek beserta # workspace-nya dari setiap perangkat yang dapat dijangkau, dan menghapus semua worktree tersebut dari disk.}}"
 
 msgid "{years}y ago"
 msgstr "{years}thn lalu"
@@ -1377,6 +1382,9 @@ msgstr "Aktivasi, seberapa banyak dipakai setelah masuk, dan apakah mereka kemba
 
 msgid "Active"
 msgstr "Aktif"
+
+msgid "active {lastActive}"
+msgstr "aktif {lastActive}"
 
 msgid "Active agent sessions."
 msgstr "Sesi agen yang aktif."
@@ -4498,6 +4506,9 @@ msgstr "Tidak bisa memulai ulang terminal"
 msgid "Couldn't restart the host service"
 msgstr "Tidak bisa memulai ulang layanan host"
 
+msgid "Couldn't restore \"{projectName}\""
+msgstr "Tidak dapat memulihkan \"{projectName}\""
+
 msgid "Couldn't save"
 msgstr "Tidak bisa menyimpan"
 
@@ -5088,13 +5099,13 @@ msgstr "Menghapus \"{deletedName}\""
 msgid "Deleted \"{hostName}\""
 msgstr "Menghapus \"{hostName}\""
 
-msgid "Deleted \"{projectName}\""
-msgstr "Menghapus \"{projectName}\""
+#. placeholder {0}: deletedUrls.length
+#. placeholder {1}: selected.length
+msgid "Deleted \"{projectName}\" from {0} of {1} devices. The others keep their copy."
+msgstr "\"{projectName}\" dihapus dari {0} dari {1} perangkat. Perangkat lain tetap menyimpan salinannya."
 
-#. placeholder {0}: results.length - failed.length
-#. placeholder {1}: hostIds.length
-msgid "Deleted \"{projectName}\" from {0} of {1} devices — unreachable devices keep their copy"
-msgstr "Menghapus \"{projectName}\" dari {0} dari {1} perangkat — perangkat yang tak terjangkau tetap menyimpan salinannya"
+msgid "Deleted \"{projectName}\". You can restore it from Settings → Projects for 30 days."
+msgstr "\"{projectName}\" dihapus. Anda dapat memulihkannya dari Pengaturan → Proyek selama 30 hari."
 
 msgid "Deleted {name}"
 msgstr "Menghapus {name}"
@@ -5231,6 +5242,9 @@ msgstr "Build pengembangan"
 
 msgid "Device: {selectedLabel}"
 msgstr "Perangkat: {selectedLabel}"
+
+msgid "Devices"
+msgstr "Perangkat"
 
 msgid "DevTools"
 msgstr "DevTools"
@@ -7276,6 +7290,9 @@ msgstr "Sembunyikan dari bilah"
 
 msgid "Hide from chart"
 msgstr "Sembunyikan dari grafik"
+
+msgid "Hide from sidebar"
+msgstr "Sembunyikan dari sidebar"
 
 msgid "Hide from Sidebar"
 msgstr "Sembunyikan dari Sidebar"
@@ -9598,9 +9615,6 @@ msgstr "Belum ada riwayat"
 msgid "No host is available for this port"
 msgstr "Tidak ada host yang tersedia untuk port ini"
 
-msgid "No host serving this project is reachable right now"
-msgstr "Tidak ada host yang melayani proyek ini yang bisa dijangkau saat ini"
-
 msgid "No hosts match \"{q}\"."
 msgstr "Tidak ada host yang cocok dengan \"{q}\"."
 
@@ -10225,11 +10239,11 @@ msgstr "Hanya pemilik host yang bisa mengubah lokasi ini."
 msgid "Only host owners can delete this host"
 msgstr "Hanya pemilik host yang bisa menghapus host ini"
 
-msgid "Only organization owners can delete this project."
-msgstr "Hanya pemilik organisasi yang bisa menghapus proyek ini."
-
 msgid "Only organization owners can modify these settings."
 msgstr "Hanya pemilik organisasi yang bisa mengubah pengaturan ini."
+
+msgid "Only organization owners or the device's owner can delete this project."
+msgstr "Hanya pemilik organisasi atau pemilik perangkat yang dapat menghapus proyek ini."
 
 msgid "Only owners can change membership."
 msgstr "Hanya pemilik yang bisa mengubah keanggotaan."
@@ -10266,6 +10280,9 @@ msgstr "Hanya orang yang membuat halaman ini yang dapat mengubahnya."
 
 msgid "Only the thread's author or the page's owner can delete it"
 msgstr "Hanya penulis thread atau pemilik halaman yang bisa menghapusnya"
+
+msgid "Only want it out of your sidebar? Hide it instead. Nobody else is affected."
+msgstr "Hanya ingin menghapusnya dari sidebar Anda? Sembunyikan saja. Tidak ada orang lain yang terpengaruh."
 
 msgid "Only you"
 msgstr "Hanya Anda"
@@ -10814,6 +10831,9 @@ msgstr "Perangkat lain"
 msgid "Other Hosts"
 msgstr "Host Lain"
 
+msgid "Other people are using this project. Type <0>{projectName}</0> to confirm."
+msgstr "Orang lain sedang menggunakan proyek ini. Ketik <0>{projectName}</0> untuk mengonfirmasi."
+
 msgid "Other Team Members"
 msgstr "Anggota Tim Lainnya"
 
@@ -10871,6 +10891,9 @@ msgstr "Dimiliki oleh {0} — hanya dia yang bisa mengedit otomatisasi ini."
 
 msgid "Owner"
 msgstr "Pemilik"
+
+msgid "Owner access required"
+msgstr "Akses pemilik diperlukan"
 
 msgid "Owns every PTY session and survives app restarts."
 msgstr "Memiliki setiap sesi PTY dan bertahan saat aplikasi dimulai ulang."
@@ -11885,6 +11908,9 @@ msgstr "PR terbaru"
 msgid "Recent pull requests"
 msgstr "Pull request terbaru"
 
+msgid "Recently deleted"
+msgstr "Baru dihapus"
+
 msgid "Recently Shipped"
 msgstr "Baru Dirilis"
 
@@ -12486,6 +12512,9 @@ msgstr "Pulihkan versi ini?"
 
 msgid "Restored"
 msgstr "Dipulihkan"
+
+msgid "Restored \"{projectName}\""
+msgstr "\"{projectName}\" dipulihkan"
 
 msgid "Restoring your session"
 msgstr "Memulihkan sesi Anda"
@@ -13980,6 +14009,9 @@ msgstr "Sebagian tema dilewati"
 msgid "Some triggers need additional configuration"
 msgstr "Sebagian pemicu perlu konfigurasi tambahan"
 
+msgid "Someone"
+msgstr "Seseorang"
+
 #. js-lingui-explicit-id
 msgid "serverError.page.entryPathHeldByColleague"
 msgstr "Orang lain sudah menerbitkan {entryPath} dari workspace ini. Terbitkan dengan id halaman yang eksplisit untuk menambahkan versi ke halaman mereka, atau pindahkan berkasnya."
@@ -15232,9 +15264,6 @@ msgstr "Branch remote sudah menyimpang. Lakukan pull sebelum melanjutkan."
 msgid "The repositories a cloud workspace checks out, and which one's .superset/config.json it acts on. The workspace opens on the config location, or on the first repository by name."
 msgstr "Repositori yang di-checkout oleh workspace cloud, dan .superset/config.json milik repositori mana yang diterapkan. Workspace dibuka di lokasi konfigurasi, atau di repositori pertama menurut nama."
 
-msgid "The repository folder itself is kept."
-msgstr "Folder repositori itu sendiri tetap dipertahankan."
-
 msgid "The request failed."
 msgstr "Permintaan gagal."
 
@@ -15540,8 +15569,8 @@ msgstr "Ini menghapus setiap worktree terpilih dari disk dan menghapus catatan w
 msgid "This removes the host, its access, and its workspaces. Files on the machine stay. A running host may reappear. This can’t be undone."
 msgstr "Ini menghapus host, aksesnya, dan workspace-nya. File di mesin itu tetap ada. Host yang berjalan bisa muncul lagi. Ini tidak bisa dibatalkan."
 
-msgid "This removes the project from every reachable device."
-msgstr "Ini menghapus proyek dari setiap perangkat yang dapat dijangkau."
+msgid "This removes the project and its workspaces for everyone on the selected devices, and stops their terminals and agents."
+msgstr "Ini menghapus proyek dan workspace-nya untuk semua orang di perangkat yang dipilih, serta menghentikan terminal dan agennya."
 
 msgid "This removes the worktree from disk and closes the workspace."
 msgstr "Ini menghapus worktree dari disk dan menutup workspace."
@@ -17058,9 +17087,6 @@ msgstr "Worktree"
 msgid "Worktrees are removed from disk; workspaces on the project's checkout only close. Files in the checkout stay as they are."
 msgstr "Worktree dihapus dari disk; workspace di checkout proyek hanya ditutup. File di checkout tetap seperti semula."
 
-msgid "Worktrees with uncommitted changes are left on disk."
-msgstr "Worktree dengan perubahan yang belum di-commit tetap berada di disk."
-
 msgid "Would you like to reassign it?"
 msgstr "Ingin menetapkannya ulang?"
 
@@ -17157,6 +17183,9 @@ msgstr "Anda melihat versi {version}, hanya-baca"
 
 msgid "You can attach up to {MAX_ATTACHMENTS} files"
 msgstr "Anda dapat melampirkan hingga {MAX_ATTACHMENTS} file"
+
+msgid "You can restore it from Settings → Projects for 30 days. The repository folder is never deleted."
+msgstr "Anda dapat memulihkannya dari Pengaturan → Proyek selama 30 hari. Folder repositori tidak pernah dihapus."
 
 #. placeholder {0}: COMPANY.DOMAIN
 msgid "You can't change this subscription in the app. Your organization's plan is managed by its owner at {0}."

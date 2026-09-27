@@ -104,6 +104,10 @@ msgstr "{0, plural, one {활성 포트 #개 — 세부 정보 숨기기} other {
 msgid "{0, plural, one {# active port — show details} other {# active ports — show details}}"
 msgstr "{0, plural, one {활성 포트 #개 — 세부 정보 표시} other {활성 포트 #개 — 세부 정보 표시}}"
 
+#. placeholder {0}: person.runningAgentCount
+msgid "{0, plural, one {# agent} other {# agents}}"
+msgstr "{0, plural, other {에이전트 #개}}"
+
 #. placeholder {0}: workspace.diffStats.fileCount
 msgid "{0, plural, one {# changed file} other {# changed files}}"
 msgstr "{0, plural, one {변경된 파일 #개} other {변경된 파일 #개}}"
@@ -212,6 +216,10 @@ msgstr "{0, plural, other {서브 에이전트 #개}}"
 #. placeholder {0}: TASKS.length
 msgid "{0, plural, one {# task} other {# tasks}}"
 msgstr "{0, plural, one {작업 #개} other {작업 #개}}"
+
+#. placeholder {0}: person.runningTerminalCount
+msgid "{0, plural, one {# terminal running} other {# terminals running}}"
+msgstr "{0, plural, other {터미널 #개 실행 중}}"
 
 #. placeholder {0}: entry.items.length
 msgid "{0, plural, one {# tool call} other {# tool calls}}"
@@ -663,6 +671,9 @@ msgstr "{days}일 {hours}시간"
 msgid "{days}d ago"
 msgstr "{days}일 전"
 
+msgid "{daysLeft, plural, one {# day left} other {# days left}}"
+msgstr "{daysLeft, plural, other {#일 남음}}"
+
 msgid "{daysRemaining, plural, one {Your account is deactivated and will be permanently deleted in # day. Reactivate to restore it exactly as you left it.} other {Your account is deactivated and will be permanently deleted in # days. Reactivate to restore it exactly as you left it.}}"
 msgstr "{daysRemaining, plural, one {계정이 비활성화되었으며 #일 후에 영구적으로 삭제됩니다. 다시 활성화하면 이전 상태 그대로 복원됩니다.} other {계정이 비활성화되었으며 #일 후에 영구적으로 삭제됩니다. 다시 활성화하면 이전 상태 그대로 복원됩니다.}}"
 
@@ -807,9 +818,6 @@ msgstr "{noun, select, person {사람을 한 명 이상 지정하거나 {choice}
 
 msgid "{noun, select, repository {Specify at least one repository.} channel {Specify at least one channel.} reaction {Specify at least one reaction.} dataSource {Specify at least one data source.} team {Specify at least one team.} project {Specify at least one project.} calendar {Specify at least one calendar.} other {Specify at least one entry.}}"
 msgstr "{noun, select, repository {리포지토리를 하나 이상 지정하세요.} channel {채널을 하나 이상 지정하세요.} reaction {리액션을 하나 이상 지정하세요.} dataSource {데이터 소스를 하나 이상 지정하세요.} team {팀을 하나 이상 지정하세요.} project {프로젝트를 하나 이상 지정하세요.} calendar {캘린더를 하나 이상 지정하세요.} other {항목을 하나 이상 지정하세요.}}"
-
-msgid "{offlineHostCount, plural, one {# device is offline and keeps its copy.} other {# devices are offline and keep their copy.}}"
-msgstr "{offlineHostCount, plural, one {기기 #대가 오프라인 상태이며 사본을 그대로 유지합니다.} other {기기 #대가 오프라인 상태이며 사본을 그대로 유지합니다.}}"
 
 msgid "{openCount} open"
 msgstr "{openCount}개 열림"
@@ -966,9 +974,6 @@ msgstr "{workspaceName}: 호스트를 사용할 수 없습니다"
 
 msgid "{workspaceName}: teardown failed"
 msgstr "{workspaceName}: 정리에 실패했습니다"
-
-msgid "{worktreeCount, plural, one {This removes the project and its # workspace from every reachable device, and deletes that worktree from disk.} other {This removes the project and its # workspaces from every reachable device, and deletes their worktrees from disk.}}"
-msgstr "{worktreeCount, plural, one {연결 가능한 모든 기기에서 프로젝트와 워크스페이스 #개를 제거하고, 해당 worktree를 디스크에서 삭제합니다.} other {연결 가능한 모든 기기에서 프로젝트와 워크스페이스 #개를 제거하고, 해당 worktree를 디스크에서 삭제합니다.}}"
 
 msgid "{years}y ago"
 msgstr "{years}년 전"
@@ -1377,6 +1382,9 @@ msgstr "활성화, 들어온 뒤 얼마나 쓰는지, 그리고 다시 돌아오
 
 msgid "Active"
 msgstr "활성"
+
+msgid "active {lastActive}"
+msgstr "{lastActive} 활동"
 
 msgid "Active agent sessions."
 msgstr "활성 에이전트 세션입니다."
@@ -4498,6 +4506,9 @@ msgstr "터미널을 다시 시작하지 못했습니다"
 msgid "Couldn't restart the host service"
 msgstr "호스트 서비스를 다시 시작하지 못했습니다"
 
+msgid "Couldn't restore \"{projectName}\""
+msgstr "\"{projectName}\"을(를) 복원하지 못했습니다"
+
 msgid "Couldn't save"
 msgstr "저장하지 못했습니다"
 
@@ -5088,13 +5099,13 @@ msgstr "\"{deletedName}\"을(를) 삭제했습니다"
 msgid "Deleted \"{hostName}\""
 msgstr "\"{hostName}\"을(를) 삭제했습니다"
 
-msgid "Deleted \"{projectName}\""
-msgstr "\"{projectName}\"을(를) 삭제했습니다"
+#. placeholder {0}: deletedUrls.length
+#. placeholder {1}: selected.length
+msgid "Deleted \"{projectName}\" from {0} of {1} devices. The others keep their copy."
+msgstr "기기 {1}대 중 {0}대에서 \"{projectName}\"을(를) 삭제했습니다. 나머지 기기에는 사본이 남아 있습니다."
 
-#. placeholder {0}: results.length - failed.length
-#. placeholder {1}: hostIds.length
-msgid "Deleted \"{projectName}\" from {0} of {1} devices — unreachable devices keep their copy"
-msgstr "기기 {1}대 중 {0}대에서 \"{projectName}\"을(를) 삭제했습니다 — 연결할 수 없는 기기에는 사본이 남습니다"
+msgid "Deleted \"{projectName}\". You can restore it from Settings → Projects for 30 days."
+msgstr "\"{projectName}\"을(를) 삭제했습니다. 30일 동안 설정 → 프로젝트에서 복원할 수 있습니다."
 
 msgid "Deleted {name}"
 msgstr "{name}을(를) 삭제했습니다"
@@ -5231,6 +5242,9 @@ msgstr "개발 빌드"
 
 msgid "Device: {selectedLabel}"
 msgstr "기기: {selectedLabel}"
+
+msgid "Devices"
+msgstr "기기"
 
 msgid "DevTools"
 msgstr "DevTools"
@@ -7276,6 +7290,9 @@ msgstr "바에서 숨기기"
 
 msgid "Hide from chart"
 msgstr "차트에서 숨기기"
+
+msgid "Hide from sidebar"
+msgstr "사이드바에서 숨기기"
 
 msgid "Hide from Sidebar"
 msgstr "사이드바에서 숨기기"
@@ -9598,9 +9615,6 @@ msgstr "아직 기록이 없습니다"
 msgid "No host is available for this port"
 msgstr "이 포트에 사용할 수 있는 호스트가 없습니다"
 
-msgid "No host serving this project is reachable right now"
-msgstr "지금은 이 프로젝트를 제공하는 호스트에 연결할 수 없습니다"
-
 msgid "No hosts match \"{q}\"."
 msgstr "\"{q}\"과(와) 일치하는 호스트가 없습니다."
 
@@ -10225,11 +10239,11 @@ msgstr "호스트 소유자만 이 위치를 변경할 수 있습니다."
 msgid "Only host owners can delete this host"
 msgstr "호스트 소유자만 이 호스트를 삭제할 수 있습니다"
 
-msgid "Only organization owners can delete this project."
-msgstr "조직 소유자만 이 프로젝트를 삭제할 수 있습니다."
-
 msgid "Only organization owners can modify these settings."
 msgstr "조직 소유자만 이 설정을 변경할 수 있습니다."
+
+msgid "Only organization owners or the device's owner can delete this project."
+msgstr "이 프로젝트는 조직 소유자 또는 기기 소유자만 삭제할 수 있습니다."
 
 msgid "Only owners can change membership."
 msgstr "소유자만 멤버십을 변경할 수 있습니다."
@@ -10266,6 +10280,9 @@ msgstr "이 페이지를 만든 사람만 변경할 수 있습니다."
 
 msgid "Only the thread's author or the page's owner can delete it"
 msgstr "스레드 작성자 또는 페이지 소유자만 삭제할 수 있습니다"
+
+msgid "Only want it out of your sidebar? Hide it instead. Nobody else is affected."
+msgstr "사이드바에서만 빼고 싶으신가요? 대신 숨기세요. 다른 사람에게는 영향이 없습니다."
 
 msgid "Only you"
 msgstr "나만"
@@ -10814,6 +10831,9 @@ msgstr "다른 기기"
 msgid "Other Hosts"
 msgstr "다른 호스트"
 
+msgid "Other people are using this project. Type <0>{projectName}</0> to confirm."
+msgstr "다른 사람이 이 프로젝트를 사용 중입니다. 확인하려면 <0>{projectName}</0>을(를) 입력하세요."
+
 msgid "Other Team Members"
 msgstr "다른 팀 멤버"
 
@@ -10871,6 +10891,9 @@ msgstr "{0} 소유 — 소유자만 이 자동화를 편집할 수 있습니다.
 
 msgid "Owner"
 msgstr "소유자"
+
+msgid "Owner access required"
+msgstr "소유자 권한 필요"
 
 msgid "Owns every PTY session and survives app restarts."
 msgstr "모든 PTY 세션을 소유하며 앱을 다시 시작해도 살아 있습니다."
@@ -11885,6 +11908,9 @@ msgstr "최근 PR"
 msgid "Recent pull requests"
 msgstr "최근 풀 리퀘스트"
 
+msgid "Recently deleted"
+msgstr "최근 삭제됨"
+
 msgid "Recently Shipped"
 msgstr "최근 출시"
 
@@ -12486,6 +12512,9 @@ msgstr "이 버전을 복원할까요?"
 
 msgid "Restored"
 msgstr "복원됨"
+
+msgid "Restored \"{projectName}\""
+msgstr "\"{projectName}\"을(를) 복원했습니다"
 
 msgid "Restoring your session"
 msgstr "세션을 복원하는 중"
@@ -13980,6 +14009,9 @@ msgstr "일부 테마를 건너뛰었습니다"
 msgid "Some triggers need additional configuration"
 msgstr "일부 트리거에는 추가 설정이 필요합니다"
 
+msgid "Someone"
+msgstr "누군가"
+
 #. js-lingui-explicit-id
 msgid "serverError.page.entryPathHeldByColleague"
 msgstr "다른 사람이 이 워크스페이스의 {entryPath}를 이미 게시했습니다. 페이지 ID를 명시해 그 페이지에 버전을 추가하거나 파일을 옮기세요."
@@ -15232,9 +15264,6 @@ msgstr "원격 브랜치가 갈라졌습니다. 계속하기 전에 pull하세�
 msgid "The repositories a cloud workspace checks out, and which one's .superset/config.json it acts on. The workspace opens on the config location, or on the first repository by name."
 msgstr "클라우드 워크스페이스가 체크아웃하는 리포지토리와 어느 리포지토리의 .superset/config.json을 적용할지 정합니다. 워크스페이스는 구성 위치에서, 없으면 이름순 첫 번째 리포지토리에서 열립니다."
 
-msgid "The repository folder itself is kept."
-msgstr "저장소 폴더 자체는 유지됩니다."
-
 msgid "The request failed."
 msgstr "요청이 실패했습니다."
 
@@ -15540,8 +15569,8 @@ msgstr "선택한 worktree를 디스크에서 모두 제거하고 해당 워크�
 msgid "This removes the host, its access, and its workspaces. Files on the machine stay. A running host may reappear. This can’t be undone."
 msgstr "호스트와 그 접근 권한, 워크스페이스가 제거됩니다. 컴퓨터의 파일은 그대로 남습니다. 호스트가 실행 중이면 다시 나타날 수 있습니다. 이 작업은 되돌릴 수 없습니다."
 
-msgid "This removes the project from every reachable device."
-msgstr "연결 가능한 모든 기기에서 프로젝트를 제거합니다."
+msgid "This removes the project and its workspaces for everyone on the selected devices, and stops their terminals and agents."
+msgstr "선택한 기기의 모든 사용자에게서 프로젝트와 작업 공간을 제거하고 터미널과 에이전트를 중지합니다."
 
 msgid "This removes the worktree from disk and closes the workspace."
 msgstr "worktree를 디스크에서 제거하고 워크스페이스를 닫습니다."
@@ -17058,9 +17087,6 @@ msgstr "worktree"
 msgid "Worktrees are removed from disk; workspaces on the project's checkout only close. Files in the checkout stay as they are."
 msgstr "worktree는 디스크에서 제거되며, 프로젝트 체크아웃에 있는 워크스페이스는 닫히기만 합니다. 체크아웃의 파일은 그대로 유지됩니다."
 
-msgid "Worktrees with uncommitted changes are left on disk."
-msgstr "커밋되지 않은 변경 사항이 있는 worktree는 디스크에 남습니다."
-
 msgid "Would you like to reassign it?"
 msgstr "다시 지정할까요?"
 
@@ -17157,6 +17183,9 @@ msgstr "버전 {version}을 읽기 전용으로 보고 있습니다"
 
 msgid "You can attach up to {MAX_ATTACHMENTS} files"
 msgstr "파일은 최대 {MAX_ATTACHMENTS}개까지 첨부할 수 있습니다"
+
+msgid "You can restore it from Settings → Projects for 30 days. The repository folder is never deleted."
+msgstr "30일 동안 설정 → 프로젝트에서 복원할 수 있습니다. 저장소 폴더는 절대 삭제되지 않습니다."
 
 #. placeholder {0}: COMPANY.DOMAIN
 msgid "You can't change this subscription in the app. Your organization's plan is managed by its owner at {0}."

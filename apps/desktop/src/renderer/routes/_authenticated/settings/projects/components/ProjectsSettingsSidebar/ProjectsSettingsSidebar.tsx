@@ -12,6 +12,7 @@ import {
 	SettingsListSidebar,
 	settingsListItemClass,
 } from "../../../components/SettingsListSidebar";
+import { RecentlyDeletedProjects } from "./components/RecentlyDeletedProjects";
 
 interface ProjectRow {
 	kind: "v1" | "v2";
@@ -78,6 +79,7 @@ export function ProjectsSettingsSidebar({
 			})}
 			hideFilterWhenEmpty
 			groups={listGroups}
+			listFooter={isV2CloudEnabled ? <RecentlyDeletedProjects /> : null}
 			filterRow={(row, q) => row.name.toLowerCase().includes(q.toLowerCase())}
 			getRowKey={(row) => `${row.kind}:${row.id}`}
 			emptyLabel={t({

@@ -104,6 +104,10 @@ msgstr "{0, plural, one {#個活動埠 — 隱藏詳情} other {#個活動埠 �
 msgid "{0, plural, one {# active port — show details} other {# active ports — show details}}"
 msgstr "{0, plural, one {#個活動埠 — 顯示詳情} other {#個活動埠 — 顯示詳情}}"
 
+#. placeholder {0}: person.runningAgentCount
+msgid "{0, plural, one {# agent} other {# agents}}"
+msgstr "{0, plural, other {# 個代理}}"
+
 #. placeholder {0}: workspace.diffStats.fileCount
 msgid "{0, plural, one {# changed file} other {# changed files}}"
 msgstr "{0, plural, one {#個已更改檔案} other {#個已更改檔案}}"
@@ -212,6 +216,10 @@ msgstr "{0, plural, other {# 個子代理程式}}"
 #. placeholder {0}: TASKS.length
 msgid "{0, plural, one {# task} other {# tasks}}"
 msgstr "{0, plural, one {#個任務} other {#個任務}}"
+
+#. placeholder {0}: person.runningTerminalCount
+msgid "{0, plural, one {# terminal running} other {# terminals running}}"
+msgstr "{0, plural, other {# 個終端機正在執行}}"
 
 #. placeholder {0}: entry.items.length
 msgid "{0, plural, one {# tool call} other {# tool calls}}"
@@ -663,6 +671,9 @@ msgstr "{days}天{hours}小時"
 msgid "{days}d ago"
 msgstr "{days}天前"
 
+msgid "{daysLeft, plural, one {# day left} other {# days left}}"
+msgstr "{daysLeft, plural, other {剩餘 # 天}}"
+
 msgid "{daysRemaining, plural, one {Your account is deactivated and will be permanently deleted in # day. Reactivate to restore it exactly as you left it.} other {Your account is deactivated and will be permanently deleted in # days. Reactivate to restore it exactly as you left it.}}"
 msgstr "{daysRemaining, plural, one {你的帳戶已停用，將在#天後被永久刪除。重新啟用即可恢復到你離開時的狀態。} other {你的帳戶已停用，將在#天後被永久刪除。重新啟用即可恢復到你離開時的狀態。}}"
 
@@ -807,9 +818,6 @@ msgstr "{noun, select, person {請至少指定一個人員，或選擇{choice}�
 
 msgid "{noun, select, repository {Specify at least one repository.} channel {Specify at least one channel.} reaction {Specify at least one reaction.} dataSource {Specify at least one data source.} team {Specify at least one team.} project {Specify at least one project.} calendar {Specify at least one calendar.} other {Specify at least one entry.}}"
 msgstr "{noun, select, repository {請至少指定一個倉庫。} channel {請至少指定一個頻道。} reaction {請至少指定一個回應。} dataSource {請至少指定一個資料來源。} team {請至少指定一個團隊。} project {請至少指定一個專案。} calendar {請至少指定一個日曆。} other {請至少指定一個項目。}}"
-
-msgid "{offlineHostCount, plural, one {# device is offline and keeps its copy.} other {# devices are offline and keep their copy.}}"
-msgstr "{offlineHostCount, plural, one {# 台裝置處於離線狀態，將保留其副本。} other {# 台裝置處於離線狀態，將保留其副本。}}"
 
 msgid "{openCount} open"
 msgstr "{openCount}項已開啟"
@@ -966,9 +974,6 @@ msgstr "{workspaceName}：主機不可用"
 
 msgid "{workspaceName}: teardown failed"
 msgstr "{workspaceName}：清理失敗"
-
-msgid "{worktreeCount, plural, one {This removes the project and its # workspace from every reachable device, and deletes that worktree from disk.} other {This removes the project and its # workspaces from every reachable device, and deletes their worktrees from disk.}}"
-msgstr "{worktreeCount, plural, one {這會從所有可連線的裝置中移除該專案及其 # 個工作區，並從磁碟刪除它們的worktree。} other {這會從所有可連線的裝置中移除該專案及其 # 個工作區，並從磁碟刪除它們的worktree。}}"
 
 msgid "{years}y ago"
 msgstr "{years}年前"
@@ -1377,6 +1382,9 @@ msgstr "啟用情況、進來之後的使用量，以及他們是否會回來。
 
 msgid "Active"
 msgstr "啟用中"
+
+msgid "active {lastActive}"
+msgstr "{lastActive}活躍"
 
 msgid "Active agent sessions."
 msgstr "活躍的代理程式會話。"
@@ -4498,6 +4506,9 @@ msgstr "無法重啟終端"
 msgid "Couldn't restart the host service"
 msgstr "無法重啟主機服務"
 
+msgid "Couldn't restore \"{projectName}\""
+msgstr "無法還原「{projectName}」"
+
 msgid "Couldn't save"
 msgstr "儲存失敗"
 
@@ -5088,13 +5099,13 @@ msgstr "已刪除「{deletedName}」"
 msgid "Deleted \"{hostName}\""
 msgstr "已刪除「{hostName}」"
 
-msgid "Deleted \"{projectName}\""
-msgstr "已刪除「{projectName}」"
+#. placeholder {0}: deletedUrls.length
+#. placeholder {1}: selected.length
+msgid "Deleted \"{projectName}\" from {0} of {1} devices. The others keep their copy."
+msgstr "已從 {1} 台裝置中的 {0} 台刪除「{projectName}」。其他裝置保留其副本。"
 
-#. placeholder {0}: results.length - failed.length
-#. placeholder {1}: hostIds.length
-msgid "Deleted \"{projectName}\" from {0} of {1} devices — unreachable devices keep their copy"
-msgstr "已從{1}臺裝置中的{0}臺刪除「{projectName}」——無法存取的裝置仍保留副本"
+msgid "Deleted \"{projectName}\". You can restore it from Settings → Projects for 30 days."
+msgstr "已刪除「{projectName}」。你可以在 30 天內從「設定 → 專案」還原。"
 
 msgid "Deleted {name}"
 msgstr "已刪除{name}"
@@ -5231,6 +5242,9 @@ msgstr "開發版本"
 
 msgid "Device: {selectedLabel}"
 msgstr "裝置：{selectedLabel}"
+
+msgid "Devices"
+msgstr "裝置"
 
 msgid "DevTools"
 msgstr "DevTools"
@@ -7276,6 +7290,9 @@ msgstr "從工具列隱藏"
 
 msgid "Hide from chart"
 msgstr "從圖表中隱藏"
+
+msgid "Hide from sidebar"
+msgstr "從側邊欄隱藏"
 
 msgid "Hide from Sidebar"
 msgstr "從側邊欄隱藏"
@@ -9598,9 +9615,6 @@ msgstr "暫無歷史"
 msgid "No host is available for this port"
 msgstr "此埠沒有可用的主機"
 
-msgid "No host serving this project is reachable right now"
-msgstr "目前無法存取任何提供此專案的主機"
-
 msgid "No hosts match \"{q}\"."
 msgstr "沒有與「{q}」匹配的主機。"
 
@@ -10225,11 +10239,11 @@ msgstr "只有主機擁有者可以更改此位置。"
 msgid "Only host owners can delete this host"
 msgstr "只有主機擁有者才能刪除此主機"
 
-msgid "Only organization owners can delete this project."
-msgstr "只有組織擁有者可以刪除此專案。"
-
 msgid "Only organization owners can modify these settings."
 msgstr "只有組織擁有者可以修改這些設定。"
+
+msgid "Only organization owners or the device's owner can delete this project."
+msgstr "只有組織擁有者或裝置擁有者可以刪除此專案。"
 
 msgid "Only owners can change membership."
 msgstr "只有擁有者可以更改成員。"
@@ -10266,6 +10280,9 @@ msgstr "只有建立此頁面的人才能變更這些設定。"
 
 msgid "Only the thread's author or the page's owner can delete it"
 msgstr "只有討論串的作者或頁面擁有者才能刪除它"
+
+msgid "Only want it out of your sidebar? Hide it instead. Nobody else is affected."
+msgstr "只是想把它從側邊欄移除？請改為隱藏。不會影響其他人。"
 
 msgid "Only you"
 msgstr "僅你自己"
@@ -10814,6 +10831,9 @@ msgstr "其他裝置"
 msgid "Other Hosts"
 msgstr "其他主機"
 
+msgid "Other people are using this project. Type <0>{projectName}</0> to confirm."
+msgstr "其他人正在使用此專案。輸入 <0>{projectName}</0> 以確認。"
+
 msgid "Other Team Members"
 msgstr "其他團隊成員"
 
@@ -10871,6 +10891,9 @@ msgstr "歸{0}所有，只有本人能編輯這個自動化。"
 
 msgid "Owner"
 msgstr "擁有者"
+
+msgid "Owner access required"
+msgstr "需要擁有者權限"
 
 msgid "Owns every PTY session and survives app restarts."
 msgstr "持有所有PTY會話，並在應用重啟後繼續存活。"
@@ -11885,6 +11908,9 @@ msgstr "最近的PR"
 msgid "Recent pull requests"
 msgstr "最近的拉取請求"
 
+msgid "Recently deleted"
+msgstr "最近刪除"
+
 msgid "Recently Shipped"
 msgstr "近期已釋出"
 
@@ -12486,6 +12512,9 @@ msgstr "恢復這個版本？"
 
 msgid "Restored"
 msgstr "已恢復"
+
+msgid "Restored \"{projectName}\""
+msgstr "已還原「{projectName}」"
 
 msgid "Restoring your session"
 msgstr "正在恢復你的會話"
@@ -13980,6 +14009,9 @@ msgstr "部分主題已被跳過"
 msgid "Some triggers need additional configuration"
 msgstr "部分觸發器需要額外配置"
 
+msgid "Someone"
+msgstr "某人"
+
 #. js-lingui-explicit-id
 msgid "serverError.page.entryPathHeldByColleague"
 msgstr "其他人已發佈此工作區中的 {entryPath}。使用明確的頁面 id 發佈以為其頁面新增版本，或移動該檔案。"
@@ -15232,9 +15264,6 @@ msgstr "遠端分支已分叉。請先拉取再繼續。"
 msgid "The repositories a cloud workspace checks out, and which one's .superset/config.json it acts on. The workspace opens on the config location, or on the first repository by name."
 msgstr "雲端工作區簽出的儲存庫，以及它套用哪個儲存庫的 .superset/config.json。工作區會在設定位置開啟，否則在依名稱排序的第一個儲存庫開啟。"
 
-msgid "The repository folder itself is kept."
-msgstr "儲存庫資料夾本身會保留。"
-
 msgid "The request failed."
 msgstr "請求失敗。"
 
@@ -15540,8 +15569,8 @@ msgstr "這會把每個選中的worktree從磁碟上移除，並刪除它的工�
 msgid "This removes the host, its access, and its workspaces. Files on the machine stay. A running host may reappear. This can’t be undone."
 msgstr "這將移除該主機、其存取權限及其工作區。機器上的檔案會保留。執行中的主機可能會重新出現。此操作無法復原。"
 
-msgid "This removes the project from every reachable device."
-msgstr "這會從所有可連線的裝置中移除該專案。"
+msgid "This removes the project and its workspaces for everyone on the selected devices, and stops their terminals and agents."
+msgstr "這會為所選裝置上的所有人移除此專案及其工作區，並停止其終端機和代理。"
 
 msgid "This removes the worktree from disk and closes the workspace."
 msgstr "這將從磁碟中移除該 worktree 並關閉工作區。"
@@ -17058,9 +17087,6 @@ msgstr "Worktree"
 msgid "Worktrees are removed from disk; workspaces on the project's checkout only close. Files in the checkout stay as they are."
 msgstr "worktree 會從磁碟中移除；位於專案簽出上的工作區僅會關閉。簽出中的檔案保持不變。"
 
-msgid "Worktrees with uncommitted changes are left on disk."
-msgstr "有未提交變更的worktree會保留在磁碟上。"
-
 msgid "Would you like to reassign it?"
 msgstr "要重新分配嗎？"
 
@@ -17157,6 +17183,9 @@ msgstr "您正在檢視版本 {version}，唯讀"
 
 msgid "You can attach up to {MAX_ATTACHMENTS} files"
 msgstr "最多可附加{MAX_ATTACHMENTS}個檔案"
+
+msgid "You can restore it from Settings → Projects for 30 days. The repository folder is never deleted."
+msgstr "你可以在 30 天內從「設定 → 專案」還原。儲存庫資料夾永遠不會被刪除。"
 
 #. placeholder {0}: COMPANY.DOMAIN
 msgid "You can't change this subscription in the app. Your organization's plan is managed by its owner at {0}."

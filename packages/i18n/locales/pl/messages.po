@@ -104,6 +104,10 @@ msgstr "{0, plural, one {# aktywny port — ukryj szczegóły} few {# aktywne po
 msgid "{0, plural, one {# active port — show details} other {# active ports — show details}}"
 msgstr "{0, plural, one {# aktywny port — pokaż szczegóły} few {# aktywne porty — pokaż szczegóły} many {# aktywnych portów — pokaż szczegóły} other {# aktywnego portu — pokaż szczegóły}}"
 
+#. placeholder {0}: person.runningAgentCount
+msgid "{0, plural, one {# agent} other {# agents}}"
+msgstr "{0, plural, one {# agent} few {# agenci} many {# agentów} other {# agenta}}"
+
 #. placeholder {0}: workspace.diffStats.fileCount
 msgid "{0, plural, one {# changed file} other {# changed files}}"
 msgstr "{0, plural, one {# zmieniony plik} few {# zmienione pliki} many {# zmienionych plików} other {# zmienionego pliku}}"
@@ -212,6 +216,10 @@ msgstr "{0, plural, one {# subagent} few {# subagenty} many {# subagentów} othe
 #. placeholder {0}: TASKS.length
 msgid "{0, plural, one {# task} other {# tasks}}"
 msgstr "{0, plural, one {# zadanie} few {# zadania} many {# zadań} other {# zadania}}"
+
+#. placeholder {0}: person.runningTerminalCount
+msgid "{0, plural, one {# terminal running} other {# terminals running}}"
+msgstr "{0, plural, one {# działający terminal} few {# działające terminale} many {# działających terminali} other {# działającego terminala}}"
 
 #. placeholder {0}: entry.items.length
 msgid "{0, plural, one {# tool call} other {# tool calls}}"
@@ -663,6 +671,9 @@ msgstr "{days} d {hours} godz."
 msgid "{days}d ago"
 msgstr "{days} dni temu"
 
+msgid "{daysLeft, plural, one {# day left} other {# days left}}"
+msgstr "{daysLeft, plural, one {Został # dzień} few {Zostały # dni} many {Zostało # dni} other {Zostało # dnia}}"
+
 msgid "{daysRemaining, plural, one {Your account is deactivated and will be permanently deleted in # day. Reactivate to restore it exactly as you left it.} other {Your account is deactivated and will be permanently deleted in # days. Reactivate to restore it exactly as you left it.}}"
 msgstr "{daysRemaining, plural, one {Konto jest dezaktywowane i zostanie trwale usunięte za # dzień. Reaktywuj je, aby przywrócić dokładnie taki stan jak przedtem.} few {Konto jest dezaktywowane i zostanie trwale usunięte za # dni. Reaktywuj je, aby przywrócić dokładnie taki stan jak przedtem.} many {Konto jest dezaktywowane i zostanie trwale usunięte za # dni. Reaktywuj je, aby przywrócić dokładnie taki stan jak przedtem.} other {Konto jest dezaktywowane i zostanie trwale usunięte za # dnia. Reaktywuj je, aby przywrócić dokładnie taki stan jak przedtem.}}"
 
@@ -807,9 +818,6 @@ msgstr "{noun, select, person {Podaj co najmniej jedną osobę lub wybierz {choi
 
 msgid "{noun, select, repository {Specify at least one repository.} channel {Specify at least one channel.} reaction {Specify at least one reaction.} dataSource {Specify at least one data source.} team {Specify at least one team.} project {Specify at least one project.} calendar {Specify at least one calendar.} other {Specify at least one entry.}}"
 msgstr "{noun, select, repository {Podaj co najmniej jedno repozytorium.} channel {Podaj co najmniej jeden kanał.} reaction {Podaj co najmniej jedną reakcję.} dataSource {Podaj co najmniej jedno źródło danych.} team {Podaj co najmniej jeden zespół.} project {Podaj co najmniej jeden projekt.} calendar {Podaj co najmniej jeden kalendarz.} other {Podaj co najmniej jedną pozycję.}}"
-
-msgid "{offlineHostCount, plural, one {# device is offline and keeps its copy.} other {# devices are offline and keep their copy.}}"
-msgstr "{offlineHostCount, plural, one {# urządzenie jest offline i zachowa swoją kopię.} few {# urządzenia są offline i zachowają swoje kopie.} many {# urządzeń jest offline i zachowa swoje kopie.} other {# urządzenia jest offline i zachowa swoje kopie.}}"
 
 msgid "{openCount} open"
 msgstr "{openCount} otwartych"
@@ -966,9 +974,6 @@ msgstr "{workspaceName}: host jest niedostępny"
 
 msgid "{workspaceName}: teardown failed"
 msgstr "{workspaceName}: sprzątanie nie powiodło się"
-
-msgid "{worktreeCount, plural, one {This removes the project and its # workspace from every reachable device, and deletes that worktree from disk.} other {This removes the project and its # workspaces from every reachable device, and deletes their worktrees from disk.}}"
-msgstr "{worktreeCount, plural, one {Spowoduje to usunięcie projektu i jego # obszaru roboczego z każdego dostępnego urządzenia oraz skasowanie tego worktree z dysku.} few {Spowoduje to usunięcie projektu i jego # obszarów roboczych z każdego dostępnego urządzenia oraz skasowanie ich worktree z dysku.} many {Spowoduje to usunięcie projektu i jego # obszarów roboczych z każdego dostępnego urządzenia oraz skasowanie ich worktree z dysku.} other {Spowoduje to usunięcie projektu i jego # obszaru roboczego z każdego dostępnego urządzenia oraz skasowanie ich worktree z dysku.}}"
 
 msgid "{years}y ago"
 msgstr "{years} lat temu"
@@ -1377,6 +1382,9 @@ msgstr "Aktywacja, ile korzystają po wejściu i czy wracają."
 
 msgid "Active"
 msgstr "Aktywna"
+
+msgid "active {lastActive}"
+msgstr "aktywny {lastActive}"
 
 msgid "Active agent sessions."
 msgstr "Aktywne sesje agentów."
@@ -4498,6 +4506,9 @@ msgstr "Nie udało się zrestartować terminali"
 msgid "Couldn't restart the host service"
 msgstr "Nie udało się zrestartować usługi hosta"
 
+msgid "Couldn't restore \"{projectName}\""
+msgstr "Nie udało się przywrócić „{projectName}”"
+
 msgid "Couldn't save"
 msgstr "Nie udało się zapisać"
 
@@ -5088,13 +5099,13 @@ msgstr "Usunięto „{deletedName}”"
 msgid "Deleted \"{hostName}\""
 msgstr "Usunięto „{hostName}”"
 
-msgid "Deleted \"{projectName}\""
-msgstr "Usunięto „{projectName}”"
+#. placeholder {0}: deletedUrls.length
+#. placeholder {1}: selected.length
+msgid "Deleted \"{projectName}\" from {0} of {1} devices. The others keep their copy."
+msgstr "Usunięto „{projectName}” z {0} z {1} urządzeń. Pozostałe zachowują swoją kopię."
 
-#. placeholder {0}: results.length - failed.length
-#. placeholder {1}: hostIds.length
-msgid "Deleted \"{projectName}\" from {0} of {1} devices — unreachable devices keep their copy"
-msgstr "Usunięto „{projectName}” z {0} z {1} urządzeń — nieosiągalne urządzenia zachowują swoją kopię"
+msgid "Deleted \"{projectName}\". You can restore it from Settings → Projects for 30 days."
+msgstr "Usunięto „{projectName}”. Możesz go przywrócić w Ustawienia → Projekty przez 30 dni."
 
 msgid "Deleted {name}"
 msgstr "Usunięto {name}"
@@ -5231,6 +5242,9 @@ msgstr "Kompilacja deweloperska"
 
 msgid "Device: {selectedLabel}"
 msgstr "Urządzenie: {selectedLabel}"
+
+msgid "Devices"
+msgstr "Urządzenia"
 
 msgid "DevTools"
 msgstr "DevTools"
@@ -7276,6 +7290,9 @@ msgstr "Ukryj na pasku"
 
 msgid "Hide from chart"
 msgstr "Ukryj na wykresie"
+
+msgid "Hide from sidebar"
+msgstr "Ukryj na pasku bocznym"
 
 msgid "Hide from Sidebar"
 msgstr "Ukryj z paska bocznego"
@@ -9598,9 +9615,6 @@ msgstr "Brak historii"
 msgid "No host is available for this port"
 msgstr "Brak dostępnego hosta dla tego portu"
 
-msgid "No host serving this project is reachable right now"
-msgstr "Żaden host obsługujący ten projekt nie jest teraz osiągalny"
-
 msgid "No hosts match \"{q}\"."
 msgstr "Żaden host nie pasuje do „{q}”."
 
@@ -10225,11 +10239,11 @@ msgstr "Tylko właściciele hosta mogą zmienić tę lokalizację."
 msgid "Only host owners can delete this host"
 msgstr "Tylko właściciele hosta mogą usunąć tego hosta"
 
-msgid "Only organization owners can delete this project."
-msgstr "Tylko właściciele organizacji mogą usunąć ten projekt."
-
 msgid "Only organization owners can modify these settings."
 msgstr "Tylko właściciele organizacji mogą zmieniać te ustawienia."
+
+msgid "Only organization owners or the device's owner can delete this project."
+msgstr "Ten projekt mogą usunąć tylko właściciele organizacji lub właściciel urządzenia."
 
 msgid "Only owners can change membership."
 msgstr "Tylko właściciele mogą zmieniać dostęp."
@@ -10266,6 +10280,9 @@ msgstr "Tylko osoba, która utworzyła tę stronę, może to zmienić."
 
 msgid "Only the thread's author or the page's owner can delete it"
 msgstr "Tylko autor wątku lub właściciel strony może go usunąć"
+
+msgid "Only want it out of your sidebar? Hide it instead. Nobody else is affected."
+msgstr "Chcesz tylko usunąć go z paska bocznego? Ukryj go. Nikogo innego to nie dotyczy."
 
 msgid "Only you"
 msgstr "Tylko Ty"
@@ -10814,6 +10831,9 @@ msgstr "Inne urządzenia"
 msgid "Other Hosts"
 msgstr "Inne hosty"
 
+msgid "Other people are using this project. Type <0>{projectName}</0> to confirm."
+msgstr "Inne osoby używają tego projektu. Wpisz <0>{projectName}</0>, aby potwierdzić."
+
 msgid "Other Team Members"
 msgstr "Pozostali członkowie zespołu"
 
@@ -10871,6 +10891,9 @@ msgstr "Właściciel: {0} — tylko ta osoba może edytować tę automatyzację.
 
 msgid "Owner"
 msgstr "Właściciel"
+
+msgid "Owner access required"
+msgstr "Wymagany dostęp właściciela"
 
 msgid "Owns every PTY session and survives app restarts."
 msgstr "Jest właścicielem każdej sesji PTY i przeżywa restarty aplikacji."
@@ -11885,6 +11908,9 @@ msgstr "Ostatnie PR-y"
 msgid "Recent pull requests"
 msgstr "Ostatnie pull requesty"
 
+msgid "Recently deleted"
+msgstr "Ostatnio usunięte"
+
 msgid "Recently Shipped"
 msgstr "Ostatnio wydane"
 
@@ -12486,6 +12512,9 @@ msgstr "Przywrócić tę wersję?"
 
 msgid "Restored"
 msgstr "Przywrócona"
+
+msgid "Restored \"{projectName}\""
+msgstr "Przywrócono „{projectName}”"
 
 msgid "Restoring your session"
 msgstr "Przywracanie sesji"
@@ -13980,6 +14009,9 @@ msgstr "Część motywów pominięto"
 msgid "Some triggers need additional configuration"
 msgstr "Część wyzwalaczy wymaga dodatkowej konfiguracji"
 
+msgid "Someone"
+msgstr "Ktoś"
+
 #. js-lingui-explicit-id
 msgid "serverError.page.entryPathHeldByColleague"
 msgstr "Ktoś inny opublikował już {entryPath} z tego workspace. Opublikuj z jawnym identyfikatorem strony, aby dodać wersję do jego strony, albo przenieś plik."
@@ -15232,9 +15264,6 @@ msgstr "Zdalna gałąź się rozjechała. Pobierz zmiany przed kontynuowaniem."
 msgid "The repositories a cloud workspace checks out, and which one's .superset/config.json it acts on. The workspace opens on the config location, or on the first repository by name."
 msgstr "Repozytoria, które obszar roboczy w chmurze pobiera, oraz to, którego .superset/config.json stosuje. Obszar roboczy otwiera się w lokalizacji konfiguracji lub w pierwszym repozytorium według nazwy."
 
-msgid "The repository folder itself is kept."
-msgstr "Sam folder repozytorium zostaje zachowany."
-
 msgid "The request failed."
 msgstr "Żądanie nie powiodło się."
 
@@ -15540,8 +15569,8 @@ msgstr "Usuwa z dysku każdy zaznaczony worktree i kasuje jego wpis obszaru robo
 msgid "This removes the host, its access, and its workspaces. Files on the machine stay. A running host may reappear. This can’t be undone."
 msgstr "Usuwa hosta, dostęp do niego i jego obszary robocze. Pliki na maszynie zostają. Działający host może pojawić się ponownie. Tej operacji nie można cofnąć."
 
-msgid "This removes the project from every reachable device."
-msgstr "Spowoduje to usunięcie projektu z każdego dostępnego urządzenia."
+msgid "This removes the project and its workspaces for everyone on the selected devices, and stops their terminals and agents."
+msgstr "Spowoduje to usunięcie projektu i jego obszarów roboczych dla wszystkich na wybranych urządzeniach oraz zatrzymanie ich terminali i agentów."
 
 msgid "This removes the worktree from disk and closes the workspace."
 msgstr "Spowoduje to usunięcie worktree z dysku i zamknięcie obszaru roboczego."
@@ -17058,9 +17087,6 @@ msgstr "Worktrees"
 msgid "Worktrees are removed from disk; workspaces on the project's checkout only close. Files in the checkout stay as they are."
 msgstr "Worktree są usuwane z dysku; obszary robocze na checkoucie projektu są tylko zamykane. Pliki w checkoucie pozostają bez zmian."
 
-msgid "Worktrees with uncommitted changes are left on disk."
-msgstr "Worktree z niezatwierdzonymi zmianami pozostają na dysku."
-
 msgid "Would you like to reassign it?"
 msgstr "Czy przypisać ponownie?"
 
@@ -17157,6 +17183,9 @@ msgstr "Przeglądasz wersję {version}, tylko do odczytu"
 
 msgid "You can attach up to {MAX_ATTACHMENTS} files"
 msgstr "Możesz dołączyć maksymalnie {MAX_ATTACHMENTS} plików"
+
+msgid "You can restore it from Settings → Projects for 30 days. The repository folder is never deleted."
+msgstr "Możesz go przywrócić w Ustawienia → Projekty przez 30 dni. Folder repozytorium nigdy nie jest usuwany."
 
 #. placeholder {0}: COMPANY.DOMAIN
 msgid "You can't change this subscription in the app. Your organization's plan is managed by its owner at {0}."
