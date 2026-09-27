@@ -65,6 +65,9 @@ function claimedSessionNames(ctx: HostServiceContext): string[] {
  * no branch semantics beyond the repo's own `main` — but a real workspace
  * row, so terminals, chat, agents, and git status all work unchanged.
  */
+/** Until a name is typed or generated; the folder stays unique on its own. */
+const NEW_SESSION_NAME = "New session";
+
 export const createSession = protectedProcedure
 	.input(createSessionInputSchema)
 	.mutation(async ({ ctx, input }) => {
@@ -135,7 +138,7 @@ export const createSession = protectedProcedure
 				projectId: null,
 				worktreePath: repoPath,
 				branch: "main",
-				name: typedName || folderName,
+				name: typedName || NEW_SESSION_NAME,
 				type: "session",
 				createdByUserId: ctx.userId ?? null,
 				tags: input.tags,

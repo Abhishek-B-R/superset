@@ -156,6 +156,9 @@ const createInputSchema = z
 		},
 	);
 
+/** Until a name is typed or generated; the branch stays unique on its own. */
+const NEW_WORKSPACE_NAME = "New workspace";
+
 /** "local", then "local 2", "local 3", … among the project's live local rows. */
 function nextLocalWorkspaceName(
 	ctx: HostServiceContext,
@@ -942,7 +945,7 @@ export const workspacesRouter = router({
 								ctx,
 								id: input.id,
 								projectId: input.projectId,
-								name: input.name ?? prMetadata.title ?? resolvedBranch,
+								name: input.name ?? prMetadata.title ?? NEW_WORKSPACE_NAME,
 								branch: resolvedBranch,
 								worktreePath,
 								taskId: input.taskId,
@@ -1170,7 +1173,7 @@ export const workspacesRouter = router({
 										projectId: input.projectId,
 										branch: resolvedBranch,
 										worktreePath,
-										workspaceName: input.name ?? resolvedBranch,
+										workspaceName: input.name ?? NEW_WORKSPACE_NAME,
 										baseBranch: baseShortName,
 										idempotencyId: input.id,
 										taskId: input.taskId,
@@ -1220,7 +1223,7 @@ export const workspacesRouter = router({
 								ctx,
 								id: input.id,
 								projectId: input.projectId,
-								name: input.name ?? resolvedBranch,
+								name: input.name ?? NEW_WORKSPACE_NAME,
 								branch: resolvedBranch,
 								worktreePath,
 								taskId: input.taskId,

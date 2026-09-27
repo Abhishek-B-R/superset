@@ -63,7 +63,10 @@ const title = {
 	branchName: "fix-login",
 };
 
+const uniqueSlug = /^[a-z]+-[a-z]+-[0-9a-f]{8}(?:-\d+)?$/;
+
 for (const kind of ["session", "worktree"] as const) {
+	const placeholder = kind === "session" ? "New session" : "New workspace";
 	async function fixture() {
 		const scenario = await createBasicScenario();
 		const id = crypto.randomUUID();
@@ -135,16 +138,14 @@ for (const kind of ["session", "worktree"] as const) {
 			const result = await f.create({
 				namingPrompt: "https://superset.sh please fix login",
 			});
-			expect(result.workspace.name).toMatch(
-				/^[a-z]+-[a-z]+-[0-9a-f]{8}(?:-\d+)?$/,
-			);
-			expect(result.workspace.name).not.toContain("https");
+			expect(result.workspace.name).toBe(placeholder);
 			await until(() => f.generator.mock.calls.length === 1);
 			const initial = f.row();
 			if (!initial) throw new Error("Workspace row missing");
-			const branch = initial.branch;
-			expect(branch).toBe(kind === "session" ? "main" : result.workspace.name);
-			expect(basename(initial.worktreePath)).toBe(result.workspace.name);
+			const folder = basename(initial.worktreePath);
+			expect(folder).toMatch(uniqueSlug);
+			expect(folder).not.toContain("https");
+			expect(initial.branch).toBe(kind === "session" ? "main" : folder);
 			f.deferred.resolve(title);
 			await until(() => f.row()?.name === title.title);
 			expect(f.row()?.worktreePath).toBe(initial.worktreePath);
@@ -167,12 +168,12 @@ for (const kind of ["session", "worktree"] as const) {
 		const f = await fixture();
 		try {
 			const result = await f.create({ namingPrompt: undefined });
-			expect(result.workspace.name).toMatch(
-				/^[a-z]+-[a-z]+-[0-9a-f]{8}(?:-\d+)?$/,
-			);
-			expect(f.row()?.name).toBe(result.workspace.name);
+			expect(result.workspace.name).toBe(placeholder);
+			expect(f.row()?.name).toBe(placeholder);
+			const folder = basename(f.row()?.worktreePath ?? "");
+			expect(folder).toMatch(uniqueSlug);
 			expect(result.workspace.branch).toBe(
-				kind === "session" ? "main" : result.workspace.name,
+				kind === "session" ? "main" : folder,
 			);
 			expect(f.generator).not.toHaveBeenCalled();
 		} finally {
