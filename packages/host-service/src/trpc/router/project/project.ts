@@ -845,13 +845,26 @@ export const projectRouter = router({
 	 * UI can offer an explicit "delete files too" follow-up.
 	 */
 	remove: machineOnlyProcedure
-		.input(z.object({ projectId: z.string().uuid() }))
+		.input(
+			z.object({
+				projectId: z.string().uuid(),
+				acknowledgedOtherUsersWorkspaceCount: z
+					.number()
+					.int()
+					.nonnegative()
+					.optional(),
+			}),
+		)
 		.mutation(async ({ ctx, input }) => {
 			const localProject = ctx.db.query.projects
 				.findFirst({ where: eq(projects.id, input.projectId) })
 				.sync();
 			if (!localProject) return { success: true, repoPath: null };
-			await requireProjectDeletionAccess(ctx, input.projectId);
+			await requireProjectDeletionAccess(
+				ctx,
+				input.projectId,
+				input.acknowledgedOtherUsersWorkspaceCount,
+			);
 
 			// The project-row delete below cascades tombstones away — removing a
 			// project intentionally drops its workspace history. Sweep worktrees

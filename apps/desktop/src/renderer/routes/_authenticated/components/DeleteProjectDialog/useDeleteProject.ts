@@ -6,6 +6,7 @@ import { useHostUrls } from "renderer/hooks/host-service/useHostTargetUrl";
 import { useKnownHosts } from "renderer/hooks/known-hosts/useKnownHosts";
 import { getHostServiceClientByUrl } from "renderer/lib/host-service-client";
 import { useProjectDeletionHosts } from "renderer/routes/_authenticated/hooks/useProjectDeletionHosts";
+import { useHostWorkspaces } from "renderer/routes/_authenticated/providers/HostWorkspacesProvider";
 import {
 	defaultProjectDeletionSelection,
 	selectedProjectDeletionTargets,
@@ -35,6 +36,7 @@ export function useDeleteProject({
 		creatorByHostId,
 	});
 	const { hosts } = useKnownHosts();
+	const { cache: workspacesCache } = useHostWorkspaces();
 	const hostUrls = useHostUrls(hostIds);
 	const targets = hostUrls.map((host) => {
 		const hostAccess = access.find((entry) => entry.hostId === host.hostId);
@@ -76,9 +78,15 @@ export function useDeleteProject({
 				reachableHosts.map((host) =>
 					getHostServiceClientByUrl(host.url).project.remove.mutate({
 						projectId,
+						acknowledgedOtherUsersWorkspaceCount: host.otherUsersWorkspaceCount,
 					}),
 				),
 			);
+			results.forEach((result, index) => {
+				const host = reachableHosts[index];
+				if (result.status === "rejected" && host)
+					workspacesCache.invalidateHost(host.hostId);
+			});
 			const failed = results.filter((r) => r.status === "rejected");
 			if (failed.length === results.length) {
 				const first = failed[0] as PromiseRejectedResult;

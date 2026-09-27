@@ -18,6 +18,8 @@ let workspaces: {
 	createdByUserId: string | null;
 }[] = [];
 const requests: string[] = [];
+const acknowledged: (number | undefined)[] = [];
+const invalidated: string[] = [];
 mock.module("renderer/lib/auth-client", () => ({
 	authClient: { useSession: () => ({ data: { user: { id: "member" } } }) },
 }));
@@ -48,7 +50,13 @@ mock.module("renderer/lib/cloud-trpc", () => ({
 }));
 mock.module(
 	"renderer/routes/_authenticated/providers/HostWorkspacesProvider",
-	() => ({ useHostWorkspaces: () => ({ workspaces, isReady: false }) }),
+	() => ({
+		useHostWorkspaces: () => ({
+			workspaces,
+			isReady: false,
+			cache: { invalidateHost: (hostId: string) => invalidated.push(hostId) },
+		}),
+	}),
 );
 mock.module("renderer/hooks/host-service/useHostTargetUrl", () => ({
 	useHostUrls: (ids: string[]) =>
@@ -70,8 +78,11 @@ mock.module("renderer/lib/host-service-client", () => ({
 	getHostServiceClientByUrl: (url: string) => ({
 		project: {
 			remove: {
-				mutate: async () => {
+				mutate: async (input: {
+					acknowledgedOtherUsersWorkspaceCount?: number;
+				}) => {
 					requests.push(url);
+					acknowledged.push(input.acknowledgedOtherUsersWorkspaceCount);
 					if (url === "shared" && failShared)
 						throw new Error("Remote rejected deletion");
 				},
@@ -89,6 +100,8 @@ const { useDeleteProject } = await import("../useDeleteProject");
 afterEach(() => {
 	cleanup();
 	requests.length = 0;
+	acknowledged.length = 0;
+	invalidated.length = 0;
 	isOwner = false;
 	remoteOnline = true;
 	localReachable = true;
@@ -371,4 +384,44 @@ test("an offline local copy does not take the default from a sole online remote"
 		}),
 	);
 	expect(result.current.defaultSelectedHostIds).toEqual(["shared"]);
+});
+
+test("each device is told how many of other people's workspaces the user was warned about", async () => {
+	isOwner = true;
+	workspaces = [
+		{ projectId: "project", hostId: "shared", createdByUserId: "other" },
+		{ projectId: "project", hostId: "shared", createdByUserId: "other" },
+	];
+	const { result } = renderHook(() =>
+		useDeleteProject({
+			projectId: "project",
+			projectName: "Project",
+			hostIds: ["personal", "shared"],
+			selectedHostIds: ["personal", "shared"],
+			creatorByHostId: creators,
+		}),
+	);
+	await act(async () => {
+		await result.current.deleteProject();
+	});
+	expect(requests).toEqual(["personal", "shared"]);
+	expect(acknowledged).toEqual([0, 2]);
+});
+
+test("a device that refuses gets its workspace list refreshed", async () => {
+	isOwner = true;
+	failShared = true;
+	const { result } = renderHook(() =>
+		useDeleteProject({
+			projectId: "project",
+			projectName: "Project",
+			hostIds: ["personal", "shared"],
+			selectedHostIds: ["personal", "shared"],
+			creatorByHostId: creators,
+		}),
+	);
+	await act(async () => {
+		expect(await result.current.deleteProject()).toBe(false);
+	});
+	expect(invalidated).toEqual(["shared"]);
 });

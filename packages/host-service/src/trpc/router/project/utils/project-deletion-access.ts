@@ -40,6 +40,7 @@ export function readProjectDeletionEligibility(
 export async function requireProjectDeletionAccess(
 	ctx: Pick<HostServiceContext, "db" | "api" | "organizationId" | "userId">,
 	projectId: string,
+	acknowledgedOtherUsersWorkspaceCount?: number,
 ): Promise<void> {
 	const { userId } = ctx;
 	if (!userId) {
@@ -49,6 +50,17 @@ export async function requireProjectDeletionAccess(
 		});
 	}
 	const eligibility = readProjectDeletionEligibility(ctx.db, projectId, userId);
+	if (
+		eligibility &&
+		acknowledgedOtherUsersWorkspaceCount !== undefined &&
+		eligibility.otherUsersWorkspaceCount > acknowledgedOtherUsersWorkspaceCount
+	) {
+		throw new TRPCError({
+			code: "CONFLICT",
+			message:
+				"Other people are using this project on this device. Review the warning and try again.",
+		});
+	}
 	if (
 		eligibility?.createdByCaller &&
 		eligibility.otherUsersWorkspaceCount === 0

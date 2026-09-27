@@ -149,3 +149,36 @@ test("an unreachable API refuses with a typed error instead of a 500", async () 
 		),
 	).rejects.toMatchObject({ code: "PRECONDITION_FAILED" });
 });
+
+test("a delete that under-counts other people's workspaces is refused before any owner check", async () => {
+	const calls: unknown[] = [];
+	const db = seed({
+		creator: "alice",
+		workspaceCreators: [{ userId: "bob" }, { userId: "carol" }],
+	});
+	await expect(
+		requireProjectDeletionAccess(
+			contextFor(db, "owner", true, calls),
+			PROJECT_ID,
+			0,
+		),
+	).rejects.toMatchObject({ code: "CONFLICT" });
+	await expect(
+		requireProjectDeletionAccess(
+			contextFor(db, "owner", true, calls),
+			PROJECT_ID,
+			1,
+		),
+	).rejects.toMatchObject({ code: "CONFLICT" });
+	expect(calls).toEqual([]);
+	await requireProjectDeletionAccess(
+		contextFor(db, "owner", true),
+		PROJECT_ID,
+		2,
+	);
+});
+
+test("a caller that sends no acknowledged count keeps the previous behavior", async () => {
+	const db = seed({ creator: "alice", workspaceCreators: [{ userId: "bob" }] });
+	await requireProjectDeletionAccess(contextFor(db, "owner", true), PROJECT_ID);
+});
