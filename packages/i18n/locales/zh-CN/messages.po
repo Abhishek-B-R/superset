@@ -4192,9 +4192,6 @@ msgstr "把其他浏览器的浏览历史和登录信息复制到Superset。原�
 msgid "Copy your key now — you won't be able to see it again."
 msgstr "请立即复制你的密钥，之后将无法再次查看。"
 
-msgid "Copying configuration"
-msgstr "正在复制配置"
-
 msgid "Cost"
 msgstr "费用"
 
@@ -4469,6 +4466,9 @@ msgstr "无法加载你的资料，编辑已停用。"
 msgid "Couldn't merge pull request"
 msgstr "无法合并拉取请求"
 
+msgid "Couldn't name \"{name}\" automatically"
+msgstr "无法自动命名“{name}”"
+
 msgid "Couldn't parse this diff: {patchParseError}"
 msgstr "无法解析这个差异：{patchParseError}"
 
@@ -4721,9 +4721,6 @@ msgstr "创建中"
 
 msgid "Creating"
 msgstr "创建中"
-
-msgid "Creating git worktree"
-msgstr "正在创建git worktree"
 
 msgid "Creating PR..."
 msgstr "正在创建PR…"
@@ -6661,9 +6658,6 @@ msgstr "筛选"
 msgid "Filters, {activeFilterCount} active"
 msgstr "筛选，{activeFilterCount}项生效"
 
-msgid "Finalizing setup"
-msgstr "正在完成设置"
-
 msgid "Find"
 msgstr "查找"
 
@@ -7697,9 +7691,6 @@ msgstr "初始化Git"
 msgid "Initialize Git Repository?"
 msgstr "初始化Git仓库？"
 
-msgid "Initializing session"
-msgstr "正在初始化会话"
-
 msgid "Initializing..."
 msgstr "正在初始化..."
 
@@ -7941,6 +7932,9 @@ msgstr "议题URL必须匹配{repoMismatch}。"
 
 msgid "Issue…"
 msgstr "议题…"
+
+msgid "It keeps the title from your prompt."
+msgstr "将保留根据你的提示生成的标题。"
 
 msgid "It may be asleep"
 msgstr "设备可能处于睡眠状态"
@@ -14732,9 +14726,6 @@ msgstr "同步仓库"
 msgid "Sync started"
 msgstr "同步已开始"
 
-msgid "Syncing with remote"
-msgstr "正在与远程同步"
-
 msgid "Syncing..."
 msgstr "正在同步..."
 
@@ -16456,9 +16447,6 @@ msgstr "核实这里"
 
 msgid "Verify your identity"
 msgstr "验证你的身份"
-
-msgid "Verifying base branch"
-msgstr "正在校验基础分支"
 
 msgid "Version"
 msgstr "版本"

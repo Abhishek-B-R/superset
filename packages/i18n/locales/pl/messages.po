@@ -4192,9 +4192,6 @@ msgstr "Skopiuj historię przeglądania i dane logowania z innej przeglądarki d
 msgid "Copy your key now — you won't be able to see it again."
 msgstr "Skopiuj klucz teraz — nie zobaczysz go ponownie."
 
-msgid "Copying configuration"
-msgstr "Kopiowanie konfiguracji"
-
 msgid "Cost"
 msgstr "Koszt"
 
@@ -4469,6 +4466,9 @@ msgstr "Nie udało się wczytać Twojego profilu, więc edycja jest wyłączona.
 msgid "Couldn't merge pull request"
 msgstr "Nie udało się scalić pull requesta"
 
+msgid "Couldn't name \"{name}\" automatically"
+msgstr "Nie udało się automatycznie nazwać „{name}”"
+
 msgid "Couldn't parse this diff: {patchParseError}"
 msgstr "Nie udało się przetworzyć tych różnic: {patchParseError}"
 
@@ -4721,9 +4721,6 @@ msgstr "tworzenie"
 
 msgid "Creating"
 msgstr "Tworzenie"
-
-msgid "Creating git worktree"
-msgstr "Tworzenie worktree gita"
 
 msgid "Creating PR..."
 msgstr "Tworzenie PR…"
@@ -6661,9 +6658,6 @@ msgstr "Filtry"
 msgid "Filters, {activeFilterCount} active"
 msgstr "Filtry, aktywne: {activeFilterCount}"
 
-msgid "Finalizing setup"
-msgstr "Finalizowanie konfiguracji"
-
 msgid "Find"
 msgstr "Znajdź"
 
@@ -7697,9 +7691,6 @@ msgstr "Zainicjuj Git"
 msgid "Initialize Git Repository?"
 msgstr "Zainicjować repozytorium Git?"
 
-msgid "Initializing session"
-msgstr "Inicjowanie sesji"
-
 msgid "Initializing..."
 msgstr "Inicjowanie..."
 
@@ -7941,6 +7932,9 @@ msgstr "URL zgłoszenia musi pasować do {repoMismatch}."
 
 msgid "Issue…"
 msgstr "Zgłoszenie…"
+
+msgid "It keeps the title from your prompt."
+msgstr "Zachowa tytuł z Twojego polecenia."
 
 msgid "It may be asleep"
 msgstr "Może być uśpiony"
@@ -14732,9 +14726,6 @@ msgstr "Synchronizuj repozytoria"
 msgid "Sync started"
 msgstr "Rozpoczęto synchronizację"
 
-msgid "Syncing with remote"
-msgstr "Synchronizacja ze zdalnym repozytorium"
-
 msgid "Syncing..."
 msgstr "Synchronizowanie..."
 
@@ -16456,9 +16447,6 @@ msgstr "Zweryfikuj to"
 
 msgid "Verify your identity"
 msgstr "Zweryfikować Twoją tożsamość"
-
-msgid "Verifying base branch"
-msgstr "Weryfikacja gałęzi bazowej"
 
 msgid "Version"
 msgstr "Wersja"
