@@ -443,7 +443,6 @@ export async function listDirectory({
 }
 
 export async function readFile({
-	rootPath,
 	absolutePath,
 	offset,
 	maxBytes,
@@ -456,13 +455,6 @@ export async function readFile({
 	encoding?: string;
 }): Promise<FsReadResult> {
 	const targetPath = normalizeAbsolutePath(absolutePath);
-	// Explicit outside-root paths are readable, but a path that lexically sits
-	// inside the workspace must also physically resolve there — otherwise a
-	// malicious repo symlink (docs/config.yml -> ~/.ssh/id_rsa) could disguise
-	// a sensitive host file as a workspace file.
-	if (isPathWithinRoot(rootPath, targetPath)) {
-		await assertRealpathWithinRoot(rootPath, targetPath);
-	}
 
 	const fileHandle = await fs.open(targetPath, "r");
 	try {
