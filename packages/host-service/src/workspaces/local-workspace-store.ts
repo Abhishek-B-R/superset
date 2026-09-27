@@ -16,6 +16,11 @@ import type { EventBus } from "../events";
 import type { WorkspaceSnapshot } from "../events/types";
 import type { ApiClient } from "../types";
 
+import {
+	keepWorkspaceBranch,
+	setWorkspaceNamingState,
+	type WorkspaceNamingState,
+} from "./workspace-naming-state";
 import { cancelWorkspaceTitleJob } from "./workspace-title-jobs";
 
 export type HostWorkspaceRow = typeof workspaces.$inferSelect;
@@ -241,9 +246,6 @@ export interface InsertLocalWorkspaceValues {
 	taskId?: string | null;
 	createdByUserId?: string | null;
 	tags?: string[];
-	autoNamingPrompt?: string | null;
-	autoNamingBranch?: string | null;
-	autoNamingAgent?: string | null;
 }
 
 /**
@@ -268,9 +270,6 @@ export function insertLocalWorkspace(
 				type: values.type ?? "worktree",
 				taskId: values.taskId ?? null,
 				createdByUserId: values.createdByUserId ?? null,
-				autoNamingPrompt: values.autoNamingPrompt ?? null,
-				autoNamingBranch: values.autoNamingBranch ?? null,
-				autoNamingAgent: values.autoNamingAgent ?? null,
 				createdAt: now,
 				updatedAt: now,
 			})
@@ -308,12 +307,7 @@ export interface UpdateLocalWorkspacePatch {
 	 * writes as automatic. Every other name/branch write is a user edit and
 	 * ends automatic naming for that side.
 	 */
-	autoNaming?: {
-		prompt: string | null;
-		attempts: number;
-		branch: string | null;
-		agent: string | null;
-	};
+	autoNaming?: WorkspaceNamingState | null;
 	worktreePath?: string;
 	taskId?: string | null;
 	projectId?: string;
@@ -345,18 +339,6 @@ export function updateLocalWorkspace(
 		tx.update(workspaces)
 			.set({
 				...columns,
-				...(autoNaming
-					? {
-							autoNamingPrompt: autoNaming.prompt,
-							autoNamingAttempts: autoNaming.attempts,
-							autoNamingBranch: autoNaming.branch,
-							autoNamingAgent: autoNaming.agent,
-						}
-					: {}),
-				...(userEdit && patch.name !== undefined
-					? { autoNamingPrompt: null }
-					: {}),
-				...(userEdit ? { autoNamingBranch: null } : {}),
 				updatedAt: Date.now(),
 			})
 			.where(eq(workspaces.id, id))
@@ -394,7 +376,12 @@ export function updateLocalWorkspace(
 			}
 		}
 	});
-	if (userEdit) cancelWorkspaceTitleJob(ctx.db, id);
+	if (autoNaming !== undefined) setWorkspaceNamingState(ctx.db, id, autoNaming);
+	else if (userEdit) {
+		cancelWorkspaceTitleJob(ctx.db, id);
+		if (patch.name !== undefined) setWorkspaceNamingState(ctx.db, id, null);
+		else keepWorkspaceBranch(ctx.db, id);
+	}
 	const row = getLocalWorkspace(ctx.db, id);
 	if (row) emitWorkspaceChanged(ctx, "updated", row);
 	return row;
@@ -418,6 +405,7 @@ export function emitLocalWorkspaceDeleted(
 	row: HostWorkspaceRow,
 ): void {
 	cancelWorkspaceTitleJob(ctx.db, row.id);
+	setWorkspaceNamingState(ctx.db, row.id, null);
 	ctx.eventBus.broadcastWorkspaceChanged({
 		workspaceId: row.id,
 		eventType: "deleted",
@@ -453,6 +441,7 @@ export function archiveLocalWorkspace(
 			.run();
 	}
 	cancelWorkspaceTitleJob(ctx.db, id);
+	setWorkspaceNamingState(ctx.db, id, null);
 	ctx.eventBus.broadcastWorkspaceChanged({
 		workspaceId: id,
 		eventType: "deleted",

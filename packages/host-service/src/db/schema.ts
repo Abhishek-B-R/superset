@@ -278,16 +278,6 @@ export const workspaces = sqliteTable(
 		archivedAt: integer("archived_at"),
 		// "merged" when the linked PR was merged at destroy time.
 		archiveReason: text("archive_reason").$type<"merged" | "deleted">(),
-		// Non-null while the name is still automatic and an AI name is owed;
-		// any user rename clears it.
-		autoNamingPrompt: text("auto_naming_prompt"),
-		autoNamingAttempts: integer("auto_naming_attempts").notNull().default(0),
-		// The generated branch AI naming may still replace; cleared when the
-		// user changes the branch.
-		autoNamingBranch: text("auto_naming_branch"),
-		// The agent whose headless CLI names this workspace; null names from
-		// the prompt text alone.
-		autoNamingAgent: text("auto_naming_agent"),
 	},
 	(table) => [
 		index("workspaces_project_id_idx").on(table.projectId),

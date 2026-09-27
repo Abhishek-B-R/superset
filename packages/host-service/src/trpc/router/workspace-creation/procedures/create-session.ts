@@ -14,6 +14,7 @@ import {
 	insertLocalWorkspace,
 	toCloudShape,
 } from "../../../../workspaces/local-workspace-store";
+import { setWorkspaceNamingState } from "../../../../workspaces/workspace-naming-state";
 import { protectedProcedure } from "../../../index";
 import { validateAgentLaunchOptions } from "../../agents";
 import { initEmptyRepo } from "../../project/utils/resolve-repo";
@@ -138,8 +139,6 @@ export const createSession = protectedProcedure
 				type: "session",
 				createdByUserId: ctx.userId ?? null,
 				tags: input.tags,
-				autoNamingPrompt: wantAi ? composerPrompt : null,
-				autoNamingAgent: wantAi ? (namingAgent ?? null) : null,
 			});
 		} catch (err) {
 			// The folder was allocated this call and holds only the scaffold —
@@ -168,7 +167,15 @@ export const createSession = protectedProcedure
 			throw err;
 		}
 
-		if (wantAi) scheduleWorkspaceNaming(ctx, row.id);
+		if (wantAi) {
+			setWorkspaceNamingState(ctx.db, row.id, {
+				prompt: composerPrompt,
+				attempts: 0,
+				branch: null,
+				agent: namingAgent ?? null,
+			});
+			scheduleWorkspaceNaming(ctx, row.id);
+		}
 
 		const terminalsResult: Array<{ terminalId: string; label: string }> = [];
 		const [agentsResult, commandResult] = await Promise.all([

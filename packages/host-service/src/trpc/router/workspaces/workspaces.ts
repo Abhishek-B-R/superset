@@ -26,8 +26,8 @@ import {
 	type HostWorkspaceRow,
 	insertLocalWorkspace,
 	toCloudShape,
-	updateLocalWorkspace,
 } from "../../../workspaces/local-workspace-store";
+import { setWorkspaceNamingState } from "../../../workspaces/workspace-naming-state";
 import {
 	createCallerFactory,
 	machineOnlyProcedure,
@@ -1233,14 +1233,11 @@ export const workspacesRouter = router({
 			}
 
 			if (!alreadyExists && wantAi) {
-				updateLocalWorkspace(ctx, workspaceRow.id, {
-					autoNaming: {
-						prompt: composerPrompt,
-						attempts: 0,
-						branch:
-							automaticBranch && worktreePath ? workspaceRow.branch : null,
-						agent: namingAgent ?? null,
-					},
+				setWorkspaceNamingState(ctx.db, workspaceRow.id, {
+					prompt: composerPrompt,
+					attempts: 0,
+					branch: automaticBranch && worktreePath ? workspaceRow.branch : null,
+					agent: namingAgent ?? null,
 				});
 				scheduleWorkspaceNaming(ctx, workspaceRow.id);
 			}

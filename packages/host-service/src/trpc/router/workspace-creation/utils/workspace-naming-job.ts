@@ -1,6 +1,4 @@
 import { deriveWorkspaceTitleFromPrompt } from "@superset/shared/workspace-launch";
-import { and, eq, isNotNull, isNull } from "drizzle-orm";
-import { workspaces } from "../../../../db/schema";
 import { getLocalProject } from "../../../../projects/local-project-store";
 import { createGitEnvResolver } from "../../../../runtime/git/git";
 import type { HostServiceContext } from "../../../../types";
@@ -13,6 +11,10 @@ import {
 	getLocalWorkspace,
 	updateLocalWorkspace,
 } from "../../../../workspaces/local-workspace-store";
+import {
+	getWorkspaceNamingState,
+	type WorkspaceNamingState,
+} from "../../../../workspaces/workspace-naming-state";
 import {
 	commitWorkspaceTitleJob,
 	hasWorkspaceTitleJob,
@@ -93,11 +95,11 @@ async function projectGithubRepo(
 	);
 }
 
-function pendingRow(ctx: HostServiceContext, workspaceId: string) {
+/** The live row and its naming state, while naming is still owed. */
+function pendingNaming(ctx: HostServiceContext, workspaceId: string) {
 	const row = getLocalWorkspace(ctx.db, workspaceId);
-	return row && row.archivedAt == null && row.autoNamingPrompt
-		? { ...row, autoNamingPrompt: row.autoNamingPrompt }
-		: null;
+	const naming = getWorkspaceNamingState(ctx.db, workspaceId);
+	return row && row.archivedAt == null && naming ? { row, naming } : null;
 }
 
 /**
@@ -136,11 +138,10 @@ export const namingGitOps = {
 };
 
 /**
- * Runs one naming attempt for a workspace whose name is still automatic
- * (`autoNamingPrompt` set). Creation queues the first attempt; hook events
- * and host boot queue the rest (`continueWorkspaceNaming`,
- * `resumeInterruptedWorkspaceNaming`). Every write re-checks the row, so a
- * user rename in the meantime always wins.
+ * Runs one naming attempt for a workspace that still owes one (see
+ * `workspace-naming-state`). Creation queues the first attempt and agent
+ * events queue the rest (`continueWorkspaceNaming`). Every write re-checks
+ * the state, so a user rename in the meantime always wins.
  */
 export function scheduleWorkspaceNaming(
 	ctx: HostServiceContext,
@@ -148,14 +149,15 @@ export function scheduleWorkspaceNaming(
 	{ agentReply }: { agentReply?: string } = {},
 ): void {
 	queueWorkspaceTitleJob(ctx.db, workspaceId, async (isCurrent, signal) => {
-		const row = pendingRow(ctx, workspaceId);
-		if (!row) return;
-		const prompt = row.autoNamingPrompt;
+		const pending = pendingNaming(ctx, workspaceId);
+		if (!pending) return;
+		const { row, naming } = pending;
+		const prompt = naming.prompt;
 		// An agent with no headless mode names nothing; its workspace keeps
 		// the prompt title without retries or a failure notice.
 		const agent =
-			row.autoNamingAgent && canNameWithAgent(ctx.db, row.autoNamingAgent)
-				? row.autoNamingAgent
+			naming.agent && canNameWithAgent(ctx.db, naming.agent)
+				? naming.agent
 				: undefined;
 		const project = row.projectId
 			? getLocalProject(ctx.db, row.projectId)
@@ -179,26 +181,26 @@ export function scheduleWorkspaceNaming(
 			{ agentReply, links },
 		);
 		if (!isCurrent()) return;
-		const current = pendingRow(ctx, workspaceId);
+		const current = pendingNaming(ctx, workspaceId);
 		if (!current) return;
 
-		const oldBranch = current.autoNamingBranch;
+		const oldBranch = current.naming.branch;
 		const branchStillAutomatic =
-			!!project && !!oldBranch && current.branch === oldBranch;
+			!!project && !!oldBranch && current.row.branch === oldBranch;
 		// A failed probe (git lock, hung index) says nothing about the branch,
 		// so the attempt counts as failed and the next turn tries again.
 		const canRenameBranch =
 			branchStillAutomatic && names?.branchName
 				? await namingGitOps
-						.canRenameAutomaticBranch(ctx, current.worktreePath, oldBranch)
+						.canRenameAutomaticBranch(ctx, current.row.worktreePath, oldBranch)
 						.catch((error) => {
 							console.warn("[workspace-title] branch probe failed", error);
 							return null;
 						})
 				: false;
-		if (!isCurrent() || !pendingRow(ctx, workspaceId)) return;
+		if (!isCurrent() || !pendingNaming(ctx, workspaceId)) return;
 
-		const attempt = current.autoNamingAttempts + 1;
+		const attempt = current.naming.attempts + 1;
 		const decision = decideNaming({
 			names,
 			canRenameBranch,
@@ -207,13 +209,13 @@ export function scheduleWorkspaceNaming(
 			hasAgent: !!agent,
 			hasAgentReply: !!agentReply,
 		});
-		const state = decision.pending
+		const state: WorkspaceNamingState | null = decision.pending
 			? { prompt, attempts: attempt, branch: oldBranch, agent: agent ?? null }
-			: { prompt: null, attempts: attempt, branch: null, agent: null };
+			: null;
 		if (decision.gaveUp && agent) {
 			ctx.eventBus.broadcastWorkspaceNamingFailed({
 				workspaceId,
-				name: decision.title ?? current.name,
+				name: decision.title ?? current.row.name,
 				occurredAt: Date.now(),
 			});
 		}
@@ -221,7 +223,7 @@ export function scheduleWorkspaceNaming(
 			try {
 				await renameAutomaticBranch(ctx, {
 					workspaceId,
-					worktreePath: current.worktreePath,
+					worktreePath: current.row.worktreePath,
 					repoPath: project.repoPath,
 					oldBranch,
 					branchName: decision.branchName,
@@ -234,7 +236,7 @@ export function scheduleWorkspaceNaming(
 				console.warn("[workspace-title] branch rename failed", error);
 			}
 		}
-		if (!isCurrent() || !pendingRow(ctx, workspaceId)) return;
+		if (!isCurrent() || !pendingNaming(ctx, workspaceId)) return;
 		updateLocalWorkspace(ctx, workspaceId, {
 			...(decision.title ? { name: decision.title } : {}),
 			autoNaming: state,
@@ -251,12 +253,7 @@ async function renameAutomaticBranch(
 		oldBranch: string;
 		branchName: string;
 		title: string;
-		state: {
-			prompt: string | null;
-			attempts: number;
-			branch: string | null;
-			agent: string | null;
-		};
+		state: WorkspaceNamingState | null;
 		isCurrent: () => boolean;
 	},
 ): Promise<void> {
@@ -274,7 +271,7 @@ async function renameAutomaticBranch(
 		branches.filter((branch) => branch !== oldBranch),
 	);
 	await commitWorkspaceTitleJob(ctx.db, workspaceId, async () => {
-		if (!isCurrent() || !pendingRow(ctx, workspaceId)) return;
+		if (!isCurrent() || !pendingNaming(ctx, workspaceId)) return;
 		await namingGitOps.renameBranch(ctx, input.worktreePath, oldBranch, target);
 		gitStatusStore.recordChange(workspaceId, undefined);
 		updateLocalWorkspace(ctx, workspaceId, {
@@ -286,9 +283,9 @@ async function renameAutomaticBranch(
 }
 
 /**
- * Hook-driven follow-ups to the attempt creation queued: a Start covers a
- * host that restarted before that attempt ran, and each Stop retries a
- * failed or vague attempt with the agent's reply. A Stop during a running
+ * Agent-event follow-ups to the attempt creation queued: a Start runs a
+ * first attempt that never ran (the queue was full), and each Stop retries
+ * a failed or vague attempt with the agent's reply. A Stop during a running
  * attempt queues behind it, so a quick first turn's reply still counts.
  */
 export function continueWorkspaceNaming(
@@ -296,34 +293,14 @@ export function continueWorkspaceNaming(
 	workspaceId: string,
 	event: { eventType: string; agentReply?: string },
 ): void {
-	const row = getLocalWorkspace(ctx.db, workspaceId);
-	if (!row?.autoNamingPrompt || row.archivedAt != null) return;
+	const pending = pendingNaming(ctx, workspaceId);
+	if (!pending) return;
 	if (event.eventType === "Start") {
-		if (row.autoNamingAttempts > 0 || hasWorkspaceTitleJob(ctx.db, workspaceId))
+		if (
+			pending.naming.attempts > 0 ||
+			hasWorkspaceTitleJob(ctx.db, workspaceId)
+		)
 			return;
 	} else if (event.eventType !== "Stop") return;
 	scheduleWorkspaceNaming(ctx, workspaceId, { agentReply: event.agentReply });
-}
-
-/**
- * Host boot: a previous process may have died in the middle of a
- * workspace's creation-time attempt, and nothing retries an attempt that
- * never counted until an agent event arrives — which a workspace whose
- * agent never launched will never get.
- */
-export function resumeInterruptedWorkspaceNaming(
-	ctx: HostServiceContext,
-): void {
-	const rows = ctx.db
-		.select({ id: workspaces.id })
-		.from(workspaces)
-		.where(
-			and(
-				isNull(workspaces.archivedAt),
-				isNotNull(workspaces.autoNamingPrompt),
-				eq(workspaces.autoNamingAttempts, 0),
-			),
-		)
-		.all();
-	for (const row of rows) scheduleWorkspaceNaming(ctx, row.id);
 }

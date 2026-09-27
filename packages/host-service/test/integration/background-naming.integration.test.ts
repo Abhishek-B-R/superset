@@ -7,7 +7,6 @@ import { projects, terminalSessions, workspaces } from "../../src/db/schema";
 import { PullRequestRuntimeManager } from "../../src/runtime/pull-requests/pull-requests";
 import * as agents from "../../src/trpc/router/agents";
 import * as naming from "../../src/trpc/router/workspace-creation/utils/ai-workspace-names";
-import { resumeInterruptedWorkspaceNaming } from "../../src/trpc/router/workspace-creation/utils/workspace-naming-job";
 import {
 	archiveLocalWorkspace,
 	deleteLocalWorkspace,
@@ -16,9 +15,10 @@ import {
 	updateLocalWorkspace,
 } from "../../src/workspaces/local-workspace-store";
 import {
-	cancelWorkspaceTitleJob,
-	commitWorkspaceTitleJob,
-} from "../../src/workspaces/workspace-title-jobs";
+	getWorkspaceNamingState,
+	setWorkspaceNamingState,
+} from "../../src/workspaces/workspace-naming-state";
+import { commitWorkspaceTitleJob } from "../../src/workspaces/workspace-title-jobs";
 import { createBasicScenario } from "../helpers/scenarios";
 
 const savedEnv = { ...process.env };
@@ -75,6 +75,7 @@ for (const kind of ["session", "worktree"] as const) {
 		).mockReturnValue(deferred.promise);
 		const headless = spyOn(naming, "canNameWithAgent").mockReturnValue(true);
 		const row = () => getLocalWorkspace(scenario.host.db, id);
+		const namingState = () => getWorkspaceNamingState(scenario.host.db, id);
 		const create = (
 			extra: {
 				name?: string;
@@ -112,6 +113,7 @@ for (const kind of ["session", "worktree"] as const) {
 			generator,
 			headless,
 			row,
+			namingState,
 			create,
 			hook,
 			cleanup: async () => {
@@ -308,7 +310,7 @@ for (const kind of ["session", "worktree"] as const) {
 		const f = await fixture();
 		await withAgent(f, null, async () => {
 			await until(() => f.row()?.name === "Fix login");
-			expect(f.row()?.autoNamingAttempts).toBe(1);
+			expect(f.namingState()?.attempts).toBe(1);
 			await f.hook("Start");
 			await settle();
 			expect(f.generator).toHaveBeenCalledTimes(1);
@@ -318,7 +320,7 @@ for (const kind of ["session", "worktree"] as const) {
 			expect(f.generator.mock.calls[1]?.[5]?.agentReply).toBe(
 				"I traced the login failure to an expired token.",
 			);
-			expect(f.row()?.autoNamingPrompt).toBeNull();
+			expect(f.namingState()).toBeUndefined();
 			await f.hook("Stop", "done");
 			await settle();
 			expect(f.generator).toHaveBeenCalledTimes(2);
@@ -345,12 +347,12 @@ for (const kind of ["session", "worktree"] as const) {
 		const failed = spyOn(f.host.eventBus, "broadcastWorkspaceNamingFailed");
 		await withAgent(f, null, async () => {
 			f.generator.mockResolvedValue(null);
-			await until(() => f.row()?.autoNamingAttempts === 1);
+			await until(() => f.namingState()?.attempts === 1);
 			await f.hook("Stop", "reply");
-			await until(() => f.row()?.autoNamingAttempts === 2);
+			await until(() => f.namingState()?.attempts === 2);
 			await f.hook("Stop", "reply");
-			await until(() => f.row()?.autoNamingAttempts === 3);
-			expect(f.row()?.autoNamingPrompt).toBeNull();
+			await until(() => f.namingState() === undefined);
+			expect(f.generator).toHaveBeenCalledTimes(3);
 			await f.hook("Stop", "reply");
 			await settle();
 			expect(f.generator).toHaveBeenCalledTimes(3);
@@ -367,7 +369,7 @@ for (const kind of ["session", "worktree"] as const) {
 		f.headless.mockReturnValue(false);
 		await withAgent(f, null, async () => {
 			await until(() => f.row()?.name === "Fix login");
-			expect(f.row()?.autoNamingPrompt).toBeNull();
+			expect(f.namingState()).toBeUndefined();
 			await f.hook("Stop", "reply");
 			await settle();
 			expect(f.generator).toHaveBeenCalledTimes(1);
@@ -388,7 +390,7 @@ for (const kind of ["session", "worktree"] as const) {
 				await gate.promise;
 				updateLocalWorkspace(f.host, f.id, {
 					name: "AI title",
-					autoNaming: { prompt: null, attempts: 1, branch: null, agent: null },
+					autoNaming: null,
 				});
 			});
 			await committing.promise;
@@ -412,22 +414,17 @@ for (const kind of ["session", "worktree"] as const) {
 			await settle();
 			expect(f.generator).toHaveBeenCalledTimes(1);
 			expect(f.row()?.name).toBe("Mine");
-			expect(f.row()?.autoNamingPrompt).toBeNull();
+			expect(f.namingState()).toBeUndefined();
 		});
 	});
 
-	test(`${kind}: a host restart before the first attempt ran resumes on the agent's first Start`, async () => {
+	test(`${kind}: a first attempt that never ran runs on the agent's first Start`, async () => {
 		const f = await fixture();
 		await withAgent(f, null, async () => {
-			await until(() => f.row()?.autoNamingAttempts === 1);
-			updateLocalWorkspace(f.host, f.id, {
-				autoNaming: {
-					prompt: "Fix login",
-					attempts: 0,
-					branch: f.row()?.autoNamingBranch ?? null,
-					agent: "test-agent",
-				},
-			});
+			await until(() => f.namingState()?.attempts === 1);
+			const current = f.namingState();
+			if (!current) throw new Error("Naming state missing");
+			setWorkspaceNamingState(f.host.db, f.id, { ...current, attempts: 0 });
 			f.generator.mockResolvedValueOnce(title);
 			await f.hook("Start");
 			await until(() => f.row()?.name === title.title);
@@ -444,57 +441,22 @@ for (const kind of ["session", "worktree"] as const) {
 		};
 		await withAgent(f, guess, async () => {
 			await until(() => f.row()?.name === guess.title);
-			const row = f.row();
-			expect(row?.autoNamingPrompt).toBe("Fix login");
-			expect(row?.autoNamingAttempts).toBe(1);
+			expect(f.namingState()?.prompt).toBe("Fix login");
+			expect(f.namingState()?.attempts).toBe(1);
 			if (kind === "worktree")
-				expect(row?.autoNamingBranch).toBe(row?.branch ?? null);
+				expect(f.namingState()?.branch).toBe(f.row()?.branch ?? null);
 			f.generator.mockResolvedValueOnce(title);
 			await f.hook("Stop", "Login fails because the session token expired.");
 			await until(() => f.row()?.name === title.title);
 			expect(f.generator.mock.calls[1]?.[5]?.agentReply).toBe(
 				"Login fails because the session token expired.",
 			);
-			expect(f.row()?.autoNamingPrompt).toBeNull();
+			expect(f.namingState()).toBeUndefined();
 			if (kind === "worktree")
 				expect(
 					f.row()?.branch.endsWith(`${title.branchName}-${f.id.slice(0, 8)}`),
 				).toBe(true);
 		});
-	});
-
-	test(`${kind}: a host that died mid-first-attempt names the workspace at boot without an agent event`, async () => {
-		const f = await fixture();
-		let ctx: Parameters<typeof agents.runAgentInWorkspace>[0] | undefined;
-		const launch = spyOn(agents, "runAgentInWorkspace").mockImplementation(
-			async (host) => {
-				ctx = host;
-				return {
-					kind: "terminal",
-					sessionId: "test-agent",
-					label: "Test agent",
-				};
-			},
-		);
-		try {
-			await f.create({
-				agents: [{ agent: "test-agent", prompt: "Fix login" }],
-			});
-			await until(() => f.generator.mock.calls.length === 1);
-			cancelWorkspaceTitleJob(f.host.db, f.id);
-			f.deferred.resolve(null);
-			await settle();
-			expect(f.row()?.autoNamingAttempts).toBe(0);
-			expect(f.row()?.autoNamingAgent).toBe("test-agent");
-			if (!ctx) throw new Error("Launch missing");
-			f.generator.mockResolvedValueOnce(title);
-			resumeInterruptedWorkspaceNaming(ctx);
-			await until(() => f.row()?.name === title.title);
-			expect(f.generator.mock.calls[1]?.[1]?.agent).toBe("test-agent");
-		} finally {
-			launch.mockRestore();
-			await f.cleanup();
-		}
 	});
 
 	for (const resolveBeforeLaunchFinishes of [false, true]) {
@@ -763,13 +725,11 @@ test("host disposal prevents late naming from reading the closed database", asyn
 	const warn = spyOn(console, "warn").mockImplementation(() => {});
 	let disposed = false;
 	try {
-		updateLocalWorkspace(scenario.host, scenario.workspaceId, {
-			autoNaming: {
-				prompt: "Fix login",
-				attempts: 0,
-				branch: null,
-				agent: "claude",
-			},
+		setWorkspaceNamingState(scenario.host.db, scenario.workspaceId, {
+			prompt: "Fix login",
+			attempts: 0,
+			branch: null,
+			agent: "claude",
 		});
 		scenario.host.db
 			.insert(terminalSessions)
