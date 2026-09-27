@@ -19,6 +19,10 @@ import {
 	scanForShellReady,
 } from "@superset/shared/shell-ready-scanner";
 import {
+	type TerminalColors,
+	terminalColorsSchema,
+} from "@superset/shared/terminal-colors";
+import {
 	boundTranscriptText,
 	buildBoundedTerminalSessionTranscript,
 	TERMINAL_HANDOFF_MAX_CHARS,
@@ -98,6 +102,7 @@ interface DaemonPty {
 	writeOrThrow(data: string): void;
 	write(data: string): void;
 	resize(cols: number, rows: number): void;
+	setColors(colors: TerminalColors): void;
 	kill(signal?: NodeJS.Signals): Promise<void>;
 	onData(cb: (data: string) => void): PtyDataDisposer;
 	onExit(
@@ -122,6 +127,11 @@ function makeDaemonPty(
 				// Daemon socket died before the disconnect sweep ran; a throw
 				// here would escape the WS input handler uncaught.
 			}
+		},
+		setColors(colors) {
+			try {
+				daemon.setColors(sessionId, colors);
+			} catch {}
 		},
 		resize(cols, rows) {
 			try {
@@ -193,6 +203,7 @@ function getHostAgentHookUrl(): string {
 
 type TerminalClientMessage =
 	| { type: "input"; data: string }
+	| { type: "colors"; colors: TerminalColors }
 	| { type: "resize"; cols: number; rows: number }
 	// The client's current keyboard-focus state, sent on every attach. A
 	// reattaching client may hold focus the program last heard it lost (or
@@ -2879,6 +2890,7 @@ interface CreateTerminalSessionOptions {
 	terminalId: string;
 	workspaceId: string;
 	themeType?: "dark" | "light";
+	colors?: TerminalColors;
 	db: HostDb;
 	eventBus?: EventBus;
 	initialCommand?: string;
@@ -2966,6 +2978,7 @@ async function createTerminalSessionUnlocked({
 	terminalId,
 	workspaceId,
 	themeType,
+	colors,
 	db,
 	eventBus,
 	initialCommand,
@@ -3134,6 +3147,7 @@ async function createTerminalSessionUnlocked({
 					cols,
 					rows,
 					env: ptyEnv,
+					colors,
 				});
 			} catch (err) {
 				// After host-service restart the daemon may already own this
@@ -3561,6 +3575,12 @@ export function registerWorkspaceTerminalRoute({
 			// never queues behind Chromium's 6-per-origin HTTP socket pool.
 			const createRequested = c.req.query("create") === "1";
 			const requestedThemeType = parseThemeType(c.req.query("themeType"));
+			let requestedColors: TerminalColors | undefined;
+			try {
+				requestedColors = terminalColorsSchema.parse(
+					JSON.parse(c.req.query("colors") ?? "null"),
+				);
+			} catch {}
 			const attachSocketToSession = (
 				session: TerminalSession,
 				ws: TerminalSocket,
@@ -3639,6 +3659,7 @@ export function registerWorkspaceTerminalRoute({
 							terminalId,
 							workspaceId: requestedWorkspaceId,
 							themeType: requestedThemeType,
+							colors: requestedColors,
 							db,
 							eventBus,
 						});
@@ -3680,6 +3701,7 @@ export function registerWorkspaceTerminalRoute({
 					terminalId,
 					workspaceId: record.originWorkspaceId,
 					themeType: requestedThemeType,
+					colors: requestedColors,
 					db,
 					eventBus,
 					adoptOnly: true,
@@ -3708,6 +3730,7 @@ export function registerWorkspaceTerminalRoute({
 					terminalId,
 					workspaceId: record.originWorkspaceId,
 					themeType: requestedThemeType,
+					colors: requestedColors,
 					db,
 					eventBus,
 					restoredNotice: true,
@@ -3784,6 +3807,17 @@ export function registerWorkspaceTerminalRoute({
 					}
 
 					if (session.exited) return;
+
+					if (message.type === "colors") {
+						const parsed = terminalColorsSchema.safeParse(message.colors);
+						if (
+							parsed.success &&
+							session.sockets.values().next().value === ws
+						) {
+							session.pty.setColors(parsed.data);
+						}
+						return;
+					}
 
 					if (message.type === "input") {
 						session.pty.write(message.data);

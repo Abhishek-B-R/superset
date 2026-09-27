@@ -4,7 +4,7 @@ import {
 	createRelaySocket,
 	type RelaySocket,
 } from "@superset/workspace-client/relay-socket";
-import type { Terminal as XTerm } from "@xterm/xterm";
+import type { ITheme, Terminal as XTerm } from "@xterm/xterm";
 import { ensureFreshJwt } from "renderer/lib/auth-client";
 import { posthog } from "renderer/lib/posthog";
 import {
@@ -18,6 +18,7 @@ import {
 	resetAttachRetryState,
 	shouldSurfaceDiagnosis,
 } from "./attach-retry-diagnosis";
+import { terminalQueryColors } from "./terminal-query-colors";
 import {
 	classifyTerminalFailure,
 	type TerminalFailureClassification,
@@ -672,6 +673,17 @@ export function connect(
 	attachSocketListeners(transport, terminal, socket);
 }
 
+export function sendColors(
+	transport: TerminalTransport,
+	theme: ITheme | undefined,
+): void {
+	if (!theme) return;
+	const colors = terminalQueryColors(theme);
+	if (colors && transport.connectionState === "open") {
+		transport._socket?.send(JSON.stringify({ type: "colors", colors }));
+	}
+}
+
 function attachSocketListeners(
 	transport: TerminalTransport,
 	terminal: XTerm,
@@ -736,6 +748,7 @@ function attachSocketListeners(
 			transport._seqCounting = false;
 			transport._bytesSinceAttach = false;
 			setConnectionState(transport, "open");
+			sendColors(transport, terminal.options?.theme);
 			sendVisibleState(transport);
 			sendResize(transport, terminal.cols, terminal.rows);
 			return;

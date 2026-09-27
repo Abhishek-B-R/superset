@@ -124,9 +124,8 @@ afterAll(() => {
 	);
 });
 
-const { connect, createTransport, disconnect, park, reconnect } = await import(
-	"./terminal-ws-transport"
-);
+const { connect, createTransport, disconnect, park, reconnect, sendColors } =
+	await import("./terminal-ws-transport");
 
 // `window` is aliased to `globalThis` by the xterm-env-polyfill preload, and
 // `globalThis.addEventListener` is absent on Linux CI runtimes, so the transport's
@@ -852,4 +851,31 @@ describe("terminal-ws-transport", () => {
 		expect(transport.logs).toHaveLength(0);
 		expect(transport.title).toBeUndefined();
 	});
+});
+
+test("attach synchronizes configured colors and later theme updates use the same channel", () => {
+	const terminal = createMockTerminal();
+	terminal.options = {
+		theme: { foreground: "#eae8e6", background: "#151110", cursor: "#ffffff" },
+	};
+	const transport = createTransport();
+	connect(transport, terminal, "ws://host/terminal/colors");
+	const socket = FakeRelaySocket.instances.at(-1);
+	if (!socket) throw new Error("missing socket");
+	socket.open();
+	sendColors(transport, terminal.options.theme);
+	expect(socket.sent).toEqual([]);
+	socket.message(JSON.stringify({ type: "attached", terminalId: "colors" }));
+	let messages = socket.sent.map((payload) => JSON.parse(payload));
+	expect(messages[0]).toMatchObject({
+		type: "colors",
+		colors: { background: "#151110" },
+	});
+	sendColors(transport, { background: "#ffffff", foreground: "#000000" });
+	messages = socket.sent.map((payload) => JSON.parse(payload));
+	expect(messages.at(-1)).toMatchObject({
+		type: "colors",
+		colors: { background: "#ffffff" },
+	});
+	disconnect(transport);
 });

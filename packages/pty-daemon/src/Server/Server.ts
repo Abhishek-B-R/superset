@@ -3,6 +3,7 @@ import * as fs from "node:fs";
 import * as net from "node:net";
 import * as os from "node:os";
 import * as path from "node:path";
+import { terminalColorsSchema } from "@superset/shared/terminal-colors";
 import type { Conn, HandlerCtx } from "../handlers/index.ts";
 import {
 	handleClose,
@@ -174,11 +175,15 @@ export class Server {
 							s.buffer.byteOffset,
 							s.buffer.byteLength,
 						);
-						session.buffer = [buf];
-						session.bufferBytes = buf.byteLength;
+						const retained = s.colors
+							? buf
+							: session.colors.feed(buf, () => {});
+						session.buffer = [retained];
+						session.bufferBytes = retained.byteLength;
 						if (!s.modes) session.modes.feed(buf);
 					}
 					if (s.modes) session.modes.restore(s.modes);
+					if (s.colors) session.colors.restore(s.colors);
 					this.wireSession(session);
 					adopted.push(session);
 				} catch (err) {
@@ -465,6 +470,7 @@ export class Server {
 				daemonPid: process.pid,
 				trustdHealthy: this.trustdHealthy,
 				supportsModeSnapshots: true,
+				supportsColorQueries: true,
 			});
 			return;
 		}
@@ -486,6 +492,12 @@ export class Server {
 			case "input": {
 				const reply = handleInput(ctx, msg, payload);
 				if (reply) conn.send(reply);
+				return;
+			}
+			case "colors": {
+				const parsed = terminalColorsSchema.safeParse(msg.colors);
+				if (parsed.success)
+					this.store.get(msg.id)?.colors.configure(parsed.data);
 				return;
 			}
 			case "resize": {
@@ -582,8 +594,19 @@ export class Server {
 				});
 			}
 		};
-		session.pty.onData(deliver);
+		session.pty.onData((chunk) => {
+			const output = session.colors.feed(chunk, (reply) => {
+				try {
+					session.pty.write(reply);
+				} catch {
+					// The child can exit between emitting a query and receiving its reply.
+				}
+			});
+			if (output.length) deliver(output);
+		});
 		session.pty.onExit((info) => {
+			const pending = session.colors.flush();
+			if (pending.length) deliver(pending);
 			session.exited = true;
 			session.exitCode = info.code;
 			session.exitSignal = info.signal;
