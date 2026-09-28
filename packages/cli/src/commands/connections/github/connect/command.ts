@@ -13,6 +13,13 @@ export default command({
 		noWait: boolean().desc("Print the authorize URL and exit without waiting"),
 	},
 	run: async ({ ctx, options }) => {
+		const { connection: existing } = await ctx.api.githubUser.get.query();
+		if (existing) {
+			return {
+				data: { connection: existing },
+				message: `Already connected as ${existing.login}. To switch accounts, run: superset connections github disconnect`,
+			};
+		}
 		const { url } = await ctx.api.githubUser.connect.mutate();
 		const opened =
 			canReachDesktop() &&

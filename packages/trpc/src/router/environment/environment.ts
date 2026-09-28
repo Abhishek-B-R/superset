@@ -271,6 +271,17 @@ export const environmentRouter = {
 		.mutation(async ({ ctx, input }) => {
 			await assertCloudAccess(ctx);
 			assertMember(ctx.organizationIds, input.organizationId);
+			if (
+				input.hooksRepositoryId &&
+				!input.repositoryIds.includes(input.hooksRepositoryId)
+			) {
+				throw userError({
+					code: "BAD_REQUEST",
+					message:
+						"The hooks repository must be one of the environment's repositories",
+					i18nKey: "serverError.environment.hooksRepositoryNotIncluded",
+				});
+			}
 			const [row] = await db
 				.insert(environments)
 				.values({
@@ -369,22 +380,6 @@ export const environmentRouter = {
 			const environmentId = target?.id ?? crypto.randomUUID();
 			// The row keeps forking from the old golden until the update lands, so the new one needs its own name.
 			const goldenName = `env-${(target ? crypto.randomUUID() : environmentId).replaceAll("-", "").slice(0, 24)}`;
-			const { claim } = await buildSandboxClaim({ row: workspace });
-			const golden = await promoteSandboxToEnvironment({
-				sourceSandbox: workspace.providerSandboxId,
-				goldenName,
-				claim,
-			});
-			const hooksRepositoryId =
-				checkouts.find((entry) => entry.hooks)?.repository.id ?? null;
-			const fromGolden = {
-				provider: workspace.provider,
-				sourceKind: "fork" as const,
-				sourceRef: goldenName,
-				region: golden.region,
-				bundleSha: source?.bundleSha ?? null,
-				hooksRepositoryId,
-			};
 			const inheritedSecrets =
 				target || !source
 					? []
@@ -401,65 +396,96 @@ export const environmentRouter = {
 								),
 							);
 
-			const row = await dbWs.transaction(async (tx) => {
-				const [saved] = target
-					? await tx
-							.update(environments)
-							.set({
-								...fromGolden,
-								...(input.scope ? { scope: input.scope } : {}),
-								...(targetOwner ? { createdByUserId: targetOwner } : {}),
-							})
-							.where(eq(environments.id, target.id))
-							.returning()
-					: await tx
-							.insert(environments)
-							.values({
-								id: environmentId,
-								organizationId: workspace.organizationId,
-								name: input.name as string,
-								...fromGolden,
-								scope: input.scope ?? source?.scope ?? "organization",
-								createdByUserId: ctx.userId,
-							})
-							.returning();
-				// The golden baked these checkouts; a fork must ask for the same.
-				await tx
-					.delete(environmentRepositories)
-					.where(eq(environmentRepositories.environmentId, environmentId));
-				await tx.insert(environmentRepositories).values(
-					checkouts.map((entry) => ({
-						environmentId,
-						repositoryId: entry.repository.id,
-					})),
-				);
-				if (source && inheritedSecrets.length) {
-					await tx.insert(environmentSecrets).values(
-						inheritedSecrets.map((secret) => ({
-							organizationId: secret.organizationId,
+			const { claim } = await buildSandboxClaim({ row: workspace });
+			const golden = await promoteSandboxToEnvironment({
+				sourceSandbox: workspace.providerSandboxId,
+				goldenName,
+				claim,
+			});
+			const hooksRepositoryId =
+				checkouts.find((entry) => entry.hooks)?.repository.id ?? null;
+			const fromGolden = {
+				provider: workspace.provider,
+				sourceKind: "fork" as const,
+				sourceRef: goldenName,
+				region: golden.region,
+				bundleSha: source?.bundleSha ?? null,
+				hooksRepositoryId,
+			};
+			const row = await dbWs
+				.transaction(async (tx) => {
+					const [saved] = target
+						? await tx
+								.update(environments)
+								.set({
+									...fromGolden,
+									...(input.scope ? { scope: input.scope } : {}),
+									...(targetOwner ? { createdByUserId: targetOwner } : {}),
+								})
+								.where(eq(environments.id, target.id))
+								.returning()
+						: await tx
+								.insert(environments)
+								.values({
+									id: environmentId,
+									organizationId: workspace.organizationId,
+									name: input.name as string,
+									...fromGolden,
+									scope: input.scope ?? source?.scope ?? "organization",
+									createdByUserId: ctx.userId,
+								})
+								.returning();
+					// The golden baked these checkouts; a fork must ask for the same.
+					await tx
+						.delete(environmentRepositories)
+						.where(eq(environmentRepositories.environmentId, environmentId));
+					await tx.insert(environmentRepositories).values(
+						checkouts.map((entry) => ({
 							environmentId,
-							key: secret.key,
-							encryptedValue: encryptSecret(
-								decryptSecret(secret.encryptedValue, {
-									environmentId: source.id,
-									organizationId: secret.organizationId,
-									key: secret.key,
-								}),
-								{
-									environmentId,
-									organizationId: secret.organizationId,
-									key: secret.key,
-								},
-							),
-							sensitive: secret.sensitive,
-							createdByUserId: secret.createdByUserId,
+							repositoryId: entry.repository.id,
 						})),
 					);
-				}
-				return saved;
-			});
+					if (source && inheritedSecrets.length) {
+						await tx.insert(environmentSecrets).values(
+							inheritedSecrets.map((secret) => ({
+								organizationId: secret.organizationId,
+								environmentId,
+								key: secret.key,
+								encryptedValue: encryptSecret(
+									decryptSecret(secret.encryptedValue, {
+										environmentId: source.id,
+										organizationId: secret.organizationId,
+										key: secret.key,
+									}),
+									{
+										environmentId,
+										organizationId: secret.organizationId,
+										key: secret.key,
+									},
+								),
+								sensitive: secret.sensitive,
+								createdByUserId: secret.createdByUserId,
+							})),
+						);
+					}
+					return saved;
+				})
+				.catch(async (error: unknown) => {
+					await deleteSandbox(goldenName).catch((cleanup: unknown) =>
+						console.error(
+							`[environment/promote] could not delete unused golden ${goldenName}`,
+							cleanup,
+						),
+					);
+					throw error;
+				});
 			if (target?.sourceKind === "fork") {
-				await deleteSandbox(target.sourceRef);
+				await deleteSandbox(target.sourceRef).catch((error: unknown) =>
+					console.error(
+						`[environment/promote] ${target.id} replaced; could not delete its previous golden ${target.sourceRef}`,
+						error,
+					),
+				);
 			}
 			return row;
 		}),
