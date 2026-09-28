@@ -296,7 +296,7 @@ export function createApp(options: CreateAppOptions): CreateAppResult {
 	// one project and one workspace, seeded by us, that no earlier build ever
 	// touched. There is nothing to recover, so the sweeps can only invent.
 	const purgeContext = {
-		git,
+		credentials: providers.credentials,
 		api,
 		db,
 		eventBus,

@@ -9,6 +9,7 @@ import {
 } from "../db/schema";
 import { runTeardown } from "../runtime/teardown";
 import { disposeSessionsByWorkspaceId } from "../terminal/terminal";
+import { cleanupGitOps } from "../trpc/router/workspace-cleanup/git-ops";
 import { isLocalCheckoutWorkspace } from "../trpc/router/workspace-cleanup/is-local-checkout-workspace";
 import type { HostServiceContext } from "../types";
 import {
@@ -23,7 +24,7 @@ export const PROJECT_PURGE_INTERVAL_MS = 6 * 60 * 60 * 1000;
 
 type ProjectDeletionContext = Pick<
 	HostServiceContext,
-	"db" | "eventBus" | "api" | "git" | "organizationId"
+	"db" | "eventBus" | "api" | "credentials" | "organizationId"
 > &
 	Partial<Pick<HostServiceContext, "clientMachineId" | "userId">>;
 
@@ -218,16 +219,34 @@ async function purgeProject(
 		.from(workspaces)
 		.where(eq(workspaces.projectId, project.id))
 		.all();
-	for (const row of rows) {
-		if (row.type === "local" || row.worktreePath === project.repoPath) continue;
-		if (!existsSync(row.worktreePath)) continue;
+	const worktrees = rows.filter(
+		(row) =>
+			row.type !== "local" &&
+			row.worktreePath !== project.repoPath &&
+			existsSync(row.worktreePath),
+	);
+	if (worktrees.length > 0) {
 		try {
-			const git = await ctx.git(project.repoPath);
-			await git.raw(["worktree", "remove", row.worktreePath]);
+			const gitEnv = await cleanupGitOps.resolveGitEnv(ctx, project.repoPath);
+			for (const row of worktrees) {
+				const { stillRegistered, removeError } =
+					await cleanupGitOps.removeWorktree({
+						repoPath: project.repoPath,
+						worktreePath: row.worktreePath,
+						gitEnv,
+						force: false,
+					});
+				if (stillRegistered) {
+					console.warn("[project-deletion] left worktree on disk", {
+						projectId: project.id,
+						worktreePath: row.worktreePath,
+						removeError,
+					});
+				}
+			}
 		} catch (err) {
-			console.warn("[project-deletion] left worktree on disk", {
+			console.warn("[project-deletion] left worktrees on disk", {
 				projectId: project.id,
-				worktreePath: row.worktreePath,
 				err,
 			});
 		}
@@ -238,6 +257,11 @@ async function purgeProject(
 		tx.delete(tagFolderSettings)
 			.where(eq(tagFolderSettings.scope, project.id))
 			.run();
+	});
+	ctx.eventBus.broadcastTagFoldersChanged({
+		scope: project.id,
+		settings: [],
+		occurredAt: Date.now(),
 	});
 	for (const row of rows) {
 		if (row.archivedAt === project.deletedAt) trackWorkspaceDeleted(ctx, row);

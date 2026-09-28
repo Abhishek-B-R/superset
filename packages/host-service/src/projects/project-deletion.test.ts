@@ -1,5 +1,5 @@
 import { Database } from "bun:sqlite";
-import { afterAll, describe, expect, test } from "bun:test";
+import { afterAll, afterEach, describe, expect, test } from "bun:test";
 import { existsSync, mkdirSync, mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
@@ -18,6 +18,7 @@ import { runArchivedWorkspaceReconcile } from "../runtime/archived-workspace-rec
 import { createCallerFactory } from "../trpc";
 import { projectRouter } from "../trpc/router/project/project";
 import { workspaceRouter } from "../trpc/router/workspace/workspace";
+import { cleanupGitOps } from "../trpc/router/workspace-cleanup/git-ops";
 import type { HostServiceContext } from "../types";
 import {
 	listDeletedProjects,
@@ -33,6 +34,8 @@ const MIGRATIONS_FOLDER = resolve(import.meta.dir, "../../drizzle");
 const PROJECT_ID = "00000000-0000-4000-8000-000000000001";
 const root = mkdtempSync(join(tmpdir(), "project-deletion-"));
 afterAll(() => rmSync(root, { recursive: true, force: true }));
+const originalGitOps = { ...cleanupGitOps };
+afterEach(() => Object.assign(cleanupGitOps, originalGitOps));
 
 function setup() {
 	const db = drizzle(new Database(":memory:"), {
@@ -63,21 +66,23 @@ function setup() {
 	};
 	const events: { kind: string; id: string; type: string }[] = [];
 	const gitCalls: string[][] = [];
+	cleanupGitOps.resolveGitEnv = async () => ({}) as never;
+	cleanupGitOps.removeWorktree = async ({ worktreePath, force }) => {
+		gitCalls.push(["worktree", "remove", worktreePath, `force=${force}`]);
+		rmSync(worktreePath, { recursive: true, force: true });
+		return { stillRegistered: false };
+	};
 	const ctx = {
 		db,
 		userId: "alice",
 		isAuthenticated: true,
 		organizationId: "org",
 		api: null,
-		git: async () => ({
-			raw: async (args: string[]) => {
-				gitCalls.push(args);
-				rmSync(args[2] as string, { recursive: true, force: true });
-			},
-		}),
+
 		eventBus: {
 			broadcastProjectChanged: (e: { projectId: string; eventType: string }) =>
 				events.push({ kind: "project", id: e.projectId, type: e.eventType }),
+			broadcastTagFoldersChanged: () => {},
 			broadcastWorkspaceChanged: (e: {
 				workspaceId: string;
 				eventType: string;
@@ -246,7 +251,7 @@ describe("purge", () => {
 		).toBe(1);
 		expect(project()).toBeUndefined();
 		expect(workspace("live")).toBeUndefined();
-		expect(gitCalls).toEqual([["worktree", "remove", live]]);
+		expect(gitCalls).toEqual([["worktree", "remove", live, "force=false"]]);
 		expect(existsSync(repoPath)).toBe(true);
 	});
 });
@@ -258,7 +263,7 @@ describe("delete permanently", () => {
 		await softDeleteProject(ctx, PROJECT_ID);
 		expect(await purgeDeletedProject(ctx, PROJECT_ID)).toBe(true);
 		expect(project()).toBeUndefined();
-		expect(gitCalls).toEqual([["worktree", "remove", live]]);
+		expect(gitCalls).toEqual([["worktree", "remove", live, "force=false"]]);
 		expect(existsSync(repoPath)).toBe(true);
 	});
 
