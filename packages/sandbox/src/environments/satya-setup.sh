@@ -1,12 +1,12 @@
 #!/bin/bash
-# The internal environment's setup hook: what a Superset engineer's box has
-# beyond the image. Runs once as the sandbox user, with sudo, in the golden
+# Satya's environment's setup hook: his shell, dotfiles and CLIs on top of
+# the image. Coworkers make their own environments (superset environments create). Runs once as the sandbox user, with sudo, in the golden
 # after the boot runner has checked the monorepo out under /workspace; the
 # environment row stores it as its `setup` override, and a fork inherits the
 # result. Its `start` counterpart is the repository's own dev-stack.cloud.sh.
 set -uo pipefail
 
-log() { printf '[internal-setup] %s\n' "$1"; }
+log() { printf '[satya-setup] %s\n' "$1"; }
 
 # The sandbox API runs commands with no USER in their env; bash under set -u
 # exits 127 on the first reference.
