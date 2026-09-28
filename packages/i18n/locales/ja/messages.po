@@ -104,6 +104,10 @@ msgstr "{0, plural, one {#個のアクティブなポート — 詳細を隠す}
 msgid "{0, plural, one {# active port — show details} other {# active ports — show details}}"
 msgstr "{0, plural, one {#個のアクティブなポート — 詳細を表示} other {#個のアクティブなポート — 詳細を表示}}"
 
+#. placeholder {0}: person.runningAgentCount
+msgid "{0, plural, one {# agent} other {# agents}}"
+msgstr "{0, plural, other {エージェント # 件}}"
+
 #. placeholder {0}: workspace.diffStats.fileCount
 msgid "{0, plural, one {# changed file} other {# changed files}}"
 msgstr "{0, plural, one {#件の変更ファイル} other {#件の変更ファイル}}"
@@ -212,6 +216,10 @@ msgstr "{0, plural, other {サブエージェント # 件}}"
 #. placeholder {0}: TASKS.length
 msgid "{0, plural, one {# task} other {# tasks}}"
 msgstr "{0, plural, one {#件のタスク} other {#件のタスク}}"
+
+#. placeholder {0}: person.runningTerminalCount
+msgid "{0, plural, one {# terminal running} other {# terminals running}}"
+msgstr "{0, plural, other {ターミナル # 個が実行中}}"
 
 #. placeholder {0}: entry.items.length
 msgid "{0, plural, one {# tool call} other {# tool calls}}"
@@ -663,6 +671,9 @@ msgstr "{days}日{hours}時間"
 msgid "{days}d ago"
 msgstr "{days}日前"
 
+msgid "{daysLeft, plural, one {# day left} other {# days left}}"
+msgstr "{daysLeft, plural, other {残り # 日}}"
+
 msgid "{daysRemaining, plural, one {Your account is deactivated and will be permanently deleted in # day. Reactivate to restore it exactly as you left it.} other {Your account is deactivated and will be permanently deleted in # days. Reactivate to restore it exactly as you left it.}}"
 msgstr "{daysRemaining, plural, one {アカウントは無効化されており、#日後に完全に削除されます。再有効化すると元の状態に戻ります。} other {アカウントは無効化されており、#日後に完全に削除されます。再有効化すると元の状態に戻ります。}}"
 
@@ -807,9 +818,6 @@ msgstr "{noun, select, person {人を1人以上指定するか、{choice}を選�
 
 msgid "{noun, select, repository {Specify at least one repository.} channel {Specify at least one channel.} reaction {Specify at least one reaction.} dataSource {Specify at least one data source.} team {Specify at least one team.} project {Specify at least one project.} calendar {Specify at least one calendar.} other {Specify at least one entry.}}"
 msgstr "{noun, select, repository {リポジトリを1つ以上指定してください。} channel {チャンネルを1つ以上指定してください。} reaction {リアクションを1つ以上指定してください。} dataSource {データソースを1つ以上指定してください。} team {チームを1つ以上指定してください。} project {プロジェクトを1つ以上指定してください。} calendar {カレンダーを1つ以上指定してください。} other {項目を1つ以上指定してください。}}"
-
-msgid "{offlineHostCount, plural, one {# device is offline and keeps its copy.} other {# devices are offline and keep their copy.}}"
-msgstr "{offlineHostCount, plural, one {#台のデバイスがオフラインのため、そのコピーは残ります。} other {#台のデバイスがオフラインのため、そのコピーは残ります。}}"
 
 msgid "{openCount} open"
 msgstr "{openCount}件通過"
@@ -966,9 +974,6 @@ msgstr "{workspaceName}: ホストが利用できません"
 
 msgid "{workspaceName}: teardown failed"
 msgstr "{workspaceName}: ティアダウンに失敗しました"
-
-msgid "{worktreeCount, plural, one {This removes the project and its # workspace from every reachable device, and deletes that worktree from disk.} other {This removes the project and its # workspaces from every reachable device, and deletes their worktrees from disk.}}"
-msgstr "{worktreeCount, plural, one {到達可能なすべてのデバイスからプロジェクトと#件のワークスペースを削除し、それらのワークツリーをディスクから削除します。} other {到達可能なすべてのデバイスからプロジェクトと#件のワークスペースを削除し、それらのワークツリーをディスクから削除します。}}"
 
 msgid "{years}y ago"
 msgstr "{years}年前"
@@ -1377,6 +1382,9 @@ msgstr "アクティベーション、使い始めてからの利用量、そし
 
 msgid "Active"
 msgstr "有効"
+
+msgid "active {lastActive}"
+msgstr "{lastActive}にアクティブ"
 
 msgid "Active agent sessions."
 msgstr "実行中のエージェントセッション。"
@@ -4469,6 +4477,9 @@ msgstr "「{name}」に自動で名前を付けられませんでした"
 msgid "Couldn't parse this diff: {patchParseError}"
 msgstr "この差分を解析できませんでした: {patchParseError}"
 
+msgid "Couldn't permanently delete \"{projectName}\""
+msgstr "「{projectName}」を完全に削除できませんでした"
+
 msgid "Couldn't post reply"
 msgstr "返信を投稿できませんでした"
 
@@ -4494,6 +4505,9 @@ msgstr "ターミナルを再起動できませんでした"
 
 msgid "Couldn't restart the host service"
 msgstr "ホストサービスを再起動できませんでした"
+
+msgid "Couldn't restore \"{projectName}\""
+msgstr "「{projectName}」を復元できませんでした"
 
 msgid "Couldn't save"
 msgstr "保存できませんでした"
@@ -5036,6 +5050,9 @@ msgstr "組織を削除"
 msgid "Delete page"
 msgstr "ページを削除"
 
+msgid "Delete permanently"
+msgstr "完全に削除"
+
 msgid "Delete project"
 msgstr "プロジェクトを削除"
 
@@ -5085,19 +5102,28 @@ msgstr "「{deletedName}」を削除しました"
 msgid "Deleted \"{hostName}\""
 msgstr "「{hostName}」を削除しました"
 
-msgid "Deleted \"{projectName}\""
-msgstr "「{projectName}」を削除しました"
+#. placeholder {0}: deletedUrls.length
+#. placeholder {1}: selected.length
+msgid "Deleted \"{projectName}\" from {0} of {1} devices. The others keep their copy."
+msgstr "{1} 台中 {0} 台のデバイスから「{projectName}」を削除しました。他のデバイスにはコピーが残ります。"
 
-#. placeholder {0}: results.length - failed.length
-#. placeholder {1}: hostIds.length
-msgid "Deleted \"{projectName}\" from {0} of {1} devices — unreachable devices keep their copy"
-msgstr "「{projectName}」を{1}台中{0}台のデバイスから削除しました — 到達できないデバイスにはコピーが残ります"
+msgid "Deleted \"{projectName}\". You can restore it from Settings → Projects for 30 days."
+msgstr "「{projectName}」を削除しました。30 日間は「設定 → プロジェクト」から復元できます。"
+
+msgid "Deleted {deletedWhen} · {deviceNames}"
+msgstr "{deletedWhen}に削除 · {deviceNames}"
 
 msgid "Deleted {name}"
 msgstr "{name}を削除しました"
 
+msgid "Deleted by {deletedBy} {deletedWhen} · {deviceNames}"
+msgstr "{deletedBy} が{deletedWhen}に削除 · {deviceNames}"
+
 msgid "deleted or unavailable — pick another"
 msgstr "削除済みまたは利用不可 — 別のものを選んでください"
+
+msgid "Deleted projects can be restored for 30 days, with the workspaces that were deleted with them. After that they are removed; the repository folder and worktrees with uncommitted changes stay on disk."
+msgstr "削除したプロジェクトは、一緒に削除されたワークスペースとともに 30 日間復元できます。その後は完全に削除されますが、リポジトリのフォルダーと未コミットの変更があるワークツリーはディスクに残ります。"
 
 msgid "Deleted workspaces, but couldn’t finish updating the sidebar"
 msgstr "ワークスペースは削除しましたが、サイドバーの更新を完了できませんでした"
@@ -5228,6 +5254,9 @@ msgstr "開発ビルド"
 
 msgid "Device: {selectedLabel}"
 msgstr "デバイス: {selectedLabel}"
+
+msgid "Devices"
+msgstr "デバイス"
 
 msgid "DevTools"
 msgstr "DevTools"
@@ -7280,6 +7309,9 @@ msgstr "バーから隠す"
 msgid "Hide from chart"
 msgstr "チャートから隠す"
 
+msgid "Hide from sidebar"
+msgstr "サイドバーから非表示"
+
 msgid "Hide from Sidebar"
 msgstr "サイドバーから非表示"
 
@@ -7962,6 +7994,9 @@ msgstr "独自のブランチとファイルのコピー"
 
 msgid "Its workspaces and terminals are unavailable until it restarts — use the Superset tray menu > Host Service > Restart."
 msgstr "再起動するまで、そのワークスペースとターミナルは利用できません — Supersetのトレイメニューから「ホストサービス」>「再起動」を実行してください。"
+
+msgid "Its workspaces and their worktrees are removed from disk now instead of after 30 days. The repository folder and worktrees with uncommitted changes are kept."
+msgstr "ワークスペースとそのワークツリーは、30 日後ではなく今すぐディスクから削除されます。リポジトリのフォルダーと未コミットの変更があるワークツリーは残ります。"
 
 msgid "Jane Doe"
 msgstr "山田太郎"
@@ -9598,9 +9633,6 @@ msgstr "履歴はまだありません"
 msgid "No host is available for this port"
 msgstr "このポートに利用できるホストがありません"
 
-msgid "No host serving this project is reachable right now"
-msgstr "このプロジェクトを提供しているホストに現在到達できません"
-
 msgid "No hosts match \"{q}\"."
 msgstr "「{q}」に一致するホストはありません。"
 
@@ -9751,6 +9783,9 @@ msgstr "一致するプロジェクトがありません。"
 
 msgid "No projects on this host yet"
 msgstr "このホストにはまだプロジェクトがありません"
+
+msgid "No projects were deleted in the last 30 days."
+msgstr "過去 30 日間に削除されたプロジェクトはありません。"
 
 msgid "No projects yet."
 msgstr "プロジェクトはまだありません。"
@@ -10222,11 +10257,11 @@ msgstr "この場所を変更できるのはホストのオーナーのみです
 msgid "Only host owners can delete this host"
 msgstr "このホストを削除できるのはホストのオーナーのみです"
 
-msgid "Only organization owners can delete this project."
-msgstr "このプロジェクトを削除できるのは組織のオーナーのみです。"
-
 msgid "Only organization owners can modify these settings."
 msgstr "これらの設定を変更できるのは組織のオーナーのみです。"
+
+msgid "Only organization owners or the device's owner can delete this project."
+msgstr "このプロジェクトを削除できるのは、組織のオーナーまたはデバイスのオーナーのみです。"
 
 msgid "Only owners can change membership."
 msgstr "メンバーシップを変更できるのはオーナーのみです。"
@@ -10263,6 +10298,9 @@ msgstr "このページを作成した人だけが変更できます。"
 
 msgid "Only the thread's author or the page's owner can delete it"
 msgstr "スレッドを削除できるのはスレッドの投稿者かページのオーナーのみです"
+
+msgid "Only want it out of your sidebar? Hide it instead. Nobody else is affected."
+msgstr "サイドバーから外したいだけですか？代わりに非表示にしてください。他のユーザーには影響しません。"
 
 msgid "Only you"
 msgstr "自分のみ"
@@ -10817,6 +10855,9 @@ msgstr "その他のデバイス"
 msgid "Other Hosts"
 msgstr "その他のホスト"
 
+msgid "Other people are using this project. Type <0>{projectName}</0> to confirm."
+msgstr "他のユーザーがこのプロジェクトを使用しています。確認のため <0>{projectName}</0> と入力してください。"
+
 msgid "Other Team Members"
 msgstr "他のチームメンバー"
 
@@ -10874,6 +10915,9 @@ msgstr "{0} が所有 — このオートメーションを編集できるのは
 
 msgid "Owner"
 msgstr "オーナー"
+
+msgid "Owner access required"
+msgstr "オーナー権限が必要"
 
 msgid "Owns every PTY session and survives app restarts."
 msgstr "すべてのPTYセッションを保持し、アプリの再起動後も動き続けます。"
@@ -11078,6 +11122,12 @@ msgstr "1ユーザーあたり月額"
 
 msgid "Percent of total system RAM used by monitored Superset resources only (not all apps). A high share means Superset is a major contributor to system memory pressure; a low share means pressure is likely elsewhere."
 msgstr "監視対象のSupersetリソースのみが使用する、システムRAM全体に対する割合です(すべてのアプリではありません)。割合が高い場合はSupersetがシステムのメモリ圧迫の主な要因であり、低い場合は原因は他にあります。"
+
+msgid "Permanently delete \"{projectName}\"?"
+msgstr "「{projectName}」を完全に削除しますか？"
+
+msgid "Permanently deleted \"{projectName}\""
+msgstr "「{projectName}」を完全に削除しました"
 
 #. placeholder {0}: team.name
 msgid "Permanently remove <0>{0}</0> and all of its members. This can't be undone."
@@ -11888,6 +11938,9 @@ msgstr "最近のPR"
 msgid "Recent pull requests"
 msgstr "最近のプルリクエスト"
 
+msgid "Recently deleted"
+msgstr "最近削除した項目"
+
 msgid "Recently Shipped"
 msgstr "最近リリース"
 
@@ -12490,11 +12543,17 @@ msgstr "このバージョンを復元しますか?"
 msgid "Restored"
 msgstr "復元済み"
 
+msgid "Restored \"{projectName}\""
+msgstr "「{projectName}」を復元しました"
+
 msgid "Restoring your session"
 msgstr "セッションを復元中"
 
 msgid "Restoring..."
 msgstr "復元中..."
+
+msgid "Restoring…"
+msgstr "復元中…"
 
 msgid "Result"
 msgstr "結果"
@@ -13983,6 +14042,9 @@ msgstr "一部のテーマはスキップされました"
 msgid "Some triggers need additional configuration"
 msgstr "一部のトリガーには追加の設定が必要です"
 
+msgid "Someone"
+msgstr "誰か"
+
 #. js-lingui-explicit-id
 msgid "serverError.page.entryPathHeldByColleague"
 msgstr "このワークスペースの {entryPath} は、他の人がすでに公開しています。ページ ID を明示して相手のページにバージョンを追加するか、ファイルを移動してください。"
@@ -15235,9 +15297,6 @@ msgstr "リモートブランチが分岐しています。続ける前にpull�
 msgid "The repositories a cloud workspace checks out, and which one's .superset/config.json it acts on. The workspace opens on the config location, or on the first repository by name."
 msgstr "クラウドワークスペースがチェックアウトするリポジトリと、どのリポジトリの .superset/config.json を適用するか。ワークスペースは設定の場所、なければ名前順で最初のリポジトリで開きます。"
 
-msgid "The repository folder itself is kept."
-msgstr "リポジトリのフォルダ自体は残ります。"
-
 msgid "The request failed."
 msgstr "リクエストに失敗しました。"
 
@@ -15543,8 +15602,8 @@ msgstr "選択したすべてのワークツリーをディスクから削除し
 msgid "This removes the host, its access, and its workspaces. Files on the machine stay. A running host may reappear. This can’t be undone."
 msgstr "ホストとそのアクセス権、ワークスペースを削除します。マシン上のファイルは残ります。稼働中のホストは再表示されることがあります。この操作は元に戻せません。"
 
-msgid "This removes the project from every reachable device."
-msgstr "到達可能なすべてのデバイスからプロジェクトを削除します。"
+msgid "This removes the project and its workspaces for everyone on the selected devices, and stops their terminals and agents."
+msgstr "選択したデバイス上のすべてのユーザーからプロジェクトとそのワークスペースを削除し、ターミナルとエージェントを停止します。"
 
 msgid "This removes the worktree from disk and closes the workspace."
 msgstr "ワークツリーをディスクから削除し、ワークスペースを閉じます。"
@@ -17061,9 +17120,6 @@ msgstr "ワークツリー"
 msgid "Worktrees are removed from disk; workspaces on the project's checkout only close. Files in the checkout stay as they are."
 msgstr "ワークツリーはディスクから削除され、プロジェクトのチェックアウト上のワークスペースは閉じるだけです。チェックアウト内のファイルはそのまま残ります。"
 
-msgid "Worktrees with uncommitted changes are left on disk."
-msgstr "未コミットの変更があるワークツリーはディスクに残ります。"
-
 msgid "Would you like to reassign it?"
 msgstr "割り当て直しますか?"
 
@@ -17160,6 +17216,9 @@ msgstr "バージョン {version} を閲覧中です（読み取り専用）"
 
 msgid "You can attach up to {MAX_ATTACHMENTS} files"
 msgstr "添付できるファイルは最大{MAX_ATTACHMENTS}件です"
+
+msgid "You can restore it from Settings → Projects for 30 days. The repository folder is never deleted."
+msgstr "30 日間は「設定 → プロジェクト」から復元できます。リポジトリのフォルダーが削除されることはありません。"
 
 #. placeholder {0}: COMPANY.DOMAIN
 msgid "You can't change this subscription in the app. Your organization's plan is managed by its owner at {0}."

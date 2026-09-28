@@ -104,6 +104,10 @@ msgstr "{0, plural, one {# etkin port — ayrıntıları gizle} other {# etkin p
 msgid "{0, plural, one {# active port — show details} other {# active ports — show details}}"
 msgstr "{0, plural, one {# etkin port — ayrıntıları göster} other {# etkin port — ayrıntıları göster}}"
 
+#. placeholder {0}: person.runningAgentCount
+msgid "{0, plural, one {# agent} other {# agents}}"
+msgstr "{0, plural, one {# ajan} other {# ajan}}"
+
 #. placeholder {0}: workspace.diffStats.fileCount
 msgid "{0, plural, one {# changed file} other {# changed files}}"
 msgstr "{0, plural, one {# değişen dosya} other {# değişen dosya}}"
@@ -212,6 +216,10 @@ msgstr "{0, plural, one {# alt ajan} other {# alt ajan}}"
 #. placeholder {0}: TASKS.length
 msgid "{0, plural, one {# task} other {# tasks}}"
 msgstr "{0, plural, one {# görev} other {# görev}}"
+
+#. placeholder {0}: person.runningTerminalCount
+msgid "{0, plural, one {# terminal running} other {# terminals running}}"
+msgstr "{0, plural, one {# terminal çalışıyor} other {# terminal çalışıyor}}"
 
 #. placeholder {0}: entry.items.length
 msgid "{0, plural, one {# tool call} other {# tool calls}}"
@@ -663,6 +671,9 @@ msgstr "{days}g {hours}sa"
 msgid "{days}d ago"
 msgstr "{days}g önce"
 
+msgid "{daysLeft, plural, one {# day left} other {# days left}}"
+msgstr "{daysLeft, plural, one {# gün kaldı} other {# gün kaldı}}"
+
 msgid "{daysRemaining, plural, one {Your account is deactivated and will be permanently deleted in # day. Reactivate to restore it exactly as you left it.} other {Your account is deactivated and will be permanently deleted in # days. Reactivate to restore it exactly as you left it.}}"
 msgstr "{daysRemaining, plural, one {Hesabınız devre dışı bırakıldı ve # gün içinde kalıcı olarak silinecek. Bıraktığınız gibi geri yüklemek için yeniden etkinleştirin.} other {Hesabınız devre dışı bırakıldı ve # gün içinde kalıcı olarak silinecek. Bıraktığınız gibi geri yüklemek için yeniden etkinleştirin.}}"
 
@@ -807,9 +818,6 @@ msgstr "{noun, select, person {En az bir kişi belirtin veya {choice} seçeneği
 
 msgid "{noun, select, repository {Specify at least one repository.} channel {Specify at least one channel.} reaction {Specify at least one reaction.} dataSource {Specify at least one data source.} team {Specify at least one team.} project {Specify at least one project.} calendar {Specify at least one calendar.} other {Specify at least one entry.}}"
 msgstr "{noun, select, repository {En az bir depo belirtin.} channel {En az bir kanal belirtin.} reaction {En az bir tepki belirtin.} dataSource {En az bir veri kaynağı belirtin.} team {En az bir takım belirtin.} project {En az bir proje belirtin.} calendar {En az bir takvim belirtin.} other {En az bir öğe belirtin.}}"
-
-msgid "{offlineHostCount, plural, one {# device is offline and keeps its copy.} other {# devices are offline and keep their copy.}}"
-msgstr "{offlineHostCount, plural, one {# cihaz çevrimdışı ve kopyasını koruyor.} other {# cihaz çevrimdışı ve kopyalarını koruyor.}}"
 
 msgid "{openCount} open"
 msgstr "{openCount} açık"
@@ -966,9 +974,6 @@ msgstr "{workspaceName}: host kullanılamıyor"
 
 msgid "{workspaceName}: teardown failed"
 msgstr "{workspaceName}: kapatma başarısız"
-
-msgid "{worktreeCount, plural, one {This removes the project and its # workspace from every reachable device, and deletes that worktree from disk.} other {This removes the project and its # workspaces from every reachable device, and deletes their worktrees from disk.}}"
-msgstr "{worktreeCount, plural, one {Bu, projeyi ve # çalışma alanını erişilebilir tüm cihazlardan kaldırır ve worktree'sini diskten siler.} other {Bu, projeyi ve # çalışma alanlarını erişilebilir tüm cihazlardan kaldırır ve worktree'lerini diskten siler.}}"
 
 msgid "{years}y ago"
 msgstr "{years}y önce"
@@ -1377,6 +1382,9 @@ msgstr "Aktivasyon, içeri girdikten sonra ne kadar kullandıkları ve geri dön
 
 msgid "Active"
 msgstr "Etkin"
+
+msgid "active {lastActive}"
+msgstr "{lastActive} aktif"
 
 msgid "Active agent sessions."
 msgstr "Etkin ajan oturumları."
@@ -4469,6 +4477,9 @@ msgstr "\"{name}\" otomatik olarak adlandırılamadı"
 msgid "Couldn't parse this diff: {patchParseError}"
 msgstr "Bu fark ayrıştırılamadı: {patchParseError}"
 
+msgid "Couldn't permanently delete \"{projectName}\""
+msgstr "\"{projectName}\" kalıcı olarak silinemedi"
+
 msgid "Couldn't post reply"
 msgstr "Yanıt gönderilemedi"
 
@@ -4494,6 +4505,9 @@ msgstr "Terminaller yeniden başlatılamadı"
 
 msgid "Couldn't restart the host service"
 msgstr "Host hizmeti yeniden başlatılamadı"
+
+msgid "Couldn't restore \"{projectName}\""
+msgstr "\"{projectName}\" geri yüklenemedi"
 
 msgid "Couldn't save"
 msgstr "Kaydedilemedi"
@@ -5036,6 +5050,9 @@ msgstr "Kuruluşu sil"
 msgid "Delete page"
 msgstr "Sayfayı sil"
 
+msgid "Delete permanently"
+msgstr "Kalıcı olarak sil"
+
 msgid "Delete project"
 msgstr "Projeyi sil"
 
@@ -5085,19 +5102,28 @@ msgstr "\"{deletedName}\" silindi"
 msgid "Deleted \"{hostName}\""
 msgstr "\"{hostName}\" silindi"
 
-msgid "Deleted \"{projectName}\""
-msgstr "\"{projectName}\" silindi"
+#. placeholder {0}: deletedUrls.length
+#. placeholder {1}: selected.length
+msgid "Deleted \"{projectName}\" from {0} of {1} devices. The others keep their copy."
+msgstr "\"{projectName}\", {1} cihazın {0} tanesinden silindi. Diğerleri kopyalarını korur."
 
-#. placeholder {0}: results.length - failed.length
-#. placeholder {1}: hostIds.length
-msgid "Deleted \"{projectName}\" from {0} of {1} devices — unreachable devices keep their copy"
-msgstr "\"{projectName}\", {1} cihazdan {0} tanesinden silindi — erişilemeyen cihazlar kopyalarını korur"
+msgid "Deleted \"{projectName}\". You can restore it from Settings → Projects for 30 days."
+msgstr "\"{projectName}\" silindi. 30 gün boyunca Ayarlar → Projeler bölümünden geri yükleyebilirsin."
+
+msgid "Deleted {deletedWhen} · {deviceNames}"
+msgstr "{deletedWhen} silindi · {deviceNames}"
 
 msgid "Deleted {name}"
 msgstr "{name} silindi"
 
+msgid "Deleted by {deletedBy} {deletedWhen} · {deviceNames}"
+msgstr "{deletedBy} tarafından {deletedWhen} silindi · {deviceNames}"
+
 msgid "deleted or unavailable — pick another"
 msgstr "silinmiş veya kullanılamıyor — başka birini seçin"
+
+msgid "Deleted projects can be restored for 30 days, with the workspaces that were deleted with them. After that they are removed; the repository folder and worktrees with uncommitted changes stay on disk."
+msgstr "Silinen projeler, onlarla birlikte silinen çalışma alanlarıyla birlikte 30 gün boyunca geri yüklenebilir. Sonrasında kaldırılırlar; depo klasörü ve commit edilmemiş değişiklikler içeren worktree'ler diskte kalır."
 
 msgid "Deleted workspaces, but couldn’t finish updating the sidebar"
 msgstr "Çalışma alanları silindi, ancak kenar çubuğu güncellenemedi"
@@ -5228,6 +5254,9 @@ msgstr "Geliştirme derlemesi"
 
 msgid "Device: {selectedLabel}"
 msgstr "Cihaz: {selectedLabel}"
+
+msgid "Devices"
+msgstr "Cihazlar"
 
 msgid "DevTools"
 msgstr "DevTools"
@@ -7280,6 +7309,9 @@ msgstr "Çubuktan gizle"
 msgid "Hide from chart"
 msgstr "Grafikten gizle"
 
+msgid "Hide from sidebar"
+msgstr "Kenar çubuğunda gizle"
+
 msgid "Hide from Sidebar"
 msgstr "Kenar çubuğundan gizle"
 
@@ -7962,6 +7994,9 @@ msgstr "Kendi dalı ve dosyaların kendi kopyası"
 
 msgid "Its workspaces and terminals are unavailable until it restarts — use the Superset tray menu > Host Service > Restart."
 msgstr "Yeniden başlayana kadar çalışma alanları ve terminalleri kullanılamaz — Superset tepsi menüsünde Host hizmeti > Yeniden başlat yolunu kullanın."
+
+msgid "Its workspaces and their worktrees are removed from disk now instead of after 30 days. The repository folder and worktrees with uncommitted changes are kept."
+msgstr "Çalışma alanları ve worktree'leri 30 gün sonra değil şimdi diskten kaldırılır. Depo klasörü ve commit edilmemiş değişiklikler içeren worktree'ler korunur."
 
 msgid "Jane Doe"
 msgstr "Ayşe Yılmaz"
@@ -9598,9 +9633,6 @@ msgstr "Henüz geçmiş yok"
 msgid "No host is available for this port"
 msgstr "Bu port için kullanılabilir host yok"
 
-msgid "No host serving this project is reachable right now"
-msgstr "Bu projeyi sunan hiçbir host şu anda erişilebilir değil"
-
 msgid "No hosts match \"{q}\"."
 msgstr "\"{q}\" ile eşleşen host yok."
 
@@ -9751,6 +9783,9 @@ msgstr "Eşleşen proje yok."
 
 msgid "No projects on this host yet"
 msgstr "Bu host'ta henüz proje yok"
+
+msgid "No projects were deleted in the last 30 days."
+msgstr "Son 30 günde hiçbir proje silinmedi."
 
 msgid "No projects yet."
 msgstr "Henüz proje yok."
@@ -10222,11 +10257,11 @@ msgstr "Bu konumu yalnızca host sahipleri değiştirebilir."
 msgid "Only host owners can delete this host"
 msgstr "Bu host'u yalnızca host sahipleri silebilir"
 
-msgid "Only organization owners can delete this project."
-msgstr "Bu projeyi yalnızca kuruluş sahipleri silebilir."
-
 msgid "Only organization owners can modify these settings."
 msgstr "Bu ayarları yalnızca kuruluş sahipleri değiştirebilir."
+
+msgid "Only organization owners or the device's owner can delete this project."
+msgstr "Bu projeyi yalnızca kuruluş sahipleri veya cihazın sahibi silebilir."
 
 msgid "Only owners can change membership."
 msgstr "Üyeliği yalnızca sahipler değiştirebilir."
@@ -10263,6 +10298,9 @@ msgstr "Bunları yalnızca bu sayfayı oluşturan kişi değiştirebilir."
 
 msgid "Only the thread's author or the page's owner can delete it"
 msgstr "Konuyu yalnızca yazarı veya sayfanın sahibi silebilir"
+
+msgid "Only want it out of your sidebar? Hide it instead. Nobody else is affected."
+msgstr "Sadece kenar çubuğundan mı kaldırmak istiyorsun? Bunun yerine gizle. Başka kimse etkilenmez."
 
 msgid "Only you"
 msgstr "Yalnızca siz"
@@ -10817,6 +10855,9 @@ msgstr "Diğer cihazlar"
 msgid "Other Hosts"
 msgstr "Diğer host'lar"
 
+msgid "Other people are using this project. Type <0>{projectName}</0> to confirm."
+msgstr "Bu projeyi başkaları kullanıyor. Onaylamak için <0>{projectName}</0> yaz."
+
 msgid "Other Team Members"
 msgstr "Diğer takım üyeleri"
 
@@ -10874,6 +10915,9 @@ msgstr "Sahibi: {0} — bu otomasyonu yalnızca o düzenleyebilir."
 
 msgid "Owner"
 msgstr "Sahip"
+
+msgid "Owner access required"
+msgstr "Sahip erişimi gerekli"
 
 msgid "Owns every PTY session and survives app restarts."
 msgstr "Her PTY oturumunun sahibidir ve uygulama yeniden başlatmalarından sağ çıkar."
@@ -11078,6 +11122,12 @@ msgstr "kullanıcı/ay başına"
 
 msgid "Percent of total system RAM used by monitored Superset resources only (not all apps). A high share means Superset is a major contributor to system memory pressure; a low share means pressure is likely elsewhere."
 msgstr "Yalnızca izlenen Superset kaynaklarının kullandığı toplam sistem RAM'i yüzdesi (tüm uygulamalar değil). Yüksek pay, Superset'in sistem bellek baskısına önemli ölçüde katkıda bulunduğu anlamına gelir; düşük pay ise baskının büyük olasılıkla başka yerden geldiğini gösterir."
+
+msgid "Permanently delete \"{projectName}\"?"
+msgstr "\"{projectName}\" kalıcı olarak silinsin mi?"
+
+msgid "Permanently deleted \"{projectName}\""
+msgstr "\"{projectName}\" kalıcı olarak silindi"
 
 #. placeholder {0}: team.name
 msgid "Permanently remove <0>{0}</0> and all of its members. This can't be undone."
@@ -11888,6 +11938,9 @@ msgstr "Son PR'lar"
 msgid "Recent pull requests"
 msgstr "Son pull request'ler"
 
+msgid "Recently deleted"
+msgstr "Son silinenler"
+
 msgid "Recently Shipped"
 msgstr "Yeni yayımlananlar"
 
@@ -12490,11 +12543,17 @@ msgstr "Bu sürüm geri yüklensin mi?"
 msgid "Restored"
 msgstr "Geri yüklendi"
 
+msgid "Restored \"{projectName}\""
+msgstr "\"{projectName}\" geri yüklendi"
+
 msgid "Restoring your session"
 msgstr "Oturumunuz geri yükleniyor"
 
 msgid "Restoring..."
 msgstr "Geri yükleniyor..."
+
+msgid "Restoring…"
+msgstr "Geri yükleniyor…"
 
 msgid "Result"
 msgstr "Sonuç"
@@ -13983,6 +14042,9 @@ msgstr "Bazı temalar atlandı"
 msgid "Some triggers need additional configuration"
 msgstr "Bazı tetikleyiciler ek yapılandırma gerektiriyor"
 
+msgid "Someone"
+msgstr "Biri"
+
 #. js-lingui-explicit-id
 msgid "serverError.page.entryPathHeldByColleague"
 msgstr "Bu çalışma alanından {entryPath} dosyasını başkası zaten yayımlamış. Onun sayfasına sürüm eklemek için açık bir sayfa kimliğiyle yayımla ya da dosyayı taşı."
@@ -15235,9 +15297,6 @@ msgstr "Uzak dal ayrıştı. Devam etmeden önce pull yapın."
 msgid "The repositories a cloud workspace checks out, and which one's .superset/config.json it acts on. The workspace opens on the config location, or on the first repository by name."
 msgstr "Bir bulut çalışma alanının çektiği depolar ve hangisinin .superset/config.json dosyasını uyguladığı. Çalışma alanı yapılandırma konumunda, yoksa ada göre ilk depoda açılır."
 
-msgid "The repository folder itself is kept."
-msgstr "Depo klasörünün kendisi korunur."
-
 msgid "The request failed."
 msgstr "İstek başarısız oldu."
 
@@ -15543,8 +15602,8 @@ msgstr "Bu işlem, seçili her worktree'yi diskten kaldırır ve çalışma alan
 msgid "This removes the host, its access, and its workspaces. Files on the machine stay. A running host may reappear. This can’t be undone."
 msgstr "Bu işlem host'u, erişimini ve çalışma alanlarını kaldırır. Makinedeki dosyalar kalır. Çalışan bir host yeniden görünebilir. Bu geri alınamaz."
 
-msgid "This removes the project from every reachable device."
-msgstr "Bu, projeyi erişilebilir tüm cihazlardan kaldırır."
+msgid "This removes the project and its workspaces for everyone on the selected devices, and stops their terminals and agents."
+msgstr "Bu işlem, seçili cihazlardaki herkes için projeyi ve çalışma alanlarını kaldırır ve terminallerini ve ajanlarını durdurur."
 
 msgid "This removes the worktree from disk and closes the workspace."
 msgstr "Bu, worktree'yi diskten kaldırır ve çalışma alanını kapatır."
@@ -17061,9 +17120,6 @@ msgstr "Worktree'ler"
 msgid "Worktrees are removed from disk; workspaces on the project's checkout only close. Files in the checkout stay as they are."
 msgstr "Worktree'ler diskten kaldırılır; projenin checkout'undaki çalışma alanları yalnızca kapanır. Checkout'taki dosyalar olduğu gibi kalır."
 
-msgid "Worktrees with uncommitted changes are left on disk."
-msgstr "Commit edilmemiş değişiklikleri olan worktree'ler diskte bırakılır."
-
 msgid "Would you like to reassign it?"
 msgstr "Yeniden atamak ister misiniz?"
 
@@ -17160,6 +17216,9 @@ msgstr "Sürüm {version} görüntüleniyor, salt okunur"
 
 msgid "You can attach up to {MAX_ATTACHMENTS} files"
 msgstr "En fazla {MAX_ATTACHMENTS} dosya ekleyebilirsiniz"
+
+msgid "You can restore it from Settings → Projects for 30 days. The repository folder is never deleted."
+msgstr "30 gün boyunca Ayarlar → Projeler bölümünden geri yükleyebilirsin. Depo klasörü asla silinmez."
 
 #. placeholder {0}: COMPANY.DOMAIN
 msgid "You can't change this subscription in the app. Your organization's plan is managed by its owner at {0}."

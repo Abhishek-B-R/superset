@@ -104,6 +104,10 @@ msgstr "{0, plural, one {# actieve poort — details verbergen} other {# actieve
 msgid "{0, plural, one {# active port — show details} other {# active ports — show details}}"
 msgstr "{0, plural, one {# actieve poort — details tonen} other {# actieve poorten — details tonen}}"
 
+#. placeholder {0}: person.runningAgentCount
+msgid "{0, plural, one {# agent} other {# agents}}"
+msgstr "{0, plural, one {# agent} other {# agents}}"
+
 #. placeholder {0}: workspace.diffStats.fileCount
 msgid "{0, plural, one {# changed file} other {# changed files}}"
 msgstr "{0, plural, one {# gewijzigd bestand} other {# gewijzigde bestanden}}"
@@ -212,6 +216,10 @@ msgstr "{0, plural, one {# subagent} other {# subagents}}"
 #. placeholder {0}: TASKS.length
 msgid "{0, plural, one {# task} other {# tasks}}"
 msgstr "{0, plural, one {# taak} other {# taken}}"
+
+#. placeholder {0}: person.runningTerminalCount
+msgid "{0, plural, one {# terminal running} other {# terminals running}}"
+msgstr "{0, plural, one {# terminal actief} other {# terminals actief}}"
 
 #. placeholder {0}: entry.items.length
 msgid "{0, plural, one {# tool call} other {# tool calls}}"
@@ -663,6 +671,9 @@ msgstr "{days}d {hours}u"
 msgid "{days}d ago"
 msgstr "{days}d geleden"
 
+msgid "{daysLeft, plural, one {# day left} other {# days left}}"
+msgstr "{daysLeft, plural, one {Nog # dag} other {Nog # dagen}}"
+
 msgid "{daysRemaining, plural, one {Your account is deactivated and will be permanently deleted in # day. Reactivate to restore it exactly as you left it.} other {Your account is deactivated and will be permanently deleted in # days. Reactivate to restore it exactly as you left it.}}"
 msgstr "{daysRemaining, plural, one {Je account is gedeactiveerd en wordt over # dag definitief verwijderd. Reactiveer het om alles terug te krijgen zoals je het achterliet.} other {Je account is gedeactiveerd en wordt over # dagen definitief verwijderd. Reactiveer het om alles terug te krijgen zoals je het achterliet.}}"
 
@@ -807,9 +818,6 @@ msgstr "{noun, select, person {Geef minstens één persoon op, of kies {choice}.
 
 msgid "{noun, select, repository {Specify at least one repository.} channel {Specify at least one channel.} reaction {Specify at least one reaction.} dataSource {Specify at least one data source.} team {Specify at least one team.} project {Specify at least one project.} calendar {Specify at least one calendar.} other {Specify at least one entry.}}"
 msgstr "{noun, select, repository {Geef minstens één repository op.} channel {Geef minstens één kanaal op.} reaction {Geef minstens één reactie op.} dataSource {Geef minstens één gegevensbron op.} team {Geef minstens één team op.} project {Geef minstens één project op.} calendar {Geef minstens één agenda op.} other {Geef minstens één item op.}}"
-
-msgid "{offlineHostCount, plural, one {# device is offline and keeps its copy.} other {# devices are offline and keep their copy.}}"
-msgstr "{offlineHostCount, plural, one {# apparaat is offline en behoudt zijn kopie.} other {# apparaten zijn offline en behouden hun kopie.}}"
 
 msgid "{openCount} open"
 msgstr "{openCount} open"
@@ -966,9 +974,6 @@ msgstr "{workspaceName}: host is niet beschikbaar"
 
 msgid "{workspaceName}: teardown failed"
 msgstr "{workspaceName}: teardown mislukt"
-
-msgid "{worktreeCount, plural, one {This removes the project and its # workspace from every reachable device, and deletes that worktree from disk.} other {This removes the project and its # workspaces from every reachable device, and deletes their worktrees from disk.}}"
-msgstr "{worktreeCount, plural, one {Dit verwijdert het project en zijn # werkruimte van elk bereikbaar apparaat en wist die worktree van de schijf.} other {Dit verwijdert het project en zijn # werkruimten van elk bereikbaar apparaat en wist hun worktrees van de schijf.}}"
 
 msgid "{years}y ago"
 msgstr "{years}j geleden"
@@ -1377,6 +1382,9 @@ msgstr "Activatie, hoeveel mensen het gebruiken zodra ze binnen zijn, en of ze t
 
 msgid "Active"
 msgstr "Actief"
+
+msgid "active {lastActive}"
+msgstr "actief {lastActive}"
 
 msgid "Active agent sessions."
 msgstr "Actieve agentsessies."
@@ -4469,6 +4477,9 @@ msgstr "Kon \"{name}\" niet automatisch een naam geven"
 msgid "Couldn't parse this diff: {patchParseError}"
 msgstr "Kan deze diff niet parsen: {patchParseError}"
 
+msgid "Couldn't permanently delete \"{projectName}\""
+msgstr "Kan \"{projectName}\" niet definitief verwijderen"
+
 msgid "Couldn't post reply"
 msgstr "Kan antwoord niet plaatsen"
 
@@ -4494,6 +4505,9 @@ msgstr "Kan terminals niet herstarten"
 
 msgid "Couldn't restart the host service"
 msgstr "Kan de hostservice niet herstarten"
+
+msgid "Couldn't restore \"{projectName}\""
+msgstr "Kan \"{projectName}\" niet herstellen"
 
 msgid "Couldn't save"
 msgstr "Kan niet opslaan"
@@ -5036,6 +5050,9 @@ msgstr "Organisatie verwijderen"
 msgid "Delete page"
 msgstr "Pagina verwijderen"
 
+msgid "Delete permanently"
+msgstr "Definitief verwijderen"
+
 msgid "Delete project"
 msgstr "Project verwijderen"
 
@@ -5085,19 +5102,28 @@ msgstr "\"{deletedName}\" verwijderd"
 msgid "Deleted \"{hostName}\""
 msgstr "\"{hostName}\" verwijderd"
 
-msgid "Deleted \"{projectName}\""
-msgstr "\"{projectName}\" verwijderd"
+#. placeholder {0}: deletedUrls.length
+#. placeholder {1}: selected.length
+msgid "Deleted \"{projectName}\" from {0} of {1} devices. The others keep their copy."
+msgstr "\"{projectName}\" verwijderd van {0} van {1} apparaten. De andere houden hun kopie."
 
-#. placeholder {0}: results.length - failed.length
-#. placeholder {1}: hostIds.length
-msgid "Deleted \"{projectName}\" from {0} of {1} devices — unreachable devices keep their copy"
-msgstr "\"{projectName}\" verwijderd van {0} van {1} apparaten — onbereikbare apparaten houden hun kopie"
+msgid "Deleted \"{projectName}\". You can restore it from Settings → Projects for 30 days."
+msgstr "\"{projectName}\" verwijderd. Je kunt het 30 dagen lang herstellen via Instellingen → Projecten."
+
+msgid "Deleted {deletedWhen} · {deviceNames}"
+msgstr "Verwijderd {deletedWhen} · {deviceNames}"
 
 msgid "Deleted {name}"
 msgstr "{name} verwijderd"
 
+msgid "Deleted by {deletedBy} {deletedWhen} · {deviceNames}"
+msgstr "Verwijderd door {deletedBy} {deletedWhen} · {deviceNames}"
+
 msgid "deleted or unavailable — pick another"
 msgstr "verwijderd of niet beschikbaar — kies een andere"
+
+msgid "Deleted projects can be restored for 30 days, with the workspaces that were deleted with them. After that they are removed; the repository folder and worktrees with uncommitted changes stay on disk."
+msgstr "Verwijderde projecten kunnen 30 dagen lang worden hersteld, samen met de workspaces die ermee zijn verwijderd. Daarna worden ze verwijderd; de repositorymap en worktrees met niet-gecommitte wijzigingen blijven op de schijf."
 
 msgid "Deleted workspaces, but couldn’t finish updating the sidebar"
 msgstr "Werkruimtes verwijderd, maar de zijbalk kon niet worden bijgewerkt"
@@ -5228,6 +5254,9 @@ msgstr "Ontwikkelbuild"
 
 msgid "Device: {selectedLabel}"
 msgstr "Apparaat: {selectedLabel}"
+
+msgid "Devices"
+msgstr "Apparaten"
 
 msgid "DevTools"
 msgstr "DevTools"
@@ -7280,6 +7309,9 @@ msgstr "Verbergen in balk"
 msgid "Hide from chart"
 msgstr "Verbergen in grafiek"
 
+msgid "Hide from sidebar"
+msgstr "Verbergen in zijbalk"
+
 msgid "Hide from Sidebar"
 msgstr "Uit de zijbalk verbergen"
 
@@ -7962,6 +7994,9 @@ msgstr "Een eigen branch en een eigen kopie van de bestanden"
 
 msgid "Its workspaces and terminals are unavailable until it restarts — use the Superset tray menu > Host Service > Restart."
 msgstr "De werkruimtes en terminals zijn niet beschikbaar tot de service opnieuw start — gebruik het Superset-menu in de menubalk > Hostservice > Opnieuw starten."
+
+msgid "Its workspaces and their worktrees are removed from disk now instead of after 30 days. The repository folder and worktrees with uncommitted changes are kept."
+msgstr "De workspaces en hun worktrees worden nu van de schijf verwijderd in plaats van na 30 dagen. De repositorymap en worktrees met niet-gecommitte wijzigingen blijven behouden."
 
 msgid "Jane Doe"
 msgstr "Jan Jansen"
@@ -9598,9 +9633,6 @@ msgstr "Nog geen geschiedenis"
 msgid "No host is available for this port"
 msgstr "Er is geen host beschikbaar voor deze poort"
 
-msgid "No host serving this project is reachable right now"
-msgstr "Er is nu geen host bereikbaar die dit project bedient"
-
 msgid "No hosts match \"{q}\"."
 msgstr "Geen hosts komen overeen met \"{q}\"."
 
@@ -9751,6 +9783,9 @@ msgstr "Geen overeenkomende projecten."
 
 msgid "No projects on this host yet"
 msgstr "Nog geen projecten op deze host"
+
+msgid "No projects were deleted in the last 30 days."
+msgstr "Er zijn de afgelopen 30 dagen geen projecten verwijderd."
 
 msgid "No projects yet."
 msgstr "Nog geen projecten."
@@ -10222,11 +10257,11 @@ msgstr "Alleen eigenaren van de host kunnen deze locatie wijzigen."
 msgid "Only host owners can delete this host"
 msgstr "Alleen eigenaren van de host kunnen deze host verwijderen"
 
-msgid "Only organization owners can delete this project."
-msgstr "Alleen eigenaren van de organisatie kunnen dit project verwijderen."
-
 msgid "Only organization owners can modify these settings."
 msgstr "Alleen eigenaren van de organisatie kunnen deze instellingen wijzigen."
+
+msgid "Only organization owners or the device's owner can delete this project."
+msgstr "Alleen organisatie-eigenaren of de eigenaar van het apparaat kunnen dit project verwijderen."
 
 msgid "Only owners can change membership."
 msgstr "Alleen eigenaren kunnen het lidmaatschap wijzigen."
@@ -10263,6 +10298,9 @@ msgstr "Alleen degene die deze pagina heeft gemaakt kan dit wijzigen."
 
 msgid "Only the thread's author or the page's owner can delete it"
 msgstr "Alleen de auteur van de thread of de eigenaar van de pagina kan hem verwijderen"
+
+msgid "Only want it out of your sidebar? Hide it instead. Nobody else is affected."
+msgstr "Wil je het alleen uit je zijbalk halen? Verberg het dan. Niemand anders merkt er iets van."
 
 msgid "Only you"
 msgstr "Alleen jij"
@@ -10817,6 +10855,9 @@ msgstr "Andere apparaten"
 msgid "Other Hosts"
 msgstr "Andere hosts"
 
+msgid "Other people are using this project. Type <0>{projectName}</0> to confirm."
+msgstr "Anderen gebruiken dit project. Typ <0>{projectName}</0> om te bevestigen."
+
 msgid "Other Team Members"
 msgstr "Andere teamleden"
 
@@ -10874,6 +10915,9 @@ msgstr "Eigendom van {0} — alleen die persoon kan deze automatisering bewerken
 
 msgid "Owner"
 msgstr "Eigenaar"
+
+msgid "Owner access required"
+msgstr "Eigenaarstoegang vereist"
 
 msgid "Owns every PTY session and survives app restarts."
 msgstr "Bezit elke PTY-sessie en overleeft herstarts van de app."
@@ -11078,6 +11122,12 @@ msgstr "per gebruiker/maand"
 
 msgid "Percent of total system RAM used by monitored Superset resources only (not all apps). A high share means Superset is a major contributor to system memory pressure; a low share means pressure is likely elsewhere."
 msgstr "Percentage van het totale systeem-RAM dat alleen door de gemonitorde Superset-resources wordt gebruikt (niet door alle apps). Een hoog aandeel betekent dat Superset flink bijdraagt aan de geheugendruk; een laag aandeel betekent dat de druk waarschijnlijk elders zit."
+
+msgid "Permanently delete \"{projectName}\"?"
+msgstr "\"{projectName}\" definitief verwijderen?"
+
+msgid "Permanently deleted \"{projectName}\""
+msgstr "\"{projectName}\" definitief verwijderd"
 
 #. placeholder {0}: team.name
 msgid "Permanently remove <0>{0}</0> and all of its members. This can't be undone."
@@ -11888,6 +11938,9 @@ msgstr "Recente PR's"
 msgid "Recent pull requests"
 msgstr "Recente pull requests"
 
+msgid "Recently deleted"
+msgstr "Onlangs verwijderd"
+
 msgid "Recently Shipped"
 msgstr "Onlangs uitgebracht"
 
@@ -12490,11 +12543,17 @@ msgstr "Deze versie herstellen?"
 msgid "Restored"
 msgstr "Hersteld"
 
+msgid "Restored \"{projectName}\""
+msgstr "\"{projectName}\" hersteld"
+
 msgid "Restoring your session"
 msgstr "Je sessie wordt hersteld"
 
 msgid "Restoring..."
 msgstr "Herstellen..."
+
+msgid "Restoring…"
+msgstr "Herstellen…"
 
 msgid "Result"
 msgstr "Resultaat"
@@ -13983,6 +14042,9 @@ msgstr "Sommige thema's zijn overgeslagen"
 msgid "Some triggers need additional configuration"
 msgstr "Sommige triggers hebben extra configuratie nodig"
 
+msgid "Someone"
+msgstr "Iemand"
+
 #. js-lingui-explicit-id
 msgid "serverError.page.entryPathHeldByColleague"
 msgstr "Iemand anders heeft {entryPath} vanuit deze workspace al gepubliceerd. Publiceer met een expliciet pagina-id om een versie aan hun pagina toe te voegen, of verplaats het bestand."
@@ -15235,9 +15297,6 @@ msgstr "De remote branch is uiteengelopen. Pull voordat je verdergaat."
 msgid "The repositories a cloud workspace checks out, and which one's .superset/config.json it acts on. The workspace opens on the config location, or on the first repository by name."
 msgstr "De repositories die een cloudwerkruimte uitcheckt, en van welke de .superset/config.json wordt toegepast. De werkruimte opent op de configuratielocatie, of anders in de eerste repository op naam."
 
-msgid "The repository folder itself is kept."
-msgstr "De repositorymap zelf blijft behouden."
-
 msgid "The request failed."
 msgstr "Het verzoek is mislukt."
 
@@ -15543,8 +15602,8 @@ msgstr "Hiermee wordt elke geselecteerde worktree van schijf gehaald en het bijb
 msgid "This removes the host, its access, and its workspaces. Files on the machine stay. A running host may reappear. This can’t be undone."
 msgstr "Hiermee worden de host, de toegang en de werkruimtes verwijderd. Bestanden op de machine blijven staan. Een draaiende host kan weer verschijnen. Dit kan niet ongedaan worden gemaakt."
 
-msgid "This removes the project from every reachable device."
-msgstr "Dit verwijdert het project van elk bereikbaar apparaat."
+msgid "This removes the project and its workspaces for everyone on the selected devices, and stops their terminals and agents."
+msgstr "Hiermee worden het project en de workspaces voor iedereen op de geselecteerde apparaten verwijderd en worden hun terminals en agents gestopt."
 
 msgid "This removes the worktree from disk and closes the workspace."
 msgstr "Hiermee verwijder je de worktree van de schijf en sluit je de werkruimte."
@@ -17061,9 +17120,6 @@ msgstr "Worktrees"
 msgid "Worktrees are removed from disk; workspaces on the project's checkout only close. Files in the checkout stay as they are."
 msgstr "Worktrees worden van de schijf verwijderd; werkruimtes op de checkout van het project worden alleen gesloten. Bestanden in de checkout blijven ongewijzigd."
 
-msgid "Worktrees with uncommitted changes are left on disk."
-msgstr "Worktrees met niet-gecommitte wijzigingen blijven op de schijf staan."
-
 msgid "Would you like to reassign it?"
 msgstr "Wil je hem opnieuw toewijzen?"
 
@@ -17160,6 +17216,9 @@ msgstr "Je bekijkt versie {version}, alleen-lezen"
 
 msgid "You can attach up to {MAX_ATTACHMENTS} files"
 msgstr "Je kunt maximaal {MAX_ATTACHMENTS} bestanden toevoegen"
+
+msgid "You can restore it from Settings → Projects for 30 days. The repository folder is never deleted."
+msgstr "Je kunt het 30 dagen lang herstellen via Instellingen → Projecten. De repositorymap wordt nooit verwijderd."
 
 #. placeholder {0}: COMPANY.DOMAIN
 msgid "You can't change this subscription in the app. Your organization's plan is managed by its owner at {0}."

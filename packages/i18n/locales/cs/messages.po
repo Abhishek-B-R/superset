@@ -104,6 +104,10 @@ msgstr "{0, plural, one {# aktivní port — skrýt podrobnosti} few {# aktivní
 msgid "{0, plural, one {# active port — show details} other {# active ports — show details}}"
 msgstr "{0, plural, one {# aktivní port — zobrazit podrobnosti} few {# aktivní porty — zobrazit podrobnosti} many {# aktivního portu — zobrazit podrobnosti} other {# aktivních portů — zobrazit podrobnosti}}"
 
+#. placeholder {0}: person.runningAgentCount
+msgid "{0, plural, one {# agent} other {# agents}}"
+msgstr "{0, plural, one {# agent} few {# agenti} many {# agenta} other {# agentů}}"
+
 #. placeholder {0}: workspace.diffStats.fileCount
 msgid "{0, plural, one {# changed file} other {# changed files}}"
 msgstr "{0, plural, one {# změněný soubor} few {# změněné soubory} many {# změněného souboru} other {# změněných souborů}}"
@@ -212,6 +216,10 @@ msgstr "{0, plural, one {# subagent} few {# subagenti} many {# subagenta} other 
 #. placeholder {0}: TASKS.length
 msgid "{0, plural, one {# task} other {# tasks}}"
 msgstr "{0, plural, one {# úkol} few {# úkoly} many {# úkolu} other {# úkolů}}"
+
+#. placeholder {0}: person.runningTerminalCount
+msgid "{0, plural, one {# terminal running} other {# terminals running}}"
+msgstr "{0, plural, one {# běžící terminál} few {# běžící terminály} many {# běžícího terminálu} other {# běžících terminálů}}"
 
 #. placeholder {0}: entry.items.length
 msgid "{0, plural, one {# tool call} other {# tool calls}}"
@@ -663,6 +671,9 @@ msgstr "{days} d {hours} h"
 msgid "{days}d ago"
 msgstr "před {days} d"
 
+msgid "{daysLeft, plural, one {# day left} other {# days left}}"
+msgstr "{daysLeft, plural, one {Zbývá # den} few {Zbývají # dny} many {Zbývá # dne} other {Zbývá # dní}}"
+
 msgid "{daysRemaining, plural, one {Your account is deactivated and will be permanently deleted in # day. Reactivate to restore it exactly as you left it.} other {Your account is deactivated and will be permanently deleted in # days. Reactivate to restore it exactly as you left it.}}"
 msgstr "{daysRemaining, plural, one {Váš účet je deaktivovaný a za # den bude trvale smazán. Obnovte ho a bude přesně takový, jaký jste ho opustili.} few {Váš účet je deaktivovaný a za # dny bude trvale smazán. Obnovte ho a bude přesně takový, jaký jste ho opustili.} many {Váš účet je deaktivovaný a za # dne bude trvale smazán. Obnovte ho a bude přesně takový, jaký jste ho opustili.} other {Váš účet je deaktivovaný a za # dní bude trvale smazán. Obnovte ho a bude přesně takový, jaký jste ho opustili.}}"
 
@@ -807,9 +818,6 @@ msgstr "{noun, select, person {Zadejte alespoň jednu osobu, nebo zvolte {choice
 
 msgid "{noun, select, repository {Specify at least one repository.} channel {Specify at least one channel.} reaction {Specify at least one reaction.} dataSource {Specify at least one data source.} team {Specify at least one team.} project {Specify at least one project.} calendar {Specify at least one calendar.} other {Specify at least one entry.}}"
 msgstr "{noun, select, repository {Zadejte alespoň jeden repozitář.} channel {Zadejte alespoň jeden kanál.} reaction {Zadejte alespoň jednu reakci.} dataSource {Zadejte alespoň jeden zdroj dat.} team {Zadejte alespoň jeden tým.} project {Zadejte alespoň jeden projekt.} calendar {Zadejte alespoň jeden kalendář.} other {Zadejte alespoň jednu položku.}}"
-
-msgid "{offlineHostCount, plural, one {# device is offline and keeps its copy.} other {# devices are offline and keep their copy.}}"
-msgstr "{offlineHostCount, plural, one {# zařízení je offline a ponechá si svou kopii.} few {# zařízení jsou offline a ponechají si svou kopii.} many {# zařízení je offline a ponechá si svou kopii.} other {# zařízení je offline a ponechá si svou kopii.}}"
 
 msgid "{openCount} open"
 msgstr "{openCount} otevřených"
@@ -966,9 +974,6 @@ msgstr "{workspaceName}: host není dostupný"
 
 msgid "{workspaceName}: teardown failed"
 msgstr "{workspaceName}: teardown selhal"
-
-msgid "{worktreeCount, plural, one {This removes the project and its # workspace from every reachable device, and deletes that worktree from disk.} other {This removes the project and its # workspaces from every reachable device, and deletes their worktrees from disk.}}"
-msgstr "{worktreeCount, plural, one {Tím se projekt a jeho # pracovní prostor odstraní ze všech dostupných zařízení a tento worktree se smaže z disku.} few {Tím se projekt a jeho # pracovní prostory odstraní ze všech dostupných zařízení a jejich worktree se smažou z disku.} many {Tím se projekt a jeho # pracovního prostoru odstraní ze všech dostupných zařízení a jejich worktree se smažou z disku.} other {Tím se projekt a jeho # pracovních prostorů odstraní ze všech dostupných zařízení a jejich worktree se smažou z disku.}}"
 
 msgid "{years}y ago"
 msgstr "před {years} r."
@@ -1377,6 +1382,9 @@ msgstr "Aktivace, kolik toho lidé používají, když už jsou uvnitř, a jestl
 
 msgid "Active"
 msgstr "Aktivní"
+
+msgid "active {lastActive}"
+msgstr "aktivní {lastActive}"
 
 msgid "Active agent sessions."
 msgstr "Aktivní relace agentů."
@@ -4469,6 +4477,9 @@ msgstr "Nepodařilo se automaticky pojmenovat „{name}“"
 msgid "Couldn't parse this diff: {patchParseError}"
 msgstr "Tento diff se nepodařilo zpracovat: {patchParseError}"
 
+msgid "Couldn't permanently delete \"{projectName}\""
+msgstr "„{projectName}“ se nepodařilo trvale smazat"
+
 msgid "Couldn't post reply"
 msgstr "Nepodařilo se odeslat odpověď"
 
@@ -4494,6 +4505,9 @@ msgstr "Nepodařilo se restartovat terminály"
 
 msgid "Couldn't restart the host service"
 msgstr "Nepodařilo se restartovat host service"
+
+msgid "Couldn't restore \"{projectName}\""
+msgstr "„{projectName}“ se nepodařilo obnovit"
 
 msgid "Couldn't save"
 msgstr "Nepodařilo se uložit"
@@ -5036,6 +5050,9 @@ msgstr "Smazat organizaci"
 msgid "Delete page"
 msgstr "Smazat stránku"
 
+msgid "Delete permanently"
+msgstr "Trvale smazat"
+
 msgid "Delete project"
 msgstr "Smazat projekt"
 
@@ -5085,19 +5102,28 @@ msgstr "„{deletedName}“ smazán"
 msgid "Deleted \"{hostName}\""
 msgstr "„{hostName}“ smazán"
 
-msgid "Deleted \"{projectName}\""
-msgstr "„{projectName}“ smazán"
+#. placeholder {0}: deletedUrls.length
+#. placeholder {1}: selected.length
+msgid "Deleted \"{projectName}\" from {0} of {1} devices. The others keep their copy."
+msgstr "„{projectName}“ smazán na {0} z {1} zařízení. Ostatní si kopii ponechají."
 
-#. placeholder {0}: results.length - failed.length
-#. placeholder {1}: hostIds.length
-msgid "Deleted \"{projectName}\" from {0} of {1} devices — unreachable devices keep their copy"
-msgstr "„{projectName}“ smazán z {0} z {1} zařízení — nedostupná zařízení si kopii ponechala"
+msgid "Deleted \"{projectName}\". You can restore it from Settings → Projects for 30 days."
+msgstr "„{projectName}“ smazán. Můžete ho obnovit v Nastavení → Projekty po dobu 30 dnů."
+
+msgid "Deleted {deletedWhen} · {deviceNames}"
+msgstr "Smazáno {deletedWhen} · {deviceNames}"
 
 msgid "Deleted {name}"
 msgstr "{name} smazán"
 
+msgid "Deleted by {deletedBy} {deletedWhen} · {deviceNames}"
+msgstr "Smazal(a) {deletedBy} {deletedWhen} · {deviceNames}"
+
 msgid "deleted or unavailable — pick another"
 msgstr "smazán nebo nedostupný — vyberte jiný"
+
+msgid "Deleted projects can be restored for 30 days, with the workspaces that were deleted with them. After that they are removed; the repository folder and worktrees with uncommitted changes stay on disk."
+msgstr "Smazané projekty lze obnovit po dobu 30 dnů, spolu s pracovními prostory, které byly smazány s nimi. Poté budou odstraněny; složka repozitáře a worktree s necommitnutými změnami zůstanou na disku."
 
 msgid "Deleted workspaces, but couldn’t finish updating the sidebar"
 msgstr "Pracovní prostory byly smazány, ale postranní panel se nepodařilo dokončit aktualizovat"
@@ -5228,6 +5254,9 @@ msgstr "Vývojové sestavení"
 
 msgid "Device: {selectedLabel}"
 msgstr "Zařízení: {selectedLabel}"
+
+msgid "Devices"
+msgstr "Zařízení"
 
 msgid "DevTools"
 msgstr "DevTools"
@@ -7280,6 +7309,9 @@ msgstr "Skrýt z lišty"
 msgid "Hide from chart"
 msgstr "Skrýt z grafu"
 
+msgid "Hide from sidebar"
+msgstr "Skrýt z postranního panelu"
+
 msgid "Hide from Sidebar"
 msgstr "Skrýt z postranního panelu"
 
@@ -7962,6 +7994,9 @@ msgstr "Vlastní větev a vlastní kopie souborů"
 
 msgid "Its workspaces and terminals are unavailable until it restarts — use the Superset tray menu > Host Service > Restart."
 msgstr "Její pracovní prostory a terminály nebudou dostupné, dokud se nerestartuje — použijte nabídku Superset na liště > Host Service > Restart."
+
+msgid "Its workspaces and their worktrees are removed from disk now instead of after 30 days. The repository folder and worktrees with uncommitted changes are kept."
+msgstr "Jeho pracovní prostory a jejich worktree se odstraní z disku hned, ne až za 30 dní. Složka repozitáře a worktree s necommitnutými změnami zůstanou zachovány."
 
 msgid "Jane Doe"
 msgstr "Jan Novák"
@@ -9598,9 +9633,6 @@ msgstr "Zatím žádná historie"
 msgid "No host is available for this port"
 msgstr "Pro tento port není dostupný žádný host"
 
-msgid "No host serving this project is reachable right now"
-msgstr "Žádný host s tímto projektem teď není dostupný"
-
 msgid "No hosts match \"{q}\"."
 msgstr "Žádný host neodpovídá „{q}“."
 
@@ -9751,6 +9783,9 @@ msgstr "Žádný projekt neodpovídá."
 
 msgid "No projects on this host yet"
 msgstr "Na tomto hostu zatím nejsou žádné projekty"
+
+msgid "No projects were deleted in the last 30 days."
+msgstr "Za posledních 30 dní nebyly smazány žádné projekty."
 
 msgid "No projects yet."
 msgstr "Zatím žádné projekty."
@@ -10222,11 +10257,11 @@ msgstr "Toto umístění mohou měnit jen vlastníci hosta."
 msgid "Only host owners can delete this host"
 msgstr "Tohoto hosta mohou smazat jen jeho vlastníci"
 
-msgid "Only organization owners can delete this project."
-msgstr "Tento projekt mohou smazat jen vlastníci organizace."
-
 msgid "Only organization owners can modify these settings."
 msgstr "Toto nastavení mohou měnit jen vlastníci organizace."
+
+msgid "Only organization owners or the device's owner can delete this project."
+msgstr "Tento projekt mohou smazat jen vlastníci organizace nebo vlastník zařízení."
 
 msgid "Only owners can change membership."
 msgstr "Členství mohou měnit jen vlastníci."
@@ -10263,6 +10298,9 @@ msgstr "Tuto stránku může měnit jen ten, kdo ji vytvořil."
 
 msgid "Only the thread's author or the page's owner can delete it"
 msgstr "Smazat ho může jen autor vlákna nebo vlastník stránky"
+
+msgid "Only want it out of your sidebar? Hide it instead. Nobody else is affected."
+msgstr "Chcete ho jen odebrat z postranního panelu? Skryjte ho. Nikoho jiného se to nedotkne."
 
 msgid "Only you"
 msgstr "Jen vy"
@@ -10817,6 +10855,9 @@ msgstr "Ostatní zařízení"
 msgid "Other Hosts"
 msgstr "Ostatní hosty"
 
+msgid "Other people are using this project. Type <0>{projectName}</0> to confirm."
+msgstr "Tento projekt používají další lidé. Pro potvrzení napište <0>{projectName}</0>."
+
 msgid "Other Team Members"
 msgstr "Další členové týmu"
 
@@ -10874,6 +10915,9 @@ msgstr "Vlastník: {0} — upravovat tuto automatizaci může jen vlastník."
 
 msgid "Owner"
 msgstr "Vlastník"
+
+msgid "Owner access required"
+msgstr "Vyžadován přístup vlastníka"
 
 msgid "Owns every PTY session and survives app restarts."
 msgstr "Vlastní každou PTY relaci a přežije restart aplikace."
@@ -11078,6 +11122,12 @@ msgstr "na uživatele/měsíc"
 
 msgid "Percent of total system RAM used by monitored Superset resources only (not all apps). A high share means Superset is a major contributor to system memory pressure; a low share means pressure is likely elsewhere."
 msgstr "Procento celkové systémové RAM využité jen sledovanými prostředky Superset (ne všemi aplikacemi). Vysoký podíl znamená, že se Superset zásadně podílí na tlaku na paměť; nízký podíl znamená, že tlak pochází nejspíš odjinud."
+
+msgid "Permanently delete \"{projectName}\"?"
+msgstr "Trvale smazat „{projectName}“?"
+
+msgid "Permanently deleted \"{projectName}\""
+msgstr "„{projectName}“ trvale smazán"
 
 #. placeholder {0}: team.name
 msgid "Permanently remove <0>{0}</0> and all of its members. This can't be undone."
@@ -11888,6 +11938,9 @@ msgstr "Nedávné PR"
 msgid "Recent pull requests"
 msgstr "Nedávné pull requesty"
 
+msgid "Recently deleted"
+msgstr "Nedávno smazané"
+
 msgid "Recently Shipped"
 msgstr "Nedávno vydáno"
 
@@ -12490,11 +12543,17 @@ msgstr "Obnovit tuto verzi?"
 msgid "Restored"
 msgstr "Obnoveno"
 
+msgid "Restored \"{projectName}\""
+msgstr "„{projectName}“ obnoven"
+
 msgid "Restoring your session"
 msgstr "Obnovuji vaši relaci"
 
 msgid "Restoring..."
 msgstr "Obnovuji..."
+
+msgid "Restoring…"
+msgstr "Obnovuji…"
 
 msgid "Result"
 msgstr "Výsledek"
@@ -13983,6 +14042,9 @@ msgstr "Některé motivy byly přeskočeny"
 msgid "Some triggers need additional configuration"
 msgstr "Některé spouštěče potřebují další nastavení"
 
+msgid "Someone"
+msgstr "Někdo"
+
 #. js-lingui-explicit-id
 msgid "serverError.page.entryPathHeldByColleague"
 msgstr "Někdo jiný už {entryPath} z tohoto workspace publikoval. Publikuj s výslovným ID stránky a přidej verzi k jeho stránce, nebo soubor přesuň."
@@ -15235,9 +15297,6 @@ msgstr "Vzdálená větev se rozešla. Před pokračováním udělejte pull."
 msgid "The repositories a cloud workspace checks out, and which one's .superset/config.json it acts on. The workspace opens on the config location, or on the first repository by name."
 msgstr "Repozitáře, které cloudový pracovní prostor stáhne, a čí .superset/config.json použije. Pracovní prostor se otevře v umístění konfigurace, jinak v prvním repozitáři podle názvu."
 
-msgid "The repository folder itself is kept."
-msgstr "Samotná složka repozitáře zůstane zachována."
-
 msgid "The request failed."
 msgstr "Požadavek selhal."
 
@@ -15543,8 +15602,8 @@ msgstr "Tímto se z disku odstraní každý vybraný worktree a smaže se zázna
 msgid "This removes the host, its access, and its workspaces. Files on the machine stay. A running host may reappear. This can’t be undone."
 msgstr "Tímto se odstraní host, přístup k němu i jeho pracovní prostory. Soubory na počítači zůstanou. Běžící host se může znovu objevit. Nelze vrátit zpět."
 
-msgid "This removes the project from every reachable device."
-msgstr "Tím se projekt odstraní ze všech dostupných zařízení."
+msgid "This removes the project and its workspaces for everyone on the selected devices, and stops their terminals and agents."
+msgstr "Tím odeberete projekt a jeho pracovní prostory všem na vybraných zařízeních a zastavíte jejich terminály a agenty."
 
 msgid "This removes the worktree from disk and closes the workspace."
 msgstr "Tím se worktree odstraní z disku a pracovní prostor se zavře."
@@ -17061,9 +17120,6 @@ msgstr "Worktrees"
 msgid "Worktrees are removed from disk; workspaces on the project's checkout only close. Files in the checkout stay as they are."
 msgstr "Worktree se odstraní z disku; pracovní prostory na checkoutu projektu se pouze zavřou. Soubory v checkoutu zůstanou beze změny."
 
-msgid "Worktrees with uncommitted changes are left on disk."
-msgstr "Worktree s necommitnutými změnami zůstanou na disku."
-
 msgid "Would you like to reassign it?"
 msgstr "Chcete zkratku přiřadit znovu?"
 
@@ -17160,6 +17216,9 @@ msgstr "Prohlížíte si verzi {version}, jen pro čtení"
 
 msgid "You can attach up to {MAX_ATTACHMENTS} files"
 msgstr "Můžete přiložit nejvýše {MAX_ATTACHMENTS} souborů"
+
+msgid "You can restore it from Settings → Projects for 30 days. The repository folder is never deleted."
+msgstr "Můžete ho obnovit v Nastavení → Projekty po dobu 30 dnů. Složka repozitáře se nikdy nemaže."
 
 #. placeholder {0}: COMPANY.DOMAIN
 msgid "You can't change this subscription in the app. Your organization's plan is managed by its owner at {0}."
