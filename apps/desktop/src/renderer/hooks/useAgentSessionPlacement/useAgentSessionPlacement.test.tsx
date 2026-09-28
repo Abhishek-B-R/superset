@@ -1,7 +1,8 @@
-import { afterEach, beforeEach, expect, test } from "bun:test";
+import { afterAll, afterEach, beforeEach, expect, test } from "bun:test";
 import { GlobalRegistrator } from "@happy-dom/global-registrator";
 
-if (!GlobalRegistrator.isRegistered) GlobalRegistrator.register();
+const alreadyRegistered = GlobalRegistrator.isRegistered;
+if (!alreadyRegistered) GlobalRegistrator.register();
 const { act, cleanup, renderHook } = await import("@testing-library/react");
 const { setAgentSessionPlacement, useAgentSessionPlacement } = await import(
 	"./useAgentSessionPlacement"
@@ -9,6 +10,9 @@ const { setAgentSessionPlacement, useAgentSessionPlacement } = await import(
 
 beforeEach(() => window.localStorage.clear());
 afterEach(cleanup);
+afterAll(async () => {
+	if (!alreadyRegistered) await GlobalRegistrator.unregister();
+});
 
 test("preserves the existing placement preference", () => {
 	window.localStorage.setItem("lastSelectedDiffCommentPlacement", "new-tab");
