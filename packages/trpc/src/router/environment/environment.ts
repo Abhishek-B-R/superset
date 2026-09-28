@@ -422,7 +422,12 @@ export const environmentRouter = {
 									...(input.scope ? { scope: input.scope } : {}),
 									...(targetOwner ? { createdByUserId: targetOwner } : {}),
 								})
-								.where(eq(environments.id, target.id))
+								.where(
+									and(
+										eq(environments.id, target.id),
+										isNull(environments.archivedAt),
+									),
+								)
 								.returning()
 						: await tx
 								.insert(environments)
@@ -467,6 +472,13 @@ export const environmentRouter = {
 								createdByUserId: secret.createdByUserId,
 							})),
 						);
+					}
+					if (!saved) {
+						throw userError({
+							code: "NOT_FOUND",
+							message: "Environment not found",
+							i18nKey: "serverError.environment.environmentNotFound",
+						});
 					}
 					return saved;
 				})
@@ -571,14 +583,18 @@ export const environmentRouter = {
 			await assertCloudAccess(ctx);
 			const environment = await loadEnvironment(input.id, ctx);
 			assertOwned(environment);
-			await db
+			const [archived] = await db
 				.update(environments)
 				.set({ archivedAt: new Date() })
-				.where(eq(environments.id, input.id));
+				.where(eq(environments.id, environment.id))
+				.returning({
+					sourceKind: environments.sourceKind,
+					sourceRef: environments.sourceRef,
+				});
 			// A golden is one environment's alone, and an archived environment
 			// never forks from it again; without this it bills storage forever.
-			if (environment.sourceKind === "fork") {
-				await deleteSandbox(environment.sourceRef);
+			if (archived?.sourceKind === "fork") {
+				await deleteSandbox(archived.sourceRef);
 			}
 			return { archived: true };
 		}),

@@ -1,4 +1,5 @@
 import { describe, expect, test } from "bun:test";
+import { TRPCClientError } from "@trpc/client";
 import { type ApiClient, ApiHttpError } from "../api-client";
 import { promoteWorkspace } from "./promoteWorkspace";
 
@@ -31,8 +32,13 @@ function fakeApi({
 }
 
 const fast = { pollIntervalMs: 1, pollTimeoutMs: 200 };
+/** What the tRPC client throws for a gateway's HTML 504: the HTTP error as its cause. */
 const gatewayTimeout = () =>
-	Promise.reject(new ApiHttpError(504, "Gateway Timeout", ""));
+	Promise.reject(
+		new TRPCClientError("HTTP 504", {
+			cause: new ApiHttpError(504, "Gateway Timeout", ""),
+		}),
+	);
 
 describe("promoteWorkspace", () => {
 	test("a gateway timeout waits for the new environment, not an older one with its name", async () => {

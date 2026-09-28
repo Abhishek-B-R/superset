@@ -72,9 +72,13 @@ export async function promoteWorkspace({
 			scope,
 		})
 		.catch((error: unknown) => {
-			if (error instanceof ApiHttpError && error.status >= 502) {
-				return waitForRow();
-			}
+			const httpError =
+				error instanceof ApiHttpError
+					? error
+					: error instanceof Error && error.cause instanceof ApiHttpError
+						? error.cause
+						: undefined;
+			if (httpError && httpError.status >= 502) return waitForRow();
 			throw error;
 		});
 	if (!saved) throw new CLIError("The environment was not saved");
