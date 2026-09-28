@@ -1214,6 +1214,9 @@ msgstr "Trình duyệt trong ứng dụng tốt hơn: xem trước thay đổi v
 msgid "A better Superset is ready"
 msgstr "Phiên bản Superset tốt hơn đã sẵn sàng"
 
+msgid "A cloud automation needs an environment or a cloud workspace"
+msgstr "Tự động hóa trên cloud cần một environment hoặc một workspace cloud"
+
 #. js-lingui-explicit-id
 msgid "serverError.common.cloudWorkspaceCannotCallThis"
 msgstr "Workspace trên cloud không thể gọi {path}. Hãy làm việc này từ một client bạn đã đăng nhập."
@@ -1915,6 +1918,9 @@ msgstr "Agent hoàn thành trọn vẹn các thay đổi trên nhiều tệp."
 
 msgid "An agent writes whole functions and files while a human watches every step and approves every command. One agent, one human. Faster, but still serial."
 msgstr "Agent viết nguyên hàm và nguyên tệp trong khi con người theo dõi từng bước và duyệt từng lệnh. Một agent, một người. Nhanh hơn, nhưng vẫn tuần tự."
+
+msgid "An automation can only use a cloud workspace you created"
+msgstr "Tự động hóa chỉ có thể dùng workspace cloud do bạn tạo"
 
 msgid "An error occurred"
 msgstr "Đã xảy ra lỗi"
@@ -11246,9 +11252,6 @@ msgstr "PID"
 msgid "Pin"
 msgstr "Ghim"
 
-msgid "Pin a workspace to continue its agent session between runs"
-msgstr "Ghim một workspace để tiếp tục phiên agent giữa các lần chạy"
-
 msgid "Pin workspaces above your projects, then ⌘-click a batch to move, group, or delete them all at once."
 msgstr "Ghim workspace lên trên các dự án, rồi ⌘-nhấp một loạt để chuyển, gom nhóm hoặc xóa tất cả cùng lúc."
 
@@ -15165,8 +15168,14 @@ msgstr "Ứng dụng đang ở {appVersion} nhưng kết nối với dịch vụ
 msgid "The associated device isn't reachable right now"
 msgstr "Hiện không kết nối được tới thiết bị liên quan"
 
+msgid "The automation's owner can't use cloud workspaces in this organization anymore. Ask them to check their access, or run the automation on a device."
+msgstr "Chủ sở hữu của tự động hóa không còn dùng được workspace cloud trong tổ chức này. Hãy nhờ họ kiểm tra quyền truy cập, hoặc chạy tự động hóa trên một thiết bị."
+
 msgid "The best agent will change.<0/>Your workflow shouldn't."
 msgstr "Agent tốt nhất sẽ thay đổi.<0/>Quy trình của bạn thì không."
+
+msgid "The cloud workspace should have started but didn't answer in time. The next run tries again."
+msgstr "Workspace cloud lẽ ra đã khởi động nhưng không phản hồi kịp. Lần chạy tiếp theo sẽ thử lại."
 
 msgid "The config repository must be one of the environment's repositories"
 msgstr "Repository cấu hình phải là một trong các repository của environment"
@@ -15200,6 +15209,9 @@ msgstr "Người điều phối xuất hiện"
 
 msgid "The endpoint must use https."
 msgstr "Endpoint phải dùng https."
+
+msgid "The environment this automation starts cloud workspaces from was archived or has no repositories. Pick another environment in the automation's settings."
+msgstr "Environment mà tự động hóa này dùng để khởi động workspace cloud đã bị lưu trữ hoặc không có repository nào. Hãy chọn một environment khác trong cài đặt của tự động hóa."
 
 msgid "The factory"
 msgstr "Nhà máy"
@@ -15485,6 +15497,9 @@ msgstr "Tài khoản {plugin} này đã được một tổ chức Superset khá
 
 msgid "This action is irreversible."
 msgstr "Không thể hoàn tác thao tác này."
+
+msgid "This agent can't run in a cloud workspace"
+msgstr "Agent này không thể chạy trong workspace cloud"
 
 msgid "This agent no longer exists on the selected device (its agents may have been reset). Runs will fail until you pick a new one."
 msgstr "Agent này không còn tồn tại trên thiết bị đã chọn (agent trên đó có thể đã bị đặt lại). Các lần chạy sẽ thất bại cho đến khi bạn chọn agent khác."

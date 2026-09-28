@@ -238,6 +238,17 @@ deliberately not `shouldOpenBrowser()` from `lib/auth.ts`, whose extra TTY
 test is right for an interactive login prompt and wrong for an agent running
 the CLI with piped stdout.
 
+**A box has no agents until something lists them. Worked around, Open.**
+`agents.run` finds its agent in host-service's `host_agent_configs` table, and
+only a list call (`settings.agentConfigs.list`) or the first-boot launch fills
+it with the built-in presets. The desktop lists on every open, so a machine
+someone uses never shows this. A box that nobody opened and that launched no
+agent answers "No host agent config matching 'claude'". Automation dispatch
+lists before it runs (`cloudDispatch.ts`); `superset agents create` into such a
+box still fails. Still owed: `agents.run` fills the table itself (a host-service
+release), and a decision on which agents a box offers — the list fills every
+preset, but the image installs only Claude and Codex.
+
 ## Lifecycle
 
 **Delete is not wired.** The generic delete routes to the owning host, which

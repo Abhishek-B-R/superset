@@ -3,6 +3,7 @@ import {
 	automationRuns,
 	automations,
 	automationTriggers,
+	cloudWorkspaces,
 	v2Hosts,
 	v2UsersHosts,
 	v2Workspaces,
@@ -14,6 +15,7 @@ import {
 	planAllowsAutomations,
 	planTierFromSubscription,
 } from "@superset/shared/billing";
+import { isCloudAgentId } from "@superset/shared/cloud-agent-launch";
 import {
 	describeSchedule,
 	nextOccurrenceAfter,
@@ -21,10 +23,12 @@ import {
 	parseRrule,
 } from "@superset/shared/rrule";
 import { TRPCError, type TRPCRouterRecord } from "@trpc/server";
-import { and, asc, desc, eq, ilike } from "drizzle-orm";
+import { and, asc, desc, eq, ilike, notInArray } from "drizzle-orm";
 import { z } from "zod";
 import { env } from "../../env";
+import { assertCloudAccess } from "../../lib/cloud-guards";
 import { planRequiredError, protectedProcedure, userError } from "../../trpc";
+import { loadUsableEnvironment } from "../cloud-workspace/start";
 import { joinSlackTriggerChannels } from "../integration/slack/joinChannels";
 import {
 	requireActiveOrgMembership,
@@ -50,6 +54,15 @@ import {
 	setAutomationPromptSchema,
 	updateAutomationSchema,
 } from "./schema";
+import {
+	type AutomationTarget,
+	NO_TARGET,
+	needsLegacyWorkspace,
+	newCloudPin,
+	planTarget,
+	type TargetInput,
+	type TargetLookups,
+} from "./targetPlan";
 import { saveTriggerSet } from "./triggerSet";
 import { automationVersionsRouter } from "./versions";
 import { generateWebhookToken, hashWebhookToken } from "./webhookSecret";
@@ -117,6 +130,87 @@ async function verifyHostAccess(
 			i18nKey: "serverError.automation.youDonTHaveAccess",
 		});
 	}
+}
+
+/** Looks up what the input names, plans the target, then runs the checks the plan asks for. */
+async function resolveTarget(
+	ctx: { session: { user: { id: string; email: string } } },
+	organizationId: string,
+	existing: AutomationTarget,
+	input: TargetInput,
+	agent: string,
+): Promise<AutomationTarget> {
+	const userId = ctx.session.user.id;
+	const lookups: TargetLookups = {};
+	if (needsLegacyWorkspace(input) && input.v2WorkspaceId) {
+		lookups.legacyWorkspace = await verifyWorkspaceInOrg(
+			organizationId,
+			input.v2WorkspaceId,
+		);
+	}
+	const pin = newCloudPin(existing, input);
+	if (pin) {
+		lookups.pinEnvironmentId = await ownCloudWorkspaceEnvironment(
+			userId,
+			organizationId,
+			pin,
+		);
+	}
+
+	const plan = planTarget(existing, input, lookups);
+	for (const hostId of plan.hostsToVerify) {
+		await verifyHostAccess(userId, organizationId, hostId);
+	}
+	if (plan.cloud) {
+		await assertCloudAccess({ userId, session: ctx.session });
+		if (!isCloudAgentId(agent)) {
+			throw userError({
+				code: "BAD_REQUEST",
+				message: "This agent can't run in a cloud workspace",
+				i18nKey: "serverError.automation.cloudAgentUnsupported",
+			});
+		}
+		if (plan.cloud.environmentToVerify) {
+			await loadUsableEnvironment({
+				organizationId,
+				userId,
+				environmentId: plan.cloud.environmentToVerify,
+			});
+		}
+	}
+	return plan.target;
+}
+
+/** The pinned cloud workspace's environment, refused unless the caller created it. */
+async function ownCloudWorkspaceEnvironment(
+	userId: string,
+	organizationId: string,
+	cloudWorkspaceId: string,
+): Promise<string | null> {
+	const workspace = await db.query.cloudWorkspaces.findFirst({
+		where: and(
+			eq(cloudWorkspaces.id, cloudWorkspaceId),
+			eq(cloudWorkspaces.organizationId, organizationId),
+			notInArray(cloudWorkspaces.status, ["deleted", "failed"]),
+		),
+		columns: { environmentId: true, createdByUserId: true },
+	});
+	if (!workspace) {
+		throw userError({
+			code: "NOT_FOUND",
+			message: "Not found",
+			i18nKey: "serverError.cloudWorkspace.notFound",
+		});
+	}
+	// Waking a box hands it its creator's agent and GitHub credentials.
+	if (workspace.createdByUserId !== userId) {
+		throw userError({
+			code: "FORBIDDEN",
+			message: "An automation can only use a cloud workspace you created",
+			i18nKey: "serverError.automation.cloudWorkspaceNotYours",
+		});
+	}
+	return workspace.environmentId;
 }
 
 async function verifyWorkspaceInOrg(
@@ -314,65 +408,21 @@ export const automationRouter = {
 		.mutation(async ({ ctx, input }) => {
 			const organizationId = await requireAutomationsPlan(ctx);
 
-			if (input.targetHostId) {
-				await verifyHostAccess(
-					ctx.session.user.id,
-					organizationId,
-					input.targetHostId,
-				);
-			}
-
-			let targetHostId = input.targetHostId ?? null;
-			let v2ProjectId = input.v2ProjectId ?? null;
-			// Denormalized pin: a client that supplies hostId (and projectId, when
-			// the workspace has one) alongside the workspace id needs no registry
-			// lookup — hosts own workspace records. A null project means the pin
-			// is a session workspace. Host access is still verified below; a
-			// stale pin surfaces as a host-side error at run time, same as today.
-			if (input.v2WorkspaceId && !targetHostId) {
-				// Legacy clients (pre-denormalization) — resolve via the cloud
-				// table while it still exists; this branch is deleted in R3.
-				const workspace = await verifyWorkspaceInOrg(
-					organizationId,
-					input.v2WorkspaceId,
-				);
-				if (targetHostId && targetHostId !== workspace.hostId) {
-					throw userError({
-						code: "BAD_REQUEST",
-						message: "targetHostId does not match the workspace's host",
-						i18nKey:
-							"serverError.automation.targethostidDoesNotMatchTheWorkspace",
-					});
-				}
-				targetHostId = workspace.hostId;
-				if (v2ProjectId && v2ProjectId !== workspace.projectId) {
-					throw userError({
-						code: "BAD_REQUEST",
-						message: "v2ProjectId does not match the workspace's project",
-						i18nKey:
-							"serverError.automation.v2projectidDoesNotMatchTheWorkspace",
-					});
-				}
-				v2ProjectId = workspace.projectId;
-			}
-			if (input.continueAgentSession && !input.v2WorkspaceId) {
-				throw userError({
-					code: "BAD_REQUEST",
-					message: "Continuing an agent session requires a pinned workspace",
-					i18nKey: "serverError.automation.continueNeedsPinnedWorkspace",
-				});
-			}
-
-			// No project and no pin = session automation: each run creates a
-			// project-less session workspace on the host.
-
-			if (targetHostId && targetHostId !== input.targetHostId) {
-				await verifyHostAccess(
-					ctx.session.user.id,
-					organizationId,
-					targetHostId,
-				);
-			}
+			const target = await resolveTarget(
+				ctx,
+				organizationId,
+				NO_TARGET,
+				{
+					targetHostId: input.targetHostId,
+					// A null project is the default here, never a conflicting one.
+					v2ProjectId: input.v2ProjectId ?? undefined,
+					v2WorkspaceId: input.v2WorkspaceId,
+					cloudWorkspaceId: input.cloudWorkspaceId,
+					environmentId: input.environmentId,
+					continueAgentSession: input.continueAgentSession,
+				},
+				input.agent,
+			);
 
 			// Only the legacy shape carries a top-level schedule; a trigger set
 			// describes its own, or has none at all.
@@ -401,13 +451,10 @@ export const automationRouter = {
 						name: input.name,
 						prompt: input.prompt,
 						agent: input.agent,
-						targetHostId,
-						v2ProjectId,
-						v2WorkspaceId: input.v2WorkspaceId ?? null,
+						...target,
 						// Every automation groups its runs out of the box; explicit
 						// tags (including []) override the default.
 						tags: input.tags ?? ["automation"],
-						continueAgentSession: input.continueAgentSession ?? false,
 					})
 					.returning();
 
@@ -474,112 +521,20 @@ export const automationRouter = {
 				input.id,
 			);
 
-			if (input.targetHostId !== undefined && input.targetHostId !== null) {
-				await verifyHostAccess(
-					ctx.session.user.id,
-					organizationId,
-					input.targetHostId,
-				);
-			}
-
-			let nextTargetHostId =
-				input.targetHostId === undefined
-					? existing.targetHostId
-					: input.targetHostId;
-			// Explicit null switches to session mode; undefined keeps the project.
-			let nextProjectId =
-				input.v2ProjectId === undefined
-					? existing.v2ProjectId
-					: input.v2ProjectId;
-			let nextWorkspaceId =
-				input.v2WorkspaceId === undefined
-					? existing.v2WorkspaceId
-					: input.v2WorkspaceId;
-
-			if (input.v2WorkspaceId === undefined) {
-				const targetHostChanged =
-					input.targetHostId !== undefined &&
-					input.targetHostId !== existing.targetHostId;
-				const projectChanged =
-					input.v2ProjectId !== undefined &&
-					input.v2ProjectId !== existing.v2ProjectId;
-				if (targetHostChanged || projectChanged) {
-					nextWorkspaceId = null;
-				}
-			}
-
-			if (input.v2WorkspaceId && input.targetHostId) {
-				// Denormalized pin (see create): the client supplies host (and
-				// project, when the workspace has one) with the workspace id; no
-				// workspace registry lookup. A null project = session pin.
-				nextProjectId = input.v2ProjectId ?? null;
-				nextTargetHostId = input.targetHostId;
-			} else if (input.v2WorkspaceId) {
-				// Legacy clients changing the pin — resolve via the cloud table
-				// while it still exists; this branch is deleted in R3. A merely
-				// retained pin is never re-resolved here: hosts own workspace
-				// records, and session pins have no cloud row at all.
-				const workspace = await verifyWorkspaceInOrg(
-					organizationId,
-					input.v2WorkspaceId,
-				);
-				// Mirror create: derive the project from the workspace and only
-				// reject when the caller *explicitly* passed a conflicting project.
-				// Otherwise a legitimate cross-project workspace move (sending only
-				// v2WorkspaceId) would be wrongly rejected as a mismatch.
-				if (
-					input.v2ProjectId !== undefined &&
-					input.v2ProjectId !== workspace.projectId
-				) {
-					throw userError({
-						code: "BAD_REQUEST",
-						message: "v2ProjectId does not match the workspace's project",
-						i18nKey:
-							"serverError.automation.v2projectidDoesNotMatchTheWorkspace",
-					});
-				}
-				nextProjectId = workspace.projectId;
-				if (
-					input.targetHostId !== undefined &&
-					input.targetHostId !== null &&
-					input.targetHostId !== workspace.hostId
-				) {
-					throw userError({
-						code: "BAD_REQUEST",
-						message: "targetHostId does not match the workspace's host",
-						i18nKey:
-							"serverError.automation.targethostidDoesNotMatchTheWorkspace",
-					});
-				}
-				nextTargetHostId = workspace.hostId;
-			}
-			if (
-				nextTargetHostId &&
-				nextTargetHostId !== existing.targetHostId &&
-				nextTargetHostId !== input.targetHostId
-			) {
-				await verifyHostAccess(
-					ctx.session.user.id,
-					organizationId,
-					nextTargetHostId,
-				);
-			}
-
-			// Asking for it without a pin is a mistake worth reporting; losing the
-			// pin some other way (a host or project change nulls it above) just
-			// takes the flag with it, since the session it would continue lived
-			// in that workspace.
-			if (input.continueAgentSession === true && nextWorkspaceId === null) {
-				throw userError({
-					code: "BAD_REQUEST",
-					message: "Continuing an agent session requires a pinned workspace",
-					i18nKey: "serverError.automation.continueNeedsPinnedWorkspace",
-				});
-			}
-			const nextContinueAgentSession =
-				nextWorkspaceId === null
-					? false
-					: (input.continueAgentSession ?? existing.continueAgentSession);
+			const target = await resolveTarget(
+				ctx,
+				organizationId,
+				existing,
+				{
+					targetHostId: input.targetHostId,
+					v2ProjectId: input.v2ProjectId,
+					v2WorkspaceId: input.v2WorkspaceId,
+					cloudWorkspaceId: input.cloudWorkspaceId,
+					environmentId: input.environmentId,
+					continueAgentSession: input.continueAgentSession,
+				},
+				input.agent ?? existing.agent,
+			);
 
 			const nextRrule = input.rrule ?? existing.rrule;
 			const nextDtstart = input.dtstart ?? existing.dtstart;
@@ -604,11 +559,8 @@ export const automationRouter = {
 					.set({
 						name: input.name ?? existing.name,
 						agent: input.agent ?? existing.agent,
-						targetHostId: nextTargetHostId,
-						v2ProjectId: nextProjectId,
-						v2WorkspaceId: nextWorkspaceId,
+						...target,
 						tags: input.tags ?? existing.tags,
-						continueAgentSession: nextContinueAgentSession,
 						prompt: input.prompt ?? existing.prompt,
 					})
 					.where(eq(automations.id, input.id))
@@ -995,6 +947,7 @@ export const automationRouter = {
 				status: automationRuns.status,
 				createdAt: automationRuns.createdAt,
 				v2WorkspaceId: automationRuns.v2WorkspaceId,
+				cloudWorkspaceId: automationRuns.cloudWorkspaceId,
 				chatSessionId: automationRuns.chatSessionId,
 				terminalSessionId: automationRuns.terminalSessionId,
 			})

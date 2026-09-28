@@ -1214,6 +1214,9 @@ msgstr "アプリ内ブラウザを改良します。変更をプレビューし
 msgid "A better Superset is ready"
 msgstr "新しいSupersetの準備ができました"
 
+msgid "A cloud automation needs an environment or a cloud workspace"
+msgstr "クラウドオートメーションには環境またはクラウドワークスペースが必要です"
+
 #. js-lingui-explicit-id
 msgid "serverError.common.cloudWorkspaceCannotCallThis"
 msgstr "クラウドワークスペースからは {path} を呼び出せません。サインイン済みのクライアントから実行してください。"
@@ -1915,6 +1918,9 @@ msgstr "エージェントが複数ファイルにまたがる変更を最後ま
 
 msgid "An agent writes whole functions and files while a human watches every step and approves every command. One agent, one human. Faster, but still serial."
 msgstr "エージェントが関数やファイルをまるごと書き、人間は各ステップを見守りコマンドを1つずつ承認します。エージェント1体に人間1人。速くはなりますが、依然として直列です。"
+
+msgid "An automation can only use a cloud workspace you created"
+msgstr "オートメーションで使用できるのは、自分が作成したクラウドワークスペースのみです"
 
 msgid "An error occurred"
 msgstr "エラーが発生しました"
@@ -11246,9 +11252,6 @@ msgstr "PID"
 msgid "Pin"
 msgstr "ピン留め"
 
-msgid "Pin a workspace to continue its agent session between runs"
-msgstr "実行間でエージェントセッションを継続するには、ワークスペースをピン留めしてください"
-
 msgid "Pin workspaces above your projects, then ⌘-click a batch to move, group, or delete them all at once."
 msgstr "ワークスペースをプロジェクトの上にピン留めし、⌘クリックでまとめて選んで移動、グループ化、削除ができます。"
 
@@ -15165,8 +15168,14 @@ msgstr "アプリは{appVersion}ですが、別のもの（古いCLIや別のSup
 msgid "The associated device isn't reachable right now"
 msgstr "関連デバイスに現在接続できません"
 
+msgid "The automation's owner can't use cloud workspaces in this organization anymore. Ask them to check their access, or run the automation on a device."
+msgstr "このオートメーションの所有者は、この組織でクラウドワークスペースを使用できなくなりました。所有者にアクセス権の確認を依頼するか、デバイス上でオートメーションを実行してください。"
+
 msgid "The best agent will change.<0/>Your workflow shouldn't."
 msgstr "最良のエージェントは変わります。<0/>ワークフローは変わるべきではありません。"
+
+msgid "The cloud workspace should have started but didn't answer in time. The next run tries again."
+msgstr "クラウドワークスペースは起動しているはずですが、時間内に応答がありませんでした。次回の実行で再試行します。"
 
 msgid "The config repository must be one of the environment's repositories"
 msgstr "設定リポジトリは環境のリポジトリのいずれかである必要があります"
@@ -15200,6 +15209,9 @@ msgstr "ディスパッチャーの登場"
 
 msgid "The endpoint must use https."
 msgstr "エンドポイントは https を使用する必要があります。"
+
+msgid "The environment this automation starts cloud workspaces from was archived or has no repositories. Pick another environment in the automation's settings."
+msgstr "このオートメーションがクラウドワークスペースを起動する環境が、アーカイブされたかリポジトリがありません。オートメーションの設定で別の環境を選択してください。"
 
 msgid "The factory"
 msgstr "工場"
@@ -15485,6 +15497,9 @@ msgstr "この {plugin} アカウントはすでに別の Superset 組織が接�
 
 msgid "This action is irreversible."
 msgstr "この操作は元に戻せません。"
+
+msgid "This agent can't run in a cloud workspace"
+msgstr "このエージェントはクラウドワークスペースで実行できません"
 
 msgid "This agent no longer exists on the selected device (its agents may have been reset). Runs will fail until you pick a new one."
 msgstr "選択したデバイスにこのエージェントは存在しません(エージェントがリセットされた可能性があります)。新しいエージェントを選ぶまで実行は失敗します。"

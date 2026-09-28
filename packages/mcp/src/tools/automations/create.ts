@@ -26,14 +26,28 @@ export function register(server: McpServer): void {
 				.min(1)
 				.max(200)
 				.describe(
-					"Host agent instance id (UUID from /settings/agents) or presetId (e.g. 'claude', 'codex').",
+					"Host agent instance id (UUID from /settings/agents) or presetId (e.g. 'claude', 'codex'). A cloud automation runs 'claude' or 'codex'.",
 				),
 			targetHostId: z
 				.string()
 				.min(1)
 				.nullish()
 				.describe(
-					"Host that should run the automation. Defaults to the owner's online host.",
+					"Host that should run the automation. Defaults to the owner's online host. 'cloud' runs it in a cloud workspace: pass environmentId to start one per run, cloudWorkspaceId to reuse one, or both.",
+				),
+			cloudWorkspaceId: z
+				.string()
+				.uuid()
+				.nullish()
+				.describe(
+					"With targetHostId 'cloud': the cloud workspace to reuse every run.",
+				),
+			environmentId: z
+				.string()
+				.uuid()
+				.nullish()
+				.describe(
+					"With targetHostId 'cloud': the environment each run's cloud workspace starts from.",
 				),
 			v2ProjectId: z
 				.string()

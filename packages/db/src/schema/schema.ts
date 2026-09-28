@@ -1086,6 +1086,15 @@ export const automations = pgTable(
 		v2ProjectId: uuid("v2_project_id"),
 		v2WorkspaceId: uuid("v2_workspace_id"),
 
+		// With targetHostId "cloud"; v2WorkspaceId is only ever a host's workspace.
+		cloudWorkspaceId: uuid("cloud_workspace_id").references(
+			() => cloudWorkspaces.id,
+			{ onDelete: "set null" },
+		),
+		environmentId: uuid("environment_id").references(() => environments.id, {
+			onDelete: "set null",
+		}),
+
 		// Workspace tags applied to each run's created workspace, so scheduled
 		// runs file themselves into the matching sidebar folders. Stored
 		// normalized (see @superset/shared/workspace-tags). Defaults to
@@ -1095,10 +1104,10 @@ export const automations = pgTable(
 
 		// Deliver each run's prompt into the agent session the previous run
 		// left behind, rather than starting another beside it. Needs a pinned
-		// v2WorkspaceId — that is where the session lives. Off by default: a
-		// run that lands in a conversation already holding context behaves
-		// differently from one starting clean, and that is a choice to make
-		// per automation rather than a default to inherit.
+		// v2WorkspaceId or cloudWorkspaceId — that is where the session lives.
+		// Off by default: a run that lands in a conversation already holding
+		// context behaves differently from one starting clean, and that is a
+		// choice to make per automation rather than a default to inherit.
 		continueAgentSession: boolean("continue_agent_session")
 			.notNull()
 			.default(false),
@@ -1287,6 +1296,10 @@ export const automationRuns = pgTable(
 
 		hostId: text("host_id"),
 		v2WorkspaceId: uuid("v2_workspace_id"),
+		cloudWorkspaceId: uuid("cloud_workspace_id").references(
+			() => cloudWorkspaces.id,
+			{ onDelete: "set null" },
+		),
 
 		sessionKind: automationSessionKind("session_kind"),
 		chatSessionId: uuid("chat_session_id").references(() => chatSessions.id, {
@@ -1324,6 +1337,7 @@ export const automationRuns = pgTable(
 		index("automation_runs_history_idx").on(t.automationId, t.createdAt),
 		index("automation_runs_status_idx").on(t.status),
 		index("automation_runs_workspace_idx").on(t.v2WorkspaceId),
+		index("automation_runs_cloud_workspace_idx").on(t.cloudWorkspaceId),
 		// ON DELETE SET NULL on event_id resolves through this; without it every
 		// automation_events row deleted by retention scans this table.
 		index("automation_runs_event_idx").on(t.eventId),

@@ -133,6 +133,24 @@ export const serverErrorMessages: Record<
 				message: "Automation not found",
 			}),
 		),
+	"serverError.automation.cloudAgentUnsupported": () =>
+		i18n._(
+			msg({
+				message: "This agent can't run in a cloud workspace",
+			}),
+		),
+	"serverError.automation.cloudNeedsEnvironment": () =>
+		i18n._(
+			msg({
+				message: "A cloud automation needs an environment or a cloud workspace",
+			}),
+		),
+	"serverError.automation.cloudWorkspaceNotYours": () =>
+		i18n._(
+			msg({
+				message: "An automation can only use a cloud workspace you created",
+			}),
+		),
 	"serverError.automation.continueNeedsPinnedWorkspace": () =>
 		i18n._(
 			msg({

@@ -1214,6 +1214,9 @@ msgstr "Lepsza przeglądarka w aplikacji: podejrzyj swoje zmiany i kliknij dowol
 msgid "A better Superset is ready"
 msgstr "Lepsza wersja Superset jest gotowa"
 
+msgid "A cloud automation needs an environment or a cloud workspace"
+msgstr "Automatyzacja w chmurze wymaga środowiska lub obszaru roboczego w chmurze"
+
 #. js-lingui-explicit-id
 msgid "serverError.common.cloudWorkspaceCannotCallThis"
 msgstr "Workspace w chmurze nie może wywołać {path}. Zrób to z klienta, do którego jesteś zalogowany."
@@ -1915,6 +1918,9 @@ msgstr "Agent wykonuje zmiany w wielu plikach od początku do końca."
 
 msgid "An agent writes whole functions and files while a human watches every step and approves every command. One agent, one human. Faster, but still serial."
 msgstr "Agent pisze całe funkcje i pliki, a człowiek obserwuje każdy krok i zatwierdza każde polecenie. Jeden agent, jeden człowiek. Szybciej, ale nadal szeregowo."
+
+msgid "An automation can only use a cloud workspace you created"
+msgstr "Automatyzacja może używać tylko obszaru roboczego w chmurze, który utworzyłeś"
 
 msgid "An error occurred"
 msgstr "Wystąpił błąd"
@@ -11246,9 +11252,6 @@ msgstr "PID"
 msgid "Pin"
 msgstr "Przypnij"
 
-msgid "Pin a workspace to continue its agent session between runs"
-msgstr "Przypnij obszar roboczy, aby kontynuować jego sesję agenta między uruchomieniami"
-
 msgid "Pin workspaces above your projects, then ⌘-click a batch to move, group, or delete them all at once."
 msgstr "Przypnij obszary robocze nad projektami, a potem ⌘-kliknij grupę, aby przenieść, pogrupować lub usunąć je naraz."
 
@@ -15165,8 +15168,14 @@ msgstr "Aplikacja jest w wersji {appVersion}, ale podłączona do usługi hosta 
 msgid "The associated device isn't reachable right now"
 msgstr "Powiązane urządzenie jest teraz nieosiągalne"
 
+msgid "The automation's owner can't use cloud workspaces in this organization anymore. Ask them to check their access, or run the automation on a device."
+msgstr "Właściciel automatyzacji nie może już używać obszarów roboczych w chmurze w tej organizacji. Poproś go o sprawdzenie dostępu albo uruchom automatyzację na urządzeniu."
+
 msgid "The best agent will change.<0/>Your workflow shouldn't."
 msgstr "Najlepszy agent się zmieni.<0/>Twój workflow nie musi."
+
+msgid "The cloud workspace should have started but didn't answer in time. The next run tries again."
+msgstr "Obszar roboczy w chmurze powinien był się uruchomić, ale nie odpowiedział na czas. Następne uruchomienie spróbuje ponownie."
 
 msgid "The config repository must be one of the environment's repositories"
 msgstr "Repozytorium konfiguracji musi być jednym z repozytoriów środowiska"
@@ -15200,6 +15209,9 @@ msgstr "Pojawia się dyspozytor"
 
 msgid "The endpoint must use https."
 msgstr "Punkt końcowy musi używać https."
+
+msgid "The environment this automation starts cloud workspaces from was archived or has no repositories. Pick another environment in the automation's settings."
+msgstr "Środowisko, z którego ta automatyzacja uruchamia obszary robocze w chmurze, zostało zarchiwizowane lub nie ma repozytoriów. Wybierz inne środowisko w ustawieniach automatyzacji."
 
 msgid "The factory"
 msgstr "Fabryka"
@@ -15485,6 +15497,9 @@ msgstr "To konto {plugin} jest już połączone z inną organizacją Superset."
 
 msgid "This action is irreversible."
 msgstr "Tej operacji nie można cofnąć."
+
+msgid "This agent can't run in a cloud workspace"
+msgstr "Ten agent nie może działać w obszarze roboczym w chmurze"
 
 msgid "This agent no longer exists on the selected device (its agents may have been reset). Runs will fail until you pick a new one."
 msgstr "Ten agent już nie istnieje na wybranym urządzeniu (jego agenci mogli zostać zresetowani). Uruchomienia będą kończyć się błędem, dopóki nie wybierzesz nowego."

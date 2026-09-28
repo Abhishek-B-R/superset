@@ -19,9 +19,17 @@ export function register(server: McpServer): void {
 				.max(200)
 				.optional()
 				.describe(
-					"Host agent instance id (UUID from /settings/agents) or presetId.",
+					"Host agent instance id (UUID from /settings/agents) or presetId. A cloud automation runs 'claude' or 'codex'.",
 				),
-			targetHostId: z.string().min(1).nullish(),
+			targetHostId: z
+				.string()
+				.min(1)
+				.nullish()
+				.describe(
+					"'cloud' runs it in a cloud workspace started from environmentId, or the cloud workspace cloudWorkspaceId names.",
+				),
+			cloudWorkspaceId: z.string().uuid().nullish(),
+			environmentId: z.string().uuid().nullish(),
 			v2ProjectId: z
 				.string()
 				.uuid()

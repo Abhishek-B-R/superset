@@ -1214,6 +1214,9 @@ msgstr "Een betere ingebouwde browser: bekijk je wijzigingen en klik op elk elem
 msgid "A better Superset is ready"
 msgstr "Een betere versie van Superset staat klaar"
 
+msgid "A cloud automation needs an environment or a cloud workspace"
+msgstr "Een cloudautomatisering heeft een omgeving of een cloudwerkruimte nodig"
+
 #. js-lingui-explicit-id
 msgid "serverError.common.cloudWorkspaceCannotCallThis"
 msgstr "Een cloud-workspace kan {path} niet aanroepen. Doe dit vanuit een client waarop je bent ingelogd."
@@ -1915,6 +1918,9 @@ msgstr "Een agent voltooit wijzigingen over meerdere bestanden van begin tot ein
 
 msgid "An agent writes whole functions and files while a human watches every step and approves every command. One agent, one human. Faster, but still serial."
 msgstr "Een agent schrijft hele functies en bestanden terwijl een mens elke stap volgt en elk commando goedkeurt. Eén agent, één mens. Sneller, maar nog steeds serieel."
+
+msgid "An automation can only use a cloud workspace you created"
+msgstr "Een automatisering kan alleen een cloudwerkruimte gebruiken die je zelf hebt aangemaakt"
 
 msgid "An error occurred"
 msgstr "Er is een fout opgetreden"
@@ -11246,9 +11252,6 @@ msgstr "PID"
 msgid "Pin"
 msgstr "Vastzetten"
 
-msgid "Pin a workspace to continue its agent session between runs"
-msgstr "Zet een workspace vast om de agentsessie tussen runs voort te zetten"
-
 msgid "Pin workspaces above your projects, then ⌘-click a batch to move, group, or delete them all at once."
 msgstr "Zet werkruimtes vast boven je projecten en ⌘-klik daarna een reeks om ze in één keer te verplaatsen, groeperen of verwijderen."
 
@@ -15165,8 +15168,14 @@ msgstr "De app is op {appVersion}, maar gekoppeld aan een hostservice die door i
 msgid "The associated device isn't reachable right now"
 msgstr "Het bijbehorende apparaat is nu niet bereikbaar"
 
+msgid "The automation's owner can't use cloud workspaces in this organization anymore. Ask them to check their access, or run the automation on a device."
+msgstr "De eigenaar van de automatisering kan in deze organisatie geen cloudwerkruimtes meer gebruiken. Vraag diegene de toegang te controleren, of voer de automatisering uit op een apparaat."
+
 msgid "The best agent will change.<0/>Your workflow shouldn't."
 msgstr "De beste agent verandert.<0/>Jouw workflow niet."
+
+msgid "The cloud workspace should have started but didn't answer in time. The next run tries again."
+msgstr "De cloudwerkruimte had gestart moeten zijn, maar reageerde niet op tijd. De volgende run probeert het opnieuw."
 
 msgid "The config repository must be one of the environment's repositories"
 msgstr "De configuratierepository moet een van de repositories van de omgeving zijn"
@@ -15200,6 +15209,9 @@ msgstr "De dispatcher verschijnt"
 
 msgid "The endpoint must use https."
 msgstr "Het endpoint moet https gebruiken."
+
+msgid "The environment this automation starts cloud workspaces from was archived or has no repositories. Pick another environment in the automation's settings."
+msgstr "De omgeving waaruit deze automatisering cloudwerkruimtes start, is gearchiveerd of heeft geen repository's. Kies een andere omgeving in de instellingen van de automatisering."
 
 msgid "The factory"
 msgstr "De fabriek"
@@ -15485,6 +15497,9 @@ msgstr "Dit {plugin}-account is al verbonden door een andere Superset-organisati
 
 msgid "This action is irreversible."
 msgstr "Deze actie kan niet worden teruggedraaid."
+
+msgid "This agent can't run in a cloud workspace"
+msgstr "Deze agent kan niet in een cloudwerkruimte draaien"
 
 msgid "This agent no longer exists on the selected device (its agents may have been reset). Runs will fail until you pick a new one."
 msgstr "Deze agent bestaat niet meer op het gekozen apparaat (de agents zijn mogelijk gereset). Runs mislukken totdat je een nieuwe kiest."
