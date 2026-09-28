@@ -53,6 +53,7 @@ export default defineConfig({
 				commands: [
 					"auth",
 					"connections",
+					"integrations",
 					"organization",
 					"settings",
 					"update",

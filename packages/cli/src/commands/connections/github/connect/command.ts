@@ -34,7 +34,7 @@ export default command({
 			};
 		}
 		process.stderr.write(
-			`${opened ? "Opened" : "Open"} this URL to connect GitHub:\n  ${url}\nWaiting for you to authorize…\n`,
+			`${opened ? "If your browser did not open, open" : "Open"} this URL to connect GitHub:\n  ${url}\nWaiting for you to authorize…\n`,
 		);
 		const deadline = Date.now() + POLL_TIMEOUT_MS;
 		while (Date.now() < deadline) {
