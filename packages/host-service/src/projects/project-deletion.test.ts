@@ -22,6 +22,7 @@ import type { HostServiceContext } from "../types";
 import {
 	listDeletedProjects,
 	PROJECT_RESTORE_WINDOW_MS,
+	purgeDeletedProject,
 	purgeExpiredProjects,
 	readDeletionImpact,
 	restoreProject,
@@ -247,6 +248,26 @@ describe("purge", () => {
 		expect(workspace("live")).toBeUndefined();
 		expect(gitCalls).toEqual([["worktree", "remove", live]]);
 		expect(existsSync(repoPath)).toBe(true);
+	});
+});
+
+describe("delete permanently", () => {
+	test("purges a deleted project right away", async () => {
+		const { ctx, addWorkspace, gitCalls, project, repoPath } = setup();
+		const live = addWorkspace("live");
+		await softDeleteProject(ctx, PROJECT_ID);
+		expect(await purgeDeletedProject(ctx, PROJECT_ID)).toBe(true);
+		expect(project()).toBeUndefined();
+		expect(gitCalls).toEqual([["worktree", "remove", live]]);
+		expect(existsSync(repoPath)).toBe(true);
+	});
+
+	test("refuses a project that was never deleted", async () => {
+		const { ctx, addWorkspace, gitCalls, project } = setup();
+		addWorkspace("live");
+		expect(await purgeDeletedProject(ctx, PROJECT_ID)).toBe(false);
+		expect(project()).toBeDefined();
+		expect(gitCalls).toEqual([]);
 	});
 });
 

@@ -12,6 +12,7 @@ interface DeletedProjectRowProps {
 	canRestore: boolean;
 	isRestoring: boolean;
 	onRestore: () => void;
+	onDeletePermanently: () => void;
 }
 
 export function DeletedProjectRow({
@@ -21,6 +22,7 @@ export function DeletedProjectRow({
 	canRestore,
 	isRestoring,
 	onRestore,
+	onDeletePermanently,
 }: DeletedProjectRowProps) {
 	const deletedWhen = formatRelativeTime(project.deletedAt);
 	const daysLeft = Math.max(
@@ -46,6 +48,16 @@ export function DeletedProjectRow({
 			<div className="shrink-0 text-xs text-muted-foreground tabular-nums">
 				<Plural value={daysLeft} one="# day left" other="# days left" />
 			</div>
+			<Button
+				type="button"
+				variant="ghost"
+				size="sm"
+				className="text-muted-foreground hover:text-destructive"
+				disabled={!canRestore || isRestoring}
+				onClick={onDeletePermanently}
+			>
+				<Trans>Delete permanently…</Trans>
+			</Button>
 			<Button
 				type="button"
 				variant="outline"

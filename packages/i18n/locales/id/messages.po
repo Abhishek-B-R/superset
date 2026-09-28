@@ -4480,6 +4480,9 @@ msgstr "Tidak dapat menamai \"{name}\" secara otomatis"
 msgid "Couldn't parse this diff: {patchParseError}"
 msgstr "Tidak bisa mengurai diff ini: {patchParseError}"
 
+msgid "Couldn't permanently delete \"{projectName}\""
+msgstr "Tidak dapat menghapus \"{projectName}\" secara permanen"
+
 msgid "Couldn't post reply"
 msgstr "Tidak bisa mengirim balasan"
 
@@ -5049,6 +5052,12 @@ msgstr "Hapus organisasi"
 
 msgid "Delete page"
 msgstr "Hapus halaman"
+
+msgid "Delete permanently"
+msgstr "Hapus permanen"
+
+msgid "Delete permanently…"
+msgstr "Hapus permanen…"
 
 msgid "Delete project"
 msgstr "Hapus proyek"
@@ -7985,6 +7994,9 @@ msgstr "Branch dan salinan file tersendiri"
 
 msgid "Its workspaces and terminals are unavailable until it restarts — use the Superset tray menu > Host Service > Restart."
 msgstr "Workspace dan terminalnya tidak tersedia sampai layanan ini dimulai ulang — pakai menu tray Superset > Host Service > Restart."
+
+msgid "Its workspaces and their worktrees are removed from disk now instead of after 30 days. The repository folder and worktrees with uncommitted changes are kept."
+msgstr "Workspace dan worktree-nya dihapus dari disk sekarang, bukan setelah 30 hari. Folder repositori dan worktree dengan perubahan yang belum di-commit tetap disimpan."
 
 msgid "Jane Doe"
 msgstr "Jane Doe"
@@ -11110,6 +11122,12 @@ msgstr "per pengguna/bulan"
 
 msgid "Percent of total system RAM used by monitored Superset resources only (not all apps). A high share means Superset is a major contributor to system memory pressure; a low share means pressure is likely elsewhere."
 msgstr "Persentase total RAM sistem yang dipakai hanya oleh sumber daya Superset yang dipantau (bukan semua aplikasi). Porsi tinggi berarti Superset penyumbang utama tekanan memori sistem; porsi rendah berarti tekanannya kemungkinan dari tempat lain."
+
+msgid "Permanently delete \"{projectName}\"?"
+msgstr "Hapus \"{projectName}\" secara permanen?"
+
+msgid "Permanently deleted \"{projectName}\""
+msgstr "\"{projectName}\" dihapus secara permanen"
 
 #. placeholder {0}: team.name
 msgid "Permanently remove <0>{0}</0> and all of its members. This can't be undone."

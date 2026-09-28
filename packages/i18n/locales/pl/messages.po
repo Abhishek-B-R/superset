@@ -4480,6 +4480,9 @@ msgstr "Nie udało się automatycznie nazwać „{name}”"
 msgid "Couldn't parse this diff: {patchParseError}"
 msgstr "Nie udało się przetworzyć tych różnic: {patchParseError}"
 
+msgid "Couldn't permanently delete \"{projectName}\""
+msgstr "Nie udało się trwale usunąć „{projectName}”"
+
 msgid "Couldn't post reply"
 msgstr "Nie udało się opublikować odpowiedzi"
 
@@ -5049,6 +5052,12 @@ msgstr "Usuń organizację"
 
 msgid "Delete page"
 msgstr "Usuń stronę"
+
+msgid "Delete permanently"
+msgstr "Usuń trwale"
+
+msgid "Delete permanently…"
+msgstr "Usuń trwale…"
 
 msgid "Delete project"
 msgstr "Usuń projekt"
@@ -7985,6 +7994,9 @@ msgstr "Własna gałąź i własna kopia plików"
 
 msgid "Its workspaces and terminals are unavailable until it restarts — use the Superset tray menu > Host Service > Restart."
 msgstr "Jej obszary robocze i terminale są niedostępne do czasu restartu — użyj menu zasobnika Superset > Usługa hosta > Uruchom ponownie."
+
+msgid "Its workspaces and their worktrees are removed from disk now instead of after 30 days. The repository folder and worktrees with uncommitted changes are kept."
+msgstr "Jego obszary robocze i ich worktree zostaną usunięte z dysku teraz, a nie po 30 dniach. Folder repozytorium i worktree z niezatwierdzonymi zmianami zostaną zachowane."
 
 msgid "Jane Doe"
 msgstr "Jan Kowalski"
@@ -11110,6 +11122,12 @@ msgstr "za użytkownika miesięcznie"
 
 msgid "Percent of total system RAM used by monitored Superset resources only (not all apps). A high share means Superset is a major contributor to system memory pressure; a low share means pressure is likely elsewhere."
 msgstr "Procent całkowitej pamięci RAM systemu zużywany wyłącznie przez monitorowane zasoby Superset (nie przez wszystkie aplikacje). Wysoki udział oznacza, że Superset istotnie obciąża pamięć systemu; niski udział oznacza, że presja pochodzi skądinąd."
+
+msgid "Permanently delete \"{projectName}\"?"
+msgstr "Trwale usunąć „{projectName}”?"
+
+msgid "Permanently deleted \"{projectName}\""
+msgstr "Trwale usunięto „{projectName}”"
 
 #. placeholder {0}: team.name
 msgid "Permanently remove <0>{0}</0> and all of its members. This can't be undone."

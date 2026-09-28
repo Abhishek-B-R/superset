@@ -4480,6 +4480,9 @@ msgstr "Не удалось автоматически назвать «{name}»
 msgid "Couldn't parse this diff: {patchParseError}"
 msgstr "Не удалось разобрать этот diff: {patchParseError}"
 
+msgid "Couldn't permanently delete \"{projectName}\""
+msgstr "Не удалось окончательно удалить «{projectName}»"
+
 msgid "Couldn't post reply"
 msgstr "Не удалось отправить ответ"
 
@@ -5049,6 +5052,12 @@ msgstr "Удалить организацию"
 
 msgid "Delete page"
 msgstr "Удалить страницу"
+
+msgid "Delete permanently"
+msgstr "Удалить навсегда"
+
+msgid "Delete permanently…"
+msgstr "Удалить навсегда…"
 
 msgid "Delete project"
 msgstr "Удалить проект"
@@ -7985,6 +7994,9 @@ msgstr "Собственная ветка и собственная копия �
 
 msgid "Its workspaces and terminals are unavailable until it restarts — use the Superset tray menu > Host Service > Restart."
 msgstr "Её рабочие области и терминалы недоступны до перезапуска — откройте меню Superset в трее > Host Service > Restart."
+
+msgid "Its workspaces and their worktrees are removed from disk now instead of after 30 days. The repository folder and worktrees with uncommitted changes are kept."
+msgstr "Его рабочие области и их worktree удаляются с диска сейчас, а не через 30 дней. Папка репозитория и worktree с незакоммиченными изменениями сохраняются."
 
 msgid "Jane Doe"
 msgstr "Иван Иванов"
@@ -11110,6 +11122,12 @@ msgstr "за пользователя в месяц"
 
 msgid "Percent of total system RAM used by monitored Superset resources only (not all apps). A high share means Superset is a major contributor to system memory pressure; a low share means pressure is likely elsewhere."
 msgstr "Процент от всей системной RAM, занятый только отслеживаемыми ресурсами Superset (не всеми приложениями). Высокая доля означает, что Superset заметно нагружает память системы; низкая — что нагрузка идёт откуда-то ещё."
+
+msgid "Permanently delete \"{projectName}\"?"
+msgstr "Удалить «{projectName}» навсегда?"
+
+msgid "Permanently deleted \"{projectName}\""
+msgstr "«{projectName}» удалён навсегда"
 
 #. placeholder {0}: team.name
 msgid "Permanently remove <0>{0}</0> and all of its members. This can't be undone."

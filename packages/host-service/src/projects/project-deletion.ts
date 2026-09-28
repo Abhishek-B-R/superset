@@ -190,39 +190,58 @@ export async function purgeExpiredProjects(
 		.from(projects)
 		.where(lt(projects.deletedAt, now - PROJECT_RESTORE_WINDOW_MS))
 		.all();
-	for (const project of expired) {
-		const rows = ctx.db
-			.select()
-			.from(workspaces)
-			.where(eq(workspaces.projectId, project.id))
-			.all();
-		for (const row of rows) {
-			if (row.type === "local" || row.worktreePath === project.repoPath)
-				continue;
-			if (!existsSync(row.worktreePath)) continue;
-			try {
-				const git = await ctx.git(project.repoPath);
-				await git.raw(["worktree", "remove", row.worktreePath]);
-			} catch (err) {
-				console.warn("[project-deletion] left worktree on disk", {
-					projectId: project.id,
-					worktreePath: row.worktreePath,
-					err,
-				});
-			}
-		}
-		ctx.db.transaction((tx) => {
-			tx.delete(workspaces).where(eq(workspaces.projectId, project.id)).run();
-			tx.delete(projects).where(eq(projects.id, project.id)).run();
-			tx.delete(tagFolderSettings)
-				.where(eq(tagFolderSettings.scope, project.id))
-				.run();
-		});
-		for (const row of rows) {
-			if (row.archivedAt === project.deletedAt) trackWorkspaceDeleted(ctx, row);
+	for (const project of expired) await purgeProject(ctx, project);
+	return expired.length;
+}
+
+/**
+ * Permanently delete a project that is already soft-deleted, without waiting
+ * for the restore window to end. Anything live is refused so this can never
+ * skip the soft delete.
+ */
+export async function purgeDeletedProject(
+	ctx: ProjectDeletionContext,
+	projectId: string,
+): Promise<boolean> {
+	const project = getLocalProject(ctx.db, projectId);
+	if (!project || project.deletedAt == null) return false;
+	await purgeProject(ctx, project);
+	return true;
+}
+
+async function purgeProject(
+	ctx: ProjectDeletionContext,
+	project: typeof projects.$inferSelect,
+) {
+	const rows = ctx.db
+		.select()
+		.from(workspaces)
+		.where(eq(workspaces.projectId, project.id))
+		.all();
+	for (const row of rows) {
+		if (row.type === "local" || row.worktreePath === project.repoPath) continue;
+		if (!existsSync(row.worktreePath)) continue;
+		try {
+			const git = await ctx.git(project.repoPath);
+			await git.raw(["worktree", "remove", row.worktreePath]);
+		} catch (err) {
+			console.warn("[project-deletion] left worktree on disk", {
+				projectId: project.id,
+				worktreePath: row.worktreePath,
+				err,
+			});
 		}
 	}
-	return expired.length;
+	ctx.db.transaction((tx) => {
+		tx.delete(workspaces).where(eq(workspaces.projectId, project.id)).run();
+		tx.delete(projects).where(eq(projects.id, project.id)).run();
+		tx.delete(tagFolderSettings)
+			.where(eq(tagFolderSettings.scope, project.id))
+			.run();
+	});
+	for (const row of rows) {
+		if (row.archivedAt === project.deletedAt) trackWorkspaceDeleted(ctx, row);
+	}
 }
 
 /**

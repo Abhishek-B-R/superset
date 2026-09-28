@@ -4480,6 +4480,9 @@ msgstr "无法自动命名“{name}”"
 msgid "Couldn't parse this diff: {patchParseError}"
 msgstr "无法解析这个差异：{patchParseError}"
 
+msgid "Couldn't permanently delete \"{projectName}\""
+msgstr "无法永久删除“{projectName}”"
+
 msgid "Couldn't post reply"
 msgstr "无法发布回复"
 
@@ -5049,6 +5052,12 @@ msgstr "删除组织"
 
 msgid "Delete page"
 msgstr "删除页面"
+
+msgid "Delete permanently"
+msgstr "永久删除"
+
+msgid "Delete permanently…"
+msgstr "永久删除…"
 
 msgid "Delete project"
 msgstr "删除项目"
@@ -7985,6 +7994,9 @@ msgstr "独立的分支和文件副本"
 
 msgid "Its workspaces and terminals are unavailable until it restarts — use the Superset tray menu > Host Service > Restart."
 msgstr "在它重启之前，其工作区和终端都不可用，请使用Superset托盘菜单 > 主机服务 > 重启。"
+
+msgid "Its workspaces and their worktrees are removed from disk now instead of after 30 days. The repository folder and worktrees with uncommitted changes are kept."
+msgstr "其工作区及工作树将立即从磁盘移除，而不是在 30 天后。仓库文件夹和有未提交更改的工作树会保留。"
 
 msgid "Jane Doe"
 msgstr "张三"
@@ -11110,6 +11122,12 @@ msgstr "每用户/月"
 
 msgid "Percent of total system RAM used by monitored Superset resources only (not all apps). A high share means Superset is a major contributor to system memory pressure; a low share means pressure is likely elsewhere."
 msgstr "仅受监控的Superset资源占系统总RAM的百分比（不含其他应用）。占比高说明Superset是系统内存压力的主要来源；占比低说明压力可能来自别处。"
+
+msgid "Permanently delete \"{projectName}\"?"
+msgstr "永久删除“{projectName}”？"
+
+msgid "Permanently deleted \"{projectName}\""
+msgstr "已永久删除“{projectName}”"
 
 #. placeholder {0}: team.name
 msgid "Permanently remove <0>{0}</0> and all of its members. This can't be undone."

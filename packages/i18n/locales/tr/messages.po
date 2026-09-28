@@ -4480,6 +4480,9 @@ msgstr "\"{name}\" otomatik olarak adlandırılamadı"
 msgid "Couldn't parse this diff: {patchParseError}"
 msgstr "Bu fark ayrıştırılamadı: {patchParseError}"
 
+msgid "Couldn't permanently delete \"{projectName}\""
+msgstr "\"{projectName}\" kalıcı olarak silinemedi"
+
 msgid "Couldn't post reply"
 msgstr "Yanıt gönderilemedi"
 
@@ -5049,6 +5052,12 @@ msgstr "Kuruluşu sil"
 
 msgid "Delete page"
 msgstr "Sayfayı sil"
+
+msgid "Delete permanently"
+msgstr "Kalıcı olarak sil"
+
+msgid "Delete permanently…"
+msgstr "Kalıcı olarak sil…"
 
 msgid "Delete project"
 msgstr "Projeyi sil"
@@ -7985,6 +7994,9 @@ msgstr "Kendi dalı ve dosyaların kendi kopyası"
 
 msgid "Its workspaces and terminals are unavailable until it restarts — use the Superset tray menu > Host Service > Restart."
 msgstr "Yeniden başlayana kadar çalışma alanları ve terminalleri kullanılamaz — Superset tepsi menüsünde Host hizmeti > Yeniden başlat yolunu kullanın."
+
+msgid "Its workspaces and their worktrees are removed from disk now instead of after 30 days. The repository folder and worktrees with uncommitted changes are kept."
+msgstr "Çalışma alanları ve worktree'leri 30 gün sonra değil şimdi diskten kaldırılır. Depo klasörü ve commit edilmemiş değişiklikler içeren worktree'ler korunur."
 
 msgid "Jane Doe"
 msgstr "Ayşe Yılmaz"
@@ -11110,6 +11122,12 @@ msgstr "kullanıcı/ay başına"
 
 msgid "Percent of total system RAM used by monitored Superset resources only (not all apps). A high share means Superset is a major contributor to system memory pressure; a low share means pressure is likely elsewhere."
 msgstr "Yalnızca izlenen Superset kaynaklarının kullandığı toplam sistem RAM'i yüzdesi (tüm uygulamalar değil). Yüksek pay, Superset'in sistem bellek baskısına önemli ölçüde katkıda bulunduğu anlamına gelir; düşük pay ise baskının büyük olasılıkla başka yerden geldiğini gösterir."
+
+msgid "Permanently delete \"{projectName}\"?"
+msgstr "\"{projectName}\" kalıcı olarak silinsin mi?"
+
+msgid "Permanently deleted \"{projectName}\""
+msgstr "\"{projectName}\" kalıcı olarak silindi"
 
 #. placeholder {0}: team.name
 msgid "Permanently remove <0>{0}</0> and all of its members. This can't be undone."

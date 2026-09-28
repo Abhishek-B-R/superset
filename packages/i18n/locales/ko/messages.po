@@ -4480,6 +4480,9 @@ msgstr "\"{name}\"의 이름을 자동으로 지정하지 못했습니다"
 msgid "Couldn't parse this diff: {patchParseError}"
 msgstr "이 차이를 해석하지 못했습니다: {patchParseError}"
 
+msgid "Couldn't permanently delete \"{projectName}\""
+msgstr "\"{projectName}\"을(를) 영구 삭제하지 못했습니다"
+
 msgid "Couldn't post reply"
 msgstr "답글을 게시하지 못했습니다"
 
@@ -5049,6 +5052,12 @@ msgstr "조직 삭제"
 
 msgid "Delete page"
 msgstr "페이지 삭제"
+
+msgid "Delete permanently"
+msgstr "영구 삭제"
+
+msgid "Delete permanently…"
+msgstr "영구 삭제…"
 
 msgid "Delete project"
 msgstr "프로젝트 삭제"
@@ -7985,6 +7994,9 @@ msgstr "독립된 브랜치와 파일 사본"
 
 msgid "Its workspaces and terminals are unavailable until it restarts — use the Superset tray menu > Host Service > Restart."
 msgstr "다시 시작할 때까지 해당 워크스페이스와 터미널을 사용할 수 없습니다. Superset 트레이 메뉴 > 호스트 서비스 > 다시 시작을 사용하세요."
+
+msgid "Its workspaces and their worktrees are removed from disk now instead of after 30 days. The repository folder and worktrees with uncommitted changes are kept."
+msgstr "작업 공간과 워크트리가 30일 후가 아니라 지금 디스크에서 제거됩니다. 저장소 폴더와 커밋되지 않은 변경 사항이 있는 워크트리는 유지됩니다."
 
 msgid "Jane Doe"
 msgstr "홍길동"
@@ -11110,6 +11122,12 @@ msgstr "사용자당 월"
 
 msgid "Percent of total system RAM used by monitored Superset resources only (not all apps). A high share means Superset is a major contributor to system memory pressure; a low share means pressure is likely elsewhere."
 msgstr "모니터링 중인 Superset 리소스만 사용하는 전체 시스템 RAM의 비율입니다(모든 앱이 아님). 점유율이 높으면 Superset이 시스템 메모리 압박의 주요 원인이고, 낮으면 원인이 다른 곳에 있을 가능성이 큽니다."
+
+msgid "Permanently delete \"{projectName}\"?"
+msgstr "\"{projectName}\"을(를) 영구 삭제할까요?"
+
+msgid "Permanently deleted \"{projectName}\""
+msgstr "\"{projectName}\"을(를) 영구 삭제했습니다"
 
 #. placeholder {0}: team.name
 msgid "Permanently remove <0>{0}</0> and all of its members. This can't be undone."

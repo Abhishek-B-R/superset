@@ -4480,6 +4480,9 @@ msgstr "„{name}“ konnte nicht automatisch benannt werden"
 msgid "Couldn't parse this diff: {patchParseError}"
 msgstr "Dieser Diff konnte nicht geparst werden: {patchParseError}"
 
+msgid "Couldn't permanently delete \"{projectName}\""
+msgstr "„{projectName}“ konnte nicht endgültig gelöscht werden"
+
 msgid "Couldn't post reply"
 msgstr "Antwort konnte nicht gesendet werden"
 
@@ -5049,6 +5052,12 @@ msgstr "Organisation löschen"
 
 msgid "Delete page"
 msgstr "Seite löschen"
+
+msgid "Delete permanently"
+msgstr "Endgültig löschen"
+
+msgid "Delete permanently…"
+msgstr "Endgültig löschen…"
 
 msgid "Delete project"
 msgstr "Projekt löschen"
@@ -7985,6 +7994,9 @@ msgstr "Eigener Branch und eigene Kopie der Dateien"
 
 msgid "Its workspaces and terminals are unavailable until it restarts — use the Superset tray menu > Host Service > Restart."
 msgstr "Seine Arbeitsbereiche und Terminals sind nicht verfügbar, bis er neu startet — nutze das Superset-Menü in der Menüleiste > Host Service > Restart."
+
+msgid "Its workspaces and their worktrees are removed from disk now instead of after 30 days. The repository folder and worktrees with uncommitted changes are kept."
+msgstr "Seine Workspaces und deren Worktrees werden jetzt statt nach 30 Tagen von der Festplatte entfernt. Der Repository-Ordner und Worktrees mit nicht committeten Änderungen bleiben erhalten."
 
 msgid "Jane Doe"
 msgstr "Erika Mustermann"
@@ -11110,6 +11122,12 @@ msgstr "pro Nutzer/Monat"
 
 msgid "Percent of total system RAM used by monitored Superset resources only (not all apps). A high share means Superset is a major contributor to system memory pressure; a low share means pressure is likely elsewhere."
 msgstr "Anteil am gesamten System-RAM, der nur von den überwachten Superset-Ressourcen belegt wird (nicht von allen Apps). Ein hoher Anteil bedeutet, dass Superset maßgeblich zum Speicherdruck beiträgt; ein niedriger Anteil, dass er wohl woanders entsteht."
+
+msgid "Permanently delete \"{projectName}\"?"
+msgstr "„{projectName}“ endgültig löschen?"
+
+msgid "Permanently deleted \"{projectName}\""
+msgstr "„{projectName}“ endgültig gelöscht"
 
 #. placeholder {0}: team.name
 msgid "Permanently remove <0>{0}</0> and all of its members. This can't be undone."

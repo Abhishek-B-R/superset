@@ -1,10 +1,15 @@
-import { Trans } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
+import { errorMessage } from "@superset/i18n/errors";
+import { toast } from "@superset/ui/sonner";
+import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
+import { getHostServiceClientByUrl } from "renderer/lib/host-service-client";
 import { useProjectDeletionHosts } from "renderer/routes/_authenticated/hooks/useProjectDeletionHosts";
 import { useRestoreProject } from "renderer/routes/_authenticated/hooks/useRestoreProject";
 import { useDeletedProjects } from "../hooks/useDeletedProjects";
 import { DeletedProjectRow } from "./components/DeletedProjectRow";
+import { PurgeProjectDialog } from "./components/PurgeProjectDialog";
 
 export const Route = createFileRoute(
 	"/_authenticated/settings/projects/deleted/",
@@ -15,6 +20,38 @@ function DeletedProjectsPage() {
 	const permissions = useProjectDeletionHosts(hostIds);
 	const restoreProject = useRestoreProject();
 	const [restoringId, setRestoringId] = useState<string | null>(null);
+	const [purgeTarget, setPurgeTarget] = useState<{
+		id: string;
+		name: string;
+		hostUrls: string[];
+	} | null>(null);
+	const { t } = useLingui();
+	const queryClient = useQueryClient();
+	const purgeProject = async () => {
+		if (!purgeTarget) return;
+		const projectName = purgeTarget.name;
+		const results = await Promise.allSettled(
+			purgeTarget.hostUrls.map((url) =>
+				getHostServiceClientByUrl(url).project.purge.mutate({
+					projectId: purgeTarget.id,
+				}),
+			),
+		);
+		void queryClient.invalidateQueries({ queryKey: ["deleted-projects"] });
+		const failed = results.find(
+			(result): result is PromiseRejectedResult => result.status === "rejected",
+		);
+		if (failed) {
+			toast.error(
+				errorMessage(
+					failed.reason,
+					t({ message: `Couldn't permanently delete "${projectName}"` }),
+				),
+			);
+			return;
+		}
+		toast.success(t({ message: `Permanently deleted "${projectName}"` }));
+	};
 	const memberName = (userId: string | null) =>
 		permissions.organizationMembers.find((member) => member.userId === userId)
 			?.user.name ?? null;
@@ -65,11 +102,25 @@ function DeletedProjectsPage() {
 									});
 									setRestoringId(null);
 								}}
+								onDeletePermanently={() =>
+									setPurgeTarget({
+										id: project.id,
+										name: project.name,
+										hostUrls: restorableUrls,
+									})
+								}
 							/>
 						);
 					})}
 				</ul>
 			)}
+			<PurgeProjectDialog
+				projectName={purgeTarget?.name ?? null}
+				onOpenChange={(open) => {
+					if (!open) setPurgeTarget(null);
+				}}
+				onConfirm={purgeProject}
+			/>
 		</div>
 	);
 }

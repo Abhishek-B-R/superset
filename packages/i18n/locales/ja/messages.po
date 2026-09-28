@@ -4480,6 +4480,9 @@ msgstr "「{name}」に自動で名前を付けられませんでした"
 msgid "Couldn't parse this diff: {patchParseError}"
 msgstr "この差分を解析できませんでした: {patchParseError}"
 
+msgid "Couldn't permanently delete \"{projectName}\""
+msgstr "「{projectName}」を完全に削除できませんでした"
+
 msgid "Couldn't post reply"
 msgstr "返信を投稿できませんでした"
 
@@ -5049,6 +5052,12 @@ msgstr "組織を削除"
 
 msgid "Delete page"
 msgstr "ページを削除"
+
+msgid "Delete permanently"
+msgstr "完全に削除"
+
+msgid "Delete permanently…"
+msgstr "完全に削除…"
 
 msgid "Delete project"
 msgstr "プロジェクトを削除"
@@ -7985,6 +7994,9 @@ msgstr "独自のブランチとファイルのコピー"
 
 msgid "Its workspaces and terminals are unavailable until it restarts — use the Superset tray menu > Host Service > Restart."
 msgstr "再起動するまで、そのワークスペースとターミナルは利用できません — Supersetのトレイメニューから「ホストサービス」>「再起動」を実行してください。"
+
+msgid "Its workspaces and their worktrees are removed from disk now instead of after 30 days. The repository folder and worktrees with uncommitted changes are kept."
+msgstr "ワークスペースとそのワークツリーは、30 日後ではなく今すぐディスクから削除されます。リポジトリのフォルダーと未コミットの変更があるワークツリーは残ります。"
 
 msgid "Jane Doe"
 msgstr "山田太郎"
@@ -11110,6 +11122,12 @@ msgstr "1ユーザーあたり月額"
 
 msgid "Percent of total system RAM used by monitored Superset resources only (not all apps). A high share means Superset is a major contributor to system memory pressure; a low share means pressure is likely elsewhere."
 msgstr "監視対象のSupersetリソースのみが使用する、システムRAM全体に対する割合です(すべてのアプリではありません)。割合が高い場合はSupersetがシステムのメモリ圧迫の主な要因であり、低い場合は原因は他にあります。"
+
+msgid "Permanently delete \"{projectName}\"?"
+msgstr "「{projectName}」を完全に削除しますか？"
+
+msgid "Permanently deleted \"{projectName}\""
+msgstr "「{projectName}」を完全に削除しました"
 
 #. placeholder {0}: team.name
 msgid "Permanently remove <0>{0}</0> and all of its members. This can't be undone."

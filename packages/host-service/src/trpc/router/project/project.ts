@@ -17,6 +17,7 @@ import {
 } from "../../../projects/local-project-store";
 import {
 	listDeletedProjects,
+	purgeDeletedProject,
 	readDeletionImpact,
 	restoreProject,
 	softDeleteProject,
@@ -856,6 +857,18 @@ export const projectRouter = router({
 				});
 			}
 			return restored;
+		}),
+
+	purge: machineOnlyProcedure
+		.input(z.object({ projectId: z.string().uuid() }))
+		.mutation(async ({ ctx, input }) => {
+			if (!(await purgeDeletedProject(ctx, input.projectId))) {
+				throw new TRPCError({
+					code: "PRECONDITION_FAILED",
+					message: "Only a deleted project can be deleted permanently",
+				});
+			}
+			return { success: true };
 		}),
 
 	listDeleted: protectedProcedure.query(({ ctx }) => listDeletedProjects(ctx)),

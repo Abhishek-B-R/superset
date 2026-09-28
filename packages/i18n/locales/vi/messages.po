@@ -4480,6 +4480,9 @@ msgstr "Không thể tự động đặt tên cho \"{name}\""
 msgid "Couldn't parse this diff: {patchParseError}"
 msgstr "Không thể phân tích diff này: {patchParseError}"
 
+msgid "Couldn't permanently delete \"{projectName}\""
+msgstr "Không thể xóa vĩnh viễn \"{projectName}\""
+
 msgid "Couldn't post reply"
 msgstr "Không thể đăng trả lời"
 
@@ -5049,6 +5052,12 @@ msgstr "Xóa tổ chức"
 
 msgid "Delete page"
 msgstr "Xóa trang"
+
+msgid "Delete permanently"
+msgstr "Xóa vĩnh viễn"
+
+msgid "Delete permanently…"
+msgstr "Xóa vĩnh viễn…"
 
 msgid "Delete project"
 msgstr "Xóa dự án"
@@ -7985,6 +7994,9 @@ msgstr "Nhánh riêng và bản sao tệp riêng"
 
 msgid "Its workspaces and terminals are unavailable until it restarts — use the Superset tray menu > Host Service > Restart."
 msgstr "Các workspace và terminal của nó không khả dụng cho đến khi khởi động lại — dùng menu khay Superset > Host Service > Restart."
+
+msgid "Its workspaces and their worktrees are removed from disk now instead of after 30 days. The repository folder and worktrees with uncommitted changes are kept."
+msgstr "Các workspace và worktree của nó sẽ bị xóa khỏi ổ đĩa ngay bây giờ thay vì sau 30 ngày. Thư mục repository và các worktree có thay đổi chưa commit vẫn được giữ lại."
 
 msgid "Jane Doe"
 msgstr "Nguyễn Văn A"
@@ -11110,6 +11122,12 @@ msgstr "mỗi người/tháng"
 
 msgid "Percent of total system RAM used by monitored Superset resources only (not all apps). A high share means Superset is a major contributor to system memory pressure; a low share means pressure is likely elsewhere."
 msgstr "Phần trăm tổng RAM hệ thống chỉ do các tài nguyên Superset được theo dõi sử dụng (không tính mọi ứng dụng). Tỷ lệ cao nghĩa là Superset góp phần lớn gây áp lực bộ nhớ; tỷ lệ thấp nghĩa là áp lực có thể đến từ nơi khác."
+
+msgid "Permanently delete \"{projectName}\"?"
+msgstr "Xóa vĩnh viễn \"{projectName}\"?"
+
+msgid "Permanently deleted \"{projectName}\""
+msgstr "Đã xóa vĩnh viễn \"{projectName}\""
 
 #. placeholder {0}: team.name
 msgid "Permanently remove <0>{0}</0> and all of its members. This can't be undone."

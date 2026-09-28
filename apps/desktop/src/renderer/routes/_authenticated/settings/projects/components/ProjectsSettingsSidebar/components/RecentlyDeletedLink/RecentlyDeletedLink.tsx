@@ -10,7 +10,7 @@ export function RecentlyDeletedLink() {
 	if (deleted.length === 0) return null;
 	const isActive = !!matchRoute({ to: "/settings/projects/deleted" });
 	return (
-		<div className="border-t pt-3">
+		<div className="pt-4">
 			<Link
 				to="/settings/projects/deleted"
 				className={settingsListItemClass(

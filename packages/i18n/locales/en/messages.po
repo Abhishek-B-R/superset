@@ -4480,6 +4480,9 @@ msgstr "Couldn't name \"{name}\" automatically"
 msgid "Couldn't parse this diff: {patchParseError}"
 msgstr "Couldn't parse this diff: {patchParseError}"
 
+msgid "Couldn't permanently delete \"{projectName}\""
+msgstr "Couldn't permanently delete \"{projectName}\""
+
 msgid "Couldn't post reply"
 msgstr "Couldn't post reply"
 
@@ -5049,6 +5052,12 @@ msgstr "Delete organization"
 
 msgid "Delete page"
 msgstr "Delete page"
+
+msgid "Delete permanently"
+msgstr "Delete permanently"
+
+msgid "Delete permanently…"
+msgstr "Delete permanently…"
 
 msgid "Delete project"
 msgstr "Delete project"
@@ -7985,6 +7994,9 @@ msgstr "Its own branch and copy of the files"
 
 msgid "Its workspaces and terminals are unavailable until it restarts — use the Superset tray menu > Host Service > Restart."
 msgstr "Its workspaces and terminals are unavailable until it restarts — use the Superset tray menu > Host Service > Restart."
+
+msgid "Its workspaces and their worktrees are removed from disk now instead of after 30 days. The repository folder and worktrees with uncommitted changes are kept."
+msgstr "Its workspaces and their worktrees are removed from disk now instead of after 30 days. The repository folder and worktrees with uncommitted changes are kept."
 
 msgid "Jane Doe"
 msgstr "Jane Doe"
@@ -11110,6 +11122,12 @@ msgstr "per user/month"
 
 msgid "Percent of total system RAM used by monitored Superset resources only (not all apps). A high share means Superset is a major contributor to system memory pressure; a low share means pressure is likely elsewhere."
 msgstr "Percent of total system RAM used by monitored Superset resources only (not all apps). A high share means Superset is a major contributor to system memory pressure; a low share means pressure is likely elsewhere."
+
+msgid "Permanently delete \"{projectName}\"?"
+msgstr "Permanently delete \"{projectName}\"?"
+
+msgid "Permanently deleted \"{projectName}\""
+msgstr "Permanently deleted \"{projectName}\""
 
 #. placeholder {0}: team.name
 msgid "Permanently remove <0>{0}</0> and all of its members. This can't be undone."
