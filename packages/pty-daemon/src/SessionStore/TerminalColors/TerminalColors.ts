@@ -7,16 +7,7 @@ import {
 
 const MAX_OSC_BYTES = 16384;
 
-type State =
-	| "ground"
-	| "escape"
-	| "c2"
-	| "osc"
-	| "oscEscape"
-	| "string"
-	| "stringEscape"
-	| "overflow"
-	| "overflowEscape";
+type State = "ground" | "escape" | "c2" | "osc" | "oscEscape" | "overflow";
 
 export interface TerminalColorsSnapshot {
 	defaults: string[];
@@ -24,7 +15,6 @@ export interface TerminalColorsSnapshot {
 	state: State;
 	pending: number[];
 	previousC2?: boolean;
-	discardOverflow?: boolean;
 }
 
 function parseColor(value: string): string | undefined {
@@ -62,7 +52,6 @@ export class TerminalColors {
 	private state: State = "ground";
 	private pending: number[] = [];
 	private previousC2 = false;
-	private discardOverflow = false;
 
 	constructor(colors?: ConfiguredColors, light = false) {
 		this.configure(fallbackTerminalColors(light));
@@ -102,19 +91,15 @@ export class TerminalColors {
 			state: this.state,
 			pending: [...this.pending],
 			previousC2: this.previousC2,
-			discardOverflow: this.discardOverflow,
 		};
 	}
 
 	restore(snapshot: TerminalColorsSnapshot): void {
 		this.defaults = [...snapshot.defaults];
 		this.overrides = new Map(snapshot.overrides);
-		this.state = snapshot.state.startsWith("string")
-			? "ground"
-			: snapshot.state;
+		this.state = snapshot.state;
 		this.pending = [...snapshot.pending];
 		this.previousC2 = snapshot.previousC2 ?? false;
-		this.discardOverflow = snapshot.discardOverflow ?? false;
 	}
 
 	flush(): Buffer {
@@ -134,7 +119,6 @@ export class TerminalColors {
 			if (this.state === "ground") {
 				if (byte !== 0x1b && byte !== 0xc2) continue;
 				output.push(chunk.subarray(start, i));
-				this.discardOverflow = false;
 				this.pending = [byte];
 				this.state = byte === 0xc2 ? "c2" : "escape";
 				start = i + 1;
@@ -153,41 +137,23 @@ export class TerminalColors {
 				i--;
 				continue;
 			}
-			if (this.state === "overflow" || this.state === "overflowEscape") {
+			if (this.state === "overflow") {
 				if (byte === 0x1b) {
 					this.pending = [byte];
 					this.state = "escape";
-					this.discardOverflow = false;
 					start = i + 1;
 					continue;
 				}
 				if (this.pending.at(-1) === 0xc2 && byte === 0x9d) {
 					this.pending = [0xc2, byte];
 					this.state = "osc";
-					this.discardOverflow = false;
 					start = i + 1;
 					continue;
 				}
 				this.pending = byte === 0xc2 ? [byte] : [];
-				const escaped = this.state.endsWith("Escape");
-				const overflow = this.state.startsWith("overflow");
-				if (this.discardOverflow) start = i + 1;
-				if (
-					(escaped && byte === 0x5c) ||
-					c1End ||
-					byte === 0x18 ||
-					byte === 0x1a ||
-					(overflow && byte === 7)
-				)
+				start = i + 1;
+				if (c1End || byte === 0x18 || byte === 0x1a || byte === 7)
 					this.state = "ground";
-				else
-					this.state = overflow
-						? byte === 0x1b
-							? "overflowEscape"
-							: "overflow"
-						: byte === 0x1b
-							? "stringEscape"
-							: "string";
 				continue;
 			}
 			if (
@@ -273,14 +239,14 @@ export class TerminalColors {
 						.toString("latin1")
 						.split(";", 1)[0] ?? "";
 				const identifier = Number(header);
-				this.discardOverflow =
+				const discardOverflow =
 					this.pending.length > MAX_OSC_BYTES &&
 					/^\d+$/.test(header) &&
 					([4, 10, 11, 12, 104, 110, 111, 112].includes(identifier) ||
 						(!raw.includes(0x3b) && identifier === 0));
-				if (!this.discardOverflow) output.push(raw);
+				if (!discardOverflow) output.push(raw);
 				this.pending = [];
-				this.state = this.discardOverflow ? "overflow" : "ground";
+				this.state = discardOverflow ? "overflow" : "ground";
 			} else this.state = byte === 0x1b ? "oscEscape" : "osc";
 		}
 		output.push(chunk.subarray(start));
@@ -352,21 +318,17 @@ export class TerminalColors {
 		}
 		if (command === "10" || command === "11" || command === "12") {
 			const first = Number(command);
-			if (!parts.includes("?")) {
-				for (let i = 0; i < parts.length && first + i <= 12; i++)
-					set(256 + first + i - 10, parts[i] ?? "");
-				return raw;
-			}
 			const retained: string[] = [];
 			for (let i = 0; i < parts.length && first + i <= 12; i++) {
 				const code = first + i;
 				const value = parts[i] ?? "";
-				if (code <= 12 && value === "?") emit(String(code), 256 + code - 10);
+				if (value === "?") emit(String(code), 256 + code - 10);
 				else {
-					if (code <= 12) set(256 + code - 10, value);
+					set(256 + code - 10, value);
 					retained.push(`\x1b]${code};${value}${terminator}`);
 				}
 			}
+			if (!parts.includes("?")) return raw;
 			return Buffer.concat([
 				emptyOsc,
 				Buffer.from(retained.join(""), "latin1"),
