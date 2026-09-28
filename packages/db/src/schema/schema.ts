@@ -673,10 +673,6 @@ export const environments = pgTable(
 	},
 	(table) => [
 		index("environments_organization_id_idx").on(table.organizationId),
-		unique("environments_organization_id_name_unique").on(
-			table.organizationId,
-			table.name,
-		),
 	],
 );
 
