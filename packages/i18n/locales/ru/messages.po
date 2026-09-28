@@ -4010,9 +4010,6 @@ msgstr "Вклад"
 msgid "Control how your local machine is reachable from elsewhere"
 msgstr "Управляйте тем, как ваша локальная машина доступна извне"
 
-msgid "Control what each click — plain or with a modifier — does to a file or URL. Each row binds one modifier combination to an action."
-msgstr "Определите, что делает каждый клик — обычный или с модификатором — с файлом или URL. Каждая строка привязывает одну комбинацию модификаторов к действию."
-
 msgid "Controls when manually edited files are saved"
 msgstr "Определяет, когда сохраняются файлы, отредактированные вручную"
 
@@ -5705,6 +5702,9 @@ msgctxt "github release action"
 msgid "Edited"
 msgstr "Изменён"
 
+msgid "Editing"
+msgstr "Редактирование"
+
 msgid "Editing file..."
 msgstr "Редактирование файла..."
 
@@ -6594,6 +6594,9 @@ msgstr "Файл удалён на диске. У вас остались нес
 
 msgid "Files"
 msgstr "Файлы"
+
+msgid "Files & Editor"
+msgstr "Файлы и редактор"
 
 msgid "Files changed"
 msgstr "Изменённые файлы"
@@ -8396,9 +8399,6 @@ msgstr "Привязать задачу"
 msgid "Linked {slug} to workspace"
 msgstr "{slug} привязана к рабочей области"
 
-msgid "Links"
-msgstr "Ссылки"
-
 msgid "List"
 msgstr "Список"
 
@@ -10156,9 +10156,6 @@ msgstr "на {offScopeHostName} — здесь не запустится"
 msgid "On a host you can't reach"
 msgstr "На недоступном хосте"
 
-msgid "On click"
-msgstr "По клику"
-
 msgid "On focus change"
 msgstr "При смене фокуса"
 
@@ -10704,6 +10701,12 @@ msgstr "Открыта существующая рабочая область"
 
 msgid "opened PR #841 for review"
 msgstr "открыл PR #841 на ревью"
+
+msgid "Opening files"
+msgstr "Открытие файлов"
+
+msgid "Opening folders"
+msgstr "Открытие папок"
 
 msgid "Opening worktree..."
 msgstr "Открытие worktree..."

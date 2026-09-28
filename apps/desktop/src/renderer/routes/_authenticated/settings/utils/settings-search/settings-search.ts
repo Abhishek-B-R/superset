@@ -804,7 +804,7 @@ export const SETTINGS_ITEMS: SettingsItem[] = [
 	},
 	{
 		id: SETTING_ITEM_ID.BEHAVIOR_FILE_OPEN_MODE,
-		section: "behavior",
+		section: "files",
 		title: "File open mode",
 		description:
 			"Choose how files open when clicked in the file tree or changes view",
@@ -823,7 +823,7 @@ export const SETTINGS_ITEMS: SettingsItem[] = [
 	},
 	{
 		id: SETTING_ITEM_ID.BEHAVIOR_FILE_AUTO_SAVE,
-		section: "behavior",
+		section: "files",
 		title: "Auto Save",
 		description: "Controls when manually edited files are saved",
 		keywords: [
@@ -912,7 +912,7 @@ export const SETTINGS_ITEMS: SettingsItem[] = [
 	},
 	{
 		id: SETTING_ITEM_ID.BEHAVIOR_OPEN_LINKS_IN_APP,
-		section: "behavior",
+		section: "browser",
 		title: "Open links in the in-app browser",
 		description:
 			"Open links from chat and terminal in the in-app browser instead of your default browser",
@@ -1191,7 +1191,7 @@ export const SETTINGS_ITEMS: SettingsItem[] = [
 	},
 	{
 		id: SETTING_ITEM_ID.LINKS_FILE,
-		section: "links",
+		section: "files",
 		title: "File links",
 		description:
 			"How file paths open when clicked in terminals, chat, and tasks",
@@ -1215,7 +1215,7 @@ export const SETTINGS_ITEMS: SettingsItem[] = [
 	},
 	{
 		id: SETTING_ITEM_ID.LINKS_FOLDER,
-		section: "links",
+		section: "files",
 		title: "Folder links",
 		description:
 			"How folder paths open when clicked in terminals: reveal in sidebar, editor, or Finder",
@@ -1240,7 +1240,7 @@ export const SETTINGS_ITEMS: SettingsItem[] = [
 	},
 	{
 		id: SETTING_ITEM_ID.LINKS_URL,
-		section: "links",
+		section: "browser",
 		title: "URL links",
 		description: "How URLs open when clicked in terminals, chat, and tasks",
 		keywords: [
@@ -1265,7 +1265,7 @@ export const SETTINGS_ITEMS: SettingsItem[] = [
 	},
 	{
 		id: SETTING_ITEM_ID.LINKS_SIDEBAR_FILE,
-		section: "links",
+		section: "files",
 		title: "Sidebar file rows",
 		description:
 			"How file rows in the file tree, changes list, and diff header open when clicked",
@@ -1291,7 +1291,7 @@ export const SETTINGS_ITEMS: SettingsItem[] = [
 	},
 	{
 		id: SETTING_ITEM_ID.LINKS_PORT,
-		section: "links",
+		section: "browser",
 		title: "Ports",
 		description:
 			"How detected-port badges in the sidebar open when clicked (in-app or system browser)",
@@ -1318,7 +1318,7 @@ export const SETTINGS_ITEMS: SettingsItem[] = [
 	},
 	{
 		id: SETTING_ITEM_ID.LINKS_PAGE,
-		section: "links",
+		section: "browser",
 		title: "Pages",
 		description:
 			"Whether Page links (in terminals, chat, and task markdown) open inside Superset or the system browser",
