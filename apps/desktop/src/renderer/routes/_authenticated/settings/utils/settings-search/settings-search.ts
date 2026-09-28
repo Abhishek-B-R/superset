@@ -993,6 +993,7 @@ export const SETTINGS_ITEMS: SettingsItem[] = [
 			"claude",
 			"codex",
 			"pi",
+			"ufo",
 		],
 	},
 	{
@@ -1023,6 +1024,7 @@ export const SETTINGS_ITEMS: SettingsItem[] = [
 			"muse",
 			"meta",
 			"devin",
+			"ufo",
 			"cognition",
 			"fx",
 			"vercel",
@@ -1099,6 +1101,7 @@ export const SETTINGS_ITEMS: SettingsItem[] = [
 			"muse",
 			"meta",
 			"devin",
+			"ufo",
 			"cognition",
 			"fx",
 			"vercel",

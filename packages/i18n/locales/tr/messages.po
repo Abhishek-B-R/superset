@@ -4195,9 +4195,6 @@ msgstr "Tarama geçmişinizi ve oturum bilgilerinizi başka bir tarayıcıdan Su
 msgid "Copy your key now — you won't be able to see it again."
 msgstr "Anahtarınızı şimdi kopyalayın — bir daha göremezsiniz."
 
-msgid "Copying configuration"
-msgstr "Yapılandırma kopyalanıyor"
-
 msgid "Copyright or trademark"
 msgstr "Telif hakkı veya ticari marka"
 
@@ -4475,6 +4472,9 @@ msgstr "Profilin yüklenemedi, bu yüzden düzenleme devre dışı."
 msgid "Couldn't merge pull request"
 msgstr "Pull request birleştirilemedi"
 
+msgid "Couldn't name \"{name}\" automatically"
+msgstr "\"{name}\" otomatik olarak adlandırılamadı"
+
 msgid "Couldn't parse this diff: {patchParseError}"
 msgstr "Bu fark ayrıştırılamadı: {patchParseError}"
 
@@ -4727,9 +4727,6 @@ msgstr "oluşturuluyor"
 
 msgid "Creating"
 msgstr "Oluşturuluyor"
-
-msgid "Creating git worktree"
-msgstr "Git worktree'si oluşturuluyor"
 
 msgid "Creating PR..."
 msgstr "PR oluşturuluyor…"
@@ -6667,9 +6664,6 @@ msgstr "Filtreler"
 msgid "Filters, {activeFilterCount} active"
 msgstr "Filtreler, {activeFilterCount} etkin"
 
-msgid "Finalizing setup"
-msgstr "Kurulum tamamlanıyor"
-
 msgid "Find"
 msgstr "Bul"
 
@@ -7709,9 +7703,6 @@ msgstr "Git'i başlat"
 msgid "Initialize Git Repository?"
 msgstr "Git deposu başlatılsın mı?"
 
-msgid "Initializing session"
-msgstr "Oturum başlatılıyor"
-
 msgid "Initializing..."
 msgstr "Başlatılıyor..."
 
@@ -7953,6 +7944,9 @@ msgstr "Issue URL'si {repoMismatch} ile eşleşmeli."
 
 msgid "Issue…"
 msgstr "Issue…"
+
+msgid "It keeps the title from your prompt."
+msgstr "İsteminizdeki başlık korunur."
 
 msgid "It may be asleep"
 msgstr "Uykuda olabilir"
@@ -14780,9 +14774,6 @@ msgstr "Depoları eşitle"
 msgid "Sync started"
 msgstr "Eşitleme başladı"
 
-msgid "Syncing with remote"
-msgstr "Uzak depo ile eşitleniyor"
-
 msgid "Syncing..."
 msgstr "Eşitleniyor..."
 
@@ -16519,9 +16510,6 @@ msgstr "Bunu doğrula"
 
 msgid "Verify your identity"
 msgstr "Kimliğinizi doğrulama"
-
-msgid "Verifying base branch"
-msgstr "Temel dal doğrulanıyor"
 
 msgid "Version"
 msgstr "Sürüm"

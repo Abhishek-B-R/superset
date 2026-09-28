@@ -4195,9 +4195,6 @@ msgstr "Zkopírujte historii prohlížení a přihlášení z jiného prohlíže
 msgid "Copy your key now — you won't be able to see it again."
 msgstr "Zkopírujte si klíč teď — už ho znovu neuvidíte."
 
-msgid "Copying configuration"
-msgstr "Kopíruji konfiguraci"
-
 msgid "Copyright or trademark"
 msgstr "Autorská práva nebo ochranná známka"
 
@@ -4475,6 +4472,9 @@ msgstr "Tvůj profil se nepodařilo načíst, úpravy jsou proto vypnuté."
 msgid "Couldn't merge pull request"
 msgstr "Pull request se nepodařilo sloučit"
 
+msgid "Couldn't name \"{name}\" automatically"
+msgstr "Nepodařilo se automaticky pojmenovat „{name}“"
+
 msgid "Couldn't parse this diff: {patchParseError}"
 msgstr "Tento diff se nepodařilo zpracovat: {patchParseError}"
 
@@ -4727,9 +4727,6 @@ msgstr "vytváří se"
 
 msgid "Creating"
 msgstr "Vytvářím"
-
-msgid "Creating git worktree"
-msgstr "Vytvářím git worktree"
 
 msgid "Creating PR..."
 msgstr "Vytváření PR…"
@@ -6667,9 +6664,6 @@ msgstr "Filtry"
 msgid "Filters, {activeFilterCount} active"
 msgstr "Filtry, aktivních: {activeFilterCount}"
 
-msgid "Finalizing setup"
-msgstr "Dokončuji nastavení"
-
 msgid "Find"
 msgstr "Najít"
 
@@ -7709,9 +7703,6 @@ msgstr "Inicializovat Git"
 msgid "Initialize Git Repository?"
 msgstr "Inicializovat git repozitář?"
 
-msgid "Initializing session"
-msgstr "Inicializuji relaci"
-
 msgid "Initializing..."
 msgstr "Inicializuji..."
 
@@ -7953,6 +7944,9 @@ msgstr "URL issue musí odpovídat {repoMismatch}."
 
 msgid "Issue…"
 msgstr "Issue…"
+
+msgid "It keeps the title from your prompt."
+msgstr "Zůstane mu název z vašeho zadání."
 
 msgid "It may be asleep"
 msgstr "Možná je uspaný"
@@ -14780,9 +14774,6 @@ msgstr "Synchronizovat repozitáře"
 msgid "Sync started"
 msgstr "Synchronizace spuštěna"
 
-msgid "Syncing with remote"
-msgstr "Synchronizuji se vzdáleným repozitářem"
-
 msgid "Syncing..."
 msgstr "Synchronizuji..."
 
@@ -16519,9 +16510,6 @@ msgstr "Ověř to"
 
 msgid "Verify your identity"
 msgstr "ověřit vaši totožnost"
-
-msgid "Verifying base branch"
-msgstr "Ověřuji základní větev"
 
 msgid "Version"
 msgstr "Verze"

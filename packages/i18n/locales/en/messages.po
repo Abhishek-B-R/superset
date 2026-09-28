@@ -4195,9 +4195,6 @@ msgstr "Copy your browsing history and logins from another browser into Superset
 msgid "Copy your key now — you won't be able to see it again."
 msgstr "Copy your key now — you won't be able to see it again."
 
-msgid "Copying configuration"
-msgstr "Copying configuration"
-
 msgid "Copyright or trademark"
 msgstr "Copyright or trademark"
 
@@ -4475,6 +4472,9 @@ msgstr "Couldn't load your profile, so editing is disabled."
 msgid "Couldn't merge pull request"
 msgstr "Couldn't merge pull request"
 
+msgid "Couldn't name \"{name}\" automatically"
+msgstr "Couldn't name \"{name}\" automatically"
+
 msgid "Couldn't parse this diff: {patchParseError}"
 msgstr "Couldn't parse this diff: {patchParseError}"
 
@@ -4727,9 +4727,6 @@ msgstr "creating"
 
 msgid "Creating"
 msgstr "Creating"
-
-msgid "Creating git worktree"
-msgstr "Creating git worktree"
 
 msgid "Creating PR..."
 msgstr "Creating PR..."
@@ -6667,9 +6664,6 @@ msgstr "Filters"
 msgid "Filters, {activeFilterCount} active"
 msgstr "Filters, {activeFilterCount} active"
 
-msgid "Finalizing setup"
-msgstr "Finalizing setup"
-
 msgid "Find"
 msgstr "Find"
 
@@ -7709,9 +7703,6 @@ msgstr "Initialize Git"
 msgid "Initialize Git Repository?"
 msgstr "Initialize Git Repository?"
 
-msgid "Initializing session"
-msgstr "Initializing session"
-
 msgid "Initializing..."
 msgstr "Initializing..."
 
@@ -7953,6 +7944,9 @@ msgstr "Issue URL must match {repoMismatch}."
 
 msgid "Issue…"
 msgstr "Issue…"
+
+msgid "It keeps the title from your prompt."
+msgstr "It keeps the title from your prompt."
 
 msgid "It may be asleep"
 msgstr "It may be asleep"
@@ -14780,9 +14774,6 @@ msgstr "Sync Repositories"
 msgid "Sync started"
 msgstr "Sync started"
 
-msgid "Syncing with remote"
-msgstr "Syncing with remote"
-
 msgid "Syncing..."
 msgstr "Syncing..."
 
@@ -16519,9 +16510,6 @@ msgstr "Verify this"
 
 msgid "Verify your identity"
 msgstr "Verify your identity"
-
-msgid "Verifying base branch"
-msgstr "Verifying base branch"
 
 msgid "Version"
 msgstr "Version"

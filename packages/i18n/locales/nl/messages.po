@@ -4195,9 +4195,6 @@ msgstr "Kopieer je browsegeschiedenis en logins uit een andere browser naar Supe
 msgid "Copy your key now — you won't be able to see it again."
 msgstr "Kopieer je sleutel nu — je kunt hem later niet meer zien."
 
-msgid "Copying configuration"
-msgstr "Configuratie kopiëren"
-
 msgid "Copyright or trademark"
 msgstr "Auteursrecht of handelsmerk"
 
@@ -4475,6 +4472,9 @@ msgstr "Je profiel kon niet worden geladen, daarom is bewerken uitgeschakeld."
 msgid "Couldn't merge pull request"
 msgstr "Kan pull request niet mergen"
 
+msgid "Couldn't name \"{name}\" automatically"
+msgstr "Kon \"{name}\" niet automatisch een naam geven"
+
 msgid "Couldn't parse this diff: {patchParseError}"
 msgstr "Kan deze diff niet parsen: {patchParseError}"
 
@@ -4727,9 +4727,6 @@ msgstr "aanmaken"
 
 msgid "Creating"
 msgstr "Aanmaken"
-
-msgid "Creating git worktree"
-msgstr "Git-worktree aanmaken"
 
 msgid "Creating PR..."
 msgstr "PR wordt aangemaakt…"
@@ -6667,9 +6664,6 @@ msgstr "Filters"
 msgid "Filters, {activeFilterCount} active"
 msgstr "Filters, {activeFilterCount} actief"
 
-msgid "Finalizing setup"
-msgstr "Setup afronden"
-
 msgid "Find"
 msgstr "Zoeken"
 
@@ -7709,9 +7703,6 @@ msgstr "Git initialiseren"
 msgid "Initialize Git Repository?"
 msgstr "Git-repository initialiseren?"
 
-msgid "Initializing session"
-msgstr "Sessie initialiseren"
-
 msgid "Initializing..."
 msgstr "Initialiseren..."
 
@@ -7953,6 +7944,9 @@ msgstr "Issue-URL moet overeenkomen met {repoMismatch}."
 
 msgid "Issue…"
 msgstr "Issue…"
+
+msgid "It keeps the title from your prompt."
+msgstr "De titel uit je prompt blijft staan."
 
 msgid "It may be asleep"
 msgstr "Hij staat mogelijk in sluimerstand"
@@ -14780,9 +14774,6 @@ msgstr "Repository's synchroniseren"
 msgid "Sync started"
 msgstr "Synchronisatie gestart"
 
-msgid "Syncing with remote"
-msgstr "Synchroniseren met remote"
-
 msgid "Syncing..."
 msgstr "Synchroniseren..."
 
@@ -16519,9 +16510,6 @@ msgstr "Controleer dit"
 
 msgid "Verify your identity"
 msgstr "Je identiteit verifiëren"
-
-msgid "Verifying base branch"
-msgstr "Basisbranch verifiëren"
 
 msgid "Version"
 msgstr "Versie"

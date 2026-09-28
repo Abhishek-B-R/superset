@@ -4195,9 +4195,6 @@ msgstr "Sao chép lịch sử duyệt web và thông tin đăng nhập từ trì
 msgid "Copy your key now — you won't be able to see it again."
 msgstr "Hãy sao chép khóa ngay — bạn sẽ không xem lại được nữa."
 
-msgid "Copying configuration"
-msgstr "Đang sao chép cấu hình"
-
 msgid "Copyright or trademark"
 msgstr "Bản quyền hoặc nhãn hiệu"
 
@@ -4475,6 +4472,9 @@ msgstr "Không tải được hồ sơ của bạn nên chức năng chỉnh s�
 msgid "Couldn't merge pull request"
 msgstr "Không thể merge pull request"
 
+msgid "Couldn't name \"{name}\" automatically"
+msgstr "Không thể tự động đặt tên cho \"{name}\""
+
 msgid "Couldn't parse this diff: {patchParseError}"
 msgstr "Không thể phân tích diff này: {patchParseError}"
 
@@ -4727,9 +4727,6 @@ msgstr "đang tạo"
 
 msgid "Creating"
 msgstr "Đang tạo"
-
-msgid "Creating git worktree"
-msgstr "Đang tạo git worktree"
 
 msgid "Creating PR..."
 msgstr "Đang tạo PR…"
@@ -6667,9 +6664,6 @@ msgstr "Bộ lọc"
 msgid "Filters, {activeFilterCount} active"
 msgstr "Bộ lọc, {activeFilterCount} đang bật"
 
-msgid "Finalizing setup"
-msgstr "Đang hoàn tất thiết lập"
-
 msgid "Find"
 msgstr "Tìm"
 
@@ -7709,9 +7703,6 @@ msgstr "Khởi tạo Git"
 msgid "Initialize Git Repository?"
 msgstr "Khởi tạo repository Git?"
 
-msgid "Initializing session"
-msgstr "Đang khởi tạo phiên"
-
 msgid "Initializing..."
 msgstr "Đang khởi tạo..."
 
@@ -7953,6 +7944,9 @@ msgstr "URL của issue phải khớp với {repoMismatch}."
 
 msgid "Issue…"
 msgstr "Issue…"
+
+msgid "It keeps the title from your prompt."
+msgstr "Tiêu đề từ lời nhắc của bạn sẽ được giữ nguyên."
 
 msgid "It may be asleep"
 msgstr "Máy có thể đang ngủ"
@@ -14780,9 +14774,6 @@ msgstr "Đồng bộ repository"
 msgid "Sync started"
 msgstr "Đã bắt đầu đồng bộ"
 
-msgid "Syncing with remote"
-msgstr "Đang đồng bộ với remote"
-
 msgid "Syncing..."
 msgstr "Đang đồng bộ..."
 
@@ -16519,9 +16510,6 @@ msgstr "Xác minh điều này"
 
 msgid "Verify your identity"
 msgstr "Xác minh danh tính của bạn"
-
-msgid "Verifying base branch"
-msgstr "Đang kiểm tra nhánh gốc"
 
 msgid "Version"
 msgstr "Phiên bản"

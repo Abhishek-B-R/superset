@@ -4195,9 +4195,6 @@ msgstr "Copia in Superset la cronologia di navigazione e gli accessi da un altro
 msgid "Copy your key now — you won't be able to see it again."
 msgstr "Copia la chiave adesso — non potrai più vederla."
 
-msgid "Copying configuration"
-msgstr "Copia della configurazione"
-
 msgid "Copyright or trademark"
 msgstr "Copyright o marchio"
 
@@ -4475,6 +4472,9 @@ msgstr "Non è stato possibile caricare il tuo profilo, quindi la modifica è di
 msgid "Couldn't merge pull request"
 msgstr "Impossibile unire la pull request"
 
+msgid "Couldn't name \"{name}\" automatically"
+msgstr "Impossibile assegnare automaticamente un nome a \"{name}\""
+
 msgid "Couldn't parse this diff: {patchParseError}"
 msgstr "Impossibile analizzare questo diff: {patchParseError}"
 
@@ -4727,9 +4727,6 @@ msgstr "creazione"
 
 msgid "Creating"
 msgstr "Creazione"
-
-msgid "Creating git worktree"
-msgstr "Creazione del worktree git"
 
 msgid "Creating PR..."
 msgstr "Creazione della PR…"
@@ -6667,9 +6664,6 @@ msgstr "Filtri"
 msgid "Filters, {activeFilterCount} active"
 msgstr "Filtri, {activeFilterCount} attivi"
 
-msgid "Finalizing setup"
-msgstr "Completamento della configurazione"
-
 msgid "Find"
 msgstr "Trova"
 
@@ -7709,9 +7703,6 @@ msgstr "Inizializza Git"
 msgid "Initialize Git Repository?"
 msgstr "Inizializzare il repository Git?"
 
-msgid "Initializing session"
-msgstr "Inizializzazione della sessione"
-
 msgid "Initializing..."
 msgstr "Inizializzazione..."
 
@@ -7953,6 +7944,9 @@ msgstr "L'URL della issue deve corrispondere a {repoMismatch}."
 
 msgid "Issue…"
 msgstr "Issue…"
+
+msgid "It keeps the title from your prompt."
+msgstr "Mantiene il titolo del tuo prompt."
 
 msgid "It may be asleep"
 msgstr "Potrebbe essere in stop"
@@ -14780,9 +14774,6 @@ msgstr "Sincronizza i repository"
 msgid "Sync started"
 msgstr "Sincronizzazione avviata"
 
-msgid "Syncing with remote"
-msgstr "Sincronizzazione con il remote"
-
 msgid "Syncing..."
 msgstr "Sincronizzazione..."
 
@@ -16519,9 +16510,6 @@ msgstr "Verifica questo"
 
 msgid "Verify your identity"
 msgstr "Verificare la tua identità"
-
-msgid "Verifying base branch"
-msgstr "Verifica del branch di base"
 
 msgid "Version"
 msgstr "Versione"

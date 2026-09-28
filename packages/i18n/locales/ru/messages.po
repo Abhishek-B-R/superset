@@ -4195,9 +4195,6 @@ msgstr "Скопируйте историю просмотров и логины
 msgid "Copy your key now — you won't be able to see it again."
 msgstr "Скопируйте ключ сейчас — увидеть его снова не получится."
 
-msgid "Copying configuration"
-msgstr "Копирование конфигурации"
-
 msgid "Copyright or trademark"
 msgstr "Авторские права или товарный знак"
 
@@ -4475,6 +4472,9 @@ msgstr "Не удалось загрузить профиль, поэтому р
 msgid "Couldn't merge pull request"
 msgstr "Не удалось объединить пул-реквест"
 
+msgid "Couldn't name \"{name}\" automatically"
+msgstr "Не удалось автоматически назвать «{name}»"
+
 msgid "Couldn't parse this diff: {patchParseError}"
 msgstr "Не удалось разобрать этот diff: {patchParseError}"
 
@@ -4727,9 +4727,6 @@ msgstr "создаётся"
 
 msgid "Creating"
 msgstr "Создание"
-
-msgid "Creating git worktree"
-msgstr "Создание git worktree"
 
 msgid "Creating PR..."
 msgstr "Создание PR…"
@@ -6667,9 +6664,6 @@ msgstr "Фильтры"
 msgid "Filters, {activeFilterCount} active"
 msgstr "Фильтры, активных: {activeFilterCount}"
 
-msgid "Finalizing setup"
-msgstr "Завершение настройки"
-
 msgid "Find"
 msgstr "Найти"
 
@@ -7709,9 +7703,6 @@ msgstr "Инициализировать Git"
 msgid "Initialize Git Repository?"
 msgstr "Инициализировать git-репозиторий?"
 
-msgid "Initializing session"
-msgstr "Инициализация сессии"
-
 msgid "Initializing..."
 msgstr "Инициализация..."
 
@@ -7953,6 +7944,9 @@ msgstr "URL задачи должен соответствовать {repoMismat
 
 msgid "Issue…"
 msgstr "Задача…"
+
+msgid "It keeps the title from your prompt."
+msgstr "Останется название из вашего запроса."
 
 msgid "It may be asleep"
 msgstr "Возможно, компьютер в режиме сна"
@@ -14780,9 +14774,6 @@ msgstr "Синхронизировать репозитории"
 msgid "Sync started"
 msgstr "Синхронизация запущена"
 
-msgid "Syncing with remote"
-msgstr "Синхронизация с удалённым репозиторием"
-
 msgid "Syncing..."
 msgstr "Синхронизация..."
 
@@ -16519,9 +16510,6 @@ msgstr "Проверить это"
 
 msgid "Verify your identity"
 msgstr "проверять вашу личность"
-
-msgid "Verifying base branch"
-msgstr "Проверка базовой ветки"
 
 msgid "Version"
 msgstr "Версия"

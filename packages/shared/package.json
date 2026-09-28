@@ -4,6 +4,7 @@
 	"private": true,
 	"type": "module",
 	"exports": {
+		"./terminal-colors": "./src/terminal-colors.ts",
 		"./connectors": {
 			"types": "./src/connectors/index.ts",
 			"default": "./src/connectors/index.ts"
@@ -335,6 +336,10 @@
 		"./plugins/manifest-schema": {
 			"types": "./src/plugins/manifest-schema.ts",
 			"default": "./src/plugins/manifest-schema.ts"
+		},
+		"./workspace-activity": {
+			"types": "./src/workspace-activity.ts",
+			"default": "./src/workspace-activity.ts"
 		}
 	},
 	"scripts": {
