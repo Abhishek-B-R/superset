@@ -1,8 +1,9 @@
-import { db } from "@superset/db/client";
+import { db, dbWs } from "@superset/db/client";
 import {
 	cloudWorkspaces,
 	environmentRepositories,
 	environmentScopeValues,
+	environmentSecrets,
 	environments,
 	githubRepositories,
 } from "@superset/db/schema";
@@ -32,6 +33,7 @@ import {
 } from "../../lib/sandbox";
 import { jwtProcedure, userError } from "../../trpc";
 import { secretsRouter } from "./secrets";
+import { decryptSecret, encryptSecret } from "./secrets/utils/crypto";
 
 /** An environment the caller may see; another member's personal one does not exist to them. */
 export async function loadEnvironment(
@@ -82,6 +84,26 @@ function assertOwned(row: { organizationId: string }): void {
 			i18nKey: "serverError.environment.sharedEnvironmentIsReadOnly",
 		});
 	}
+}
+
+/**
+ * Who a personal environment belongs to: only its owner can see it, so a row
+ * nobody created (the release's) becomes the caller's, and another person's
+ * cannot be taken.
+ */
+function personalOwner(
+	row: { createdByUserId: string | null },
+	userId: string,
+): string {
+	if (row.createdByUserId && row.createdByUserId !== userId) {
+		throw userError({
+			code: "FORBIDDEN",
+			message:
+				"Only the person who created this environment can make it personal",
+			i18nKey: "serverError.environment.personalNotCreator",
+		});
+	}
+	return userId;
 }
 
 /** The repositories of many environments at once, the primary first then by name. */
@@ -280,10 +302,21 @@ export const environmentRouter = {
 
 	promote: jwtProcedure
 		.input(
-			z.object({
-				cloudWorkspaceId: z.string().uuid(),
-				name: z.string().min(1).max(100),
-			}),
+			z
+				.object({
+					cloudWorkspaceId: z.string().uuid(),
+					/** Save as a new environment by this name. */
+					name: z.string().min(1).max(100).optional(),
+					/** Or rebuild this one from the workspace, keeping its id, name and secrets. */
+					environmentId: z.string().uuid().optional(),
+					scope: z.enum(environmentScopeValues).optional(),
+				})
+				.refine(
+					(input) => Boolean(input.name) !== Boolean(input.environmentId),
+					{
+						message: "Pass either a name or an environmentId",
+					},
+				),
 		)
 		.mutation(async ({ ctx, input }) => {
 			await assertCloudAccess(ctx);
@@ -305,6 +338,24 @@ export const environmentRouter = {
 					i18nKey: "serverError.environment.workspaceNotReady",
 				});
 			}
+			const target = input.environmentId
+				? await loadEnvironment(input.environmentId, ctx)
+				: null;
+			if (target) {
+				assertOwned(target);
+				if (target.organizationId !== workspace.organizationId) {
+					throw userError({
+						code: "BAD_REQUEST",
+						message:
+							"The workspace and the environment are in different organizations",
+						i18nKey: "serverError.environment.organizationMismatch",
+					});
+				}
+			}
+			const targetOwner =
+				target && input.scope === "personal"
+					? personalOwner(target, ctx.userId)
+					: null;
 
 			const source = await db.query.environments.findFirst({
 				where: eq(environments.id, workspace.environmentId),
@@ -315,44 +366,101 @@ export const environmentRouter = {
 				primaryBranch: workspace.baseBranch,
 				workingBranch: workspace.branch,
 			});
-			const environmentId = crypto.randomUUID();
-			const goldenName = `env-${environmentId.replaceAll("-", "").slice(0, 24)}`;
+			const environmentId = target?.id ?? crypto.randomUUID();
+			// The row keeps forking from the old golden until the update lands, so the new one needs its own name.
+			const goldenName = `env-${(target ? crypto.randomUUID() : environmentId).replaceAll("-", "").slice(0, 24)}`;
 			const { claim } = await buildSandboxClaim({ row: workspace });
 			const golden = await promoteSandboxToEnvironment({
 				sourceSandbox: workspace.providerSandboxId,
 				goldenName,
 				claim,
 			});
+			const hooksRepositoryId =
+				checkouts.find((entry) => entry.hooks)?.repository.id ?? null;
+			const fromGolden = {
+				provider: workspace.provider,
+				sourceKind: "fork" as const,
+				sourceRef: goldenName,
+				region: golden.region,
+				bundleSha: source?.bundleSha ?? null,
+				hooksRepositoryId,
+			};
+			const inheritedSecrets =
+				target || !source
+					? []
+					: await db
+							.select()
+							.from(environmentSecrets)
+							.where(
+								and(
+									eq(environmentSecrets.environmentId, source.id),
+									eq(
+										environmentSecrets.organizationId,
+										workspace.organizationId,
+									),
+								),
+							);
 
-			const [row] = await db
-				.insert(environments)
-				.values({
-					id: environmentId,
-					organizationId: workspace.organizationId,
-					name: input.name,
-					provider: workspace.provider,
-					sourceKind: "fork",
-					sourceRef: goldenName,
-					region: golden.region,
-					bundleSha: source?.bundleSha ?? null,
-					scope: source?.scope ?? "organization",
-					createdByUserId: ctx.userId,
-				})
-				.returning();
-			// The golden baked these checkouts; a fork must ask for the same.
-			await db.insert(environmentRepositories).values(
-				checkouts.map((entry) => ({
-					environmentId,
-					repositoryId: entry.repository.id,
-				})),
-			);
-			await db
-				.update(environments)
-				.set({
-					hooksRepositoryId:
-						checkouts.find((entry) => entry.hooks)?.repository.id ?? null,
-				})
-				.where(eq(environments.id, environmentId));
+			const row = await dbWs.transaction(async (tx) => {
+				const [saved] = target
+					? await tx
+							.update(environments)
+							.set({
+								...fromGolden,
+								...(input.scope ? { scope: input.scope } : {}),
+								...(targetOwner ? { createdByUserId: targetOwner } : {}),
+							})
+							.where(eq(environments.id, target.id))
+							.returning()
+					: await tx
+							.insert(environments)
+							.values({
+								id: environmentId,
+								organizationId: workspace.organizationId,
+								name: input.name as string,
+								...fromGolden,
+								scope: input.scope ?? source?.scope ?? "organization",
+								createdByUserId: ctx.userId,
+							})
+							.returning();
+				// The golden baked these checkouts; a fork must ask for the same.
+				await tx
+					.delete(environmentRepositories)
+					.where(eq(environmentRepositories.environmentId, environmentId));
+				await tx.insert(environmentRepositories).values(
+					checkouts.map((entry) => ({
+						environmentId,
+						repositoryId: entry.repository.id,
+					})),
+				);
+				if (source && inheritedSecrets.length) {
+					await tx.insert(environmentSecrets).values(
+						inheritedSecrets.map((secret) => ({
+							organizationId: secret.organizationId,
+							environmentId,
+							key: secret.key,
+							encryptedValue: encryptSecret(
+								decryptSecret(secret.encryptedValue, {
+									environmentId: source.id,
+									organizationId: secret.organizationId,
+									key: secret.key,
+								}),
+								{
+									environmentId,
+									organizationId: secret.organizationId,
+									key: secret.key,
+								},
+							),
+							sensitive: secret.sensitive,
+							createdByUserId: secret.createdByUserId,
+						})),
+					);
+				}
+				return saved;
+			});
+			if (target?.sourceKind === "fork") {
+				await deleteSandbox(target.sourceRef);
+			}
 			return row;
 		}),
 
@@ -370,6 +478,7 @@ export const environmentRouter = {
 			await assertCloudAccess(ctx);
 			const current = await loadEnvironment(input.id, ctx);
 			assertOwned(current);
+
 			// A golden was built for its repositories: cloned, set up, snapshotted.
 			// A different set means a different golden, so it is promoted again.
 			if (input.repositoryIds && current.sourceKind !== "image") {
@@ -415,6 +524,9 @@ export const environmentRouter = {
 			const patch = {
 				...(input.name ? { name: input.name } : {}),
 				...(input.scope ? { scope: input.scope } : {}),
+				...(input.scope === "personal"
+					? { createdByUserId: personalOwner(current, ctx.userId) }
+					: {}),
 			};
 			if (Object.keys(patch).length === 0) {
 				return loadEnvironment(input.id, ctx);
