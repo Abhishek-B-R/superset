@@ -4015,9 +4015,6 @@ msgstr "Đóng góp"
 msgid "Control how your local machine is reachable from elsewhere"
 msgstr "Kiểm soát cách máy cục bộ của bạn có thể được truy cập từ bên ngoài"
 
-msgid "Control what each click — plain or with a modifier — does to a file or URL. Each row binds one modifier combination to an action."
-msgstr "Chọn mỗi kiểu nhấp — thường hoặc kèm phím bổ trợ — sẽ làm gì với một tệp hoặc URL. Mỗi dòng gắn một tổ hợp phím bổ trợ với một hành động."
-
 msgid "Controls when manually edited files are saved"
 msgstr "Kiểm soát thời điểm lưu các tệp được chỉnh sửa thủ công"
 
@@ -5728,6 +5725,9 @@ msgctxt "github release action"
 msgid "Edited"
 msgstr "Đã chỉnh sửa"
 
+msgid "Editing"
+msgstr "Chỉnh sửa"
+
 msgid "Editing file..."
 msgstr "Đang sửa tệp..."
 
@@ -6617,6 +6617,9 @@ msgstr "Tệp đã bị xóa trên đĩa. Bạn vẫn còn thay đổi chưa lư
 
 msgid "Files"
 msgstr "Tệp"
+
+msgid "Files & Editor"
+msgstr "Tệp và trình soạn thảo"
 
 msgid "Files changed"
 msgstr "Tệp đã thay đổi"
@@ -8419,9 +8422,6 @@ msgstr "Liên kết tác vụ"
 msgid "Linked {slug} to workspace"
 msgstr "Đã liên kết {slug} với workspace"
 
-msgid "Links"
-msgstr "Liên kết"
-
 msgid "List"
 msgstr "Danh sách"
 
@@ -10176,9 +10176,6 @@ msgstr "trên {offScopeHostName} — sẽ không chạy ở đây"
 msgid "On a host you can't reach"
 msgstr "Trên một host bạn không kết nối được"
 
-msgid "On click"
-msgstr "Khi nhấp"
-
 msgid "On focus change"
 msgstr "Khi thay đổi tiêu điểm"
 
@@ -10727,6 +10724,12 @@ msgstr "Đã mở workspace có sẵn"
 
 msgid "opened PR #841 for review"
 msgstr "đã mở PR #841 để review"
+
+msgid "Opening files"
+msgstr "Mở tệp"
+
+msgid "Opening folders"
+msgstr "Mở thư mục"
 
 msgid "Opening worktree..."
 msgstr "Đang mở worktree..."

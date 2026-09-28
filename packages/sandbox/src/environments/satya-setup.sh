@@ -1,12 +1,12 @@
 #!/bin/bash
-# The internal environment's setup hook: what a Superset engineer's box has
-# beyond the image. Runs once as the sandbox user, with sudo, in the golden
+# Satya's environment's setup hook: his shell, dotfiles and CLIs on top of
+# the image. Coworkers make their own environments (superset environments create). Runs once as the sandbox user, with sudo, in the golden
 # after the boot runner has checked the monorepo out under /workspace; the
 # environment row stores it as its `setup` override, and a fork inherits the
 # result. Its `start` counterpart is the repository's own dev-stack.cloud.sh.
 set -uo pipefail
 
-log() { printf '[internal-setup] %s\n' "$1"; }
+log() { printf '[satya-setup] %s\n' "$1"; }
 
 # The sandbox API runs commands with no USER in their env; bash under set -u
 # exits 127 on the first reference.
@@ -20,7 +20,7 @@ WORKSPACE="$(pwd)"
 export DEBIAN_FRONTEND=noninteractive
 sudo -E apt-get update -qq
 # The image carries the toolchain; these are the internal team's shell tools.
-sudo -E apt-get install -y -qq --no-install-recommends zsh fzf silversearcher-ag neovim >/dev/null
+sudo -E apt-get install -y -qq --no-install-recommends zsh fzf silversearcher-ag neovim postgresql-client >/dev/null
 log "shell tooling installed"
 # neonctl: a workspace branches the database for itself on its first start,
 # the same way .superset/setup.sh does on a laptop.
@@ -30,6 +30,14 @@ sudo npm install -g neonctl@2 >/dev/null 2>&1 && log "neonctl $(neonctl --versio
 # Cloudflare Workers apps, Expo mobile) an engineer reaches for directly
 # instead of waiting on CI.
 sudo npm install -g vercel wrangler eas-cli >/dev/null 2>&1 && log "vercel $(vercel --version 2>/dev/null), wrangler $(wrangler --version 2>/dev/null), eas $(eas --version 2>/dev/null) installed" || { log "vercel/wrangler/eas-cli install failed"; exit 1; }
+
+# ntn (Notion), lim (Limrun's remote simulators), stripe: each reads its
+# credential from the environment's variables, NOTION_API_TOKEN, LIM_API_KEY
+# and STRIPE_API_KEY.
+sudo npm install -g ntn lim >/dev/null 2>&1 && log "ntn $(ntn --version 2>/dev/null), lim $(lim --version 2>/dev/null | head -1) installed" || { log "ntn/lim install failed"; exit 1; }
+curl -fsSL https://packages.stripe.dev/api/security/keypair/stripe-cli-gpg/public | gpg --dearmor | sudo tee /usr/share/keyrings/stripe.gpg >/dev/null
+echo "deb [signed-by=/usr/share/keyrings/stripe.gpg] https://packages.stripe.dev/stripe-cli-debian-local stable main" | sudo tee /etc/apt/sources.list.d/stripe.list >/dev/null
+sudo -E apt-get update -qq && sudo -E apt-get install -y -qq stripe >/dev/null && log "stripe $(stripe --version 2>/dev/null) installed" || { log "stripe install failed"; exit 1; }
 
 # The dev stack and the workspace's database are the repository's own
 # .superset/setup.cloud.sh and .superset/dev-stack.cloud.sh, run by the start

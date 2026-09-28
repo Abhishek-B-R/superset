@@ -4015,9 +4015,6 @@ msgstr "Příspěvky"
 msgid "Control how your local machine is reachable from elsewhere"
 msgstr "Určete, jak je váš lokální počítač dosažitelný zvenčí"
 
-msgid "Control what each click — plain or with a modifier — does to a file or URL. Each row binds one modifier combination to an action."
-msgstr "Určete, co každé kliknutí — prosté i s modifikátorem — udělá se souborem nebo URL. Každý řádek váže jednu kombinaci modifikátorů k jedné akci."
-
 msgid "Controls when manually edited files are saved"
 msgstr "Určuje, kdy se ručně upravené soubory ukládají"
 
@@ -5728,6 +5725,9 @@ msgctxt "github release action"
 msgid "Edited"
 msgstr "Upraveno"
 
+msgid "Editing"
+msgstr "Úpravy"
+
 msgid "Editing file..."
 msgstr "Upravuji soubor..."
 
@@ -6617,6 +6617,9 @@ msgstr "Soubor byl na disku smazán. Pořád máte neuložené změny."
 
 msgid "Files"
 msgstr "Soubory"
+
+msgid "Files & Editor"
+msgstr "Soubory a editor"
 
 msgid "Files changed"
 msgstr "Změněné soubory"
@@ -8419,9 +8422,6 @@ msgstr "Propojit úkol"
 msgid "Linked {slug} to workspace"
 msgstr "{slug} propojeno s pracovním prostorem"
 
-msgid "Links"
-msgstr "Odkazy"
-
 msgid "List"
 msgstr "Seznam"
 
@@ -10176,9 +10176,6 @@ msgstr "na {offScopeHostName} — tady nepoběží"
 msgid "On a host you can't reach"
 msgstr "Na hostiteli, ke kterému nemáte přístup"
 
-msgid "On click"
-msgstr "Po kliknutí"
-
 msgid "On focus change"
 msgstr "Při změně zaměření"
 
@@ -10727,6 +10724,12 @@ msgstr "Otevřen existující pracovní prostor"
 
 msgid "opened PR #841 for review"
 msgstr "otevřel PR #841 k revizi"
+
+msgid "Opening files"
+msgstr "Otevírání souborů"
+
+msgid "Opening folders"
+msgstr "Otevírání složek"
 
 msgid "Opening worktree..."
 msgstr "Otevírám worktree..."

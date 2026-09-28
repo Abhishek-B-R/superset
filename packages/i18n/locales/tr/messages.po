@@ -4015,9 +4015,6 @@ msgstr "Katkılar"
 msgid "Control how your local machine is reachable from elsewhere"
 msgstr "Yerel makinenize dışarıdan nasıl erişileceğini kontrol edin"
 
-msgid "Control what each click — plain or with a modifier — does to a file or URL. Each row binds one modifier combination to an action."
-msgstr "Her tıklamanın — düz ya da değiştirici tuşlu — bir dosyaya veya URL'ye ne yapacağını denetleyin. Her satır bir değiştirici birleşimini bir eyleme bağlar."
-
 msgid "Controls when manually edited files are saved"
 msgstr "Elle düzenlenen dosyaların ne zaman kaydedileceğini belirler"
 
@@ -5728,6 +5725,9 @@ msgctxt "github release action"
 msgid "Edited"
 msgstr "Düzenlendi"
 
+msgid "Editing"
+msgstr "Düzenleme"
+
 msgid "Editing file..."
 msgstr "Dosya düzenleniyor..."
 
@@ -6617,6 +6617,9 @@ msgstr "Dosya diskten silindi. Hâlâ kaydedilmemiş değişiklikleriniz var."
 
 msgid "Files"
 msgstr "Dosyalar"
+
+msgid "Files & Editor"
+msgstr "Dosyalar ve Düzenleyici"
 
 msgid "Files changed"
 msgstr "Değişen dosyalar"
@@ -8419,9 +8422,6 @@ msgstr "Görev bağla"
 msgid "Linked {slug} to workspace"
 msgstr "{slug} çalışma alanına bağlandı"
 
-msgid "Links"
-msgstr "Bağlantılar"
-
 msgid "List"
 msgstr "Liste"
 
@@ -10176,9 +10176,6 @@ msgstr "{offScopeHostName} üzerinde — burada çalışmaz"
 msgid "On a host you can't reach"
 msgstr "Erişemediğin bir ana makinede"
 
-msgid "On click"
-msgstr "Tıklandığında"
-
 msgid "On focus change"
 msgstr "Odak değiştiğinde"
 
@@ -10727,6 +10724,12 @@ msgstr "Mevcut çalışma alanı açıldı"
 
 msgid "opened PR #841 for review"
 msgstr "inceleme için PR #841 açtı"
+
+msgid "Opening files"
+msgstr "Dosyaları açma"
+
+msgid "Opening folders"
+msgstr "Klasörleri açma"
 
 msgid "Opening worktree..."
 msgstr "Worktree açılıyor..."

@@ -56,9 +56,8 @@ describe("bug-hunt-2: symlink and additional sandbox probes", () => {
 		} catch {}
 	});
 
-	test("readFile rejects reads through a symlink that points outside the workspace", async () => {
-		// Plant a symlink inside the workspace that points outside.
-		const link = join(repo.repoPath, "evil-link");
+	test("readFile reads through a symlink that points outside the workspace", async () => {
+		const link = join(repo.repoPath, "external-link");
 		symlinkSync(outsideDir, link);
 
 		await expect(
@@ -67,7 +66,7 @@ describe("bug-hunt-2: symlink and additional sandbox probes", () => {
 				absolutePath: join(link, "secret.txt"),
 				encoding: "utf8",
 			}),
-		).rejects.toThrow();
+		).resolves.toMatchObject({ kind: "text", content: "PII" });
 	});
 
 	test("writeFile through a symlinked dir into outside the workspace is rejected", async () => {

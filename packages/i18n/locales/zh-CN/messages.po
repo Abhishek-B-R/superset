@@ -4015,9 +4015,6 @@ msgstr "贡献"
 msgid "Control how your local machine is reachable from elsewhere"
 msgstr "控制这台机器如何从外部访问"
 
-msgid "Control what each click — plain or with a modifier — does to a file or URL. Each row binds one modifier combination to an action."
-msgstr "控制每种点击（普通点击或配合修饰键）对文件或URL的行为。每一行将一种修饰键组合绑定到一个操作。"
-
 msgid "Controls when manually edited files are saved"
 msgstr "控制手动编辑的文件何时保存"
 
@@ -5728,6 +5725,9 @@ msgctxt "github release action"
 msgid "Edited"
 msgstr "已编辑"
 
+msgid "Editing"
+msgstr "编辑"
+
 msgid "Editing file..."
 msgstr "正在编辑文件..."
 
@@ -6617,6 +6617,9 @@ msgstr "文件已在磁盘上被删除。你仍有未保存的更改。"
 
 msgid "Files"
 msgstr "文件"
+
+msgid "Files & Editor"
+msgstr "文件与编辑器"
 
 msgid "Files changed"
 msgstr "更改的文件"
@@ -8419,9 +8422,6 @@ msgstr "关联任务"
 msgid "Linked {slug} to workspace"
 msgstr "已将{slug}关联到工作区"
 
-msgid "Links"
-msgstr "链接"
-
 msgid "List"
 msgstr "列表"
 
@@ -10176,9 +10176,6 @@ msgstr "在{offScopeHostName}上，不会在这里运行"
 msgid "On a host you can't reach"
 msgstr "在你无法连接的主机上"
 
-msgid "On click"
-msgstr "点击时"
-
 msgid "On focus change"
 msgstr "焦点更改时"
 
@@ -10727,6 +10724,12 @@ msgstr "已打开现有工作区"
 
 msgid "opened PR #841 for review"
 msgstr "开了PR #841待审查"
+
+msgid "Opening files"
+msgstr "打开文件"
+
+msgid "Opening folders"
+msgstr "打开文件夹"
 
 msgid "Opening worktree..."
 msgstr "正在打开worktree..."

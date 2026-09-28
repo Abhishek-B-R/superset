@@ -4015,9 +4015,6 @@ msgstr "기여"
 msgid "Control how your local machine is reachable from elsewhere"
 msgstr "외부에서 로컬 머신에 접근하는 방식을 제어합니다"
 
-msgid "Control what each click — plain or with a modifier — does to a file or URL. Each row binds one modifier combination to an action."
-msgstr "파일이나 URL을 클릭할 때 — 그냥 또는 보조 키와 함께 — 어떤 동작을 할지 설정합니다. 각 행은 보조 키 조합 하나를 동작 하나에 연결합니다."
-
 msgid "Controls when manually edited files are saved"
 msgstr "수동으로 편집한 파일을 저장할 시점을 제어합니다"
 
@@ -5728,6 +5725,9 @@ msgctxt "github release action"
 msgid "Edited"
 msgstr "편집됨"
 
+msgid "Editing"
+msgstr "편집"
+
 msgid "Editing file..."
 msgstr "파일 수정 중..."
 
@@ -6617,6 +6617,9 @@ msgstr "디스크에서 파일이 삭제되었습니다. 저장하지 않은 변
 
 msgid "Files"
 msgstr "파일"
+
+msgid "Files & Editor"
+msgstr "파일 및 편집기"
 
 msgid "Files changed"
 msgstr "변경된 파일"
@@ -8419,9 +8422,6 @@ msgstr "작업 연결"
 msgid "Linked {slug} to workspace"
 msgstr "{slug}을(를) 워크스페이스에 연결했습니다"
 
-msgid "Links"
-msgstr "링크"
-
 msgid "List"
 msgstr "목록"
 
@@ -10176,9 +10176,6 @@ msgstr "{offScopeHostName}에 있음 — 여기서는 실행되지 않습니다"
 msgid "On a host you can't reach"
 msgstr "접근할 수 없는 호스트에 있음"
 
-msgid "On click"
-msgstr "클릭 시"
-
 msgid "On focus change"
 msgstr "포커스 변경 시"
 
@@ -10727,6 +10724,12 @@ msgstr "기존 워크스페이스를 열었습니다"
 
 msgid "opened PR #841 for review"
 msgstr "리뷰용 PR #841 생성"
+
+msgid "Opening files"
+msgstr "파일 열기"
+
+msgid "Opening folders"
+msgstr "폴더 열기"
 
 msgid "Opening worktree..."
 msgstr "worktree를 여는 중..."
