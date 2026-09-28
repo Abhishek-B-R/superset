@@ -22,6 +22,8 @@ const ENV = {
 	SENTRY_CLIENT_ID: "xc",
 	SENTRY_CLIENT_SECRET: "xs",
 	SENTRY_APP_SLUG: "superset-app",
+	SENTRY_MCP_CLIENT_ID: "mc",
+	SENTRY_MCP_CLIENT_SECRET: "ms",
 };
 
 const original: Record<string, string | undefined> = {};
@@ -173,6 +175,25 @@ describe("probeIdentity", () => {
 
 		expect(identity.account).toEqual({ id: "ws-1", label: "Superset" });
 		expect(identity.user).toEqual({ id: "u-9", label: null });
+	});
+
+	test("sentry_mcp reads its identity from the token response", async () => {
+		globalThis.fetch = (() => {
+			throw new Error("probeIdentity made a request it did not need");
+		}) as unknown as typeof fetch;
+
+		const identity = await probeIdentity(
+			"sentry_mcp",
+			connectorMethod(requireConnector("sentry_mcp")),
+			"sen-test",
+			undefined,
+			{
+				user: { id: "42", name: "Harshith", email: "h@tegon.ai" },
+			},
+		);
+
+		expect(identity.account).toEqual({ id: "42", label: "h@tegon.ai" });
+		expect(identity.user).toEqual({ id: "42", label: "Harshith" });
 	});
 
 	test("a url-less probe without a token response fails loudly", async () => {

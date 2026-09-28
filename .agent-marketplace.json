@@ -48,6 +48,16 @@
 			"version": "1.2.3"
 		},
 		{
+			"name": "sentry",
+			"description": "Debug with production error context: search issues, read stack traces, and manage alerts in Sentry.",
+			"author": {
+				"name": "Superset"
+			},
+			"category": "development",
+			"source": "./plugins/sentry",
+			"version": "1.0.0"
+		},
+		{
 			"name": "gmail",
 			"description": "Read, search, send, and organize mail in your Gmail account.",
 			"author": {

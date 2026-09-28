@@ -75,6 +75,10 @@ export const env = createEnv({
 		SENTRY_CLIENT_SECRET: z.string().optional(),
 		// The published app's slug, used to build the install URL.
 		SENTRY_APP_SLUG: z.string().optional(),
+		// Sentry API application backing the sentry_mcp connector. Optional:
+		// the plugin's connect flow fails with a clear error while unset.
+		SENTRY_MCP_CLIENT_ID: z.string().optional(),
+		SENTRY_MCP_CLIENT_SECRET: z.string().optional(),
 		RELAY_URL: z.string().url().default("https://relay.superset.sh"),
 	},
 	client: {

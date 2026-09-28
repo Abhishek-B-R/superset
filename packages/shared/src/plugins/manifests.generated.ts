@@ -180,6 +180,52 @@ export const FIRST_PARTY_MANIFESTS = {
 		},
 		"skills": []
 	} as const,
+	"sentry": {
+		"$schema": "https://superset.sh/schemas/plugin/1.0.0.json",
+		"name": "sentry",
+		"version": "1.0.0",
+		"description": "Debug with production error context: search issues, read stack traces, and manage alerts in Sentry.",
+		"author": {
+			"name": "Superset",
+			"url": "https://superset.sh"
+		},
+		"homepage": "https://docs.superset.sh",
+		"repository": "https://github.com/superset-sh/superset",
+		"license": "MIT",
+		"keywords": [
+			"sentry",
+			"errors",
+			"monitoring",
+			"debugging",
+			"observability"
+		],
+		"extensions": {
+			"superset": {
+				"interface": {
+					"displayName": "Sentry",
+					"category": "Developer tools",
+					"icon": "sentry"
+				},
+				"connector": {
+					"slug": "sentry_mcp"
+				},
+				"mcp": {
+					"type": "streamable-http",
+					"url": "https://mcp.sentry.dev/mcp"
+				}
+			}
+		},
+		"skills": [
+			{
+				"name": "debug-with-sentry",
+				"description": "Root-cause a production error with Sentry's evidence before touching code — pull the issue, read the stack trace and breadcrumbs, and separate the crash from its trigger. Use when the user pastes a Sentry link or issue ID, reports a production error, or asks why something is crashing for users."
+			},
+			{
+				"name": "find-in-sentry",
+				"description": "Answer \"what's breaking\" questions from Sentry — find the right org and project, search issues and events with the vocabulary Sentry uses, and report what is actually firing rather than the first hit. Use when the user asks what errors are happening, whether something is stable, what changed since a release, or for any health summary of a service."
+			}
+		]
+	} as const,
 	"gmail": {
 		"$schema": "https://superset.sh/schemas/plugin/1.0.0.json",
 		"name": "gmail",
