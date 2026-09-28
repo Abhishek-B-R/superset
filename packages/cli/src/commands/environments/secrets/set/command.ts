@@ -29,7 +29,7 @@ export default command({
 			"Store it readable in settings instead of as a secret",
 		),
 		environment: string().desc(
-			"Environment (id or name); required when the organization has several",
+			"Environment ID (see: superset environments list); required when the organization has several",
 		),
 	},
 	run: async ({ ctx, args, options }) => {
@@ -84,7 +84,7 @@ export default command({
 			agentKeys.length === 0
 				? []
 				: [
-						`Cloud workspaces ignore ${agentKeys.join(", ")}. Agents sign in under Settings › Agents instead.`,
+						`Cloud workspaces ignore ${agentKeys.join(", ")}. Sign agents in with: superset connections agents set <agent>`,
 					];
 		const set =
 			keys.length === 1
