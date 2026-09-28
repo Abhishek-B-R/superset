@@ -4007,9 +4007,6 @@ msgstr "Kontribusi"
 msgid "Control how your local machine is reachable from elsewhere"
 msgstr "Kontrol bagaimana mesin lokal Anda dapat diakses dari luar"
 
-msgid "Control what each click — plain or with a modifier — does to a file or URL. Each row binds one modifier combination to an action."
-msgstr "Atur apa yang dilakukan tiap klik — biasa atau dengan modifier — pada sebuah file atau URL. Tiap baris mengikat satu kombinasi modifier ke satu aksi."
-
 msgid "Controls when manually edited files are saved"
 msgstr "Mengatur kapan file yang diedit secara manual disimpan"
 
@@ -5699,6 +5696,9 @@ msgctxt "github release action"
 msgid "Edited"
 msgstr "Diedit"
 
+msgid "Editing"
+msgstr "Pengeditan"
+
 msgid "Editing file..."
 msgstr "Mengedit file..."
 
@@ -6588,6 +6588,9 @@ msgstr "File dihapus di disk. Anda masih punya perubahan yang belum disimpan."
 
 msgid "Files"
 msgstr "File"
+
+msgid "Files & Editor"
+msgstr "File & Editor"
 
 msgid "Files changed"
 msgstr "File yang berubah"
@@ -8384,9 +8387,6 @@ msgstr "Tautkan tugas"
 msgid "Linked {slug} to workspace"
 msgstr "{slug} ditautkan ke workspace"
 
-msgid "Links"
-msgstr "Tautan"
-
 msgid "List"
 msgstr "Daftar"
 
@@ -10141,9 +10141,6 @@ msgstr "di {offScopeHostName} — tidak akan berjalan di sini"
 msgid "On a host you can't reach"
 msgstr "Di host yang tidak bisa kamu jangkau"
 
-msgid "On click"
-msgstr "Saat diklik"
-
 msgid "On focus change"
 msgstr "Saat fokus berubah"
 
@@ -10689,6 +10686,12 @@ msgstr "Membuka workspace yang ada"
 
 msgid "opened PR #841 for review"
 msgstr "membuka PR #841 untuk direview"
+
+msgid "Opening files"
+msgstr "Membuka file"
+
+msgid "Opening folders"
+msgstr "Membuka folder"
 
 msgid "Opening worktree..."
 msgstr "Membuka worktree..."

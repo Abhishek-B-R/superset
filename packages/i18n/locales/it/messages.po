@@ -4007,9 +4007,6 @@ msgstr "Contributi"
 msgid "Control how your local machine is reachable from elsewhere"
 msgstr "Controlla come la tua macchina locale è raggiungibile dall'esterno"
 
-msgid "Control what each click — plain or with a modifier — does to a file or URL. Each row binds one modifier combination to an action."
-msgstr "Controlla cosa fa ogni clic — semplice o con un modificatore — su un file o un URL. Ogni riga associa una combinazione di modificatori a un'azione."
-
 msgid "Controls when manually edited files are saved"
 msgstr "Controlla quando vengono salvati i file modificati manualmente"
 
@@ -5699,6 +5696,9 @@ msgctxt "github release action"
 msgid "Edited"
 msgstr "Modificato"
 
+msgid "Editing"
+msgstr "Modifica"
+
 msgid "Editing file..."
 msgstr "Modifica del file..."
 
@@ -6588,6 +6588,9 @@ msgstr "Il file è stato eliminato dal disco. Hai ancora modifiche non salvate."
 
 msgid "Files"
 msgstr "File"
+
+msgid "Files & Editor"
+msgstr "File ed editor"
 
 msgid "Files changed"
 msgstr "File modificati"
@@ -8384,9 +8387,6 @@ msgstr "Collega un task"
 msgid "Linked {slug} to workspace"
 msgstr "{slug} collegato al workspace"
 
-msgid "Links"
-msgstr "Link"
-
 msgid "List"
 msgstr "Elenco"
 
@@ -10141,9 +10141,6 @@ msgstr "su {offScopeHostName} — non verrà eseguita qui"
 msgid "On a host you can't reach"
 msgstr "Su un host che non puoi raggiungere"
 
-msgid "On click"
-msgstr "Al clic"
-
 msgid "On focus change"
 msgstr "Al cambio di focus"
 
@@ -10689,6 +10686,12 @@ msgstr "Aperto il workspace esistente"
 
 msgid "opened PR #841 for review"
 msgstr "aperta la PR #841 per la revisione"
+
+msgid "Opening files"
+msgstr "Apertura dei file"
+
+msgid "Opening folders"
+msgstr "Apertura delle cartelle"
 
 msgid "Opening worktree..."
 msgstr "Apertura del worktree..."
