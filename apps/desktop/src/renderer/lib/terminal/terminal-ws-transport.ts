@@ -105,6 +105,7 @@ export interface TerminalTransport {
 	_terminal: XTerm | null;
 	/** Internal: disposes the terminal.onData → socket.send wiring. */
 	_onDataDisposable: { dispose(): void } | null;
+	_pendingColorReset: boolean;
 	/** Internal: title-change debounce timer; see TITLE_COALESCE_MS. */
 	_titleNotifyTimer: ReturnType<typeof setTimeout> | null;
 	/**
@@ -374,6 +375,7 @@ export function createTransport(
 		_socket: null,
 		_terminal: null,
 		_onDataDisposable: null,
+		_pendingColorReset: false,
 		_titleNotifyTimer: null,
 		_writeCoalescer: null,
 		_diagnosisLogged: false,
@@ -676,12 +678,26 @@ export function connect(
 export function sendColors(
 	transport: TerminalTransport,
 	theme: ITheme | undefined,
+	resetOverrides = false,
 ): void {
 	if (!theme) return;
+	transport._pendingColorReset ||= resetOverrides;
+	const socket = transport._socket;
+	if (
+		transport.connectionState !== "open" ||
+		!socket ||
+		socket.readyState !== WebSocket.OPEN
+	)
+		return;
 	const colors = terminalQueryColors(theme);
-	if (colors && transport.connectionState === "open") {
-		transport._socket?.send(JSON.stringify({ type: "colors", colors }));
-	}
+	socket.send(
+		JSON.stringify({
+			type: "colors",
+			colors,
+			resetOverrides: transport._pendingColorReset === true,
+		}),
+	);
+	transport._pendingColorReset = false;
 }
 
 function attachSocketListeners(

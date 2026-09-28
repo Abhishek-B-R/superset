@@ -588,13 +588,19 @@ test("color updates are sent only when the daemon advertises ownership", async (
 			`color-cap-${crypto.randomUUID()}.sock`,
 		);
 		const received: string[] = [];
+		const colorResets: boolean[] = [];
 		const fake = net.createServer((socket) => {
 			const decoder = new FrameDecoder();
 			socket.on("data", (bytes) => {
 				decoder.push(bytes);
 				for (const frame of decoder.drain()) {
-					const msg = frame.message as { type: string };
+					const msg = frame.message as {
+						type: string;
+						resetOverrides?: boolean;
+					};
 					received.push(msg.type);
+					if (msg.type === "colors")
+						colorResets.push(msg.resetOverrides === true);
 					if (msg.type === "hello")
 						socket.write(
 							encodeFrame({
@@ -618,8 +624,14 @@ test("color updates are sent only when the daemon advertises ownership", async (
 				background: "#000000",
 				cursor: "#ffffff",
 			});
+			client.setColors(
+				"t",
+				{ foreground: "#ffffff", background: "#000000", cursor: "#ffffff" },
+				true,
+			);
 			await client.list();
 			assert.equal(received.includes("colors"), capable);
+			assert.deepEqual(colorResets, capable ? [false, true] : []);
 		} finally {
 			await client.dispose();
 			await new Promise<void>((resolve) => fake.close(() => resolve()));

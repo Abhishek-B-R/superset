@@ -218,8 +218,9 @@ export class DaemonClient {
 	}
 
 	/** Fire-and-forget; daemon validates dims. */
-	setColors(id: string, colors: TerminalColors): void {
-		if (this.colorQueries) this.send({ type: "colors", id, colors });
+	setColors(id: string, colors: TerminalColors, resetOverrides = false): void {
+		if (this.colorQueries)
+			this.send({ type: "colors", id, colors, resetOverrides });
 	}
 
 	resize(id: string, cols: number, rows: number): void {

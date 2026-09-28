@@ -75,6 +75,7 @@ import {
 	getShellReadyMarkerEvidence,
 	recordShellReadyMarkerEvidence,
 } from "./shell-ready-evidence.ts";
+import { TerminalColorAuthority } from "./TerminalColorAuthority";
 import {
 	createModeTracker,
 	type ModeTracker,
@@ -102,7 +103,7 @@ interface DaemonPty {
 	writeOrThrow(data: string): void;
 	write(data: string): void;
 	resize(cols: number, rows: number): void;
-	setColors(colors: TerminalColors): void;
+	setColors(colors: TerminalColors, resetOverrides?: boolean): void;
 	kill(signal?: NodeJS.Signals): Promise<void>;
 	onData(cb: (data: string) => void): PtyDataDisposer;
 	onExit(
@@ -128,9 +129,9 @@ function makeDaemonPty(
 				// here would escape the WS input handler uncaught.
 			}
 		},
-		setColors(colors) {
+		setColors(colors, resetOverrides) {
 			try {
-				daemon.setColors(sessionId, colors);
+				daemon.setColors(sessionId, colors, resetOverrides);
 			} catch {}
 		},
 		resize(cols, rows) {
@@ -203,7 +204,7 @@ function getHostAgentHookUrl(): string {
 
 type TerminalClientMessage =
 	| { type: "input"; data: string }
-	| { type: "colors"; colors: TerminalColors }
+	| { type: "colors"; colors: TerminalColors; resetOverrides?: boolean }
 	| { type: "resize"; cols: number; rows: number }
 	// The client's current keyboard-focus state, sent on every attach. A
 	// reattaching client may hold focus the program last heard it lost (or
@@ -535,6 +536,7 @@ interface TerminalSession {
 	/** Unsubscribe from the daemon's output/exit stream when disposed. */
 	unsubscribeDaemon: (() => void) | null;
 	sockets: Set<TerminalSocket>;
+	colorAuthority: TerminalColorAuthority<TerminalSocket>;
 	/**
 	 * Legacy replay FIFO for clients that attach without `?seq=` (pre-seq
 	 * renderers, raw WS consumers): fills only while zero sockets are
@@ -1783,6 +1785,7 @@ function resumeHiddenSocket(session: TerminalSession, ws: TerminalSocket) {
  */
 function detachSocket(session: TerminalSession, ws: TerminalSocket) {
 	session.sockets.delete(ws);
+	session.colorAuthority.remove(ws);
 	if (session.focusedSockets.delete(ws)) syncPtyFocus(session);
 	releaseSocketDims(session, ws);
 }
@@ -3274,6 +3277,9 @@ async function createTerminalSessionUnlocked({
 		rows,
 		unsubscribeDaemon: null,
 		sockets: new Set(),
+		colorAuthority: new TerminalColorAuthority((colors, resetOverrides) =>
+			pty.setColors(colors, resetOverrides),
+		),
 		buffer: [],
 		bufferBytes: 0,
 		// Adopted sessions kept a live shell — nothing was restored.
@@ -3810,11 +3816,12 @@ export function registerWorkspaceTerminalRoute({
 
 					if (message.type === "colors") {
 						const parsed = terminalColorsSchema.safeParse(message.colors);
-						if (
-							parsed.success &&
-							session.sockets.values().next().value === ws
-						) {
-							session.pty.setColors(parsed.data);
+						if (parsed.success && session.sockets.has(ws)) {
+							session.colorAuthority.update(
+								ws,
+								parsed.data,
+								message.resetOverrides === true,
+							);
 						}
 						return;
 					}

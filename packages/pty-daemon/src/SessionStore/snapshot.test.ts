@@ -222,10 +222,10 @@ test("disk handoff carries color defaults, overrides and pending query", () => {
 		restored.colors.restore(saved.colors);
 		const replies: string[] = [];
 		expect(
-			restored.colors.feed(Buffer.from("\\"), (reply) =>
-				replies.push(reply.toString()),
-			).length,
-		).toBe(0);
+			restored.colors
+				.feed(Buffer.from("\\"), (reply) => replies.push(reply.toString()))
+				.toString(),
+		).toBe("\x1b]\x07");
 		expect(replies).toEqual(["\x1b]11;rgb:1212/3434/5656\x1b\\"]);
 		restored.colors.feed(Buffer.from("\x1b]111\x07\x1b]11;?\x07"), (reply) =>
 			replies.push(reply.toString()),

@@ -497,7 +497,9 @@ export class Server {
 			case "colors": {
 				const parsed = terminalColorsSchema.safeParse(msg.colors);
 				if (parsed.success)
-					this.store.get(msg.id)?.colors.configure(parsed.data);
+					this.store
+						.get(msg.id)
+						?.colors.configure(parsed.data, msg.resetOverrides === true);
 				return;
 			}
 			case "resize": {
@@ -605,8 +607,9 @@ export class Server {
 			if (output.length) deliver(output);
 		});
 		session.pty.onExit((info) => {
-			const pending = session.colors.flush();
-			if (pending.length) deliver(pending);
+			// A trailing ESC can make xterm answer an unfinished OSC during replay.
+			// Parser carry from an exited process must never become new output.
+			session.colors.flush();
 			session.exited = true;
 			session.exitCode = info.code;
 			session.exitSignal = info.signal;

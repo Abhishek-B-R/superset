@@ -7,6 +7,7 @@ const theme = {
 	cursor: "#ff8800",
 };
 const osc = (body: string, end = "\x1b\\") => `\x1b]${body}${end}`;
+const emptyOsc = "\x1b]\x07";
 const backgroundReply = osc("11;rgb:1515/1111/1010");
 
 function harness(colors = new TerminalColors(theme)) {
@@ -27,7 +28,7 @@ describe("daemon terminal color queries", () => {
 						h.feed(input.subarray(0, split)),
 						h.feed(input.subarray(split)),
 					]).toString(),
-				).toBe("beforeafter");
+				).toBe(`before${emptyOsc}after`);
 				expect(h.replies).toEqual([backgroundReply]);
 			}
 		});
@@ -37,7 +38,7 @@ describe("daemon terminal color queries", () => {
 		const h = harness();
 		const input = Buffer.from(`${osc("10;?;?;?")}${osc("4;0;?;255;?")}`);
 		const output = [...input].map((byte) => h.feed(Buffer.from([byte])));
-		expect(Buffer.concat(output).length).toBe(0);
+		expect(Buffer.concat(output).toString()).toBe(emptyOsc.repeat(2));
 		expect(h.replies).toEqual([
 			osc("10;rgb:eaea/e8e8/e6e6"),
 			backgroundReply,
@@ -49,8 +50,8 @@ describe("daemon terminal color queries", () => {
 
 	test("numeric identifiers and unmatched indexed fields do not leak queries", () => {
 		const h = harness();
-		expect(h.feed(osc("011;?")).length).toBe(0);
-		expect(h.feed(osc("4;0001;?;2")).toString()).toBe(osc("4;2"));
+		expect(h.feed(osc("011;?")).toString()).toBe(emptyOsc);
+		expect(h.feed(osc("4;0001;?;2")).toString()).toBe(emptyOsc + osc("4;2"));
 		expect(h.replies).toEqual([backgroundReply, osc("4;1;rgb:cccc/0000/0000")]);
 	});
 
@@ -61,10 +62,10 @@ describe("daemon terminal color queries", () => {
 		expect(h.replies).toEqual([]);
 	});
 
-	test("preserves unrelated output including utf8, opaque strings and other OSCs", () => {
+	test("preserves unrelated output including utf8, control strings and other OSCs", () => {
 		const h = harness();
 		const input = Buffer.from(
-			`🙂漢字${["7;file://host/tmp", "8;;https://example.com", "52;c;SGVsbG8=", "133;A", "777;ready"].map((s) => osc(s)).join("")}\x1bPignored ${osc("11;?")}tail\x1b\\`,
+			`🙂漢字${["7;file://host/tmp", "8;;https://example.com", "52;c;SGVsbG8=", "133;A", "777;ready"].map((s) => osc(s)).join("")}\x1bPignored payload\x1b\\tail`,
 		);
 		const output = [...input].map((byte) => h.feed(Buffer.from([byte])));
 		expect(Buffer.concat(output)).toEqual(input);
@@ -95,10 +96,10 @@ describe("daemon terminal color queries", () => {
 	test("mixed setters and queries retain only setter effects", () => {
 		const h = harness();
 		expect(h.feed(osc("10;#123456;?;#abcdef")).toString()).toBe(
-			osc("10;#123456") + osc("12;#abcdef"),
+			emptyOsc + osc("10;#123456") + osc("12;#abcdef"),
 		);
 		expect(h.feed(osc("4;1;#123456;1;?;2;#abcdef")).toString()).toBe(
-			osc("4;1;#123456;2;#abcdef"),
+			emptyOsc + osc("4;1;#123456;2;#abcdef"),
 		);
 		expect(h.replies).toEqual([backgroundReply, osc("4;1;rgb:1212/3434/5656")]);
 	});
@@ -139,7 +140,7 @@ describe("daemon terminal color queries", () => {
 		before.feed("\x1b]11;?\x1b");
 		const after = harness();
 		after.colors.restore(JSON.parse(JSON.stringify(before.colors.snapshot())));
-		expect(after.feed("\\").length).toBe(0);
+		expect(after.feed("\\").toString()).toBe(emptyOsc);
 		expect(before.replies).toEqual([]);
 		expect(after.replies).toEqual([osc("11;rgb:1212/3434/5656")]);
 	});
@@ -167,14 +168,16 @@ test("UTF-8 C1 OSC/ST and ordinary C2 characters remain distinct at every split"
 				h.feed(input.subarray(0, split)),
 				h.feed(input.subarray(split)),
 			]).toString(),
-		).toBe("£©");
+		).toBe("£\u009d\x07©");
 		expect(h.replies).toEqual([backgroundReply]);
 	}
 });
 
 test("ESC ends an OSC query before a following non-ST control sequence", () => {
 	const h = harness();
-	expect(h.feed("\x1b]11;?\x1b[31mred").toString()).toBe("\x1b[31mred");
+	expect(h.feed("\x1b]11;?\x1b[31mred").toString()).toBe(
+		`${emptyOsc}\x1b[31mred`,
+	);
 	expect(h.replies).toEqual([backgroundReply]);
 });
 
@@ -199,7 +202,7 @@ test("over-limit color controls are rejected instead of leaking queries to obser
 	const first = h.feed(input.subarray(0, 18000));
 	expect(h.colors.snapshot().pending).toHaveLength(0);
 	expect(Buffer.concat([first, h.feed(input.subarray(18000))]).toString()).toBe(
-		"beforeafter",
+		"before\x1b\\after",
 	);
 	expect(h.replies).toEqual([]);
 });

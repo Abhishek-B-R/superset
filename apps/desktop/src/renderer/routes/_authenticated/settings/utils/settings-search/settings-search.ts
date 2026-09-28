@@ -993,6 +993,7 @@ export const SETTINGS_ITEMS: SettingsItem[] = [
 			"claude",
 			"codex",
 			"pi",
+			"ufo",
 		],
 	},
 	{

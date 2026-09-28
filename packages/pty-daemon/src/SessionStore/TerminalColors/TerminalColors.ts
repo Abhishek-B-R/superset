@@ -69,7 +69,7 @@ export class TerminalColors {
 		if (colors) this.configure(colors);
 	}
 
-	configure(colors: ConfiguredColors): void {
+	configure(colors: ConfiguredColors, resetOverrides = false): void {
 		const parsed = terminalColorsSchema.safeParse(colors);
 		if (!parsed.success) return;
 		const value = parsed.data;
@@ -86,6 +86,7 @@ export class TerminalColors {
 				`#${(8 + (i - 232) * 10).toString(16).padStart(2, "0").repeat(3)}`;
 		this.defaults.push(value.foreground, value.background, value.cursor);
 		if (
+			resetOverrides ||
 			previous.some(
 				(color, index) =>
 					color.toLowerCase() !== this.defaults[index]?.toLowerCase(),
@@ -108,7 +109,9 @@ export class TerminalColors {
 	restore(snapshot: TerminalColorsSnapshot): void {
 		this.defaults = [...snapshot.defaults];
 		this.overrides = new Map(snapshot.overrides);
-		this.state = snapshot.state;
+		this.state = snapshot.state.startsWith("string")
+			? "ground"
+			: snapshot.state;
 		this.pending = [...snapshot.pending];
 		this.previousC2 = snapshot.previousC2 ?? false;
 		this.discardOverflow = snapshot.discardOverflow ?? false;
@@ -146,18 +149,26 @@ export class TerminalColors {
 				}
 				output.push(Buffer.from(this.pending));
 				this.pending = [];
-				this.state = [0x90, 0x98, 0x9e, 0x9f].includes(byte)
-					? "string"
-					: "ground";
-				if (this.state === "ground") i--;
+				this.state = "ground";
+				i--;
 				continue;
 			}
-			if (
-				this.state === "string" ||
-				this.state === "stringEscape" ||
-				this.state === "overflow" ||
-				this.state === "overflowEscape"
-			) {
+			if (this.state === "overflow" || this.state === "overflowEscape") {
+				if (byte === 0x1b) {
+					this.pending = [byte];
+					this.state = "escape";
+					this.discardOverflow = false;
+					start = i + 1;
+					continue;
+				}
+				if (this.pending.at(-1) === 0xc2 && byte === 0x9d) {
+					this.pending = [0xc2, byte];
+					this.state = "osc";
+					this.discardOverflow = false;
+					start = i + 1;
+					continue;
+				}
+				this.pending = byte === 0xc2 ? [byte] : [];
 				const escaped = this.state.endsWith("Escape");
 				const overflow = this.state.startsWith("overflow");
 				if (this.discardOverflow) start = i + 1;
@@ -179,6 +190,24 @@ export class TerminalColors {
 							: "string";
 				continue;
 			}
+			if (
+				this.state === "osc" &&
+				this.pending.at(-1) === 0xc2 &&
+				byte >= 0x80 &&
+				byte <= 0x9f &&
+				byte !== 0x9c
+			) {
+				output.push(Buffer.from(this.pending.slice(0, -1)));
+				this.pending = [0xc2, byte];
+				start = i + 1;
+				if (byte === 0x9d) this.state = "osc";
+				else {
+					output.push(Buffer.from(this.pending));
+					this.pending = [];
+					this.state = "ground";
+				}
+				continue;
+			}
 			if (this.state === "oscEscape" && byte !== 0x5c) {
 				const ended = this.handleOsc(Buffer.from(this.pending), "\x1b", reply);
 				output.push(ended.at(-1) === 0x1b ? ended.subarray(0, -1) : ended);
@@ -188,21 +217,35 @@ export class TerminalColors {
 			this.pending.push(byte);
 			start = i + 1;
 			if (this.state === "escape") {
+				if (
+					(byte < 0x20 && byte !== 0x18 && byte !== 0x1a && byte !== 0x1b) ||
+					byte === 0x7f
+				) {
+					if (this.pending.length > MAX_OSC_BYTES) {
+						output.push(Buffer.from(this.pending));
+						this.pending = [0x1b];
+					}
+					continue;
+				}
+				if (byte === 0xc2) {
+					output.push(Buffer.from(this.pending.slice(0, -1)));
+					this.pending = [byte];
+					this.state = "c2";
+					continue;
+				}
 				if (byte === 0x5d) {
 					this.state = "osc";
 					continue;
 				}
 				if (byte === 0x1b) {
-					output.push(Buffer.from([0x1b]));
+					output.push(Buffer.from(this.pending.slice(0, -1)));
 					this.pending = [0x1b];
 					continue;
 				}
 				if (byte === 0x63) this.overrides.clear();
 				output.push(Buffer.from(this.pending));
 				this.pending = [];
-				this.state = [0x50, 0x58, 0x5e, 0x5f].includes(byte)
-					? "string"
-					: "ground";
+				this.state = "ground";
 				continue;
 			}
 			if (
@@ -222,7 +265,13 @@ export class TerminalColors {
 			) {
 				const raw = Buffer.from(this.pending);
 				const header =
-					raw.subarray(2).toString("latin1").split(";", 1)[0] ?? "";
+					Buffer.from(
+						raw
+							.subarray(raw[0] === 0x1b ? raw.indexOf(0x5d) + 1 : 2)
+							.filter((value) => value >= 0x20),
+					)
+						.toString("latin1")
+						.split(";", 1)[0] ?? "";
 				const identifier = Number(header);
 				this.discardOverflow =
 					this.pending.length > MAX_OSC_BYTES &&
@@ -231,7 +280,7 @@ export class TerminalColors {
 						(!raw.includes(0x3b) && identifier === 0));
 				if (!this.discardOverflow) output.push(raw);
 				this.pending = [];
-				this.state = byte === 0x18 || byte === 0x1a ? "ground" : "overflow";
+				this.state = this.discardOverflow ? "overflow" : "ground";
 			} else this.state = byte === 0x1b ? "oscEscape" : "osc";
 		}
 		output.push(chunk.subarray(start));
@@ -245,9 +294,15 @@ export class TerminalColors {
 		terminator: string,
 		reply: (bytes: Buffer) => void,
 	): Buffer {
+		// Keep xterm's transition out of any control sequence this OSC interrupted.
+		const introducerLength = raw[0] === 0x1b ? raw.indexOf(0x5d) + 1 : 2;
+		const emptyOsc = Buffer.concat([
+			raw.subarray(0, introducerLength),
+			Buffer.from([7]),
+		]);
 		const body = Buffer.from(
 			raw
-				.subarray(2, raw.length - terminator.length)
+				.subarray(introducerLength, raw.length - terminator.length)
 				.filter((byte) => byte >= 0x20),
 		).toString("latin1");
 		const parts = body.split(";");
@@ -285,9 +340,15 @@ export class TerminalColors {
 			if (parts.length % 2) retained.push(parts.at(-1) ?? "");
 			return !queried
 				? raw
-				: retained.length
-					? Buffer.from(`\x1b]4;${retained.join(";")}${terminator}`, "latin1")
-					: Buffer.alloc(0);
+				: Buffer.concat([
+						emptyOsc,
+						retained.length
+							? Buffer.from(
+									`\x1b]4;${retained.join(";")}${terminator}`,
+									"latin1",
+								)
+							: Buffer.alloc(0),
+					]);
 		}
 		if (command === "10" || command === "11" || command === "12") {
 			const first = Number(command);
@@ -306,7 +367,10 @@ export class TerminalColors {
 					retained.push(`\x1b]${code};${value}${terminator}`);
 				}
 			}
-			return Buffer.from(retained.join(""), "latin1");
+			return Buffer.concat([
+				emptyOsc,
+				Buffer.from(retained.join(""), "latin1"),
+			]);
 		}
 		if (command === "104") {
 			if (parts.length === 0 || parts.join("") === "") {

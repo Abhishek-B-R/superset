@@ -74,6 +74,7 @@ export interface ColorsMessage {
 	type: "colors";
 	id: string;
 	colors: TerminalColors;
+	resetOverrides?: boolean;
 }
 
 export interface ResizeMessage {
