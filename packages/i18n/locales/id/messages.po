@@ -5107,11 +5107,20 @@ msgstr "\"{projectName}\" dihapus dari {0} dari {1} perangkat. Perangkat lain te
 msgid "Deleted \"{projectName}\". You can restore it from Settings → Projects for 30 days."
 msgstr "\"{projectName}\" dihapus. Anda dapat memulihkannya dari Pengaturan → Proyek selama 30 hari."
 
+msgid "Deleted {deletedWhen} · {deviceNames}"
+msgstr "Dihapus {deletedWhen} · {deviceNames}"
+
 msgid "Deleted {name}"
 msgstr "Menghapus {name}"
 
+msgid "Deleted by {deletedBy} {deletedWhen} · {deviceNames}"
+msgstr "Dihapus oleh {deletedBy} {deletedWhen} · {deviceNames}"
+
 msgid "deleted or unavailable — pick another"
 msgstr "dihapus atau tidak tersedia — pilih yang lain"
+
+msgid "Deleted projects can be restored for 30 days, with the workspaces that were deleted with them. After that they are removed; the repository folder and worktrees with uncommitted changes stay on disk."
+msgstr "Proyek yang dihapus dapat dipulihkan selama 30 hari, bersama workspace yang ikut terhapus. Setelah itu proyek dihapus permanen; folder repositori dan worktree dengan perubahan yang belum di-commit tetap ada di disk."
 
 msgid "Deleted workspaces, but couldn’t finish updating the sidebar"
 msgstr "Workspace terhapus, tapi tidak bisa menyelesaikan pembaruan sidebar"
@@ -9766,6 +9775,9 @@ msgstr "Tidak ada proyek yang cocok."
 msgid "No projects on this host yet"
 msgstr "Belum ada proyek di host ini"
 
+msgid "No projects were deleted in the last 30 days."
+msgstr "Tidak ada proyek yang dihapus dalam 30 hari terakhir."
+
 msgid "No projects yet."
 msgstr "Belum ada proyek."
 
@@ -12521,6 +12533,9 @@ msgstr "Memulihkan sesi Anda"
 
 msgid "Restoring..."
 msgstr "Memulihkan..."
+
+msgid "Restoring…"
+msgstr "Memulihkan…"
 
 msgid "Result"
 msgstr "Hasil"

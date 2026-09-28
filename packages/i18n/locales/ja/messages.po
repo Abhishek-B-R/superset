@@ -5107,11 +5107,20 @@ msgstr "{1} 台中 {0} 台のデバイスから「{projectName}」を削除し�
 msgid "Deleted \"{projectName}\". You can restore it from Settings → Projects for 30 days."
 msgstr "「{projectName}」を削除しました。30 日間は「設定 → プロジェクト」から復元できます。"
 
+msgid "Deleted {deletedWhen} · {deviceNames}"
+msgstr "{deletedWhen}に削除 · {deviceNames}"
+
 msgid "Deleted {name}"
 msgstr "{name}を削除しました"
 
+msgid "Deleted by {deletedBy} {deletedWhen} · {deviceNames}"
+msgstr "{deletedBy} が{deletedWhen}に削除 · {deviceNames}"
+
 msgid "deleted or unavailable — pick another"
 msgstr "削除済みまたは利用不可 — 別のものを選んでください"
+
+msgid "Deleted projects can be restored for 30 days, with the workspaces that were deleted with them. After that they are removed; the repository folder and worktrees with uncommitted changes stay on disk."
+msgstr "削除したプロジェクトは、一緒に削除されたワークスペースとともに 30 日間復元できます。その後は完全に削除されますが、リポジトリのフォルダーと未コミットの変更があるワークツリーはディスクに残ります。"
 
 msgid "Deleted workspaces, but couldn’t finish updating the sidebar"
 msgstr "ワークスペースは削除しましたが、サイドバーの更新を完了できませんでした"
@@ -9766,6 +9775,9 @@ msgstr "一致するプロジェクトがありません。"
 msgid "No projects on this host yet"
 msgstr "このホストにはまだプロジェクトがありません"
 
+msgid "No projects were deleted in the last 30 days."
+msgstr "過去 30 日間に削除されたプロジェクトはありません。"
+
 msgid "No projects yet."
 msgstr "プロジェクトはまだありません。"
 
@@ -12521,6 +12533,9 @@ msgstr "セッションを復元中"
 
 msgid "Restoring..."
 msgstr "復元中..."
+
+msgid "Restoring…"
+msgstr "復元中…"
 
 msgid "Result"
 msgstr "結果"

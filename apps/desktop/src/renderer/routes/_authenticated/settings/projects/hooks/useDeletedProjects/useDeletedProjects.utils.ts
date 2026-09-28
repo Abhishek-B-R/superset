@@ -2,6 +2,7 @@ export interface DeletedProjectRow {
 	id: string;
 	name: string;
 	deletedAt: number;
+	deletedByUserId: string | null;
 	purgeAt: number;
 }
 
@@ -22,7 +23,10 @@ export function mergeDeletedProjects(
 				continue;
 			}
 			existing.hosts.push({ hostId, url });
-			existing.deletedAt = Math.max(existing.deletedAt, row.deletedAt);
+			if (row.deletedAt > existing.deletedAt) {
+				existing.deletedAt = row.deletedAt;
+				existing.deletedByUserId = row.deletedByUserId;
+			}
 			existing.purgeAt = Math.min(existing.purgeAt, row.purgeAt);
 		}
 	}

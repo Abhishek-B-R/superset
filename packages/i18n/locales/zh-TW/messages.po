@@ -5107,11 +5107,20 @@ msgstr "已從 {1} 台裝置中的 {0} 台刪除「{projectName}」。其他裝�
 msgid "Deleted \"{projectName}\". You can restore it from Settings → Projects for 30 days."
 msgstr "已刪除「{projectName}」。你可以在 30 天內從「設定 → 專案」還原。"
 
+msgid "Deleted {deletedWhen} · {deviceNames}"
+msgstr "{deletedWhen}刪除 · {deviceNames}"
+
 msgid "Deleted {name}"
 msgstr "已刪除{name}"
 
+msgid "Deleted by {deletedBy} {deletedWhen} · {deviceNames}"
+msgstr "{deletedBy} {deletedWhen}刪除 · {deviceNames}"
+
 msgid "deleted or unavailable — pick another"
 msgstr "已刪除或不可用，請另選一個"
+
+msgid "Deleted projects can be restored for 30 days, with the workspaces that were deleted with them. After that they are removed; the repository folder and worktrees with uncommitted changes stay on disk."
+msgstr "已刪除的專案可在 30 天內還原，連同一起刪除的工作區。之後將被移除；儲存庫資料夾和有未提交變更的工作樹會保留在磁碟上。"
 
 msgid "Deleted workspaces, but couldn’t finish updating the sidebar"
 msgstr "工作區已刪除，但側邊欄沒能更新完"
@@ -9766,6 +9775,9 @@ msgstr "沒有匹配的專案。"
 msgid "No projects on this host yet"
 msgstr "此主機上暫無專案"
 
+msgid "No projects were deleted in the last 30 days."
+msgstr "過去 30 天內沒有刪除任何專案。"
+
 msgid "No projects yet."
 msgstr "暫無專案。"
 
@@ -12521,6 +12533,9 @@ msgstr "正在恢復你的會話"
 
 msgid "Restoring..."
 msgstr "正在恢復..."
+
+msgid "Restoring…"
+msgstr "正在還原…"
 
 msgid "Result"
 msgstr "結果"

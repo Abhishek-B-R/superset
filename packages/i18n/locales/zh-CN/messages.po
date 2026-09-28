@@ -5107,11 +5107,20 @@ msgstr "已从 {1} 台设备中的 {0} 台删除“{projectName}”。其他设�
 msgid "Deleted \"{projectName}\". You can restore it from Settings → Projects for 30 days."
 msgstr "已删除“{projectName}”。你可以在 30 天内从“设置 → 项目”恢复它。"
 
+msgid "Deleted {deletedWhen} · {deviceNames}"
+msgstr "{deletedWhen}删除 · {deviceNames}"
+
 msgid "Deleted {name}"
 msgstr "已删除{name}"
 
+msgid "Deleted by {deletedBy} {deletedWhen} · {deviceNames}"
+msgstr "{deletedBy} {deletedWhen}删除 · {deviceNames}"
+
 msgid "deleted or unavailable — pick another"
 msgstr "已删除或不可用，请另选一个"
+
+msgid "Deleted projects can be restored for 30 days, with the workspaces that were deleted with them. After that they are removed; the repository folder and worktrees with uncommitted changes stay on disk."
+msgstr "已删除的项目可在 30 天内恢复，连同一起删除的工作区。之后将被移除；仓库文件夹和有未提交更改的工作树会保留在磁盘上。"
 
 msgid "Deleted workspaces, but couldn’t finish updating the sidebar"
 msgstr "工作区已删除，但侧边栏没能更新完"
@@ -9766,6 +9775,9 @@ msgstr "没有匹配的项目。"
 msgid "No projects on this host yet"
 msgstr "此主机上暂无项目"
 
+msgid "No projects were deleted in the last 30 days."
+msgstr "过去 30 天内没有删除任何项目。"
+
 msgid "No projects yet."
 msgstr "暂无项目。"
 
@@ -12521,6 +12533,9 @@ msgstr "正在恢复你的会话"
 
 msgid "Restoring..."
 msgstr "正在恢复..."
+
+msgid "Restoring…"
+msgstr "正在恢复…"
 
 msgid "Result"
 msgstr "结果"

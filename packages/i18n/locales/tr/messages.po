@@ -5107,11 +5107,20 @@ msgstr "\"{projectName}\", {1} cihazın {0} tanesinden silindi. Diğerleri kopya
 msgid "Deleted \"{projectName}\". You can restore it from Settings → Projects for 30 days."
 msgstr "\"{projectName}\" silindi. 30 gün boyunca Ayarlar → Projeler bölümünden geri yükleyebilirsin."
 
+msgid "Deleted {deletedWhen} · {deviceNames}"
+msgstr "{deletedWhen} silindi · {deviceNames}"
+
 msgid "Deleted {name}"
 msgstr "{name} silindi"
 
+msgid "Deleted by {deletedBy} {deletedWhen} · {deviceNames}"
+msgstr "{deletedBy} tarafından {deletedWhen} silindi · {deviceNames}"
+
 msgid "deleted or unavailable — pick another"
 msgstr "silinmiş veya kullanılamıyor — başka birini seçin"
+
+msgid "Deleted projects can be restored for 30 days, with the workspaces that were deleted with them. After that they are removed; the repository folder and worktrees with uncommitted changes stay on disk."
+msgstr "Silinen projeler, onlarla birlikte silinen çalışma alanlarıyla birlikte 30 gün boyunca geri yüklenebilir. Sonrasında kaldırılırlar; depo klasörü ve commit edilmemiş değişiklikler içeren worktree'ler diskte kalır."
 
 msgid "Deleted workspaces, but couldn’t finish updating the sidebar"
 msgstr "Çalışma alanları silindi, ancak kenar çubuğu güncellenemedi"
@@ -9766,6 +9775,9 @@ msgstr "Eşleşen proje yok."
 msgid "No projects on this host yet"
 msgstr "Bu host'ta henüz proje yok"
 
+msgid "No projects were deleted in the last 30 days."
+msgstr "Son 30 günde hiçbir proje silinmedi."
+
 msgid "No projects yet."
 msgstr "Henüz proje yok."
 
@@ -12521,6 +12533,9 @@ msgstr "Oturumunuz geri yükleniyor"
 
 msgid "Restoring..."
 msgstr "Geri yükleniyor..."
+
+msgid "Restoring…"
+msgstr "Geri yükleniyor…"
 
 msgid "Result"
 msgstr "Sonuç"

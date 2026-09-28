@@ -5107,11 +5107,20 @@ msgstr "„{projectName}“ smazán na {0} z {1} zařízení. Ostatní si kopii 
 msgid "Deleted \"{projectName}\". You can restore it from Settings → Projects for 30 days."
 msgstr "„{projectName}“ smazán. Můžete ho obnovit v Nastavení → Projekty po dobu 30 dnů."
 
+msgid "Deleted {deletedWhen} · {deviceNames}"
+msgstr "Smazáno {deletedWhen} · {deviceNames}"
+
 msgid "Deleted {name}"
 msgstr "{name} smazán"
 
+msgid "Deleted by {deletedBy} {deletedWhen} · {deviceNames}"
+msgstr "Smazal(a) {deletedBy} {deletedWhen} · {deviceNames}"
+
 msgid "deleted or unavailable — pick another"
 msgstr "smazán nebo nedostupný — vyberte jiný"
+
+msgid "Deleted projects can be restored for 30 days, with the workspaces that were deleted with them. After that they are removed; the repository folder and worktrees with uncommitted changes stay on disk."
+msgstr "Smazané projekty lze obnovit po dobu 30 dnů, spolu s pracovními prostory, které byly smazány s nimi. Poté budou odstraněny; složka repozitáře a worktree s necommitnutými změnami zůstanou na disku."
 
 msgid "Deleted workspaces, but couldn’t finish updating the sidebar"
 msgstr "Pracovní prostory byly smazány, ale postranní panel se nepodařilo dokončit aktualizovat"
@@ -9766,6 +9775,9 @@ msgstr "Žádný projekt neodpovídá."
 msgid "No projects on this host yet"
 msgstr "Na tomto hostu zatím nejsou žádné projekty"
 
+msgid "No projects were deleted in the last 30 days."
+msgstr "Za posledních 30 dní nebyly smazány žádné projekty."
+
 msgid "No projects yet."
 msgstr "Zatím žádné projekty."
 
@@ -12521,6 +12533,9 @@ msgstr "Obnovuji vaši relaci"
 
 msgid "Restoring..."
 msgstr "Obnovuji..."
+
+msgid "Restoring…"
+msgstr "Obnovuji…"
 
 msgid "Result"
 msgstr "Výsledek"

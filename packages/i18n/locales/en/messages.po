@@ -5107,11 +5107,20 @@ msgstr "Deleted \"{projectName}\" from {0} of {1} devices. The others keep their
 msgid "Deleted \"{projectName}\". You can restore it from Settings → Projects for 30 days."
 msgstr "Deleted \"{projectName}\". You can restore it from Settings → Projects for 30 days."
 
+msgid "Deleted {deletedWhen} · {deviceNames}"
+msgstr "Deleted {deletedWhen} · {deviceNames}"
+
 msgid "Deleted {name}"
 msgstr "Deleted {name}"
 
+msgid "Deleted by {deletedBy} {deletedWhen} · {deviceNames}"
+msgstr "Deleted by {deletedBy} {deletedWhen} · {deviceNames}"
+
 msgid "deleted or unavailable — pick another"
 msgstr "deleted or unavailable — pick another"
+
+msgid "Deleted projects can be restored for 30 days, with the workspaces that were deleted with them. After that they are removed; the repository folder and worktrees with uncommitted changes stay on disk."
+msgstr "Deleted projects can be restored for 30 days, with the workspaces that were deleted with them. After that they are removed; the repository folder and worktrees with uncommitted changes stay on disk."
 
 msgid "Deleted workspaces, but couldn’t finish updating the sidebar"
 msgstr "Deleted workspaces, but couldn’t finish updating the sidebar"
@@ -9766,6 +9775,9 @@ msgstr "No projects match."
 msgid "No projects on this host yet"
 msgstr "No projects on this host yet"
 
+msgid "No projects were deleted in the last 30 days."
+msgstr "No projects were deleted in the last 30 days."
+
 msgid "No projects yet."
 msgstr "No projects yet."
 
@@ -12521,6 +12533,9 @@ msgstr "Restoring your session"
 
 msgid "Restoring..."
 msgstr "Restoring..."
+
+msgid "Restoring…"
+msgstr "Restoring…"
 
 msgid "Result"
 msgstr "Result"

@@ -5107,11 +5107,20 @@ msgstr "«{projectName}» удалён с {0} из {1} устройств. На 
 msgid "Deleted \"{projectName}\". You can restore it from Settings → Projects for 30 days."
 msgstr "«{projectName}» удалён. Его можно восстановить в разделе «Настройки → Проекты» в течение 30 дней."
 
+msgid "Deleted {deletedWhen} · {deviceNames}"
+msgstr "Удалён {deletedWhen} · {deviceNames}"
+
 msgid "Deleted {name}"
 msgstr "{name} удалён"
 
+msgid "Deleted by {deletedBy} {deletedWhen} · {deviceNames}"
+msgstr "Удалил(а) {deletedBy} {deletedWhen} · {deviceNames}"
+
 msgid "deleted or unavailable — pick another"
 msgstr "удалена или недоступна — выберите другую"
+
+msgid "Deleted projects can be restored for 30 days, with the workspaces that were deleted with them. After that they are removed; the repository folder and worktrees with uncommitted changes stay on disk."
+msgstr "Удалённые проекты можно восстановить в течение 30 дней вместе с рабочими областями, удалёнными вместе с ними. После этого они удаляются окончательно; папка репозитория и worktree с незакоммиченными изменениями остаются на диске."
 
 msgid "Deleted workspaces, but couldn’t finish updating the sidebar"
 msgstr "Рабочие области удалены, но обновить боковую панель до конца не удалось"
@@ -9766,6 +9775,9 @@ msgstr "Нет подходящих проектов."
 msgid "No projects on this host yet"
 msgstr "На этом хосте пока нет проектов"
 
+msgid "No projects were deleted in the last 30 days."
+msgstr "За последние 30 дней проекты не удалялись."
+
 msgid "No projects yet."
 msgstr "Проектов пока нет."
 
@@ -12521,6 +12533,9 @@ msgstr "Восстановление сессии"
 
 msgid "Restoring..."
 msgstr "Восстановление..."
+
+msgid "Restoring…"
+msgstr "Восстановление…"
 
 msgid "Result"
 msgstr "Результат"

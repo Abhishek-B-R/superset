@@ -5107,11 +5107,20 @@ msgstr "Usunięto „{projectName}” z {0} z {1} urządzeń. Pozostałe zachowu
 msgid "Deleted \"{projectName}\". You can restore it from Settings → Projects for 30 days."
 msgstr "Usunięto „{projectName}”. Możesz go przywrócić w Ustawienia → Projekty przez 30 dni."
 
+msgid "Deleted {deletedWhen} · {deviceNames}"
+msgstr "Usunięto {deletedWhen} · {deviceNames}"
+
 msgid "Deleted {name}"
 msgstr "Usunięto {name}"
 
+msgid "Deleted by {deletedBy} {deletedWhen} · {deviceNames}"
+msgstr "Usunięte przez {deletedBy} {deletedWhen} · {deviceNames}"
+
 msgid "deleted or unavailable — pick another"
 msgstr "usunięty lub niedostępny — wybierz inny"
+
+msgid "Deleted projects can be restored for 30 days, with the workspaces that were deleted with them. After that they are removed; the repository folder and worktrees with uncommitted changes stay on disk."
+msgstr "Usunięte projekty można przywrócić przez 30 dni, razem z obszarami roboczymi usuniętymi wraz z nimi. Potem zostaną usunięte; folder repozytorium i worktree z niezatwierdzonymi zmianami pozostają na dysku."
 
 msgid "Deleted workspaces, but couldn’t finish updating the sidebar"
 msgstr "Obszary robocze usunięte, ale nie udało się dokończyć aktualizacji paska bocznego"
@@ -9766,6 +9775,9 @@ msgstr "Brak pasujących projektów."
 msgid "No projects on this host yet"
 msgstr "Brak projektów na tym hoście"
 
+msgid "No projects were deleted in the last 30 days."
+msgstr "W ciągu ostatnich 30 dni nie usunięto żadnych projektów."
+
 msgid "No projects yet."
 msgstr "Brak projektów."
 
@@ -12521,6 +12533,9 @@ msgstr "Przywracanie sesji"
 
 msgid "Restoring..."
 msgstr "Przywracanie..."
+
+msgid "Restoring…"
+msgstr "Przywracanie…"
 
 msgid "Result"
 msgstr "Wynik"

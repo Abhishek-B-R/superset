@@ -14,6 +14,8 @@ import {
 	summarizeOthersActivity,
 } from "./useDeleteProject.utils";
 
+const UNDO_TOAST_MS = 10_000;
+
 interface UseDeleteProjectOptions {
 	projectId: string;
 	projectName: string;
@@ -109,7 +111,7 @@ export function useDeleteProject({
 					t({
 						message: `Deleted "${projectName}" from ${deletedUrls.length} of ${selected.length} devices. The others keep their copy.`,
 					}),
-					{ action: undo },
+					{ action: undo, duration: UNDO_TOAST_MS },
 				);
 				return false;
 			}
@@ -117,7 +119,7 @@ export function useDeleteProject({
 				t({
 					message: `Deleted "${projectName}". You can restore it from Settings → Projects for 30 days.`,
 				}),
-				{ action: undo },
+				{ action: undo, duration: UNDO_TOAST_MS },
 			);
 			onDeleted?.();
 			return true;

@@ -5107,11 +5107,20 @@ msgstr "Đã xóa \"{projectName}\" khỏi {0}/{1} thiết bị. Các thiết b�
 msgid "Deleted \"{projectName}\". You can restore it from Settings → Projects for 30 days."
 msgstr "Đã xóa \"{projectName}\". Bạn có thể khôi phục trong Cài đặt → Dự án trong 30 ngày."
 
+msgid "Deleted {deletedWhen} · {deviceNames}"
+msgstr "Đã xóa {deletedWhen} · {deviceNames}"
+
 msgid "Deleted {name}"
 msgstr "Đã xóa {name}"
 
+msgid "Deleted by {deletedBy} {deletedWhen} · {deviceNames}"
+msgstr "{deletedBy} đã xóa {deletedWhen} · {deviceNames}"
+
 msgid "deleted or unavailable — pick another"
 msgstr "đã bị xóa hoặc không khả dụng — hãy chọn cái khác"
+
+msgid "Deleted projects can be restored for 30 days, with the workspaces that were deleted with them. After that they are removed; the repository folder and worktrees with uncommitted changes stay on disk."
+msgstr "Dự án đã xóa có thể được khôi phục trong 30 ngày, cùng với các workspace bị xóa theo. Sau đó chúng sẽ bị xóa hẳn; thư mục repository và các worktree có thay đổi chưa commit vẫn được giữ trên ổ đĩa."
 
 msgid "Deleted workspaces, but couldn’t finish updating the sidebar"
 msgstr "Đã xóa workspace, nhưng không cập nhật xong thanh bên"
@@ -9766,6 +9775,9 @@ msgstr "Không có dự án nào khớp."
 msgid "No projects on this host yet"
 msgstr "Chưa có dự án nào trên host này"
 
+msgid "No projects were deleted in the last 30 days."
+msgstr "Không có dự án nào bị xóa trong 30 ngày qua."
+
 msgid "No projects yet."
 msgstr "Chưa có dự án nào."
 
@@ -12521,6 +12533,9 @@ msgstr "Đang khôi phục phiên của bạn"
 
 msgid "Restoring..."
 msgstr "Đang khôi phục..."
+
+msgid "Restoring…"
+msgstr "Đang khôi phục…"
 
 msgid "Result"
 msgstr "Kết quả"

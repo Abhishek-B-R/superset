@@ -5107,11 +5107,20 @@ msgstr "\"{projectName}\" verwijderd van {0} van {1} apparaten. De andere houden
 msgid "Deleted \"{projectName}\". You can restore it from Settings → Projects for 30 days."
 msgstr "\"{projectName}\" verwijderd. Je kunt het 30 dagen lang herstellen via Instellingen → Projecten."
 
+msgid "Deleted {deletedWhen} · {deviceNames}"
+msgstr "Verwijderd {deletedWhen} · {deviceNames}"
+
 msgid "Deleted {name}"
 msgstr "{name} verwijderd"
 
+msgid "Deleted by {deletedBy} {deletedWhen} · {deviceNames}"
+msgstr "Verwijderd door {deletedBy} {deletedWhen} · {deviceNames}"
+
 msgid "deleted or unavailable — pick another"
 msgstr "verwijderd of niet beschikbaar — kies een andere"
+
+msgid "Deleted projects can be restored for 30 days, with the workspaces that were deleted with them. After that they are removed; the repository folder and worktrees with uncommitted changes stay on disk."
+msgstr "Verwijderde projecten kunnen 30 dagen lang worden hersteld, samen met de workspaces die ermee zijn verwijderd. Daarna worden ze verwijderd; de repositorymap en worktrees met niet-gecommitte wijzigingen blijven op de schijf."
 
 msgid "Deleted workspaces, but couldn’t finish updating the sidebar"
 msgstr "Werkruimtes verwijderd, maar de zijbalk kon niet worden bijgewerkt"
@@ -9766,6 +9775,9 @@ msgstr "Geen overeenkomende projecten."
 msgid "No projects on this host yet"
 msgstr "Nog geen projecten op deze host"
 
+msgid "No projects were deleted in the last 30 days."
+msgstr "Er zijn de afgelopen 30 dagen geen projecten verwijderd."
+
 msgid "No projects yet."
 msgstr "Nog geen projecten."
 
@@ -12521,6 +12533,9 @@ msgstr "Je sessie wordt hersteld"
 
 msgid "Restoring..."
 msgstr "Herstellen..."
+
+msgid "Restoring…"
+msgstr "Herstellen…"
 
 msgid "Result"
 msgstr "Resultaat"

@@ -5107,11 +5107,20 @@ msgstr "Se eliminó \"{projectName}\" de {0} de {1} dispositivos. Los demás con
 msgid "Deleted \"{projectName}\". You can restore it from Settings → Projects for 30 days."
 msgstr "Se eliminó \"{projectName}\". Puedes restaurarlo desde Configuración → Proyectos durante 30 días."
 
+msgid "Deleted {deletedWhen} · {deviceNames}"
+msgstr "Eliminado {deletedWhen} · {deviceNames}"
+
 msgid "Deleted {name}"
 msgstr "{name} eliminado"
 
+msgid "Deleted by {deletedBy} {deletedWhen} · {deviceNames}"
+msgstr "Eliminado por {deletedBy} {deletedWhen} · {deviceNames}"
+
 msgid "deleted or unavailable — pick another"
 msgstr "eliminado o no disponible: elige otro"
+
+msgid "Deleted projects can be restored for 30 days, with the workspaces that were deleted with them. After that they are removed; the repository folder and worktrees with uncommitted changes stay on disk."
+msgstr "Los proyectos eliminados se pueden restaurar durante 30 días, junto con los espacios de trabajo que se eliminaron con ellos. Después se eliminan; la carpeta del repositorio y los worktrees con cambios sin confirmar permanecen en el disco."
 
 msgid "Deleted workspaces, but couldn’t finish updating the sidebar"
 msgstr "Espacios de trabajo eliminados, pero no se pudo terminar de actualizar la barra lateral"
@@ -9766,6 +9775,9 @@ msgstr "Ningún proyecto coincide."
 msgid "No projects on this host yet"
 msgstr "Aún no hay proyectos en este host"
 
+msgid "No projects were deleted in the last 30 days."
+msgstr "No se eliminó ningún proyecto en los últimos 30 días."
+
 msgid "No projects yet."
 msgstr "Aún no hay proyectos."
 
@@ -12521,6 +12533,9 @@ msgstr "Restaurando la sesión"
 
 msgid "Restoring..."
 msgstr "Restaurando..."
+
+msgid "Restoring…"
+msgstr "Restaurando…"
 
 msgid "Result"
 msgstr "Resultado"
