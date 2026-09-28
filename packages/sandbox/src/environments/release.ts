@@ -290,6 +290,10 @@ const checks: Array<[label: string, command: string, expect: RegExp]> = [
 	["vercel", "vercel --version", /\d+\.\d+\.\d+/],
 	["wrangler", "wrangler --version", /\d+\.\d+\.\d+/],
 	["eas-cli", "eas --version", /\d+\.\d+\.\d+/],
+	["psql", "psql --version", /\d+\.\d+/],
+	["ntn", "ntn --version", /\d+\.\d+\.\d+/],
+	["lim", "lim --version", /\d+\.\d+\.\d+/],
+	["stripe", "stripe --version", /\d+\.\d+\.\d+/],
 ];
 let failed = 0;
 for (const [label, command, expect] of checks) {
