@@ -27,6 +27,7 @@ import {
 	ilike,
 	inArray,
 	isNotNull,
+	isNull,
 	lt,
 	notExists,
 	or,
@@ -720,7 +721,7 @@ export const pageRouter = {
 						? { description: input.description }
 						: {}),
 				})
-				.where(eq(pages.id, page.id))
+				.where(and(eq(pages.id, page.id), isNull(pages.takenDownAt)))
 				.returning();
 
 			if (!updated) {
@@ -749,7 +750,7 @@ export const pageRouter = {
 			const [updated] = await db
 				.update(pages)
 				.set({ visibility: input.visibility })
-				.where(eq(pages.id, page.id))
+				.where(and(eq(pages.id, page.id), isNull(pages.takenDownAt)))
 				.returning();
 
 			if (!updated) {
@@ -936,7 +937,7 @@ export const pageRouter = {
 			const [updated] = await db
 				.update(pages)
 				.set({ sharedVersion: resolved })
-				.where(eq(pages.id, page.id))
+				.where(and(eq(pages.id, page.id), isNull(pages.takenDownAt)))
 				.returning();
 
 			if (!updated) {

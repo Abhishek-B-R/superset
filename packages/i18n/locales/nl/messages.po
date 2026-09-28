@@ -10924,7 +10924,7 @@ msgid "Page Not Found"
 msgstr "Pagina niet gevonden"
 
 msgid "Page report rate limiting is not configured"
-msgstr "Snelheidslimiet voor paginarapportages is niet geconfigureerd"
+msgstr "Rate limiting voor paginarapportages is niet geconfigureerd"
 
 msgid "Page title"
 msgstr "Paginatitel"

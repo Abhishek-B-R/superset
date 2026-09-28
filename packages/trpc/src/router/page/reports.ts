@@ -116,7 +116,7 @@ export const pageReportRouter = {
 					page.sharedVersion ?? (await latestVersionNumber(page.id)),
 				reason: input.reason,
 				details: input.details,
-				reporterEmail: input.reporterEmail,
+				reporterEmail: ctx.session ? null : input.reporterEmail,
 				reportedByUserId: ctx.session?.user.id ?? null,
 				reporterIpHash: ipHash,
 			});

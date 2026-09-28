@@ -3,6 +3,7 @@
 import { useLingui as useTranslation } from "@lingui/react";
 import { Trans, useLingui } from "@lingui/react/macro";
 import type { PageReportReason } from "@superset/db/enums";
+import { errorMessage } from "@superset/i18n/errors";
 import { Button } from "@superset/ui/button";
 import {
 	Dialog,
@@ -169,7 +170,7 @@ export function ReportPageDialog({ slug, signedIn }: ReportPageDialogProps) {
 
 							{report.isError && (
 								<p className="text-destructive text-sm">
-									{report.error.message}
+									{errorMessage(report.error)}
 								</p>
 							)}
 						</div>

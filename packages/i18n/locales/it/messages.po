@@ -17324,7 +17324,7 @@ msgid "Your download starts automatically. If it didn't, grab it here."
 msgstr "Il download parte automaticamente. Se non è partito, scaricalo qui."
 
 msgid "Your email (optional)"
-msgstr "La tua email (facoltativo)"
+msgstr "La tua email (facoltativa)"
 
 msgid "Your GitHub account cannot reach a repository in this environment"
 msgstr "Il tuo account GitHub non può accedere a un repository di questo ambiente"
