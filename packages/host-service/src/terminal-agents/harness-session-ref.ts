@@ -2,7 +2,11 @@ import { eq } from "drizzle-orm";
 import type { HostDb } from "../db";
 import { terminalAgentBindings, workspaces } from "../db/schema";
 import { resolveDefaultAccountEnv } from "../trpc/router/usage/default-account";
-import { agentLaunchEnv, resolveHostAgentConfig } from "./agent-config";
+import {
+	accountProfileEnv,
+	agentLaunchEnv,
+	resolveHostAgentConfig,
+} from "./agent-config";
 import type { HarnessSessionRef } from "./harness-sessions";
 
 /**
@@ -24,6 +28,7 @@ export function terminalHarnessSession(
 			definitionId: terminalAgentBindings.definitionId,
 			workspaceId: terminalAgentBindings.workspaceId,
 			transcriptPath: terminalAgentBindings.transcriptPath,
+			accountProfile: terminalAgentBindings.accountProfile,
 			endedAt: terminalAgentBindings.endedAt,
 		})
 		.from(terminalAgentBindings)
@@ -45,9 +50,12 @@ export function terminalHarnessSession(
 			sessionId: binding.agentSessionId,
 			worktreePath,
 			reportedPath: binding.transcriptPath,
-			env: config
-				? agentLaunchEnv(db, config)
-				: resolveDefaultAccountEnv(db, binding.agentId),
+			env: {
+				...(config
+					? agentLaunchEnv(db, config)
+					: resolveDefaultAccountEnv(db, binding.agentId)),
+				...accountProfileEnv(binding.agentId, binding.accountProfile),
+			},
 		},
 		endedAt: binding.endedAt,
 	};
