@@ -3156,6 +3156,9 @@ msgstr "Wähle, was aus dem In-App-Browser gelöscht werden soll."
 msgid "Choose when Superset pings you."
 msgstr "Wähle, wann Superset dich anstupst."
 
+msgid "Choose where agents started from comments, design mode, and Pages open."
+msgstr "Wähle, wo aus Kommentaren, dem Designmodus und Pages gestartete Agenten geöffnet werden."
+
 msgid "Churn"
 msgstr "Abwanderung"
 
@@ -4200,6 +4203,9 @@ msgstr "Kosten pro gemergtem PR"
 
 msgid "Cost to you: $0"
 msgstr "Deine Kosten: 0 $"
+
+msgid "Could not add agent"
+msgstr "Agent konnte nicht hinzugefügt werden"
 
 msgid "Could not attach files"
 msgstr "Dateien konnten nicht angehängt werden"
@@ -9225,6 +9231,9 @@ msgstr "Neue Agentenstarts nutzen dieses Konto. Starte einen laufenden Agenten n
 
 msgid "New agent session"
 msgstr "Neue Agenten-Sitzung"
+
+msgid "New agent sessions"
+msgstr "Neue Agentensitzungen"
 
 msgid "New automation"
 msgstr "Neue Automatisierung"

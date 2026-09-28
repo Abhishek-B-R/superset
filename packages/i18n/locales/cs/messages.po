@@ -3156,6 +3156,9 @@ msgstr "Vyberte, co se má z vestavěného prohlížeče vymazat."
 msgid "Choose when Superset pings you."
 msgstr "Zvolte, kdy vás Superset upozorní."
 
+msgid "Choose where agents started from comments, design mode, and Pages open."
+msgstr "Vyberte, kde se otevřou agenti spuštění z komentářů, režimu návrhu a stránek Pages."
+
 msgid "Churn"
 msgstr "Odchody"
 
@@ -4200,6 +4203,9 @@ msgstr "Náklady na sloučený PR"
 
 msgid "Cost to you: $0"
 msgstr "Vaše náklady: 0 $"
+
+msgid "Could not add agent"
+msgstr "Agenta se nepodařilo přidat"
 
 msgid "Could not attach files"
 msgstr "Soubory se nepodařilo přiložit"
@@ -9225,6 +9231,9 @@ msgstr "Nová spuštění agentů použijí tento účet. Běžícího agenta p�
 
 msgid "New agent session"
 msgstr "Nová relace agenta"
+
+msgid "New agent sessions"
+msgstr "Nové relace agentů"
 
 msgid "New automation"
 msgstr "Nová automatizace"

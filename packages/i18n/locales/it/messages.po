@@ -3156,6 +3156,9 @@ msgstr "Scegli cosa cancellare dal browser interno."
 msgid "Choose when Superset pings you."
 msgstr "Scegli quando Superset ti avvisa."
 
+msgid "Choose where agents started from comments, design mode, and Pages open."
+msgstr "Scegli dove aprire gli agenti avviati dai commenti, dalla modalità design e da Pages."
+
 msgid "Churn"
 msgstr "Abbandono"
 
@@ -4200,6 +4203,9 @@ msgstr "Costo per PR unita"
 
 msgid "Cost to you: $0"
 msgstr "Costo per te: $0"
+
+msgid "Could not add agent"
+msgstr "Impossibile aggiungere l’agente"
 
 msgid "Could not attach files"
 msgstr "Impossibile allegare i file"
@@ -9225,6 +9231,9 @@ msgstr "I nuovi avvii di agenti usano questo account. Riavvia un agente in esecu
 
 msgid "New agent session"
 msgstr "Nuova sessione dell'agente"
+
+msgid "New agent sessions"
+msgstr "Nuove sessioni degli agenti"
 
 msgid "New automation"
 msgstr "Nuova automazione"

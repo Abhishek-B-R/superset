@@ -3156,6 +3156,9 @@ msgstr "Choisissez ce qu'il faut effacer du navigateur intégré."
 msgid "Choose when Superset pings you."
 msgstr "Choisissez quand Superset vous notifie."
 
+msgid "Choose where agents started from comments, design mode, and Pages open."
+msgstr "Choisissez où ouvrir les agents lancés depuis les commentaires, le mode design et Pages."
+
 msgid "Churn"
 msgstr "Attrition"
 
@@ -4200,6 +4203,9 @@ msgstr "Coût par PR fusionnée"
 
 msgid "Cost to you: $0"
 msgstr "Coût pour vous : 0 $"
+
+msgid "Could not add agent"
+msgstr "Impossible d’ajouter l’agent"
 
 msgid "Could not attach files"
 msgstr "Impossible de joindre les fichiers"
@@ -9225,6 +9231,9 @@ msgstr "Les nouveaux lancements d'agents utilisent ce compte. Relancez un agent 
 
 msgid "New agent session"
 msgstr "Nouvelle session d'agent"
+
+msgid "New agent sessions"
+msgstr "Nouvelles sessions d’agents"
 
 msgid "New automation"
 msgstr "Nouvelle automatisation"

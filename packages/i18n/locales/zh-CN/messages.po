@@ -3156,6 +3156,9 @@ msgstr "选择要从应用内浏览器清除的内容。"
 msgid "Choose when Superset pings you."
 msgstr "选择Superset在什么时候通知你。"
 
+msgid "Choose where agents started from comments, design mode, and Pages open."
+msgstr "选择从评论、设计模式和 Pages 启动的智能体的打开位置。"
+
 msgid "Churn"
 msgstr "流失"
 
@@ -4200,6 +4203,9 @@ msgstr "每个合并 PR 的费用"
 
 msgid "Cost to you: $0"
 msgstr "你的费用：$0"
+
+msgid "Could not add agent"
+msgstr "无法添加智能体"
 
 msgid "Could not attach files"
 msgstr "无法添加附件"
@@ -9225,6 +9231,9 @@ msgstr "新启动的智能体使用此账户。重新启动运行中的智能体
 
 msgid "New agent session"
 msgstr "新建智能体会话"
+
+msgid "New agent sessions"
+msgstr "新智能体会话"
 
 msgid "New automation"
 msgstr "新建自动化"

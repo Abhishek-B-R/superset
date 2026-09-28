@@ -3156,6 +3156,9 @@ msgstr "Wybierz, co wyczyścić z przeglądarki w aplikacji."
 msgid "Choose when Superset pings you."
 msgstr "Wybierz, kiedy Superset ma Cię powiadamiać."
 
+msgid "Choose where agents started from comments, design mode, and Pages open."
+msgstr "Wybierz, gdzie otwierać agentów uruchamianych z komentarzy, trybu projektowania i Pages."
+
 msgid "Churn"
 msgstr "Odejścia"
 
@@ -4200,6 +4203,9 @@ msgstr "Koszt na scalony PR"
 
 msgid "Cost to you: $0"
 msgstr "Twój koszt: $0"
+
+msgid "Could not add agent"
+msgstr "Nie udało się dodać agenta"
 
 msgid "Could not attach files"
 msgstr "Nie udało się załączyć plików"
@@ -9225,6 +9231,9 @@ msgstr "Nowe uruchomienia agentów korzystają z tego konta. Uruchom ponownie dz
 
 msgid "New agent session"
 msgstr "Nowa sesja agenta"
+
+msgid "New agent sessions"
+msgstr "Nowe sesje agentów"
 
 msgid "New automation"
 msgstr "Nowa automatyzacja"

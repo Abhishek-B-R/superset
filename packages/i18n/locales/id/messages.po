@@ -3156,6 +3156,9 @@ msgstr "Pilih apa yang ingin dibersihkan dari browser dalam aplikasi."
 msgid "Choose when Superset pings you."
 msgstr "Pilih kapan Superset memberi tahu Anda."
 
+msgid "Choose where agents started from comments, design mode, and Pages open."
+msgstr "Pilih tempat membuka agen yang dimulai dari komentar, mode desain, dan Pages."
+
 msgid "Churn"
 msgstr "Churn"
 
@@ -4200,6 +4203,9 @@ msgstr "Biaya per PR yang digabungkan"
 
 msgid "Cost to you: $0"
 msgstr "Biaya untuk Anda: $0"
+
+msgid "Could not add agent"
+msgstr "Tidak dapat menambahkan agen"
 
 msgid "Could not attach files"
 msgstr "Tidak bisa melampirkan file"
@@ -9224,6 +9230,9 @@ msgid "New agent launches use this account. Relaunch a running agent to switch i
 msgstr "Peluncuran agen baru memakai akun ini. Jalankan ulang agen yang sedang berjalan untuk menggantinya."
 
 msgid "New agent session"
+msgstr "Sesi agen baru"
+
+msgid "New agent sessions"
 msgstr "Sesi agen baru"
 
 msgid "New automation"

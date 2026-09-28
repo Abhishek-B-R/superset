@@ -3156,6 +3156,9 @@ msgstr "Kies wat je uit de ingebouwde browser wilt wissen."
 msgid "Choose when Superset pings you."
 msgstr "Kies wanneer Superset je een seintje geeft."
 
+msgid "Choose where agents started from comments, design mode, and Pages open."
+msgstr "Kies waar agents worden geopend die vanuit opmerkingen, de ontwerpmodus en Pages worden gestart."
+
 msgid "Churn"
 msgstr "Opzeggingen"
 
@@ -4200,6 +4203,9 @@ msgstr "Kosten per gemergede PR"
 
 msgid "Cost to you: $0"
 msgstr "Kosten voor jou: $0"
+
+msgid "Could not add agent"
+msgstr "Kon agent niet toevoegen"
 
 msgid "Could not attach files"
 msgstr "Kan bestanden niet toevoegen"
@@ -9225,6 +9231,9 @@ msgstr "Nieuwe agentstarts gebruiken dit account. Herstart een draaiende agent o
 
 msgid "New agent session"
 msgstr "Nieuwe agentsessie"
+
+msgid "New agent sessions"
+msgstr "Nieuwe agentsessies"
 
 msgid "New automation"
 msgstr "Nieuwe automatisering"

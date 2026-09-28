@@ -3156,6 +3156,9 @@ msgstr "인앱 브라우저에서 삭제할 항목을 선택하세요."
 msgid "Choose when Superset pings you."
 msgstr "Superset이 언제 알릴지 선택하세요."
 
+msgid "Choose where agents started from comments, design mode, and Pages open."
+msgstr "댓글, 디자인 모드 및 Pages에서 시작한 에이전트를 열 위치를 선택하세요."
+
 msgid "Churn"
 msgstr "이탈"
 
@@ -4200,6 +4203,9 @@ msgstr "머지된 PR당 비용"
 
 msgid "Cost to you: $0"
 msgstr "실제 비용: $0"
+
+msgid "Could not add agent"
+msgstr "에이전트를 추가하지 못했습니다"
 
 msgid "Could not attach files"
 msgstr "파일을 첨부할 수 없습니다"
@@ -9224,6 +9230,9 @@ msgid "New agent launches use this account. Relaunch a running agent to switch i
 msgstr "새 에이전트는 이 계정으로 실행됩니다. 실행 중인 에이전트는 다시 실행해야 바뀝니다."
 
 msgid "New agent session"
+msgstr "새 에이전트 세션"
+
+msgid "New agent sessions"
 msgstr "새 에이전트 세션"
 
 msgid "New automation"

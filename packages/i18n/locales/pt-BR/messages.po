@@ -3156,6 +3156,9 @@ msgstr "Escolha o que limpar do navegador do app."
 msgid "Choose when Superset pings you."
 msgstr "Escolha quando o Superset te avisa."
 
+msgid "Choose where agents started from comments, design mode, and Pages open."
+msgstr "Escolha onde abrir os agentes iniciados em comentários, no modo de design e no Pages."
+
 msgid "Churn"
 msgstr "Cancelamentos"
 
@@ -4200,6 +4203,9 @@ msgstr "Custo por PR mesclado"
 
 msgid "Cost to you: $0"
 msgstr "Custo para você: US$ 0"
+
+msgid "Could not add agent"
+msgstr "Não foi possível adicionar o agente"
 
 msgid "Could not attach files"
 msgstr "Não foi possível anexar os arquivos"
@@ -9225,6 +9231,9 @@ msgstr "Novos agentes usam esta conta. Reinicie um agente em execução para tro
 
 msgid "New agent session"
 msgstr "Nova sessão de agente"
+
+msgid "New agent sessions"
+msgstr "Novas sessões de agentes"
 
 msgid "New automation"
 msgstr "Nova automação"

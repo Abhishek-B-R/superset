@@ -3156,6 +3156,9 @@ msgstr "Chọn thứ cần xóa khỏi trình duyệt trong ứng dụng."
 msgid "Choose when Superset pings you."
 msgstr "Chọn khi nào Superset báo cho bạn."
 
+msgid "Choose where agents started from comments, design mode, and Pages open."
+msgstr "Chọn nơi mở tác nhân được khởi chạy từ bình luận, chế độ thiết kế và Pages."
+
 msgid "Churn"
 msgstr "Rời bỏ"
 
@@ -4200,6 +4203,9 @@ msgstr "Chi phí mỗi PR được merge"
 
 msgid "Cost to you: $0"
 msgstr "Chi phí của bạn: $0"
+
+msgid "Could not add agent"
+msgstr "Không thể thêm tác nhân"
 
 msgid "Could not attach files"
 msgstr "Không thể đính kèm tệp"
@@ -9225,6 +9231,9 @@ msgstr "Các agent khởi chạy mới sẽ dùng tài khoản này. Khởi ch�
 
 msgid "New agent session"
 msgstr "Phiên agent mới"
+
+msgid "New agent sessions"
+msgstr "Phiên tác nhân mới"
 
 msgid "New automation"
 msgstr "Tự động hóa mới"

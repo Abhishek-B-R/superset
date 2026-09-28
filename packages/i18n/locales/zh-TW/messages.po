@@ -3156,6 +3156,9 @@ msgstr "選擇要從應用程式內瀏覽器清除的內容。"
 msgid "Choose when Superset pings you."
 msgstr "選擇Superset在什麼時候通知你。"
 
+msgid "Choose where agents started from comments, design mode, and Pages open."
+msgstr "選擇從留言、設計模式和 Pages 啟動的代理程式的開啟位置。"
+
 msgid "Churn"
 msgstr "流失"
 
@@ -4200,6 +4203,9 @@ msgstr "每個合併 PR 的費用"
 
 msgid "Cost to you: $0"
 msgstr "你的費用：$0"
+
+msgid "Could not add agent"
+msgstr "無法新增代理程式"
 
 msgid "Could not attach files"
 msgstr "無法新增附件"
@@ -9225,6 +9231,9 @@ msgstr "新啟動的代理程式使用此帳戶。重新啟動執行中的代理
 
 msgid "New agent session"
 msgstr "新建代理程式會話"
+
+msgid "New agent sessions"
+msgstr "新的代理程式工作階段"
 
 msgid "New automation"
 msgstr "新建自動化"

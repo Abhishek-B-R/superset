@@ -3156,6 +3156,9 @@ msgstr "アプリ内ブラウザから消去する項目を選択してくださ
 msgid "Choose when Superset pings you."
 msgstr "Supersetから通知するタイミングを選びます。"
 
+msgid "Choose where agents started from comments, design mode, and Pages open."
+msgstr "コメント、デザインモード、Pages から起動したエージェントを開く場所を選択します。"
+
 msgid "Churn"
 msgstr "解約"
 
@@ -4200,6 +4203,9 @@ msgstr "マージされたPRあたりのコスト"
 
 msgid "Cost to you: $0"
 msgstr "実際のコスト: $0"
+
+msgid "Could not add agent"
+msgstr "エージェントを追加できませんでした"
 
 msgid "Could not attach files"
 msgstr "ファイルを添付できませんでした"
@@ -9225,6 +9231,9 @@ msgstr "新規エージェントの起動でこのアカウントを使用しま
 
 msgid "New agent session"
 msgstr "新規エージェントセッション"
+
+msgid "New agent sessions"
+msgstr "新しいエージェントセッション"
 
 msgid "New automation"
 msgstr "新規オートメーション"

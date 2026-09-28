@@ -3156,6 +3156,9 @@ msgstr "Uygulama içi tarayıcıdan neyin temizleneceğini seçin."
 msgid "Choose when Superset pings you."
 msgstr "Superset'in sizi ne zaman uyaracağını seçin."
 
+msgid "Choose where agents started from comments, design mode, and Pages open."
+msgstr "Yorumlardan, tasarım modundan ve Pages üzerinden başlatılan ajanların nerede açılacağını seçin."
+
 msgid "Churn"
 msgstr "Kayıp"
 
@@ -4200,6 +4203,9 @@ msgstr "Birleştirilen PR başına maliyet"
 
 msgid "Cost to you: $0"
 msgstr "Size maliyeti: $0"
+
+msgid "Could not add agent"
+msgstr "Ajan eklenemedi"
 
 msgid "Could not attach files"
 msgstr "Dosyalar eklenemedi"
@@ -9225,6 +9231,9 @@ msgstr "Yeni ajan başlatmaları bu hesabı kullanır. Değiştirmek için çal�
 
 msgid "New agent session"
 msgstr "Yeni ajan oturumu"
+
+msgid "New agent sessions"
+msgstr "Yeni ajan oturumları"
 
 msgid "New automation"
 msgstr "Yeni otomasyon"

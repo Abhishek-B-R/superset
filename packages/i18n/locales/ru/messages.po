@@ -3156,6 +3156,9 @@ msgstr "Выберите, что очистить во встроенном бр
 msgid "Choose when Superset pings you."
 msgstr "Выберите, когда Superset вас уведомляет."
 
+msgid "Choose where agents started from comments, design mode, and Pages open."
+msgstr "Выберите, где открывать агентов, запущенных из комментариев, режима дизайна и Pages."
+
 msgid "Churn"
 msgstr "Отток"
 
@@ -4200,6 +4203,9 @@ msgstr "Стоимость за смерженный PR"
 
 msgid "Cost to you: $0"
 msgstr "Ваши затраты: $0"
+
+msgid "Could not add agent"
+msgstr "Не удалось добавить агента"
 
 msgid "Could not attach files"
 msgstr "Не удалось прикрепить файлы"
@@ -9225,6 +9231,9 @@ msgstr "Новые запуски агентов используют этот �
 
 msgid "New agent session"
 msgstr "Новая сессия агента"
+
+msgid "New agent sessions"
+msgstr "Новые сеансы агентов"
 
 msgid "New automation"
 msgstr "Новая автоматизация"
