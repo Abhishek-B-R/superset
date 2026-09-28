@@ -1476,6 +1476,9 @@ msgstr "Dodaj pliki, aplikacje i inne (@)"
 msgid "Add issue #{0} to workspace"
 msgstr "Dodaj zgłoszenie #{0} do obszaru roboczego"
 
+msgid "Add listening agent"
+msgstr "Dodaj agenta nasłuchującego"
+
 msgid "Add member"
 msgstr "Dodaj członka"
 
@@ -1649,9 +1652,6 @@ msgstr "Agenci ładują własny podgląd, sterują interfejsem i dołączają zr
 
 msgid "Agents running at once"
 msgstr "Agentów uruchomionych naraz"
-
-msgid "Agents watching this page for comments"
-msgstr "Agenci obserwujący tę stronę pod kątem komentarzy"
 
 msgid "Aggregate agent usage across every developer on the Superset leaderboard — tokens, cost, cache behaviour and which models people actually reach for."
 msgstr "Zbiorcze użycie agentów przez wszystkich deweloperów w rankingu Superset — tokeny, koszt, zachowanie cache'u i modele, po które ludzie faktycznie sięgają."
@@ -1901,10 +1901,6 @@ msgstr "Także: @superset/ui/spinner"
 
 msgid "Always know which agent needs you, with notifications that deep-link straight to the blocked agent."
 msgstr "Zawsze wiedz, który agent Cię potrzebuje, dzięki powiadomieniom prowadzącym prosto do zablokowanego agenta."
-
-msgctxt "page watcher with no known name"
-msgid "An agent"
-msgstr "Agent"
 
 msgid "An agent completes multi-file changes end to end."
 msgstr "Agent wykonuje zmiany w wielu plikach od początku do końca."
@@ -8417,8 +8413,14 @@ msgstr "Wyświetlaj, twórz, aktualizuj i usuwaj obszary robocze na hoście."
 msgid "List, get, create, update, and delete tasks; track status."
 msgstr "Wyświetlaj, pobieraj, twórz, aktualizuj i usuwaj zadania; śledź status."
 
+msgid "Listening agents"
+msgstr "Agenci nasłuchujący"
+
 msgid "Listening for channel messages and new channels."
 msgstr "Nasłuchiwanie wiadomości na kanałach i nowych kanałów."
+
+msgid "Listening status unavailable"
+msgstr "Status nasłuchiwania jest niedostępny"
 
 msgid "live"
 msgstr "na żywo"
@@ -9637,6 +9639,9 @@ msgstr "Brak znanych twórców"
 msgid "No labels"
 msgstr "Brak etykiet"
 
+msgid "No listening agents"
+msgstr "Brak agentów nasłuchujących"
+
 msgid "No live sessions"
 msgstr "Brak aktywnych sesji"
 
@@ -10146,9 +10151,6 @@ msgstr "Starsze"
 
 msgid "on {offScopeHostName} — won't run here"
 msgstr "na {offScopeHostName} — nie uruchomi się tutaj"
-
-msgid "On a host you can't reach"
-msgstr "Na hoście, do którego nie masz dostępu"
 
 msgid "On focus change"
 msgstr "Przy zmianie fokusu"

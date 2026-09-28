@@ -1476,6 +1476,9 @@ msgstr "Tambah file, aplikasi, dan lainnya (@)"
 msgid "Add issue #{0} to workspace"
 msgstr "Tambahkan issue #{0} ke workspace"
 
+msgid "Add listening agent"
+msgstr "Tambahkan agen pendengar"
+
 msgid "Add member"
 msgstr "Tambah anggota"
 
@@ -1649,9 +1652,6 @@ msgstr "Agen memuat pratinjaunya sendiri, mengendalikan UI, dan melampirkan bukt
 
 msgid "Agents running at once"
 msgstr "Agen yang berjalan sekaligus"
-
-msgid "Agents watching this page for comments"
-msgstr "Agen yang memantau halaman ini untuk komentar"
 
 msgid "Aggregate agent usage across every developer on the Superset leaderboard — tokens, cost, cache behaviour and which models people actually reach for."
 msgstr "Agregat penggunaan agen dari seluruh developer di papan peringkat Superset — token, biaya, perilaku cache, dan model yang benar-benar dipakai orang."
@@ -1901,10 +1901,6 @@ msgstr "Juga: @superset/ui/spinner"
 
 msgid "Always know which agent needs you, with notifications that deep-link straight to the blocked agent."
 msgstr "Selalu tahu agen mana yang membutuhkan Anda, dengan notifikasi yang langsung menuju agen yang terhambat."
-
-msgctxt "page watcher with no known name"
-msgid "An agent"
-msgstr "Agen"
 
 msgid "An agent completes multi-file changes end to end."
 msgstr "Agen menyelesaikan perubahan lintas file dari awal sampai akhir."
@@ -8417,8 +8413,14 @@ msgstr "Menampilkan, membuat, memperbarui, dan menghapus workspace di sebuah hos
 msgid "List, get, create, update, and delete tasks; track status."
 msgstr "Menampilkan, mengambil, membuat, memperbarui, dan menghapus tugas; melacak status."
 
+msgid "Listening agents"
+msgstr "Agen pendengar"
+
 msgid "Listening for channel messages and new channels."
 msgstr "Memantau pesan channel dan channel baru."
+
+msgid "Listening status unavailable"
+msgstr "Status mendengarkan tidak tersedia"
 
 msgid "live"
 msgstr "live"
@@ -9637,6 +9639,9 @@ msgstr "Tidak ada pembuat yang diketahui"
 msgid "No labels"
 msgstr "Tanpa label"
 
+msgid "No listening agents"
+msgstr "Tidak ada agen pendengar"
+
 msgid "No live sessions"
 msgstr "Tidak ada sesi aktif"
 
@@ -10146,9 +10151,6 @@ msgstr "Lebih lama"
 
 msgid "on {offScopeHostName} — won't run here"
 msgstr "di {offScopeHostName} — tidak akan berjalan di sini"
-
-msgid "On a host you can't reach"
-msgstr "Di host yang tidak bisa kamu jangkau"
 
 msgid "On focus change"
 msgstr "Saat fokus berubah"

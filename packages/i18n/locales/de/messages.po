@@ -1476,6 +1476,9 @@ msgstr "Dateien, Apps und mehr hinzufügen (@)"
 msgid "Add issue #{0} to workspace"
 msgstr "Issue #{0} zum Arbeitsbereich hinzufügen"
 
+msgid "Add listening agent"
+msgstr "Zuhörenden Agenten hinzufügen"
+
 msgid "Add member"
 msgstr "Mitglied hinzufügen"
 
@@ -1649,9 +1652,6 @@ msgstr "Agenten laden ihre eigene Vorschau, bedienen die Oberfläche und hängen
 
 msgid "Agents running at once"
 msgstr "Gleichzeitig laufende Agenten"
-
-msgid "Agents watching this page for comments"
-msgstr "Agenten, die diese Seite auf Kommentare beobachten"
 
 msgid "Aggregate agent usage across every developer on the Superset leaderboard — tokens, cost, cache behaviour and which models people actually reach for."
 msgstr "Aggregierte Agent-Nutzung über alle Entwickler im Superset-Leaderboard — Tokens, Kosten, Cache-Verhalten und welche Modelle tatsächlich genutzt werden."
@@ -1901,10 +1901,6 @@ msgstr "Außerdem: @superset/ui/spinner"
 
 msgid "Always know which agent needs you, with notifications that deep-link straight to the blocked agent."
 msgstr "Du weißt immer, welcher Agent dich braucht — mit Benachrichtigungen, die direkt zum blockierten Agenten führen."
-
-msgctxt "page watcher with no known name"
-msgid "An agent"
-msgstr "Ein Agent"
 
 msgid "An agent completes multi-file changes end to end."
 msgstr "Ein Agent führt Änderungen über mehrere Dateien vollständig durch."
@@ -8417,8 +8413,14 @@ msgstr "Arbeitsbereiche auf einem Host auflisten, erstellen, aktualisieren und l
 msgid "List, get, create, update, and delete tasks; track status."
 msgstr "Aufgaben auflisten, abrufen, erstellen, aktualisieren und löschen; Status verfolgen."
 
+msgid "Listening agents"
+msgstr "Zuhörende Agenten"
+
 msgid "Listening for channel messages and new channels."
 msgstr "Lauscht auf Kanalnachrichten und neue Kanäle."
+
+msgid "Listening status unavailable"
+msgstr "Zuhörstatus nicht verfügbar"
 
 msgid "live"
 msgstr "live"
@@ -9637,6 +9639,9 @@ msgstr "Keine bekannten Ersteller"
 msgid "No labels"
 msgstr "Keine Labels"
 
+msgid "No listening agents"
+msgstr "Keine zuhörenden Agenten"
+
 msgid "No live sessions"
 msgstr "Keine aktiven Sitzungen"
 
@@ -10146,9 +10151,6 @@ msgstr "Älter"
 
 msgid "on {offScopeHostName} — won't run here"
 msgstr "auf {offScopeHostName} — läuft hier nicht"
-
-msgid "On a host you can't reach"
-msgstr "Auf einem Host, den du nicht erreichst"
 
 msgid "On focus change"
 msgstr "Bei Fokuswechsel"

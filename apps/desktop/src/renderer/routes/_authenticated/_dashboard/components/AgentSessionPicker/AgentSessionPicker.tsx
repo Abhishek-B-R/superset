@@ -48,7 +48,16 @@ export function AgentSessionPicker({
 					className="inline-flex h-7 min-w-0 max-w-56 items-center gap-1.5 rounded-md px-1.5 text-xs text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring data-[state=open]:bg-accent data-[state=open]:text-foreground"
 				>
 					{session ? (
-						<ExistingSessionOption binding={session} compact />
+						<ExistingSessionOption
+							binding={session}
+							compact={
+								!sessions.some(
+									(item) =>
+										item.terminalId !== session.terminalId &&
+										item.agentId === session.agentId,
+								)
+							}
+						/>
 					) : config ? (
 						<NewSessionOption label={config.label} presetId={config.presetId} />
 					) : (

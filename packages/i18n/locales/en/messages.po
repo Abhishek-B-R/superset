@@ -1476,6 +1476,9 @@ msgstr "Add files, apps, and more (@)"
 msgid "Add issue #{0} to workspace"
 msgstr "Add issue #{0} to workspace"
 
+msgid "Add listening agent"
+msgstr "Add listening agent"
+
 msgid "Add member"
 msgstr "Add member"
 
@@ -1649,9 +1652,6 @@ msgstr "Agents load their own preview, drive the UI, and attach screenshot proof
 
 msgid "Agents running at once"
 msgstr "Agents running at once"
-
-msgid "Agents watching this page for comments"
-msgstr "Agents watching this page for comments"
 
 msgid "Aggregate agent usage across every developer on the Superset leaderboard — tokens, cost, cache behaviour and which models people actually reach for."
 msgstr "Aggregate agent usage across every developer on the Superset leaderboard — tokens, cost, cache behaviour and which models people actually reach for."
@@ -1901,10 +1901,6 @@ msgstr "Also: @superset/ui/spinner"
 
 msgid "Always know which agent needs you, with notifications that deep-link straight to the blocked agent."
 msgstr "Always know which agent needs you, with notifications that deep-link straight to the blocked agent."
-
-msgctxt "page watcher with no known name"
-msgid "An agent"
-msgstr "An agent"
 
 msgid "An agent completes multi-file changes end to end."
 msgstr "An agent completes multi-file changes end to end."
@@ -8417,8 +8413,14 @@ msgstr "List, create, update, and delete workspaces on a host."
 msgid "List, get, create, update, and delete tasks; track status."
 msgstr "List, get, create, update, and delete tasks; track status."
 
+msgid "Listening agents"
+msgstr "Listening agents"
+
 msgid "Listening for channel messages and new channels."
 msgstr "Listening for channel messages and new channels."
+
+msgid "Listening status unavailable"
+msgstr "Listening status unavailable"
 
 msgid "live"
 msgstr "live"
@@ -9637,6 +9639,9 @@ msgstr "No known creators"
 msgid "No labels"
 msgstr "No labels"
 
+msgid "No listening agents"
+msgstr "No listening agents"
+
 msgid "No live sessions"
 msgstr "No live sessions"
 
@@ -10146,9 +10151,6 @@ msgstr "Older"
 
 msgid "on {offScopeHostName} — won't run here"
 msgstr "on {offScopeHostName} — won't run here"
-
-msgid "On a host you can't reach"
-msgstr "On a host you can't reach"
 
 msgid "On focus change"
 msgstr "On focus change"

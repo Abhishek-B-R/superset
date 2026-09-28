@@ -1476,6 +1476,9 @@ msgstr "Dosya, uygulama ve daha fazlasını ekleyin (@)"
 msgid "Add issue #{0} to workspace"
 msgstr "#{0} issue'sunu çalışma alanına ekle"
 
+msgid "Add listening agent"
+msgstr "Dinleyen ajan ekle"
+
 msgid "Add member"
 msgstr "Üye ekle"
 
@@ -1649,9 +1652,6 @@ msgstr "Ajanlar kendi önizlemelerini yükler, arayüzü kullanır ve işi incel
 
 msgid "Agents running at once"
 msgstr "Aynı anda çalışan ajanlar"
-
-msgid "Agents watching this page for comments"
-msgstr "Bu sayfayı yorumlar için izleyen ajanlar"
 
 msgid "Aggregate agent usage across every developer on the Superset leaderboard — tokens, cost, cache behaviour and which models people actually reach for."
 msgstr "Superset liderlik tablosundaki her geliştiricinin toplam ajan kullanımı — token, maliyet, önbellek davranışı ve insanların gerçekte tercih ettiği modeller."
@@ -1901,10 +1901,6 @@ msgstr "Ayrıca: @superset/ui/spinner"
 
 msgid "Always know which agent needs you, with notifications that deep-link straight to the blocked agent."
 msgstr "Doğrudan engellenen ajana bağlanan bildirimlerle, hangi ajanın size ihtiyacı olduğunu her zaman bilin."
-
-msgctxt "page watcher with no known name"
-msgid "An agent"
-msgstr "Bir ajan"
 
 msgid "An agent completes multi-file changes end to end."
 msgstr "Bir ajan, çok dosyalı değişiklikleri baştan sona tamamlar."
@@ -8417,8 +8413,14 @@ msgstr "Bir host'taki çalışma alanlarını listeleyin, oluşturun, güncelley
 msgid "List, get, create, update, and delete tasks; track status."
 msgstr "Görevleri listeleyin, alın, oluşturun, güncelleyin ve silin; durumu izleyin."
 
+msgid "Listening agents"
+msgstr "Dinleyen ajanlar"
+
 msgid "Listening for channel messages and new channels."
 msgstr "Kanal mesajları ve yeni kanallar dinleniyor."
+
+msgid "Listening status unavailable"
+msgstr "Dinleme durumu kullanılamıyor"
 
 msgid "live"
 msgstr "canlı"
@@ -9637,6 +9639,9 @@ msgstr "Bilinen oluşturan yok"
 msgid "No labels"
 msgstr "Etiket yok"
 
+msgid "No listening agents"
+msgstr "Dinleyen ajan yok"
+
 msgid "No live sessions"
 msgstr "Canlı oturum yok"
 
@@ -10146,9 +10151,6 @@ msgstr "Daha eski"
 
 msgid "on {offScopeHostName} — won't run here"
 msgstr "{offScopeHostName} üzerinde — burada çalışmaz"
-
-msgid "On a host you can't reach"
-msgstr "Erişemediğin bir ana makinede"
 
 msgid "On focus change"
 msgstr "Odak değiştiğinde"

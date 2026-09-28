@@ -1476,6 +1476,9 @@ msgstr "新增檔案、應用等（@）"
 msgid "Add issue #{0} to workspace"
 msgstr "將議題#{0}新增到工作區"
 
+msgid "Add listening agent"
+msgstr "新增監聽代理"
+
 msgid "Add member"
 msgstr "新增成員"
 
@@ -1649,9 +1652,6 @@ msgstr "代理程式自己載入預覽、操作介面，並在標記為待審查
 
 msgid "Agents running at once"
 msgstr "同時執行的代理程式數"
-
-msgid "Agents watching this page for comments"
-msgstr "正在關注此頁面評論的代理程式"
 
 msgid "Aggregate agent usage across every developer on the Superset leaderboard — tokens, cost, cache behaviour and which models people actually reach for."
 msgstr "Superset 排行榜上所有開發者的彙總代理使用量 — tokens、成本、快取行為，以及大家實際選用的模型。"
@@ -1901,10 +1901,6 @@ msgstr "另有：@superset/ui/spinner"
 
 msgid "Always know which agent needs you, with notifications that deep-link straight to the blocked agent."
 msgstr "隨時知道哪個代理程式需要你，通知可直接跳轉到被阻塞的代理程式。"
-
-msgctxt "page watcher with no known name"
-msgid "An agent"
-msgstr "代理程式"
 
 msgid "An agent completes multi-file changes end to end."
 msgstr "代理程式能端到端完成跨檔案改動。"
@@ -8417,8 +8413,14 @@ msgstr "列出、建立、更新和刪除主機上的工作區。"
 msgid "List, get, create, update, and delete tasks; track status."
 msgstr "列出、獲取、建立、更新和刪除任務；追蹤狀態。"
 
+msgid "Listening agents"
+msgstr "監聽代理"
+
 msgid "Listening for channel messages and new channels."
 msgstr "正在監聽頻道訊息和新建的頻道。"
+
+msgid "Listening status unavailable"
+msgstr "無法取得監聽狀態"
 
 msgid "live"
 msgstr "即時"
@@ -9637,6 +9639,9 @@ msgstr "沒有已知的建立者"
 msgid "No labels"
 msgstr "無標籤"
 
+msgid "No listening agents"
+msgstr "沒有監聽代理"
+
 msgid "No live sessions"
 msgstr "沒有活動會話"
 
@@ -10146,9 +10151,6 @@ msgstr "更早"
 
 msgid "on {offScopeHostName} — won't run here"
 msgstr "在{offScopeHostName}上，不會在這裡執行"
-
-msgid "On a host you can't reach"
-msgstr "在你無法連線的主機上"
 
 msgid "On focus change"
 msgstr "焦點變更時"

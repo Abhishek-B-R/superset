@@ -108,7 +108,7 @@ export function PageWatcherMenu({
 		},
 	);
 
-	const watchedElsewhere =
+	const unconfirmedWatch =
 		watchers.length === 0 && cloudWatch.data?.watch.watching === true;
 
 	const assign = useMutation({
@@ -198,96 +198,82 @@ export function PageWatcherMenu({
 					size="sm"
 					className="relative h-6 gap-1 px-1.5 text-muted-foreground/60 text-xs hover:text-muted-foreground"
 					aria-label={t({
-						message: "Agents watching this page for comments",
+						message: "Listening agents",
 					})}
 				>
 					<Bot className="size-4" />
-					{watchers.length > 0 || watchedElsewhere ? (
+					{watchers.length > 0 ? (
 						<span className="absolute top-0.5 left-3.5 size-1.5 rounded-full bg-amber-500 ring-2 ring-background" />
 					) : null}
 					{watchers.length > 1 ? <span>{watchers.length}</span> : null}
 				</Button>
 			</PopoverTrigger>
 			<PopoverContent align="end" className="w-96 max-w-[calc(100vw-2rem)] p-0">
-				<div className="px-3 py-2 text-muted-foreground text-xs">
-					{watchers.length > 0 || watchedElsewhere ? (
+				<div className="px-3 pt-3 pb-1 text-sm font-medium">
+					<Trans>Listening agents</Trans>
+				</div>
+				<div className="px-3 pb-3 text-muted-foreground text-xs">
+					{watchers.length > 0 ? (
 						<Plural
 							value={Math.max(watchers.length, 1)}
 							one="Comments go to this agent"
 							other="Comments go to these agents"
 						/>
+					) : unconfirmedWatch ? (
+						<Trans>Listening status unavailable</Trans>
 					) : (
-						<Trans>No agent</Trans>
+						<Trans>No listening agents</Trans>
 					)}
 				</div>
 				<div className="border-t border-border/60" />
-				{watchedElsewhere ? (
-					<div className="flex items-center gap-2 px-3 py-2">
-						<AgentIcon
-							presetId={cloudWatch.data?.watch.agentId ?? ""}
-							className="size-4"
-						/>
-						<span className="truncate text-sm">
-							{cloudWatch.data?.watch.agentId ??
-								t({
-									message: "An agent",
-									context: "page watcher with no known name",
-								})}
-						</span>
-						<span className="ml-auto shrink-0 text-muted-foreground text-xs">
-							<Trans>On a host you can't reach</Trans>
-						</span>
-					</div>
-				) : (
-					watchers.map((watcher) => {
-						const navigable = watcher.workspaceName !== null;
-						return (
-							<div
-								key={`${watcher.hostId}:${watcher.terminalId}`}
-								className="group flex items-center gap-2 px-3 py-1"
+				{watchers.map((watcher) => {
+					const navigable = watcher.workspaceName !== null;
+					return (
+						<div
+							key={`${watcher.hostId}:${watcher.terminalId}`}
+							className="group flex items-center gap-2 px-3 py-1"
+						>
+							<button
+								type="button"
+								disabled={!navigable}
+								onClick={() => open(watcher)}
+								className="flex min-w-0 flex-1 items-center gap-2 rounded-sm py-1 text-left hover:bg-accent disabled:pointer-events-none"
 							>
-								<button
-									type="button"
-									disabled={!navigable}
-									onClick={() => open(watcher)}
-									className="flex min-w-0 flex-1 items-center gap-2 rounded-sm py-1 text-left hover:bg-accent disabled:pointer-events-none"
-								>
-									<AgentIcon
-										presetId={watcher.agentId ?? ""}
-										className="size-4"
-									/>
-									<span className="min-w-0 flex-1 truncate text-sm">
-										{watcher.sessionTitle ??
-											watcher.agentId ??
-											watcher.terminalId.slice(0, 8)}
-									</span>
-									<span className="max-w-[50%] shrink-0 truncate text-muted-foreground text-xs">
-										{watcher.workspaceName}
-									</span>
-								</button>
-								<button
-									type="button"
-									aria-label={t({ message: "Stop watching" })}
-									title={t({ message: "Stop watching" })}
-									disabled={
-										!canManage ||
-										launch.isPending ||
-										assign.isPending ||
-										unwatch.isPending
-									}
-									className="flex shrink-0 items-center justify-center text-muted-foreground opacity-0 hover:text-foreground disabled:pointer-events-none disabled:opacity-30 group-hover:opacity-100 group-focus-within:opacity-100"
-									onClick={(event) => {
-										event.preventDefault();
-										event.stopPropagation();
-										unwatch.mutate(watcher);
-									}}
-								>
-									<HiMiniXMark className="size-3.5" />
-								</button>
-							</div>
-						);
-					})
-				)}
+								<AgentIcon
+									presetId={watcher.agentId ?? ""}
+									className="size-4"
+								/>
+								<span className="min-w-0 flex-1 truncate text-sm">
+									{watcher.sessionTitle ??
+										watcher.agentId ??
+										watcher.terminalId.slice(0, 8)}
+								</span>
+								<span className="max-w-[50%] shrink-0 truncate text-muted-foreground text-xs">
+									{watcher.workspaceName}
+								</span>
+							</button>
+							<button
+								type="button"
+								aria-label={t({ message: "Stop watching" })}
+								title={t({ message: "Stop watching" })}
+								disabled={
+									!canManage ||
+									launch.isPending ||
+									assign.isPending ||
+									unwatch.isPending
+								}
+								className="flex shrink-0 items-center justify-center text-muted-foreground opacity-0 hover:text-foreground disabled:pointer-events-none disabled:opacity-30 group-hover:opacity-100 group-focus-within:opacity-100"
+								onClick={(event) => {
+									event.preventDefault();
+									event.stopPropagation();
+									unwatch.mutate(watcher);
+								}}
+							>
+								<HiMiniXMark className="size-3.5" />
+							</button>
+						</div>
+					);
+				})}
 				{canManage ? (
 					<form
 						className="border-t border-border/60 bg-muted/30 p-2.5"
@@ -320,7 +306,7 @@ export function PageWatcherMenu({
 								{pending ? (
 									<LoaderCircle className="size-3 animate-spin" />
 								) : null}
-								<Trans>Add agent</Trans>
+								<Trans>Add listening agent</Trans>
 							</Button>
 						</fieldset>
 					</form>

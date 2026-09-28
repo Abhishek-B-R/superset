@@ -211,7 +211,7 @@ async function openMenu() {
 	await act(async () => {
 		fireEvent.click(
 			ui.getByRole("button", {
-				name: "Agents watching this page for comments",
+				name: "Listening agents",
 			}),
 		);
 	});
@@ -314,26 +314,29 @@ describe("a page several agents are watching", () => {
 	});
 });
 
-describe("a watcher on a host this machine cannot reach", () => {
+describe("cloud listening status without a confirmed live session", () => {
 	beforeEach(() => {
 		cloudWatch = { watching: true, agentId: "codex" };
 	});
 
-	test("still shows the badge, because comments do reach it", async () => {
+	test("keeps the control visible without claiming an agent is connected", async () => {
 		const ui = await renderMenu();
-		expect(ui.getByRole("button")).toBeDefined();
+		expect(ui.getByRole("button").querySelector(".bg-amber-500")).toBeNull();
 	});
 
-	test("says where it is instead of pretending nothing watches", async () => {
+	test("does not turn a stale flag after agent exit into an unreachable-host claim", async () => {
 		const ui = await openMenu();
-		expect(ui.getByText("On a host you can't reach")).toBeDefined();
-		expect(ui.getByText("codex")).toBeDefined();
+		expect(ui.getByText("Listening status unavailable")).toBeDefined();
+		expect(ui.queryByText("On a host you can't reach")).toBeNull();
+		expect(ui.queryByText("codex")).toBeNull();
+		expect(ui.queryByRole("button", { name: "Stop watching" })).toBeNull();
 	});
 
-	test("names it generically when the flag carries no agent", async () => {
-		cloudWatch = { watching: true, agentId: null };
+	test("shows the empty state after the cloud lease clears", async () => {
+		cloudWatch = { watching: false, agentId: null };
 		const ui = await openMenu();
-		expect(ui.getByText("An agent")).toBeDefined();
+		expect(ui.getByText("No listening agents")).toBeDefined();
+		expect(ui.queryByText("Listening status unavailable")).toBeNull();
 	});
 });
 
@@ -349,7 +352,7 @@ describe("assigning an existing workspace agent", () => {
 	test("lists an agent even when nothing watches the page and assigns it on the workspace host", async () => {
 		const ui = await openMenu();
 		await act(async () => {
-			fireEvent.click(ui.getByRole("button", { name: "Add agent" }));
+			fireEvent.click(ui.getByRole("button", { name: "Add listening agent" }));
 		});
 		expect(assigned).toEqual([
 			{
@@ -370,7 +373,7 @@ describe("assigning an existing workspace agent", () => {
 		assignError = new Error("Agent stopped");
 		const ui = await openMenu();
 		await act(async () => {
-			fireEvent.click(ui.getByRole("button", { name: "Add agent" }));
+			fireEvent.click(ui.getByRole("button", { name: "Add listening agent" }));
 		});
 		expect(errors).toEqual(["Could not add agent"]);
 	});
@@ -388,11 +391,11 @@ describe("assigning an existing workspace agent", () => {
 		await act(async () => {
 			fireEvent.click(
 				ui.getByRole("button", {
-					name: "Agents watching this page for comments",
+					name: "Listening agents",
 				}),
 			);
 		});
-		expect(ui.queryByText("Add agent")).toBeNull();
+		expect(ui.queryByText("Add listening agent")).toBeNull();
 	});
 });
 
@@ -406,7 +409,7 @@ describe("starting a page watcher", () => {
 	test("launches a configured agent when no agent exists, then assigns its actual binding", async () => {
 		const ui = await openMenu();
 		await act(async () => {
-			fireEvent.click(ui.getByRole("button", { name: "Add agent" }));
+			fireEvent.click(ui.getByRole("button", { name: "Add listening agent" }));
 		});
 		expect(launched).toEqual([
 			expect.objectContaining({
@@ -434,7 +437,7 @@ describe("starting a page watcher", () => {
 		bindingDelay = 1;
 		const ui = await openMenu();
 		await act(async () => {
-			fireEvent.click(ui.getByRole("button", { name: "Add agent" }));
+			fireEvent.click(ui.getByRole("button", { name: "Add listening agent" }));
 		});
 		expect(assigned).toEqual([]);
 		await act(async () => {
@@ -448,7 +451,7 @@ describe("starting a page watcher", () => {
 		launchResult = null;
 		const ui = await openMenu();
 		await act(async () => {
-			fireEvent.click(ui.getByRole("button", { name: "Add agent" }));
+			fireEvent.click(ui.getByRole("button", { name: "Add listening agent" }));
 		});
 		expect(assigned).toEqual([]);
 		expect(bindingPolls).toBe(0);
@@ -458,7 +461,7 @@ describe("starting a page watcher", () => {
 		assignError = new Error("Cannot watch");
 		const ui = await openMenu();
 		await act(async () => {
-			fireEvent.click(ui.getByRole("button", { name: "Add agent" }));
+			fireEvent.click(ui.getByRole("button", { name: "Add listening agent" }));
 		});
 		expect(errors).toEqual(["Could not add agent"]);
 	});
@@ -468,7 +471,7 @@ describe("starting a page watcher", () => {
 		await act(async () => {
 			fireEvent.click(
 				ui.getByRole("button", {
-					name: "Agents watching this page for comments",
+					name: "Listening agents",
 				}),
 			);
 		});
@@ -486,7 +489,7 @@ test("uses the Settings placement for a new session", async () => {
 		setAgentSessionPlacement("new-tab");
 	});
 	await act(async () => {
-		fireEvent.click(ui.getByRole("button", { name: "Add agent" }));
+		fireEvent.click(ui.getByRole("button", { name: "Add listening agent" }));
 	});
 	expect(ui.queryByRole("radio")).toBeNull();
 	expect(launched).toEqual([expect.objectContaining({ placement: "new-tab" })]);
@@ -515,9 +518,39 @@ test("filters agent choices and selects without launching", async () => {
 	).toContain("Codex");
 	expect(launched).toHaveLength(0);
 	await act(async () => {
-		fireEvent.click(ui.getByRole("button", { name: "Add agent" }));
+		fireEvent.click(ui.getByRole("button", { name: "Add listening agent" }));
 	});
 	expect(launched).toEqual([
 		expect.objectContaining({ configId: "codex-config" }),
 	]);
+});
+
+test("distinguishes multiple sessions of the same agent after selection", async () => {
+	bindings.set("first-terminal", {
+		terminalId: "first-terminal",
+		agentId: "codex",
+		lastEventAt: 2,
+	});
+	bindings.set("second-terminal", {
+		terminalId: "second-terminal",
+		agentId: "codex",
+		lastEventAt: 1,
+	});
+	const ui = await openMenu();
+	await act(async () => {
+		fireEvent.click(ui.getByRole("button", { name: "Choose agent" }));
+	});
+	await act(async () => {
+		fireEvent.click(ui.getByRole("option", { name: /codex.*second/ }));
+	});
+	expect(
+		ui.getByRole("button", { name: "Choose agent" }).textContent,
+	).toContain("second");
+	expect(assigned).toEqual([]);
+	await act(async () => {
+		fireEvent.click(ui.getByRole("button", { name: "Add listening agent" }));
+	});
+	expect(assigned[0]).toMatchObject({
+		input: { terminalId: "second-terminal" },
+	});
 });
