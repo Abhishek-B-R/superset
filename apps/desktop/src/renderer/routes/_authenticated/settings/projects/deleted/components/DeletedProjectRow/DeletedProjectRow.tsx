@@ -50,22 +50,21 @@ export function DeletedProjectRow({
 			</div>
 			<Button
 				type="button"
-				variant="ghost"
-				size="sm"
-				className="text-destructive hover:bg-destructive/10 hover:text-destructive"
-				disabled={!canRestore || isRestoring}
-				onClick={onDeletePermanently}
-			>
-				<Trans>Delete permanently</Trans>
-			</Button>
-			<Button
-				type="button"
 				variant="outline"
 				size="sm"
 				disabled={!canRestore || isRestoring}
 				onClick={onRestore}
 			>
 				{isRestoring ? <Trans>Restoring…</Trans> : <Trans>Restore</Trans>}
+			</Button>
+			<Button
+				type="button"
+				variant="destructive"
+				size="sm"
+				disabled={!canRestore || isRestoring}
+				onClick={onDeletePermanently}
+			>
+				<Trans>Delete permanently</Trans>
 			</Button>
 		</li>
 	);
