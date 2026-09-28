@@ -5056,9 +5056,6 @@ msgstr "Delete page"
 msgid "Delete permanently"
 msgstr "Delete permanently"
 
-msgid "Delete permanently…"
-msgstr "Delete permanently…"
-
 msgid "Delete project"
 msgstr "Delete project"
 

@@ -5056,9 +5056,6 @@ msgstr "Удалить страницу"
 msgid "Delete permanently"
 msgstr "Удалить навсегда"
 
-msgid "Delete permanently…"
-msgstr "Удалить навсегда…"
-
 msgid "Delete project"
 msgstr "Удалить проект"
 

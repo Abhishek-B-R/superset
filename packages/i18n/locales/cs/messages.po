@@ -5056,9 +5056,6 @@ msgstr "Smazat stránku"
 msgid "Delete permanently"
 msgstr "Trvale smazat"
 
-msgid "Delete permanently…"
-msgstr "Trvale smazat…"
-
 msgid "Delete project"
 msgstr "Smazat projekt"
 

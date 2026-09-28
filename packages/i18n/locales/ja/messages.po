@@ -5056,9 +5056,6 @@ msgstr "ページを削除"
 msgid "Delete permanently"
 msgstr "完全に削除"
 
-msgid "Delete permanently…"
-msgstr "完全に削除…"
-
 msgid "Delete project"
 msgstr "プロジェクトを削除"
 

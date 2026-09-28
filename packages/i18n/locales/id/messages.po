@@ -5056,9 +5056,6 @@ msgstr "Hapus halaman"
 msgid "Delete permanently"
 msgstr "Hapus permanen"
 
-msgid "Delete permanently…"
-msgstr "Hapus permanen…"
-
 msgid "Delete project"
 msgstr "Hapus proyek"
 

@@ -5056,9 +5056,6 @@ msgstr "删除页面"
 msgid "Delete permanently"
 msgstr "永久删除"
 
-msgid "Delete permanently…"
-msgstr "永久删除…"
-
 msgid "Delete project"
 msgstr "删除项目"
 

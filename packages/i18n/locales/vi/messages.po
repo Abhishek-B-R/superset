@@ -5056,9 +5056,6 @@ msgstr "Xóa trang"
 msgid "Delete permanently"
 msgstr "Xóa vĩnh viễn"
 
-msgid "Delete permanently…"
-msgstr "Xóa vĩnh viễn…"
-
 msgid "Delete project"
 msgstr "Xóa dự án"
 

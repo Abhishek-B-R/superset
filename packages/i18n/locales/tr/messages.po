@@ -5056,9 +5056,6 @@ msgstr "Sayfayı sil"
 msgid "Delete permanently"
 msgstr "Kalıcı olarak sil"
 
-msgid "Delete permanently…"
-msgstr "Kalıcı olarak sil…"
-
 msgid "Delete project"
 msgstr "Projeyi sil"
 
