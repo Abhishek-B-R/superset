@@ -426,6 +426,11 @@ export const environmentRouter = {
 									and(
 										eq(environments.id, target.id),
 										isNull(environments.archivedAt),
+										eq(environments.sourceRef, target.sourceRef),
+										eq(environments.scope, target.scope),
+										target.createdByUserId
+											? eq(environments.createdByUserId, target.createdByUserId)
+											: isNull(environments.createdByUserId),
 									),
 								)
 								.returning()
@@ -475,9 +480,10 @@ export const environmentRouter = {
 					}
 					if (!saved) {
 						throw userError({
-							code: "NOT_FOUND",
-							message: "Environment not found",
-							i18nKey: "serverError.environment.environmentNotFound",
+							code: "CONFLICT",
+							message:
+								"The environment changed while this workspace was being saved; run it again",
+							i18nKey: "serverError.environment.changedDuringPromote",
 						});
 					}
 					return saved;
