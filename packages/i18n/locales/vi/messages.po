@@ -1484,6 +1484,9 @@ msgstr "Thêm tệp, ứng dụng và hơn thế (@)"
 msgid "Add issue #{0} to workspace"
 msgstr "Thêm issue #{0} vào workspace"
 
+msgid "Add listening agent"
+msgstr "Thêm tác nhân lắng nghe"
+
 msgid "Add member"
 msgstr "Thêm thành viên"
 
@@ -1657,9 +1660,6 @@ msgstr "Agent tự mở bản xem trước, thao tác giao diện và đính kè
 
 msgid "Agents running at once"
 msgstr "Số agent chạy cùng lúc"
-
-msgid "Agents watching this page for comments"
-msgstr "Các agent đang theo dõi bình luận trên trang này"
 
 msgid "Aggregate agent usage across every developer on the Superset leaderboard — tokens, cost, cache behaviour and which models people actually reach for."
 msgstr "Tổng hợp mức sử dụng agent của mọi lập trình viên trên bảng xếp hạng Superset — token, chi phí, hành vi cache và những mô hình mọi người thực sự dùng."
@@ -1909,10 +1909,6 @@ msgstr "Ngoài ra: @superset/ui/spinner"
 
 msgid "Always know which agent needs you, with notifications that deep-link straight to the blocked agent."
 msgstr "Luôn biết agent nào cần bạn, với thông báo dẫn thẳng tới agent đang bị chặn."
-
-msgctxt "page watcher with no known name"
-msgid "An agent"
-msgstr "Agent"
 
 msgid "An agent completes multi-file changes end to end."
 msgstr "Agent hoàn thành trọn vẹn các thay đổi trên nhiều tệp."
@@ -3167,6 +3163,9 @@ msgstr "Chọn thứ cần xóa khỏi trình duyệt trong ứng dụng."
 msgid "Choose when Superset pings you."
 msgstr "Chọn khi nào Superset báo cho bạn."
 
+msgid "Choose where agents started from comments, design mode, and Pages open."
+msgstr "Chọn nơi mở tác nhân được khởi chạy từ bình luận, chế độ thiết kế và Pages."
+
 msgid "Churn"
 msgstr "Rời bỏ"
 
@@ -4214,6 +4213,9 @@ msgstr "Chi phí mỗi PR được merge"
 
 msgid "Cost to you: $0"
 msgstr "Chi phí của bạn: $0"
+
+msgid "Could not add agent"
+msgstr "Không thể thêm tác nhân"
 
 msgid "Could not attach files"
 msgstr "Không thể đính kèm tệp"
@@ -8458,8 +8460,14 @@ msgstr "Liệt kê, tạo, cập nhật và xóa workspace trên một host."
 msgid "List, get, create, update, and delete tasks; track status."
 msgstr "Liệt kê, lấy, tạo, cập nhật và xóa tác vụ; theo dõi trạng thái."
 
+msgid "Listening agents"
+msgstr "Tác nhân lắng nghe"
+
 msgid "Listening for channel messages and new channels."
 msgstr "Đang lắng nghe tin nhắn kênh và kênh mới."
+
+msgid "Listening status unavailable"
+msgstr "Không có thông tin trạng thái lắng nghe"
 
 msgid "live"
 msgstr "trực tiếp"
@@ -9276,6 +9284,9 @@ msgstr "Các agent khởi chạy mới sẽ dùng tài khoản này. Khởi ch�
 msgid "New agent session"
 msgstr "Phiên agent mới"
 
+msgid "New agent sessions"
+msgstr "Phiên tác nhân mới"
+
 msgid "New automation"
 msgstr "Tự động hóa mới"
 
@@ -9674,6 +9685,9 @@ msgstr "Không có người tạo nào được biết"
 
 msgid "No labels"
 msgstr "Không có nhãn"
+
+msgid "No listening agents"
+msgstr "Không có tác nhân lắng nghe"
 
 msgid "No live sessions"
 msgstr "Không có phiên nào đang chạy"
@@ -10187,9 +10201,6 @@ msgstr "Cũ hơn"
 
 msgid "on {offScopeHostName} — won't run here"
 msgstr "trên {offScopeHostName} — sẽ không chạy ở đây"
-
-msgid "On a host you can't reach"
-msgstr "Trên một host bạn không kết nối được"
 
 msgid "On focus change"
 msgstr "Khi thay đổi tiêu điểm"

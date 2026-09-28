@@ -1484,6 +1484,9 @@ msgstr "添加文件、应用等（@）"
 msgid "Add issue #{0} to workspace"
 msgstr "将议题#{0}添加到工作区"
 
+msgid "Add listening agent"
+msgstr "添加监听智能体"
+
 msgid "Add member"
 msgstr "添加成员"
 
@@ -1657,9 +1660,6 @@ msgstr "智能体自己加载预览、操作界面，并在标记为待审查之
 
 msgid "Agents running at once"
 msgstr "同时运行的智能体数"
-
-msgid "Agents watching this page for comments"
-msgstr "正在关注此页面评论的智能体"
 
 msgid "Aggregate agent usage across every developer on the Superset leaderboard — tokens, cost, cache behaviour and which models people actually reach for."
 msgstr "Superset 排行榜上所有开发者的智能体使用汇总 —— token、成本、缓存表现，以及大家实际常用的模型。"
@@ -1909,10 +1909,6 @@ msgstr "另有：@superset/ui/spinner"
 
 msgid "Always know which agent needs you, with notifications that deep-link straight to the blocked agent."
 msgstr "随时知道哪个智能体需要你，通知可直接跳转到被阻塞的智能体。"
-
-msgctxt "page watcher with no known name"
-msgid "An agent"
-msgstr "智能体"
 
 msgid "An agent completes multi-file changes end to end."
 msgstr "智能体能端到端完成跨文件改动。"
@@ -3167,6 +3163,9 @@ msgstr "选择要从应用内浏览器清除的内容。"
 msgid "Choose when Superset pings you."
 msgstr "选择Superset在什么时候通知你。"
 
+msgid "Choose where agents started from comments, design mode, and Pages open."
+msgstr "选择从评论、设计模式和 Pages 启动的智能体的打开位置。"
+
 msgid "Churn"
 msgstr "流失"
 
@@ -4214,6 +4213,9 @@ msgstr "每个合并 PR 的费用"
 
 msgid "Cost to you: $0"
 msgstr "你的费用：$0"
+
+msgid "Could not add agent"
+msgstr "无法添加智能体"
 
 msgid "Could not attach files"
 msgstr "无法添加附件"
@@ -8458,8 +8460,14 @@ msgstr "列出、创建、更新和删除主机上的工作区。"
 msgid "List, get, create, update, and delete tasks; track status."
 msgstr "列出、获取、创建、更新和删除任务；跟踪状态。"
 
+msgid "Listening agents"
+msgstr "监听智能体"
+
 msgid "Listening for channel messages and new channels."
 msgstr "正在监听频道消息和新建的频道。"
+
+msgid "Listening status unavailable"
+msgstr "监听状态不可用"
 
 msgid "live"
 msgstr "实时"
@@ -9276,6 +9284,9 @@ msgstr "新启动的智能体使用此账户。重新启动运行中的智能体
 msgid "New agent session"
 msgstr "新建智能体会话"
 
+msgid "New agent sessions"
+msgstr "新智能体会话"
+
 msgid "New automation"
 msgstr "新建自动化"
 
@@ -9674,6 +9685,9 @@ msgstr "没有已知的创建者"
 
 msgid "No labels"
 msgstr "无标签"
+
+msgid "No listening agents"
+msgstr "没有监听智能体"
 
 msgid "No live sessions"
 msgstr "没有活动会话"
@@ -10187,9 +10201,6 @@ msgstr "更早"
 
 msgid "on {offScopeHostName} — won't run here"
 msgstr "在{offScopeHostName}上，不会在这里运行"
-
-msgid "On a host you can't reach"
-msgstr "在你无法连接的主机上"
 
 msgid "On focus change"
 msgstr "焦点更改时"

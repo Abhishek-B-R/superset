@@ -190,11 +190,12 @@ export const PERSISTED_KEY_REGISTRY: ReadonlyArray<
 		["superset.terminalRichInputOpen"],
 	],
 	[
-		"src/renderer/routes/_authenticated/_dashboard/v2-workspace/$workspaceId/hooks/usePaneRegistry/components/AgentCommentComposer/hooks/useDiffCommentTarget/useDiffCommentTarget.ts",
-		[
-			"lastSelectedDiffCommentNewAgentConfigId",
-			"lastSelectedDiffCommentPlacement",
-		],
+		"src/renderer/hooks/useAgentSessionPlacement/useAgentSessionPlacement.ts",
+		["lastSelectedDiffCommentPlacement"],
+	],
+	[
+		"src/renderer/routes/_authenticated/_dashboard/components/AgentSessionPicker/hooks/useAgentSessionTarget/useAgentSessionTarget.ts",
+		["lastSelectedDiffCommentNewAgentConfigId"],
 	],
 	[
 		"src/renderer/routes/_authenticated/_dashboard/tasks/$taskId/components/PropertiesSidebar/components/OpenInWorkspaceV2/OpenInWorkspaceV2.tsx",

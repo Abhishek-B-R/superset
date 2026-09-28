@@ -1484,6 +1484,9 @@ msgstr "ファイルやアプリなどを追加(@)"
 msgid "Add issue #{0} to workspace"
 msgstr "issue #{0}をワークスペースに追加"
 
+msgid "Add listening agent"
+msgstr "コメントを受け取るエージェントを追加"
+
 msgid "Add member"
 msgstr "メンバーを追加"
 
@@ -1657,9 +1660,6 @@ msgstr "エージェントが自らプレビューを開き、UIを操作し、�
 
 msgid "Agents running at once"
 msgstr "同時に動かしているエージェント数"
-
-msgid "Agents watching this page for comments"
-msgstr "このページのコメントを監視しているエージェント"
 
 msgid "Aggregate agent usage across every developer on the Superset leaderboard — tokens, cost, cache behaviour and which models people actually reach for."
 msgstr "Supersetリーダーボード上の全開発者を横断したエージェント利用の集計 — トークン、コスト、キャッシュの挙動、実際に選ばれているモデル。"
@@ -1909,10 +1909,6 @@ msgstr "その他: @superset/ui/spinner"
 
 msgid "Always know which agent needs you, with notifications that deep-link straight to the blocked agent."
 msgstr "どのエージェントがあなたを必要としているかが常に分かります。通知からブロック中のエージェントへ直接ジャンプできます。"
-
-msgctxt "page watcher with no known name"
-msgid "An agent"
-msgstr "エージェント"
 
 msgid "An agent completes multi-file changes end to end."
 msgstr "エージェントが複数ファイルにまたがる変更を最後までやり切る。"
@@ -3167,6 +3163,9 @@ msgstr "アプリ内ブラウザから消去する項目を選択してくださ
 msgid "Choose when Superset pings you."
 msgstr "Supersetから通知するタイミングを選びます。"
 
+msgid "Choose where agents started from comments, design mode, and Pages open."
+msgstr "コメント、デザインモード、Pages から起動したエージェントを開く場所を選択します。"
+
 msgid "Churn"
 msgstr "解約"
 
@@ -4214,6 +4213,9 @@ msgstr "マージされたPRあたりのコスト"
 
 msgid "Cost to you: $0"
 msgstr "実際のコスト: $0"
+
+msgid "Could not add agent"
+msgstr "エージェントを追加できませんでした"
 
 msgid "Could not attach files"
 msgstr "ファイルを添付できませんでした"
@@ -8458,8 +8460,14 @@ msgstr "ホスト上のワークスペースの一覧、作成、更新、削除
 msgid "List, get, create, update, and delete tasks; track status."
 msgstr "タスクの一覧、取得、作成、更新、削除と、ステータスの追跡ができます。"
 
+msgid "Listening agents"
+msgstr "コメントを受け取るエージェント"
+
 msgid "Listening for channel messages and new channels."
 msgstr "チャンネルメッセージと新しいチャンネルを待ち受けています。"
+
+msgid "Listening status unavailable"
+msgstr "コメント受信状態を確認できません"
 
 msgid "live"
 msgstr "ライブ"
@@ -9276,6 +9284,9 @@ msgstr "新規エージェントの起動でこのアカウントを使用しま
 msgid "New agent session"
 msgstr "新規エージェントセッション"
 
+msgid "New agent sessions"
+msgstr "新しいエージェントセッション"
+
 msgid "New automation"
 msgstr "新規オートメーション"
 
@@ -9674,6 +9685,9 @@ msgstr "既知の作成者はいません"
 
 msgid "No labels"
 msgstr "ラベルなし"
+
+msgid "No listening agents"
+msgstr "コメントを受け取るエージェントはいません"
 
 msgid "No live sessions"
 msgstr "ライブセッションはありません"
@@ -10187,9 +10201,6 @@ msgstr "それ以前"
 
 msgid "on {offScopeHostName} — won't run here"
 msgstr "{offScopeHostName}上 — ここでは実行されません"
-
-msgid "On a host you can't reach"
-msgstr "接続できないホスト上"
 
 msgid "On focus change"
 msgstr "フォーカス変更時"

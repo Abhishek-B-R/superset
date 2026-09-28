@@ -17,6 +17,7 @@ import {
 	SETTING_ITEM_ID,
 	type SettingItemId,
 } from "../../../utils/settings-search";
+import { AgentSessionPlacementSetting } from "./components/AgentSessionPlacementSetting";
 import { GithubStarRow } from "./components/GithubStarRow";
 
 interface BehaviorSettingsProps {
@@ -128,6 +129,11 @@ export function BehaviorSettings({ visibleItems }: BehaviorSettingsProps) {
 						/>
 					</div>
 				)}
+
+				{isItemVisible(
+					SETTING_ITEM_ID.BEHAVIOR_AGENT_SESSION_PLACEMENT,
+					visibleItems,
+				) && <AgentSessionPlacementSetting searchQuery={searchQuery} />}
 
 				{showChangesOpenTarget && (
 					<div className="flex items-center justify-between">

@@ -1,9 +1,9 @@
 export type {
 	AgentSessionPlacement,
 	AgentTarget,
-} from "./useDiffCommentTarget";
+} from "./useAgentSessionTarget";
 export {
 	EXISTING_PREFIX,
 	NEW_PREFIX,
-	useDiffCommentTarget,
-} from "./useDiffCommentTarget";
+	useAgentSessionTarget,
+} from "./useAgentSessionTarget";

@@ -1484,6 +1484,9 @@ msgstr "파일, 앱 등 추가 (@)"
 msgid "Add issue #{0} to workspace"
 msgstr "이슈 #{0}을(를) 워크스페이스에 추가"
 
+msgid "Add listening agent"
+msgstr "댓글을 수신할 에이전트 추가"
+
 msgid "Add member"
 msgstr "멤버 추가"
 
@@ -1657,9 +1660,6 @@ msgstr "에이전트가 직접 미리 보기를 띄우고, UI를 조작하고, �
 
 msgid "Agents running at once"
 msgstr "동시에 실행 중인 에이전트"
-
-msgid "Agents watching this page for comments"
-msgstr "이 페이지의 댓글을 감시 중인 에이전트"
 
 msgid "Aggregate agent usage across every developer on the Superset leaderboard — tokens, cost, cache behaviour and which models people actually reach for."
 msgstr "Superset 리더보드에 참여한 모든 개발자의 에이전트 사용량 집계 — 토큰, 비용, 캐시 동작, 그리고 실제로 많이 쓰이는 모델입니다."
@@ -1909,10 +1909,6 @@ msgstr "참고: @superset/ui/spinner"
 
 msgid "Always know which agent needs you, with notifications that deep-link straight to the blocked agent."
 msgstr "어떤 에이전트가 나를 필요로 하는지 항상 알 수 있습니다. 알림을 누르면 막힌 에이전트로 바로 이동합니다."
-
-msgctxt "page watcher with no known name"
-msgid "An agent"
-msgstr "에이전트"
 
 msgid "An agent completes multi-file changes end to end."
 msgstr "에이전트가 여러 파일에 걸친 변경을 처음부터 끝까지 완료합니다."
@@ -3167,6 +3163,9 @@ msgstr "인앱 브라우저에서 삭제할 항목을 선택하세요."
 msgid "Choose when Superset pings you."
 msgstr "Superset이 언제 알릴지 선택하세요."
 
+msgid "Choose where agents started from comments, design mode, and Pages open."
+msgstr "댓글, 디자인 모드 및 Pages에서 시작한 에이전트를 열 위치를 선택하세요."
+
 msgid "Churn"
 msgstr "이탈"
 
@@ -4214,6 +4213,9 @@ msgstr "머지된 PR당 비용"
 
 msgid "Cost to you: $0"
 msgstr "실제 비용: $0"
+
+msgid "Could not add agent"
+msgstr "에이전트를 추가하지 못했습니다"
 
 msgid "Could not attach files"
 msgstr "파일을 첨부할 수 없습니다"
@@ -8458,8 +8460,14 @@ msgstr "호스트의 워크스페이스를 나열, 생성, 수정, 삭제합니�
 msgid "List, get, create, update, and delete tasks; track status."
 msgstr "작업을 나열, 조회, 생성, 수정, 삭제하고 상태를 추적합니다."
 
+msgid "Listening agents"
+msgstr "댓글 수신 에이전트"
+
 msgid "Listening for channel messages and new channels."
 msgstr "채널 메시지와 새 채널을 수신하고 있습니다."
+
+msgid "Listening status unavailable"
+msgstr "댓글 수신 상태를 확인할 수 없음"
 
 msgid "live"
 msgstr "라이브"
@@ -9276,6 +9284,9 @@ msgstr "새 에이전트는 이 계정으로 실행됩니다. 실행 중인 에�
 msgid "New agent session"
 msgstr "새 에이전트 세션"
 
+msgid "New agent sessions"
+msgstr "새 에이전트 세션"
+
 msgid "New automation"
 msgstr "새 자동화"
 
@@ -9674,6 +9685,9 @@ msgstr "알려진 만든 사람이 없습니다"
 
 msgid "No labels"
 msgstr "레이블 없음"
+
+msgid "No listening agents"
+msgstr "댓글 수신 에이전트 없음"
 
 msgid "No live sessions"
 msgstr "활성 세션 없음"
@@ -10187,9 +10201,6 @@ msgstr "이전"
 
 msgid "on {offScopeHostName} — won't run here"
 msgstr "{offScopeHostName}에 있음 — 여기서는 실행되지 않습니다"
-
-msgid "On a host you can't reach"
-msgstr "접근할 수 없는 호스트에 있음"
 
 msgid "On focus change"
 msgstr "포커스 변경 시"

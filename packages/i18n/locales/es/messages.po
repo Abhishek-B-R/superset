@@ -1484,6 +1484,9 @@ msgstr "Añadir archivos, apps y más (@)"
 msgid "Add issue #{0} to workspace"
 msgstr "Añadir el issue #{0} al espacio de trabajo"
 
+msgid "Add listening agent"
+msgstr "Añadir agente que recibe comentarios"
+
 msgid "Add member"
 msgstr "Añadir miembro"
 
@@ -1657,9 +1660,6 @@ msgstr "Los agentes cargan su propia vista previa, manejan la interfaz y adjunta
 
 msgid "Agents running at once"
 msgstr "Agentes en marcha a la vez"
-
-msgid "Agents watching this page for comments"
-msgstr "Agentes que observan los comentarios de esta página"
 
 msgid "Aggregate agent usage across every developer on the Superset leaderboard — tokens, cost, cache behaviour and which models people actually reach for."
 msgstr "Uso agregado de agentes de todos los desarrolladores de la clasificación de Superset: tokens, coste, comportamiento de la caché y qué modelos se usan realmente."
@@ -1909,10 +1909,6 @@ msgstr "También: @superset/ui/spinner"
 
 msgid "Always know which agent needs you, with notifications that deep-link straight to the blocked agent."
 msgstr "Sabrás siempre qué agente te necesita, con notificaciones que llevan directamente al agente bloqueado."
-
-msgctxt "page watcher with no known name"
-msgid "An agent"
-msgstr "Un agente"
 
 msgid "An agent completes multi-file changes end to end."
 msgstr "Un agente completa cambios en varios archivos de principio a fin."
@@ -3167,6 +3163,9 @@ msgstr "Elige qué borrar del navegador integrado."
 msgid "Choose when Superset pings you."
 msgstr "Elige cuándo te avisa Superset."
 
+msgid "Choose where agents started from comments, design mode, and Pages open."
+msgstr "Elige dónde se abren los agentes iniciados desde comentarios, el modo de diseño y Pages."
+
 msgid "Churn"
 msgstr "Abandono"
 
@@ -4214,6 +4213,9 @@ msgstr "Coste por PR fusionada"
 
 msgid "Cost to you: $0"
 msgstr "Coste para ti: $0"
+
+msgid "Could not add agent"
+msgstr "No se pudo añadir el agente"
 
 msgid "Could not attach files"
 msgstr "No se pudieron adjuntar los archivos"
@@ -8458,8 +8460,14 @@ msgstr "Listar, crear, actualizar y eliminar espacios de trabajo en un host."
 msgid "List, get, create, update, and delete tasks; track status."
 msgstr "Listar, obtener, crear, actualizar y eliminar tareas; seguir su estado."
 
+msgid "Listening agents"
+msgstr "Agentes que reciben comentarios"
+
 msgid "Listening for channel messages and new channels."
 msgstr "A la escucha de mensajes de canal y de canales nuevos."
+
+msgid "Listening status unavailable"
+msgstr "Estado de recepción de comentarios no disponible"
 
 msgid "live"
 msgstr "en vivo"
@@ -9276,6 +9284,9 @@ msgstr "Los agentes nuevos se lanzan con esta cuenta. Vuelve a lanzar un agente 
 msgid "New agent session"
 msgstr "Nueva sesión de agente"
 
+msgid "New agent sessions"
+msgstr "Nuevas sesiones de agentes"
+
 msgid "New automation"
 msgstr "Nueva automatización"
 
@@ -9674,6 +9685,9 @@ msgstr "Sin creadores conocidos"
 
 msgid "No labels"
 msgstr "Sin etiquetas"
+
+msgid "No listening agents"
+msgstr "No hay agentes que reciban comentarios"
 
 msgid "No live sessions"
 msgstr "No hay sesiones activas"
@@ -10187,9 +10201,6 @@ msgstr "Más antiguo"
 
 msgid "on {offScopeHostName} — won't run here"
 msgstr "en {offScopeHostName}: no se ejecutará aquí"
-
-msgid "On a host you can't reach"
-msgstr "En un host que no puedes alcanzar"
 
 msgid "On focus change"
 msgstr "Al cambiar el foco"

@@ -1484,6 +1484,9 @@ msgstr "Добавить файлы, приложения и другое (@)"
 msgid "Add issue #{0} to workspace"
 msgstr "Добавить задачу #{0} в рабочую область"
 
+msgid "Add listening agent"
+msgstr "Добавить агента для получения комментариев"
+
 msgid "Add member"
 msgstr "Добавить участника"
 
@@ -1657,9 +1660,6 @@ msgstr "Агенты сами открывают свой предпросмот
 
 msgid "Agents running at once"
 msgstr "Агентов запущено одновременно"
-
-msgid "Agents watching this page for comments"
-msgstr "Агенты, следящие за комментариями на этой странице"
 
 msgid "Aggregate agent usage across every developer on the Superset leaderboard — tokens, cost, cache behaviour and which models people actually reach for."
 msgstr "Совокупное использование агентов всеми разработчиками в лидерборде Superset — токены, стоимость, поведение кеша и модели, к которым люди действительно обращаются."
@@ -1909,10 +1909,6 @@ msgstr "Также: @superset/ui/spinner"
 
 msgid "Always know which agent needs you, with notifications that deep-link straight to the blocked agent."
 msgstr "Всегда знайте, какому агенту вы нужны: уведомления ведут прямо к заблокированному агенту."
-
-msgctxt "page watcher with no known name"
-msgid "An agent"
-msgstr "Агент"
 
 msgid "An agent completes multi-file changes end to end."
 msgstr "Агент выполняет изменения в нескольких файлах от начала до конца."
@@ -3167,6 +3163,9 @@ msgstr "Выберите, что очистить во встроенном бр
 msgid "Choose when Superset pings you."
 msgstr "Выберите, когда Superset вас уведомляет."
 
+msgid "Choose where agents started from comments, design mode, and Pages open."
+msgstr "Выберите, где открывать агентов, запущенных из комментариев, режима дизайна и Pages."
+
 msgid "Churn"
 msgstr "Отток"
 
@@ -4214,6 +4213,9 @@ msgstr "Стоимость за смерженный PR"
 
 msgid "Cost to you: $0"
 msgstr "Ваши затраты: $0"
+
+msgid "Could not add agent"
+msgstr "Не удалось добавить агента"
 
 msgid "Could not attach files"
 msgstr "Не удалось прикрепить файлы"
@@ -8458,8 +8460,14 @@ msgstr "Показывать, создавать, обновлять и удал
 msgid "List, get, create, update, and delete tasks; track status."
 msgstr "Показывать, получать, создавать, обновлять и удалять задачи; отслеживать статус."
 
+msgid "Listening agents"
+msgstr "Агенты, получающие комментарии"
+
 msgid "Listening for channel messages and new channels."
 msgstr "Слушаем сообщения в каналах и новые каналы."
+
+msgid "Listening status unavailable"
+msgstr "Статус получения комментариев недоступен"
 
 msgid "live"
 msgstr "онлайн"
@@ -9276,6 +9284,9 @@ msgstr "Новые запуски агентов используют этот �
 msgid "New agent session"
 msgstr "Новая сессия агента"
 
+msgid "New agent sessions"
+msgstr "Новые сеансы агентов"
+
 msgid "New automation"
 msgstr "Новая автоматизация"
 
@@ -9674,6 +9685,9 @@ msgstr "Нет известных создателей"
 
 msgid "No labels"
 msgstr "Без меток"
+
+msgid "No listening agents"
+msgstr "Нет агентов, получающих комментарии"
 
 msgid "No live sessions"
 msgstr "Нет активных сессий"
@@ -10187,9 +10201,6 @@ msgstr "Ранее"
 
 msgid "on {offScopeHostName} — won't run here"
 msgstr "на {offScopeHostName} — здесь не запустится"
-
-msgid "On a host you can't reach"
-msgstr "На недоступном хосте"
 
 msgid "On focus change"
 msgstr "При смене фокуса"

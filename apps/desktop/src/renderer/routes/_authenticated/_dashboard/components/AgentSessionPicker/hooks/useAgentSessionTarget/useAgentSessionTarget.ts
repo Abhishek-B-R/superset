@@ -2,7 +2,12 @@ import type { HostAgentConfig } from "@superset/host-service/settings";
 import { useCallback, useMemo, useState } from "react";
 import type { TerminalAgentBinding } from "renderer/hooks/host-service/useTerminalAgentBindings";
 
-export type AgentSessionPlacement = "split-pane" | "new-tab";
+import {
+	type AgentSessionPlacement,
+	useAgentSessionPlacement,
+} from "renderer/hooks/useAgentSessionPlacement";
+
+export type { AgentSessionPlacement } from "renderer/hooks/useAgentSessionPlacement";
 
 export type AgentTarget =
 	| { kind: "existing"; terminalId: string }
@@ -18,8 +23,6 @@ export const NEW_PREFIX = "new:";
 
 const LAST_NEW_AGENT_CONFIG_ID_KEY = "lastSelectedDiffCommentNewAgentConfigId";
 const LAST_TERMINAL_ID_KEY = "lastSelectedDiffCommentTerminalId";
-const LAST_PLACEMENT_KEY = "lastSelectedDiffCommentPlacement";
-const DEFAULT_PLACEMENT: AgentSessionPlacement = "split-pane";
 
 function readStorage(key: string): string | null {
 	if (typeof window === "undefined") return null;
@@ -41,19 +44,18 @@ export function decodeSelection(value: string): DecodedSelection | null {
 	return null;
 }
 
-interface UseDiffCommentTargetArgs {
+interface UseAgentSessionTargetArgs {
 	sessions: TerminalAgentBinding[];
 	configs: HostAgentConfig[];
 }
 
-interface UseDiffCommentTargetResult {
+interface UseAgentSessionTargetResult {
 	/** Encoded selection (`existing:<id>` | `new:<id>`) or null while data
 	 *  is still loading. */
 	value: string | null;
 	placement: AgentSessionPlacement;
 	resolved: AgentTarget | null;
 	onValueChange: (next: string) => void;
-	onPlacementChange: (next: string) => void;
 }
 
 /**
@@ -69,17 +71,12 @@ interface UseDiffCommentTargetResult {
  *   3. last picked new-agent config, if still listed
  *   4. first config
  */
-export function useDiffCommentTarget({
+export function useAgentSessionTarget({
 	sessions,
 	configs,
-}: UseDiffCommentTargetArgs): UseDiffCommentTargetResult {
+}: UseAgentSessionTargetArgs): UseAgentSessionTargetResult {
 	const [override, setOverride] = useState<string | null>(null);
-	const [placement, setPlacement] = useState<AgentSessionPlacement>(() => {
-		const stored = readStorage(LAST_PLACEMENT_KEY);
-		return stored === "new-tab" || stored === "split-pane"
-			? stored
-			: DEFAULT_PLACEMENT;
-	});
+	const placement = useAgentSessionPlacement();
 
 	const computedDefault = useMemo<string | null>(() => {
 		if (sessions.length > 0) {
@@ -135,11 +132,5 @@ export function useDiffCommentTarget({
 		);
 	}, []);
 
-	const onPlacementChange = useCallback((next: string) => {
-		if (next !== "split-pane" && next !== "new-tab") return;
-		setPlacement(next);
-		writeStorage(LAST_PLACEMENT_KEY, next);
-	}, []);
-
-	return { value, placement, resolved, onValueChange, onPlacementChange };
+	return { value, placement, resolved, onValueChange };
 }
