@@ -35,7 +35,7 @@ export default command({
 				() => true,
 				() => false,
 			));
-		const instructions = `${opened ? "Opened" : "Open"} this URL, signed in to Superset in that browser, to install the GitHub App:\n  ${url}`;
+		const instructions = `${opened ? "If your browser did not open, open" : "Open"} this URL, signed in to Superset in that browser, to install the GitHub App:\n  ${url}`;
 		if (options.noWait) {
 			return { data: { url }, message: instructions };
 		}
