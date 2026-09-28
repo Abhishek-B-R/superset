@@ -4007,9 +4007,6 @@ msgstr "Bijdragen"
 msgid "Control how your local machine is reachable from elsewhere"
 msgstr "Bepaal hoe je lokale machine van buitenaf bereikbaar is"
 
-msgid "Control what each click — plain or with a modifier — does to a file or URL. Each row binds one modifier combination to an action."
-msgstr "Bepaal wat elke klik — kaal of met een modifier — met een bestand of URL doet. Elke rij koppelt één modifiercombinatie aan een actie."
-
 msgid "Controls when manually edited files are saved"
 msgstr "Bepaalt wanneer handmatig bewerkte bestanden worden opgeslagen"
 
@@ -5699,6 +5696,9 @@ msgctxt "github release action"
 msgid "Edited"
 msgstr "Bewerkt"
 
+msgid "Editing"
+msgstr "Bewerken"
+
 msgid "Editing file..."
 msgstr "Bestand bewerken..."
 
@@ -6588,6 +6588,9 @@ msgstr "Het bestand is op schijf verwijderd. Je hebt nog niet-opgeslagen wijzigi
 
 msgid "Files"
 msgstr "Bestanden"
+
+msgid "Files & Editor"
+msgstr "Bestanden en editor"
 
 msgid "Files changed"
 msgstr "Gewijzigde bestanden"
@@ -8384,9 +8387,6 @@ msgstr "Taak koppelen"
 msgid "Linked {slug} to workspace"
 msgstr "{slug} gekoppeld aan werkruimte"
 
-msgid "Links"
-msgstr "Links"
-
 msgid "List"
 msgstr "Lijst"
 
@@ -10141,9 +10141,6 @@ msgstr "op {offScopeHostName} — draait hier niet"
 msgid "On a host you can't reach"
 msgstr "Op een host die je niet kunt bereiken"
 
-msgid "On click"
-msgstr "Bij klikken"
-
 msgid "On focus change"
 msgstr "Bij focuswijziging"
 
@@ -10689,6 +10686,12 @@ msgstr "Bestaande werkruimte geopend"
 
 msgid "opened PR #841 for review"
 msgstr "PR #841 geopend voor review"
+
+msgid "Opening files"
+msgstr "Bestanden openen"
+
+msgid "Opening folders"
+msgstr "Mappen openen"
 
 msgid "Opening worktree..."
 msgstr "Worktree openen..."

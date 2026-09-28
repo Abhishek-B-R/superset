@@ -9,46 +9,48 @@ import {
 } from "@superset/ui/select";
 import { useCallback } from "react";
 import {
-	actionLabel,
-	type LinkAction,
+	type FolderLinkAction,
+	type FolderTierMap,
+	folderIntentLabel,
 	type LinkTier,
-	type LinkTierMap,
 	modifierLabel,
-	type Surface,
 } from "renderer/lib/clickPolicy";
 import { HighlightText } from "renderer/routes/_authenticated/settings/components/HighlightText";
 import { useSettingsSearchQuery } from "renderer/stores/settings-state";
 
-type SlotValue = LinkAction | "none";
+type SlotValue = FolderLinkAction | "none";
 
 const TIERS: LinkTier[] = ["plain", "shift", "meta", "metaShift"];
-const ACTIONS: LinkAction[] = ["pane", "newTab", "external"];
+const ACTIONS: FolderLinkAction[] = ["reveal", "external", "finder"];
 
-function toSlot(action: LinkAction | null): SlotValue {
+function toSlot(action: FolderLinkAction | null): SlotValue {
 	return action ?? "none";
 }
 
-function fromSlot(slot: SlotValue): LinkAction | null {
+function fromSlot(slot: SlotValue): FolderLinkAction | null {
 	return slot === "none" ? null : slot;
 }
 
-export interface LinkTierMapperProps {
+export interface FolderLinkTierMapperProps {
 	title: string;
 	description: string;
-	value: LinkTierMap;
-	onChange: (next: LinkTierMap) => void;
+	value: FolderTierMap;
+	onChange: (next: FolderTierMap) => void;
 	idPrefix: string;
-	surface: Surface;
 }
 
-export function LinkTierMapper({
+/**
+ * LinkTierMapper's folder sibling — folders have their own action set
+ * (reveal / editor / Finder instead of pane / newTab / external), so the
+ * generic file/url mapper's LinkAction typing doesn't fit.
+ */
+export function FolderLinkTierMapper({
 	title,
 	description,
 	value,
 	onChange,
 	idPrefix,
-	surface,
-}: LinkTierMapperProps) {
+}: FolderLinkTierMapperProps) {
 	const searchQuery = useSettingsSearchQuery();
 	const pick = useCallback(
 		(tier: LinkTier, nextSlot: SlotValue) => {
@@ -67,11 +69,14 @@ export function LinkTierMapper({
 			<p className="text-xs text-muted-foreground mb-3">
 				<HighlightText text={description} query={searchQuery} />
 			</p>
-			<div className="space-y-2">
+			<div className="rounded-lg border border-border overflow-hidden divide-y divide-border">
 				{TIERS.map((tier) => {
 					const id = `${idPrefix}-${tier}`;
 					return (
-						<div key={tier} className="flex items-center justify-between gap-4">
+						<div
+							key={tier}
+							className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 px-4 py-3 hover:bg-muted/30 transition-colors"
+						>
 							<Label htmlFor={id} className="text-sm font-medium capitalize">
 								{modifierLabel(tier)}
 							</Label>
@@ -79,7 +84,11 @@ export function LinkTierMapper({
 								value={toSlot(value[tier])}
 								onValueChange={(v) => pick(tier, v as SlotValue)}
 							>
-								<SelectTrigger id={id} size="sm" className="w-44">
+								<SelectTrigger
+									id={id}
+									size="sm"
+									className="w-60 max-w-full shrink-0"
+								>
 									<SelectValue />
 								</SelectTrigger>
 								<SelectContent>
@@ -88,7 +97,7 @@ export function LinkTierMapper({
 									</SelectItem>
 									{ACTIONS.map((action) => (
 										<SelectItem key={action} value={action}>
-											{actionLabel(action, surface)}
+											{folderIntentLabel(action)}
 										</SelectItem>
 									))}
 								</SelectContent>

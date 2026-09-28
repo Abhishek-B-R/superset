@@ -4007,9 +4007,6 @@ msgstr "コントリビューション"
 msgid "Control how your local machine is reachable from elsewhere"
 msgstr "このマシンに外部からどのように接続できるかを設定"
 
-msgid "Control what each click — plain or with a modifier — does to a file or URL. Each row binds one modifier combination to an action."
-msgstr "クリック(修飾キーの有無)ごとのファイルやURLへの動作を設定します。各行が1つの修飾キーの組み合わせを1つのアクションに割り当てます。"
-
 msgid "Controls when manually edited files are saved"
 msgstr "手動で編集したファイルを保存するタイミングを制御します"
 
@@ -5699,6 +5696,9 @@ msgctxt "github release action"
 msgid "Edited"
 msgstr "編集"
 
+msgid "Editing"
+msgstr "編集"
+
 msgid "Editing file..."
 msgstr "ファイルを編集中..."
 
@@ -6588,6 +6588,9 @@ msgstr "ファイルはディスク上で削除されました。未保存の変
 
 msgid "Files"
 msgstr "ファイル"
+
+msgid "Files & Editor"
+msgstr "ファイルとエディター"
 
 msgid "Files changed"
 msgstr "変更されたファイル"
@@ -8384,9 +8387,6 @@ msgstr "タスクをリンク"
 msgid "Linked {slug} to workspace"
 msgstr "{slug}をワークスペースにリンクしました"
 
-msgid "Links"
-msgstr "リンク"
-
 msgid "List"
 msgstr "リスト"
 
@@ -10141,9 +10141,6 @@ msgstr "{offScopeHostName}上 — ここでは実行されません"
 msgid "On a host you can't reach"
 msgstr "接続できないホスト上"
 
-msgid "On click"
-msgstr "クリック時"
-
 msgid "On focus change"
 msgstr "フォーカス変更時"
 
@@ -10689,6 +10686,12 @@ msgstr "既存のワークスペースを開きました"
 
 msgid "opened PR #841 for review"
 msgstr "レビュー用にPR #841を作成"
+
+msgid "Opening files"
+msgstr "ファイルを開く"
+
+msgid "Opening folders"
+msgstr "フォルダーを開く"
 
 msgid "Opening worktree..."
 msgstr "ワークツリーを開いています..."
