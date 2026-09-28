@@ -19,6 +19,10 @@ import {
 	scanForShellReady,
 } from "@superset/shared/shell-ready-scanner";
 import {
+	type TerminalColors,
+	terminalColorsSchema,
+} from "@superset/shared/terminal-colors";
+import {
 	boundTranscriptText,
 	buildBoundedTerminalSessionTranscript,
 	TERMINAL_HANDOFF_MAX_CHARS,
@@ -71,6 +75,7 @@ import {
 	getShellReadyMarkerEvidence,
 	recordShellReadyMarkerEvidence,
 } from "./shell-ready-evidence.ts";
+import { TerminalColorAuthority } from "./TerminalColorAuthority";
 import {
 	createModeTracker,
 	type ModeTracker,
@@ -98,6 +103,7 @@ interface DaemonPty {
 	writeOrThrow(data: string): void;
 	write(data: string): void;
 	resize(cols: number, rows: number): void;
+	setColors(colors: TerminalColors, resetOverrides?: boolean): void;
 	kill(signal?: NodeJS.Signals): Promise<void>;
 	onData(cb: (data: string) => void): PtyDataDisposer;
 	onExit(
@@ -122,6 +128,11 @@ function makeDaemonPty(
 				// Daemon socket died before the disconnect sweep ran; a throw
 				// here would escape the WS input handler uncaught.
 			}
+		},
+		setColors(colors, resetOverrides) {
+			try {
+				daemon.setColors(sessionId, colors, resetOverrides);
+			} catch {}
 		},
 		resize(cols, rows) {
 			try {
@@ -193,6 +204,7 @@ function getHostAgentHookUrl(): string {
 
 type TerminalClientMessage =
 	| { type: "input"; data: string }
+	| { type: "colors"; colors: TerminalColors; resetOverrides?: boolean }
 	| { type: "resize"; cols: number; rows: number }
 	// The client's current keyboard-focus state, sent on every attach. A
 	// reattaching client may hold focus the program last heard it lost (or
@@ -524,6 +536,7 @@ interface TerminalSession {
 	/** Unsubscribe from the daemon's output/exit stream when disposed. */
 	unsubscribeDaemon: (() => void) | null;
 	sockets: Set<TerminalSocket>;
+	colorAuthority: TerminalColorAuthority<TerminalSocket>;
 	/**
 	 * Legacy replay FIFO for clients that attach without `?seq=` (pre-seq
 	 * renderers, raw WS consumers): fills only while zero sockets are
@@ -1772,6 +1785,7 @@ function resumeHiddenSocket(session: TerminalSession, ws: TerminalSocket) {
  */
 function detachSocket(session: TerminalSession, ws: TerminalSocket) {
 	session.sockets.delete(ws);
+	session.colorAuthority.remove(ws);
 	if (session.focusedSockets.delete(ws)) syncPtyFocus(session);
 	releaseSocketDims(session, ws);
 }
@@ -2879,6 +2893,7 @@ interface CreateTerminalSessionOptions {
 	terminalId: string;
 	workspaceId: string;
 	themeType?: "dark" | "light";
+	colors?: TerminalColors;
 	db: HostDb;
 	eventBus?: EventBus;
 	initialCommand?: string;
@@ -2966,6 +2981,7 @@ async function createTerminalSessionUnlocked({
 	terminalId,
 	workspaceId,
 	themeType,
+	colors,
 	db,
 	eventBus,
 	initialCommand,
@@ -3134,6 +3150,7 @@ async function createTerminalSessionUnlocked({
 					cols,
 					rows,
 					env: ptyEnv,
+					colors,
 				});
 			} catch (err) {
 				// After host-service restart the daemon may already own this
@@ -3260,6 +3277,9 @@ async function createTerminalSessionUnlocked({
 		rows,
 		unsubscribeDaemon: null,
 		sockets: new Set(),
+		colorAuthority: new TerminalColorAuthority((colors, resetOverrides) =>
+			pty.setColors(colors, resetOverrides),
+		),
 		buffer: [],
 		bufferBytes: 0,
 		// Adopted sessions kept a live shell — nothing was restored.
@@ -3561,6 +3581,12 @@ export function registerWorkspaceTerminalRoute({
 			// never queues behind Chromium's 6-per-origin HTTP socket pool.
 			const createRequested = c.req.query("create") === "1";
 			const requestedThemeType = parseThemeType(c.req.query("themeType"));
+			let requestedColors: TerminalColors | undefined;
+			try {
+				requestedColors = terminalColorsSchema.parse(
+					JSON.parse(c.req.query("colors") ?? "null"),
+				);
+			} catch {}
 			const attachSocketToSession = (
 				session: TerminalSession,
 				ws: TerminalSocket,
@@ -3639,6 +3665,7 @@ export function registerWorkspaceTerminalRoute({
 							terminalId,
 							workspaceId: requestedWorkspaceId,
 							themeType: requestedThemeType,
+							colors: requestedColors,
 							db,
 							eventBus,
 						});
@@ -3680,6 +3707,7 @@ export function registerWorkspaceTerminalRoute({
 					terminalId,
 					workspaceId: record.originWorkspaceId,
 					themeType: requestedThemeType,
+					colors: requestedColors,
 					db,
 					eventBus,
 					adoptOnly: true,
@@ -3708,6 +3736,7 @@ export function registerWorkspaceTerminalRoute({
 					terminalId,
 					workspaceId: record.originWorkspaceId,
 					themeType: requestedThemeType,
+					colors: requestedColors,
 					db,
 					eventBus,
 					restoredNotice: true,
@@ -3784,6 +3813,18 @@ export function registerWorkspaceTerminalRoute({
 					}
 
 					if (session.exited) return;
+
+					if (message.type === "colors") {
+						const parsed = terminalColorsSchema.safeParse(message.colors);
+						if (parsed.success && session.sockets.has(ws)) {
+							session.colorAuthority.update(
+								ws,
+								parsed.data,
+								message.resetOverrides === true,
+							);
+						}
+						return;
+					}
 
 					if (message.type === "input") {
 						session.pty.write(message.data);
