@@ -30,6 +30,7 @@ interface Row {
 type CloudWatch = { watching: boolean; agentId: string | null };
 
 let rows: Row[] = [];
+let terminalSessions: Array<{ terminalId: string; title: string | null }> = [];
 let bindings = new Map();
 let assigned: unknown[] = [];
 let assignError: Error | undefined;
@@ -89,6 +90,7 @@ mock.module("renderer/lib/cloud-trpc", () => ({
 }));
 mock.module("renderer/lib/host-service-client", () => ({
 	getHostServiceClientByUrl: (hostUrl: string) => ({
+		terminal: { list: { query: async () => ({ sessions: terminalSessions }) } },
 		terminalAgents: {
 			listByWorkspace: {
 				query: async () => {
@@ -141,7 +143,7 @@ mock.module(
 	() => ({ AgentIcon: () => null }),
 );
 
-const { act, cleanup, fireEvent, render, within } = await import(
+const { act, cleanup, fireEvent, render, waitFor, within } = await import(
 	"@testing-library/react"
 );
 const { QueryClient, QueryClientProvider } = await import(
@@ -162,6 +164,7 @@ afterAll(async () => {
 beforeEach(() => {
 	localStorage.clear();
 	rows = [];
+	terminalSessions = [];
 	configs = [];
 	launched = [];
 	launchResult = { terminalId: "new-terminal" };
@@ -547,6 +550,48 @@ test("distinguishes multiple sessions of the same agent after selection", async 
 		ui.getByRole("button", { name: "Choose agent" }).textContent,
 	).toContain("second");
 	expect(assigned).toEqual([]);
+	await act(async () => {
+		fireEvent.click(ui.getByRole("button", { name: "Add listening agent" }));
+	});
+	expect(assigned[0]).toMatchObject({
+		input: { terminalId: "second-terminal" },
+	});
+});
+
+test("searches session names and keeps the selected name in the preview", async () => {
+	for (const terminalId of ["first-terminal", "second-terminal"]) {
+		bindings.set(terminalId, {
+			terminalId,
+			workspaceId: WORKSPACE_ID,
+			agentId: "codex",
+			lastEventAt: 1,
+		});
+	}
+	terminalSessions = [
+		{ terminalId: "first-terminal", title: "Review page layout" },
+		{ terminalId: "second-terminal", title: "Fix authentication" },
+	];
+	const ui = await openMenu();
+	await act(async () => {
+		fireEvent.click(ui.getByRole("button", { name: "Choose agent" }));
+	});
+	await waitFor(() =>
+		expect(
+			ui.getByRole("option", { name: "Fix authentication" }),
+		).toBeDefined(),
+	);
+	await act(async () => {
+		fireEvent.change(ui.getByRole("combobox"), {
+			target: { value: "authentication" },
+		});
+	});
+	expect(ui.queryByRole("option", { name: "Review page layout" })).toBeNull();
+	await act(async () => {
+		fireEvent.click(ui.getByRole("option", { name: "Fix authentication" }));
+	});
+	const preview = ui.getByRole("button", { name: "Choose agent" });
+	expect(preview.textContent).toContain("Fix authentication");
+	expect(preview.textContent).not.toContain("second");
 	await act(async () => {
 		fireEvent.click(ui.getByRole("button", { name: "Add listening agent" }));
 	});

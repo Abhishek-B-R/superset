@@ -122,6 +122,7 @@ export function NewPageComposer({
 			/>
 			<div className="flex items-center gap-1.5 px-1.5 pb-1.5 pt-1">
 				<AgentSessionPicker
+					workspaceId={workspaceId}
 					value={value}
 					onValueChange={onValueChange}
 					sessions={sessions}

@@ -287,6 +287,7 @@ export function PageWatcherMenu({
 							className="flex min-w-0 flex-wrap items-center gap-2"
 						>
 							<AgentSessionPicker
+								workspaceId={workspaceId}
 								value={value}
 								onValueChange={onValueChange}
 								sessions={availableAgents}

@@ -144,6 +144,7 @@ export function AgentCommentComposer({
 
 			<div className="flex flex-wrap items-center justify-between gap-2 border-t border-border/60 bg-muted/30 px-2.5 py-1.5">
 				<AgentSessionPicker
+					workspaceId={workspaceId}
 					value={value}
 					onValueChange={onValueChange}
 					sessions={sessions}

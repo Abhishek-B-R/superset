@@ -241,6 +241,7 @@ export function DesignModePopover({
 						</TooltipContent>
 					</Tooltip>
 					<AgentSessionPicker
+						workspaceId={workspaceId}
 						value={value}
 						onValueChange={onValueChange}
 						sessions={sessions}

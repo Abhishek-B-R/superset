@@ -15,8 +15,10 @@ import type { TerminalAgentBinding } from "renderer/hooks/host-service/useTermin
 import { ExistingSessionOption } from "./components/ExistingSessionOption";
 import { NewSessionOption } from "./components/NewSessionOption";
 import { EXISTING_PREFIX, NEW_PREFIX } from "./hooks/useAgentSessionTarget";
+import { useAgentSessionTitles } from "./hooks/useAgentSessionTitles";
 
 interface AgentSessionPickerProps {
+	workspaceId: string | null;
 	value: string | null;
 	onValueChange: (next: string) => void;
 	sessions: TerminalAgentBinding[];
@@ -24,6 +26,7 @@ interface AgentSessionPickerProps {
 }
 
 export function AgentSessionPicker({
+	workspaceId,
 	value,
 	onValueChange,
 	sessions,
@@ -31,6 +34,11 @@ export function AgentSessionPicker({
 }: AgentSessionPickerProps) {
 	const { t } = useLingui();
 	const [open, setOpen] = useState(false);
+	const { titles, refreshTitles } = useAgentSessionTitles({
+		workspaceId,
+		enabled: sessions.length > 0,
+		open,
+	});
 	const session = sessions.find(
 		(item) => `${EXISTING_PREFIX}${item.terminalId}` === value,
 	);
@@ -40,7 +48,13 @@ export function AgentSessionPicker({
 		setOpen(false);
 	};
 	return (
-		<Popover open={open} onOpenChange={setOpen}>
+		<Popover
+			open={open}
+			onOpenChange={(next) => {
+				setOpen(next);
+				if (next && sessions.length > 0) void refreshTitles();
+			}}
+		>
 			<PopoverTrigger asChild>
 				<button
 					type="button"
@@ -50,6 +64,7 @@ export function AgentSessionPicker({
 					{session ? (
 						<ExistingSessionOption
 							binding={session}
+							sessionTitle={titles.get(session.terminalId)}
 							compact={
 								!sessions.some(
 									(item) =>
@@ -102,11 +117,18 @@ export function AgentSessionPicker({
 										<CommandItem
 											key={key}
 											value={key}
-											keywords={[item.agentId, item.terminalId]}
+											keywords={[
+												item.agentId,
+												item.terminalId,
+												titles.get(item.terminalId) ?? "",
+											]}
 											onSelect={() => select(key)}
 											className="gap-3 rounded-md py-2 text-xs"
 										>
-											<ExistingSessionOption binding={item} />
+											<ExistingSessionOption
+												binding={item}
+												sessionTitle={titles.get(item.terminalId)}
+											/>
 											{value === key && (
 												<Check
 													aria-hidden
