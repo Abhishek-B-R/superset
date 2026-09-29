@@ -27,9 +27,9 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@superset/ui/tooltip";
 import { cn } from "@superset/ui/utils";
 import { useNavigate } from "@tanstack/react-router";
 import { LuCloud, LuEllipsis, LuPlay, LuRotateCw } from "react-icons/lu";
+import { useCopyShareLink } from "renderer/routes/_authenticated/_dashboard/hooks/useCopyShareLink";
 import type { ProjectOption } from "renderer/routes/_authenticated/components/DashboardNewWorkspaceModal/components/DashboardNewWorkspaceForm/PromptGroup/types";
 import { ProjectThumbnail } from "renderer/routes/_authenticated/components/ProjectThumbnail";
-import { useCopyAutomationLink } from "../../hooks/useCopyAutomationLink";
 import type { AutomationLastRun } from "../../hooks/useFailedAutomations";
 import { AutomationActionsMenuItems } from "./components/AutomationActionsMenuItems";
 
@@ -136,7 +136,7 @@ export function AutomationRow({
 
 	const { t } = useLingui();
 	const navigate = useNavigate();
-	const copyAutomationLink = useCopyAutomationLink();
+	const copyShareLink = useCopyShareLink();
 	// No rrule but some trigger means the automation is driven by events
 	// rather than a clock; no triggers at all means it never fires.
 	const scheduleLabel = automation.rrule
@@ -178,7 +178,7 @@ export function AutomationRow({
 			isOwner={isOwner}
 			enabled={automation.enabled}
 			onEdit={openDetail}
-			onCopyLink={() => copyAutomationLink(automation.id)}
+			onCopyLink={() => copyShareLink(`automations/${automation.id}`)}
 			onRunNow={() => onRunNow(automation)}
 			onToggleEnabled={() => onToggleEnabled(automation)}
 			onHistory={openHistory}

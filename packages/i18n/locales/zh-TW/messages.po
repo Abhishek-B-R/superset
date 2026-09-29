@@ -87,6 +87,9 @@ msgstr "（即將推出）"
 msgid "(disabled)"
 msgstr "（已停用）"
 
+msgid "(edited)"
+msgstr "（已編輯）"
+
 msgid "(external)"
 msgstr "（外部）"
 
@@ -158,6 +161,10 @@ msgstr "{0, plural, one {# 個已隱藏的專案} other {# 個已隱藏的專案
 msgid "{0, plural, one {# history item} other {# history items}}"
 msgstr "{0, plural, one {#條歷史記錄} other {#條歷史記錄}}"
 
+#. placeholder {0}: chosenLabels.length
+msgid "{0, plural, one {# label} other {# labels}}"
+msgstr "{0, plural, other {# 個標籤}}"
+
 #. placeholder {0}: result.imported
 msgid "{0, plural, one {# login} other {# logins}}"
 msgstr "{0, plural, one {#項登入資訊} other {#項登入資訊}}"
@@ -166,10 +173,16 @@ msgstr "{0, plural, one {#項登入資訊} other {#項登入資訊}}"
 msgid "{0, plural, one {# passed} other {# passed}}"
 msgstr "{0, plural, one {#項通過} other {#項通過}}"
 
+#. placeholder {0}: chosenLeads.length
+#. placeholder {0}: chosenPeople.length
+msgid "{0, plural, one {# person} other {# people}}"
+msgstr "{0, plural, other {# 人}}"
+
 #. placeholder {0}: selectedProjects.length
 msgid "{0, plural, one {# project selected.} other {# projects selected.}}"
 msgstr "{0, plural, one {已選擇#個專案。} other {已選擇#個專案。}}"
 
+#. placeholder {0}: chosenProjects.length
 #. placeholder {0}: projectFilters.length
 msgid "{0, plural, one {# project} other {# projects}}"
 msgstr "{0, plural, one {# 個專案} other {# 個專案}}"
@@ -562,6 +575,103 @@ msgstr "佔全部token的{0}% · {1}個token"
 msgid "{0}% of total cost · {1} tokens · * at API list rates"
 msgstr "佔總費用的{0}% · {1}個token · * 按API標價計算"
 
+msgid "{actor} added the label {label}"
+msgstr "{actor} 新增了標籤 {label}"
+
+msgid "{actor} added the task to {to}"
+msgstr "{actor} 將任務新增到 {to}"
+
+msgid "{actor} added the workspace to {project}"
+msgstr "{actor} 將工作區加入了 {project}"
+
+msgid "{actor} archived the workspace"
+msgstr "{actor} 封存了工作區"
+
+msgid "{actor} assigned the task to {to}"
+msgstr "{actor} 將任務指派給 {to}"
+
+msgid "{actor} assigned themselves"
+msgstr "{actor} 將任務指派給自己"
+
+msgid "{actor} changed the priority from {from} to {to}"
+msgstr "{actor} 將優先順序從 {from} 改為 {to}"
+
+msgid "{actor} cleared the status"
+msgstr "{actor} 清除了狀態"
+
+msgid "{actor} created the task"
+msgstr "{actor} 建立了任務"
+
+msgid "{actor} created the workspace from environment {environment}"
+msgstr "{actor} 從環境 {environment} 建立了工作區"
+
+msgid "{actor} edited the description"
+msgstr "{actor} 編輯了描述"
+
+msgid "{actor} joined"
+msgstr "{actor} 加入了"
+
+msgid "{actor} linked {chip}"
+msgstr "{actor} 連結了 {chip}"
+
+msgid "{actor} linked {chip} · suggested by {suggestedBy}"
+msgstr "{actor} 連結了 {chip} · 由 {suggestedBy} 建議"
+
+msgid "{actor} linked the workspace {workspace}"
+msgstr "{actor} 關聯了工作區 {workspace}"
+
+msgid "{actor} made the workspace private"
+msgstr "{actor} 將工作區設為私人"
+
+msgid "{actor} moved the task from {from} to {to}"
+msgstr "{actor} 將任務從 {from} 移到 {to}"
+
+msgid "{actor} opened {badge}"
+msgstr "{actor} 建立了 {badge}"
+
+msgid "{actor} published {chip}"
+msgstr "{actor} 發布了 {chip}"
+
+msgid "{actor} removed the assignee"
+msgstr "{actor} 移除了負責人"
+
+msgid "{actor} removed the label {label}"
+msgstr "{actor} 移除了標籤 {label}"
+
+msgid "{actor} removed the priority"
+msgstr "{actor} 移除了優先順序"
+
+msgid "{actor} removed the project"
+msgstr "{actor} 移除了專案"
+
+msgid "{actor} removed the task from {from}"
+msgstr "{actor} 將任務從 {from} 中移除"
+
+msgid "{actor} renamed the task to {title}"
+msgstr "{actor} 將任務重新命名為 {title}"
+
+#. placeholder {0}: entry.to
+msgid "{actor} renamed the workspace to <0>{0}</0>"
+msgstr "{actor} 將工作區重新命名為 <0>{0}</0>"
+
+msgid "{actor} set the priority to {to}"
+msgstr "{actor} 將優先順序設為 {to}"
+
+msgid "{actor} set the status to {to}"
+msgstr "{actor} 將狀態設為 {to}"
+
+msgid "{actor} shared the workspace with the organization"
+msgstr "{actor} 與組織共用了工作區"
+
+msgid "{actor} unassigned {from}"
+msgstr "{actor} 取消了 {from} 的指派"
+
+msgid "{actor} unlinked {chip}"
+msgstr "{actor} 取消連結了 {chip}"
+
+msgid "{actor} unlinked the workspace {workspace}"
+msgstr "{actor} 取消關聯工作區 {workspace}"
+
 msgid "{actual} so far · ~{projected} projected"
 msgstr "目前{actual} · 預計約{projected}"
 
@@ -592,6 +702,9 @@ msgstr "{configTitle}字型大小"
 
 msgid "{cookieCount} cookies — forget this site"
 msgstr "{cookieCount}個cookie——忘記此站點"
+
+msgid "{count, plural, one {# active port — show details} other {# active ports — show details}}"
+msgstr "{count, plural, one {#個活動埠 — 顯示詳情} other {#個活動埠 — 顯示詳情}}"
 
 msgid "{count, plural, one {# Check Failed} other {# Checks Failed}}"
 msgstr "{count, plural, one {#項檢查失敗} other {#項檢查失敗}}"
@@ -962,6 +1075,9 @@ msgstr "{uncommittedCount, plural, one {#個檔案已更改} other {#個檔案�
 
 msgid "{updatedLabel} restored to defaults"
 msgstr "{updatedLabel}已恢復為預設值"
+
+msgid "{uploading, plural, one {Uploading # file…} other {Uploading # files…}}"
+msgstr "{uploading, plural, other {正在上傳 # 個檔案…}}"
 
 msgid "{used} used"
 msgstr "已使用 {used}"
@@ -1389,6 +1505,10 @@ msgstr "啟用情況、進來之後的使用量，以及他們是否會回來。
 msgid "Active"
 msgstr "啟用中"
 
+msgctxt "presence"
+msgid "Active"
+msgstr "活躍"
+
 msgid "active {lastActive}"
 msgstr "{lastActive}活躍"
 
@@ -1423,6 +1543,9 @@ msgstr "新增{0}帳戶"
 msgid "Add a comment…"
 msgstr "新增留言…"
 
+msgid "Add a description…"
+msgstr "新增描述…"
+
 msgid "Add a lifecycle run script in Project Settings or mark a terminal script as the workspace run."
 msgstr "在專案設定中新增生命週期執行指令碼，或將某個終端指令碼標記為工作區執行命令。"
 
@@ -1431,6 +1554,9 @@ msgstr "新增專案以檢視GitHub議題。"
 
 msgid "Add a project to see pull requests."
 msgstr "新增一個專案來檢視拉取請求。"
+
+msgid "Add a short summary…"
+msgstr "新增簡短摘要…"
 
 msgid "Add account"
 msgstr "新增帳戶"
@@ -1490,6 +1616,9 @@ msgstr "新增檔案、應用等（@）"
 msgid "Add issue #{0} to workspace"
 msgstr "將議題#{0}新增到工作區"
 
+msgid "Add label"
+msgstr "新增標籤"
+
 msgid "Add listening agent"
 msgstr "新增監聽代理"
 
@@ -1520,6 +1649,9 @@ msgstr "新增設定命令，每行一條..."
 msgid "Add tag…"
 msgstr "新增標籤…"
 
+msgid "Add task"
+msgstr "新增任務"
+
 msgid "Add tax ID"
 msgstr "新增稅號"
 
@@ -1532,11 +1664,20 @@ msgstr "給風險最高又沒測試的程式碼補上測試…"
 msgid "Add tests where they're missing"
 msgstr "給缺測試的地方補測試"
 
+msgid "Add this label"
+msgstr "新增此標籤"
+
 msgid "Add to Dictionary"
 msgstr "新增到詞典"
 
+msgid "Add to project"
+msgstr "新增至專案"
+
 msgid "Add to prompt"
 msgstr "新增到提示詞"
+
+msgid "Add to sidebar"
+msgstr "新增到側邊欄"
 
 msgid "Add to workspace"
 msgstr "新增到工作區"
@@ -1616,6 +1757,9 @@ msgstr "代理程式已完成"
 msgid "Agent Independence"
 msgstr "代理程式無關"
 
+msgid "Agent is working"
+msgstr "代理程式正在工作"
+
 msgid "Agent launch configuration"
 msgstr "代理程式啟動配置"
 
@@ -1639,6 +1783,9 @@ msgstr "在同樣的差異上，代理程式審查發現迴歸的能力與人類
 
 msgid "Agent reviewers catch planted regressions at parity with median human reviewers in blind tests."
 msgstr "在盲測中，代理程式審查者發現植入迴歸的能力與中位水平的人類審查者持平。"
+
+msgid "Agent run failed"
+msgstr "代理程式執行失敗"
 
 msgid "Agent self-verification"
 msgstr "代理程式自我驗證"
@@ -2145,6 +2292,10 @@ msgstr "封存環境"
 msgid "Archived"
 msgstr "已歸檔"
 
+#. placeholder {0}: formatCompactRelativeTime(archivedAt, now)
+msgid "Archived · {0}"
+msgstr "已封存 · {0}"
+
 msgid "Are you sure you want to delete this file? This action cannot be undone."
 msgstr "確定要刪除此檔案嗎？此操作無法復原。"
 
@@ -2223,6 +2374,9 @@ msgstr "至少有一支叫得出名字的團隊（包括我們自己）連續一
 msgid "at once"
 msgstr "同時"
 
+msgid "Attach files"
+msgstr "附加檔案"
+
 msgid "Attached"
 msgstr "已附加"
 
@@ -2255,9 +2409,6 @@ msgstr "附件上傳失敗：{0}"
 
 msgid "Attachment was not uploaded — send the bytes first"
 msgstr "附件尚未上傳 — 請先傳送資料"
-
-msgid "Attachments are not wired yet"
-msgstr "附件功能尚未接入"
 
 msgid "Attachments need an online host"
 msgstr "附件需要主機線上"
@@ -2466,9 +2617,6 @@ msgstr "返回整合"
 
 msgid "Back to pages"
 msgstr "返回頁面"
-
-msgid "Back to tasks"
-msgstr "返回任務"
 
 msgid "Back to the leaderboard"
 msgstr "返回排行榜"
@@ -2902,6 +3050,10 @@ msgstr "取消回覆"
 msgid "Canceled"
 msgstr "已取消"
 
+msgctxt "project state"
+msgid "Canceled"
+msgstr "已取消"
+
 msgid "Canceling..."
 msgstr "正在取消..."
 
@@ -2967,8 +3119,17 @@ msgstr "思維鏈"
 msgid "Change avatar"
 msgstr "更換頭像"
 
+msgid "Change icon"
+msgstr "變更圖示"
+
 msgid "Change location"
 msgstr "更改位置"
+
+msgid "Change or add labels…"
+msgstr "變更或新增標籤…"
+
+msgid "Change or add tasks…"
+msgstr "變更或新增任務…"
 
 msgid "Change organization logo"
 msgstr "更改組織logo"
@@ -3094,6 +3255,9 @@ msgstr "活期+儲蓄+國庫帳戶隨時間變化；臺階處為融資到帳"
 msgid "Checking agents…"
 msgstr "正在檢查代理程式…"
 
+msgid "Checking environments…"
+msgstr "正在檢查環境…"
+
 msgid "Checking host…"
 msgstr "正在檢查主機…"
 
@@ -3204,6 +3368,9 @@ msgstr "清除瀏覽資料"
 
 msgid "Clear data"
 msgstr "清除資料"
+
+msgid "Clear date"
+msgstr "清除日期"
 
 msgid "Clear filter"
 msgstr "清除篩選"
@@ -3511,6 +3678,9 @@ msgstr "{account} 尚未啟用雲端沙箱。請向 Superset 團隊申請存取�
 msgid "Cloud workspace"
 msgstr "雲端工作區"
 
+msgid "Cloud workspaces"
+msgstr "雲端工作區"
+
 msgid "Cloud workspaces ignore this variable. Agents sign in under Settings › Agents instead."
 msgstr "雲端工作區會忽略此變數。代理程式改為在「設定 › 代理程式」中登入。"
 
@@ -3626,6 +3796,9 @@ msgstr "用於工作區初始化、清理和「執行」按鈕的命令。"
 msgid "Comment"
 msgstr "評論"
 
+msgid "Comment actions"
+msgstr "留言操作"
+
 msgid "Comment added"
 msgstr "添加了評論"
 
@@ -3716,6 +3889,10 @@ msgstr "已結束"
 
 msgid "Completed"
 msgstr "完成時間"
+
+msgctxt "project state"
+msgid "Completed"
+msgstr "已完成"
 
 msgid "component-showcase"
 msgstr "component-showcase"
@@ -4126,6 +4303,9 @@ msgstr "複製ID"
 msgid "Copy IDs"
 msgstr "複製ID"
 
+msgid "Copy image"
+msgstr "複製圖片"
+
 msgid "Copy import path"
 msgstr "複製匯入路徑"
 
@@ -4184,6 +4364,9 @@ msgstr "複製所選內容"
 msgid "Copy session ID"
 msgstr "複製會話 ID"
 
+msgid "Copy task ID"
+msgstr "複製任務 ID"
+
 msgid "Copy terminal ID"
 msgstr "複製終端ID"
 
@@ -4234,6 +4417,9 @@ msgstr "無法更改分享的版本"
 
 msgid "Could not change who can see this page"
 msgstr "無法更改誰可以檢視這個頁面"
+
+msgid "Could not change who can see this workspace"
+msgstr "無法變更誰可以檢視此工作區"
 
 msgid "Could not check your plan. Check your connection and try again."
 msgstr "無法檢查您的方案。請檢查網路連線後再試一次。"
@@ -4429,6 +4615,9 @@ msgstr "無法更新分支"
 msgid "serverError.plugins.credentialUnverified"
 msgstr "無法驗證憑證：{reason}"
 
+msgid "Couldn't ask the workspace for a description"
+msgstr "無法請求工作區產生描述"
+
 msgid "Couldn't confirm star status — check that the GitHub CLI (`gh`) is installed, signed in, and that you have a network connection"
 msgstr "無法確認加星狀態，請檢查是否已安裝並登入GitHub CLI（`gh`），以及網路是否連通"
 
@@ -4443,6 +4632,9 @@ msgstr "無法複製評論"
 
 msgid "Couldn't copy path"
 msgstr "無法複製路徑"
+
+msgid "Couldn't copy the image"
+msgstr "無法複製圖片"
 
 msgid "Couldn't create workspace"
 msgstr "無法建立工作區"
@@ -4538,6 +4730,9 @@ msgstr "儲存失敗——正在重試…"
 msgid "Couldn't save edits"
 msgstr "無法儲存編輯"
 
+msgid "Couldn't save the change"
+msgstr "無法儲存變更"
+
 msgid "Couldn't send comment"
 msgstr "無法傳送評論"
 
@@ -4583,6 +4778,9 @@ msgstr "無法更新拉取請求"
 msgid "Couldn't update thread"
 msgstr "無法更新討論"
 
+msgid "Couldn't upload {name}"
+msgstr "無法上傳 {name}"
+
 msgid "Couldn’t verify"
 msgstr "無法確認"
 
@@ -4594,6 +4792,9 @@ msgstr "CPU核心"
 
 msgid "Create"
 msgstr "建立"
+
+msgid "Create \"{newLabel}\""
+msgstr "建立「{newLabel}」"
 
 msgid "Create a native provider fork with the same conversation context. The original session stays unchanged."
 msgstr "在供應商端建立具有相同對話上下文的原生分支。原本的會話維持不變。"
@@ -4609,6 +4810,9 @@ msgstr "在桌面端任務檢視中建立新任務。"
 
 msgid "Create a new workspace"
 msgstr "建立新工作區"
+
+msgid "Create a project to group tasks and cloud workspaces."
+msgstr "建立專案，將任務與雲端工作區歸在一起。"
 
 msgid "Create a task for fixing the login bug"
 msgstr "建立一個任務，修復登入的bug"
@@ -4665,6 +4869,15 @@ msgstr "建立PR"
 msgid "Create PR failed: {0}"
 msgstr "建立PR失敗：{0}"
 
+msgid "Create project"
+msgstr "建立專案"
+
+msgid "Create project \"{newName}\""
+msgstr "建立專案「{newName}」"
+
+msgid "Create project…"
+msgstr "建立專案…"
+
 msgid "Create pull request"
 msgstr "建立拉取請求"
 
@@ -4717,6 +4930,15 @@ msgstr "已建立{0}"
 msgid "Created {0} · Last used {1}"
 msgstr "創建於{0} · 最後使用{1}"
 
+msgid "Created {ago}"
+msgstr "建立於{ago}"
+
+msgid "created {createdAgo}"
+msgstr "建立於{createdAgo}"
+
+msgid "Created {createdAgo}"
+msgstr "建立於{createdAgo}"
+
 msgid "Created {createdAtLabel}"
 msgstr "創建於{createdAtLabel}"
 
@@ -4738,11 +4960,11 @@ msgstr "已在{where}建立1個資料夾"
 msgid "Created by"
 msgstr "建立者"
 
+msgid "Created by <0/> · {createdAgo}"
+msgstr "建立者 <0/> · {createdAgo}"
+
 msgid "Created team \"{trimmedName}\""
 msgstr "已建立團隊「{trimmedName}」"
-
-msgid "created the issue"
-msgstr "建立了該議題"
 
 msgid "creating"
 msgstr "建立中"
@@ -4761,6 +4983,9 @@ msgstr "正在建立會話"
 
 msgid "Creating session: {name}"
 msgstr "正在建立會話：{name}"
+
+msgid "Creating the sandbox"
+msgstr "正在建立沙箱"
 
 msgid "Creating workspace"
 msgstr "正在建立工作區"
@@ -5058,6 +5283,9 @@ msgstr "刪除群組"
 msgid "Delete host"
 msgstr "刪除主機"
 
+msgid "Delete image"
+msgstr "刪除圖片"
+
 msgid "Delete local branch on workspace removal"
 msgstr "移除工作區時刪除本地分支"
 
@@ -5090,6 +5318,12 @@ msgstr "刪除團隊"
 
 msgid "Delete this"
 msgstr "刪除這裡"
+
+msgid "Delete this comment?"
+msgstr "刪除此留言？"
+
+msgid "Delete this task?"
+msgstr "刪除此任務？"
 
 msgid "Delete this workspace?"
 msgstr "刪除這個工作區？"
@@ -5141,6 +5375,9 @@ msgstr "已刪除或不可用，請另選一個"
 
 msgid "Deleted projects can be restored for 30 days, with the workspaces that were deleted with them. After that they are removed; the repository folder and worktrees with uncommitted changes stay on disk."
 msgstr "已刪除的專案可在 30 天內還原，連同一起刪除的工作區。之後將被移除；儲存庫資料夾和有未提交變更的工作樹會保留在磁碟上。"
+
+msgid "Deleted user"
+msgstr "已刪除的使用者"
 
 msgid "Deleted workspaces, but couldn’t finish updating the sidebar"
 msgstr "工作區已刪除，但側邊欄沒能更新完"
@@ -5434,6 +5671,9 @@ msgstr "關閉錯誤提示"
 
 msgid "Dismiss resume prompt"
 msgstr "忽略恢復提示"
+
+msgid "Dismiss suggestion"
+msgstr "忽略建議"
 
 msgid "Dismiss suggestions"
 msgstr "忽略建議"
@@ -5735,12 +5975,18 @@ msgstr "編輯執行指令碼"
 msgid "Edit script"
 msgstr "編輯指令碼"
 
+msgid "Edit your comment…"
+msgstr "編輯你的留言…"
+
 msgid "Edited"
 msgstr "已編輯"
 
 msgctxt "github release action"
 msgid "Edited"
 msgstr "已編輯"
+
+msgid "Edited {ago}"
+msgstr "編輯於{ago}"
 
 msgid "Editing"
 msgstr "編輯"
@@ -6240,8 +6486,14 @@ msgstr "刪除帳戶失敗"
 msgid "Failed to delete automation"
 msgstr "刪除自動化失敗"
 
+msgid "Failed to delete host"
+msgstr "刪除主機失敗"
+
 msgid "Failed to delete organization"
 msgstr "刪除組織失敗"
+
+msgid "Failed to delete task"
+msgstr "刪除任務失敗"
 
 msgid "Failed to delete team"
 msgstr "刪除團隊失敗"
@@ -6392,8 +6644,14 @@ msgstr "重新命名失敗"
 msgid "Failed to rename branch"
 msgstr "重新命名分支失敗"
 
+msgid "Failed to rename host"
+msgstr "重新命名主機失敗"
+
 msgid "Failed to rename session"
 msgstr "重新命名會話失敗"
+
+msgid "Failed to rename workspace"
+msgstr "重新命名工作區失敗"
 
 msgid "Failed to reorder"
 msgstr "重新排序失敗"
@@ -6506,12 +6764,6 @@ msgstr "登入失敗。請重試。"
 msgid "Failed to sign up. Please try again."
 msgstr "註冊失敗。請重試。"
 
-msgid "Failed to start agent"
-msgstr "啟動代理程式失敗"
-
-msgid "Failed to start agent session."
-msgstr "啟動代理程式會話失敗。"
-
 msgid "Failed to stop workspace run command"
 msgstr "停止工作區執行命令失敗"
 
@@ -6545,8 +6797,26 @@ msgstr "更新logo失敗"
 msgid "Failed to update name"
 msgstr "更新姓名失敗"
 
+msgid "Failed to update role"
+msgstr "更新角色失敗"
+
 msgid "Failed to update setting"
 msgstr "更新設定失敗"
+
+msgid "Failed to update task assignee"
+msgstr "更新任務負責人失敗"
+
+msgid "Failed to update task description"
+msgstr "更新任務描述失敗"
+
+msgid "Failed to update task priority"
+msgstr "更新任務優先順序失敗"
+
+msgid "Failed to update task status"
+msgstr "更新任務狀態失敗"
+
+msgid "Failed to update task title"
+msgstr "更新任務標題失敗"
 
 msgid "Failed to update team. Please try again."
 msgstr "更新團隊失敗。請重試。"
@@ -6697,6 +6967,9 @@ msgstr "篩選專案…"
 
 msgid "Filter workspaces…"
 msgstr "篩選工作區…"
+
+msgid "Filter…"
+msgstr "篩選…"
 
 msgid "filtering"
 msgstr "篩選中"
@@ -7019,6 +7292,9 @@ msgstr "通用"
 msgid "General access"
 msgstr "通用存取權限"
 
+msgid "Generate"
+msgstr "產生"
+
 msgid "Generate a key to use with MCP servers."
 msgstr "生成一個金鑰，用於MCP伺服器。"
 
@@ -7039,6 +7315,9 @@ msgstr "生成中"
 
 msgid "Generating..."
 msgstr "正在生成..."
+
+msgid "Generating…"
+msgstr "正在產生…"
 
 msgid "Get an API key"
 msgstr "取得API金鑰"
@@ -7190,6 +7469,9 @@ msgstr "前往Slack整合設定"
 msgid "Go to Superset"
 msgstr "前往Superset"
 
+msgid "Go to workspace"
+msgstr "前往工作區"
+
 msgid "Google did not grant lasting access. Remove Superset from your Google account's third-party access and try again."
 msgstr "Google沒有授予持久存取權限。請在你的Google帳戶的第三方存取中移除Superset，然後重試。"
 
@@ -7216,6 +7498,9 @@ msgstr "Grok和Kimi Code加入陣容，與Claude Code、Codex等並列。"
 
 msgid "Group actions"
 msgstr "群組操作"
+
+msgid "Group by"
+msgstr "分組方式"
 
 msgid "Group new branches under a folder."
 msgstr "將新分支歸入一個資料夾。"
@@ -7553,6 +7838,9 @@ msgstr "我在{company}排行榜上排第{rank}名，代理程式用量{tokens}�
 msgid "Icon"
 msgstr "圖示"
 
+msgid "Icons"
+msgstr "圖示"
+
 msgid "ID"
 msgstr "ID"
 
@@ -7589,6 +7877,9 @@ msgstr "圖片已攔截"
 #. placeholder {0}: src ?? "(empty)"
 msgid "Image blocked: {0}"
 msgstr "圖片已攔截：{0}"
+
+msgid "Image copied"
+msgstr "已複製圖片"
 
 msgid "Image is too large (max 10MB)"
 msgstr "圖片過大（最大10MB）"
@@ -7674,6 +7965,9 @@ msgstr "已匯入{0}個worktree中的{imported}個：{1}"
 msgid "Imported {joinedMessages}"
 msgstr "已匯入{joinedMessages}"
 
+msgid "Imported from Linear"
+msgstr "從 Linear 匯入"
+
 msgid "Importing..."
 msgstr "正在匯入..."
 
@@ -7701,6 +7995,10 @@ msgstr "全部專案"
 msgid "In just a few months, <0>tens of thousands of engineers</0> run Superset as their primary IDE, at companies like Wix, DoorDash, and Netflix."
 msgstr "短短幾個月，<0>數萬名工程師</0>把Superset當作主力IDE，他們來自Wix、DoorDash、Netflix這樣的公司。"
 
+msgid "In progress"
+msgstr "進行中"
+
+msgctxt "project state"
 msgid "In progress"
 msgstr "進行中"
 
@@ -7742,6 +8040,9 @@ msgstr "資訊"
 
 msgid "Information"
 msgstr "資訊"
+
+msgid "Initial prompt"
+msgstr "初始提示"
 
 msgid "Initialize Git"
 msgstr "初始化Git"
@@ -7886,6 +8187,9 @@ msgstr "檢測到無效輸入。"
 msgid "Invalid installation response. Please try again."
 msgstr "安裝響應無效。請重試。"
 
+msgid "Invalid label"
+msgstr "無效的標籤"
+
 msgid "Invalid OAuth response. Please try again."
 msgstr "OAuth響應無效。請重試。"
 
@@ -7991,6 +8295,9 @@ msgstr "議題URL必須匹配{repoMismatch}。"
 msgid "Issue…"
 msgstr "議題…"
 
+msgid "It can't be brought back."
+msgstr "刪除後無法復原。"
+
 msgid "It keeps the title from your prompt."
 msgstr "將保留根據你的提示產生的標題。"
 
@@ -8012,8 +8319,14 @@ msgstr "斜體"
 msgid "Item"
 msgstr "條目"
 
+msgid "Its comments and history go with it."
+msgstr "其留言和歷史記錄也會一併刪除。"
+
 msgid "Its own branch and copy of the files"
 msgstr "獨立的分支和檔案副本"
+
+msgid "Its replies go with it."
+msgstr "其回覆也會一併刪除。"
 
 msgid "Its workspaces and terminals are unavailable until it restarts — use the Superset tray menu > Host Service > Restart."
 msgstr "在它重啟之前，其工作區和終端都不可用，請使用Superset托盤選單 > 主機服務 > 重啟。"
@@ -8268,6 +8581,9 @@ msgstr "每當開啟新的終端分頁時啟動此終端指令碼。"
 msgid "Layout"
 msgstr "佈局"
 
+msgid "Lead"
+msgstr "負責人"
+
 msgid "Leaderboard"
 msgstr "排行榜"
 
@@ -8288,6 +8604,9 @@ msgstr "留下評論（可選）"
 
 msgid "Leave a comment…"
 msgstr "留下評論…"
+
+msgid "Leave a reply…"
+msgstr "寫回覆…"
 
 msgid "Leave a summary…"
 msgstr "寫個總結…"
@@ -8442,6 +8761,9 @@ msgstr "關聯拉取請求"
 msgid "Link task"
 msgstr "關聯任務"
 
+msgid "Link this task"
+msgstr "連結此任務"
+
 msgid "Linked {slug} to workspace"
 msgstr "已將{slug}關聯到工作區"
 
@@ -8594,9 +8916,6 @@ msgstr "正在載入評審..."
 
 msgid "Loading sessions…"
 msgstr "正在載入會話…"
-
-msgid "Loading task..."
-msgstr "正在載入任務..."
 
 msgid "Loading terminal scripts..."
 msgstr "正在載入終端指令碼..."
@@ -9566,6 +9885,9 @@ msgstr "這臺機器上還沒有發現Claude或Codex的用量。現在加入，�
 msgid "No cloud workspaces yet"
 msgstr "暫無雲端工作區"
 
+msgid "No color"
+msgstr "無顏色"
+
 msgid "No command configured."
 msgstr "未配置命令。"
 
@@ -9653,6 +9975,9 @@ msgstr "此時間段沒有漏斗資料"
 msgid "No git remote detected"
 msgstr "未檢測到git遠端儲存庫"
 
+msgid "No grouping"
+msgstr "不分組"
+
 msgid "No groups yet"
 msgstr "還沒有群組"
 
@@ -9677,6 +10002,9 @@ msgstr "暫無主機。"
 msgid "No icon"
 msgstr "無圖示"
 
+msgid "No icons match."
+msgstr "沒有符合的圖示。"
+
 msgid "No Internet Connection"
 msgstr "無網路連線"
 
@@ -9694,6 +10022,9 @@ msgstr "沒有已知的建立者"
 
 msgid "No labels"
 msgstr "無標籤"
+
+msgid "No lead"
+msgstr "無負責人"
 
 msgid "No listening agents"
 msgstr "沒有監聽代理"
@@ -9797,6 +10128,9 @@ msgstr "未選擇專案"
 
 msgid "No project<0>session</0>"
 msgstr "無專案<0>會話</0>"
+
+msgid "No projects"
+msgstr "沒有專案"
 
 msgid "No projects available"
 msgstr "沒有可用的專案"
@@ -9906,6 +10240,12 @@ msgstr "未找到任務"
 msgid "No tasks found."
 msgstr "未找到任務。"
 
+msgid "No tasks in this project yet."
+msgstr "此專案尚無任務。"
+
+msgid "No tasks or pull requests yet"
+msgstr "尚無任務或拉取請求"
+
 msgid "No tasks yet"
 msgstr "還沒有任務"
 
@@ -9971,6 +10311,9 @@ msgstr "未配置工作區執行命令"
 
 msgid "No workspaces found."
 msgstr "未找到工作區。"
+
+msgid "No workspaces in this project yet."
+msgstr "此專案尚無工作區。"
 
 msgid "No workspaces match your filters"
 msgstr "沒有符合篩選條件的工作區"
@@ -10313,11 +10656,17 @@ msgstr "只有擁有者才能更新組織設定"
 msgid "Only people who opted in appear here."
 msgstr "只有選擇加入的人才會出現在這裡。"
 
+msgid "Only the author can change a comment"
+msgstr "只有作者可以修改留言"
+
 msgid "Only the author can edit a comment"
 msgstr "只有作者才能編輯評論"
 
 msgid "Only the host owner can set its wake command"
 msgstr "只有主機擁有者才能設定其喚醒命令"
+
+msgid "Only the owner can change this"
+msgstr "只有擁有者可以變更此設定"
 
 msgid "Only the owner can run this automation"
 msgstr "只有擁有者能執行這個自動化"
@@ -10417,6 +10766,9 @@ msgstr "開啟命令面板"
 
 msgid "Open comment on GitHub"
 msgstr "在GitHub上開啟評論"
+
+msgid "Open details"
+msgstr "開啟詳細資料"
 
 msgid "Open DevTools"
 msgstr "開啟DevTools"
@@ -10566,9 +10918,6 @@ msgstr "在T3 Chat中開啟"
 msgid "Open in tab"
 msgstr "在分頁中開啟"
 
-msgid "Open in workspace"
-msgstr "在工作區中開啟"
-
 msgid "Open in…"
 msgstr "開啟方式…"
 
@@ -10643,6 +10992,9 @@ msgstr "開啟拉取請求"
 msgid "Open pull request #{0}"
 msgstr "開啟拉取請求#{0}"
 
+msgid "Open pull request #{number}"
+msgstr "開啟拉取請求#{number}"
+
 msgid "Open pull request in GitHub"
 msgstr "在GitHub中開啟拉取請求"
 
@@ -10687,9 +11039,6 @@ msgstr "開啟系統設定"
 
 msgid "Open task {title}"
 msgstr "開啟任務{title}"
-
-msgid "Open task actions"
-msgstr "開啟任務操作"
 
 msgid "Open task externally"
 msgstr "在外部開啟任務"
@@ -10753,9 +11102,6 @@ msgstr "OpenAI拒絕了此API金鑰。"
 
 msgid "Opened"
 msgstr "已建立"
-
-msgid "Opened existing workspace"
-msgstr "已開啟現有工作區"
 
 msgid "opened PR #841 for review"
 msgstr "開了PR #841待審查"
@@ -11116,6 +11462,10 @@ msgstr "暫停每晚的清理自動化"
 msgid "Paused"
 msgstr "已暫停"
 
+msgctxt "project state"
+msgid "Paused"
+msgstr "已暫停"
+
 msgid "Pay now"
 msgstr "立即支付"
 
@@ -11139,6 +11489,9 @@ msgstr "峰值速度"
 
 msgid "Pending Invitations"
 msgstr "待處理邀請"
+
+msgid "People"
+msgstr "人員"
 
 msgid "People whose first paywall view was in the last {PAYWALL_FUNNEL_WEEKS} weeks, and how far they got. A stage counts anyone who reached it after that view, so recent cohorts are still maturing."
 msgstr "首次看到付費牆在最近 {PAYWALL_FUNNEL_WEEKS} 週內的使用者，以及他們走到哪一步。每個階段統計在該次瀏覽之後到達的人，因此近期同期群仍在累積。"
@@ -11176,6 +11529,9 @@ msgstr "權限"
 
 msgid "Persistent access to Documents, Downloads, Desktop, and iCloud."
 msgstr "持續存取「文稿」「下載」「桌面」和iCloud。"
+
+msgid "Person"
+msgstr "人員"
 
 msgid "Personal"
 msgstr "個人"
@@ -11276,6 +11632,10 @@ msgstr "方案"
 
 msgid "Plan restored"
 msgstr "方案已恢復"
+
+msgctxt "project state"
+msgid "Planned"
+msgstr "已規劃"
 
 msgid "Planning the tooltip refactor"
 msgstr "正在規劃tooltip重構"
@@ -11386,6 +11746,10 @@ msgstr "PR #{0}（{1}）"
 #. placeholder {0}: created.number
 msgid "PR #{0} created"
 msgstr "已建立PR #{0}"
+
+#. placeholder {0}: i18n._(LABEL[state])
+msgid "PR #{number} — {0}"
+msgstr "PR #{number} — {0}"
 
 msgid "PR Closed"
 msgstr "PR已關閉"
@@ -11581,6 +11945,9 @@ msgstr "效率"
 
 msgid "Profile name"
 msgstr "配置檔名稱"
+
+msgid "Progress"
+msgstr "進度"
 
 msgid "Progress · Spinner"
 msgstr "進度條 · 載入指示器"
@@ -11864,6 +12231,9 @@ msgstr "Radix Tooltip文件"
 msgid "RAM Share"
 msgstr "RAM佔比"
 
+msgid "Random icon"
+msgstr "隨機圖示"
+
 msgid "Rank"
 msgstr "排名"
 
@@ -12056,6 +12426,9 @@ msgstr "下次執行 Claude Code 時重新整理。"
 
 msgid "Refreshes when OpenCode next runs."
 msgstr "下次執行 OpenCode 時重新整理。"
+
+msgid "Regenerate"
+msgstr "重新產生"
 
 msgid "Region"
 msgstr "區域"
@@ -12941,6 +13314,9 @@ msgstr "SAML SSO與SCIM帳號開通"
 msgid "San Francisco"
 msgstr "舊金山"
 
+msgid "Sandbox stopped responding"
+msgstr "沙箱已停止回應"
+
 msgid "Save"
 msgstr "儲存"
 
@@ -12961,6 +13337,9 @@ msgstr "儲存編輯"
 
 msgid "Save edits (⌘S)"
 msgstr "儲存編輯 (⌘S)"
+
+msgid "Save environment"
+msgstr "儲存環境"
 
 msgid "Save failed: {message}"
 msgstr "儲存失敗：{message}"
@@ -12983,7 +13362,7 @@ msgstr "儲存以獲取URL"
 msgid "Saved"
 msgstr "已儲存"
 
-#. placeholder {0}: created?.name
+#. placeholder {0}: created?.name ?? name.trim()
 msgid "Saved \"{0}\" as an environment"
 msgstr "已將「{0}」儲存為環境"
 
@@ -13163,8 +13542,14 @@ msgstr "搜尋外掛"
 msgid "Search previous prompts..."
 msgstr "搜尋歷史提示詞..."
 
+msgid "Search projects"
+msgstr "搜尋專案"
+
 msgid "Search projects..."
 msgstr "搜尋專案..."
+
+msgid "Search projects…"
+msgstr "搜尋專案…"
 
 msgid "Search pull requests"
 msgstr "搜尋拉取請求"
@@ -13557,6 +13942,9 @@ msgstr "會話 · 按費用排名前{0}"
 msgid "Set color to {0}"
 msgstr "將顏色設為{0}"
 
+msgid "Set date"
+msgstr "設定日期"
+
 msgid "Set group color"
 msgstr "設定群組顏色"
 
@@ -13570,8 +13958,14 @@ msgstr "設定密碼"
 msgid "Set Password"
 msgstr "設定密碼"
 
+msgid "Set project…"
+msgstr "設定專案…"
+
 msgid "Set Run"
 msgstr "設定執行命令"
+
+msgid "Set this project"
+msgstr "設為此專案"
 
 msgid "Set up"
 msgstr "設定"
@@ -13652,6 +14046,9 @@ msgstr "分享此頁面"
 
 msgid "Share via…"
 msgstr "分享方式…"
+
+msgid "Share workspace"
+msgstr "共用工作區"
 
 msgid "Shared across sessions using this login."
 msgstr "使用此登入的所有工作階段共用此額度。"
@@ -13742,6 +14139,9 @@ msgstr "顯示差異面板"
 
 msgid "Show emails"
 msgstr "顯示電子郵件"
+
+msgid "Show everyone who opened this workspace"
+msgstr "顯示開啟過此工作區的所有人"
 
 msgid "Show file tree"
 msgstr "顯示檔案樹"
@@ -14055,6 +14455,9 @@ msgstr "小"
 msgid "Smoother onboarding"
 msgstr "更順暢的上手流程"
 
+msgid "Snapshots this workspace as it is now, with everything installed in it. New workspaces from the environment start from that snapshot."
+msgstr "為此工作區的目前狀態（包括其中安裝的所有內容）建立快照。從此環境新建的工作區將從該快照開始。"
+
 msgid "Snooze"
 msgstr "稍後提醒"
 
@@ -14306,6 +14709,10 @@ msgstr "每日新增星標"
 msgid "Stars gained per week"
 msgstr "每週新增星標"
 
+msgctxt "project date"
+msgid "Start"
+msgstr "開始日期"
+
 msgid "Start a {harness} session"
 msgstr "開始一個{harness}會話"
 
@@ -14338,6 +14745,9 @@ msgstr "開始瀏覽"
 
 msgid "Start coding agents, follow them live, and review the diff from your phone. Available on the App Store; Android is coming soon."
 msgstr "在手機上啟動程式開發 agent、即時追蹤並審查差異。現已在 App Store 上架；Android 版即將推出。"
+
+msgid "Start date"
+msgstr "開始日期"
 
 msgid "Start free. Upgrade when your team outgrows it. Enterprise plans for organizations with advanced security and compliance needs."
 msgstr "免費開始。團隊用不夠時再升級。企業方案面向有進階安全與合規需求的組織。"
@@ -14919,8 +15329,15 @@ msgstr "聯絡Superset"
 msgid "Tap anything on the page to comment on it"
 msgstr "點按頁面上的任何元素即可留言"
 
+msgctxt "project date"
+msgid "Target"
+msgstr "目標日期"
+
 msgid "Target agent"
 msgstr "目標代理程式"
+
+msgid "Target date"
+msgstr "目標日期"
 
 msgid "Target host is offline"
 msgstr "目標主機已離線"
@@ -14930,6 +15347,9 @@ msgstr "targetHostId與該工作區的主機不匹配"
 
 msgid "Task"
 msgstr "任務"
+
+msgid "Task ID copied"
+msgstr "已複製任務 ID"
 
 msgid "Task Launch"
 msgstr "任務啟動"
@@ -14954,9 +15374,6 @@ msgstr "任務已同步到Linear"
 
 msgid "Task title"
 msgstr "任務標題"
-
-msgid "Task title..."
-msgstr "任務標題..."
 
 msgid "Tasks"
 msgstr "任務"
@@ -15310,6 +15727,9 @@ msgstr "連結可能有誤、頁面可能已被刪除，或者你沒有存取權
 msgid "The linked agent is missing or disabled. Showing the snapshot."
 msgstr "關聯的代理程式已丟失或被停用。正在顯示快照。"
 
+msgid "The local change was rolled back."
+msgstr "本機變更已復原。"
+
 msgid "The local host service is unavailable for {organization} on {device}. Status: {status}. {recovery}"
 msgstr "{device}上{organization}的本地主機服務不可用。狀態：{status}。{recovery}"
 
@@ -15452,6 +15872,9 @@ msgstr "工作區可能仍已建立。如果出現，此畫面會開啟它。"
 
 msgid "The workspace this automation is pinned to no longer exists on its host. Pin a different one in the automation's settings."
 msgstr "此自動化所釘選的工作區在其主機上已不存在。請在自動化設定中釘選另一個工作區。"
+
+msgid "The workspace's repositories, as they are checked out now."
+msgstr "工作區目前簽出的儲存庫。"
 
 msgid "The worktree and any uncommitted changes will be removed. This cannot be undone."
 msgstr "worktree及其中所有未提交的更改都會被移除。此操作無法復原。"
@@ -15823,6 +16246,9 @@ msgstr "從工單到上線中位不足一天"
 
 msgid "Tier"
 msgstr "等級"
+
+msgid "Time"
+msgstr "時間"
 
 msgid "Time range"
 msgstr "時間範圍"
@@ -16275,6 +16701,9 @@ msgstr "無限"
 msgid "Unlimited users"
 msgstr "使用者數不限"
 
+msgid "Unlink task"
+msgstr "取消連結任務"
+
 msgid "Unmute notifications"
 msgstr "取消靜音通知"
 
@@ -16662,6 +17091,9 @@ msgstr "檢視檔案"
 msgid "View files changed"
 msgstr "檢視更改的檔案"
 
+msgid "View full size"
+msgstr "檢視原圖"
+
 msgid "View in GitHub"
 msgstr "在GitHub中檢視"
 
@@ -16741,6 +17173,9 @@ msgstr "等待登入…"
 
 msgid "Waiting for the subagent's first message…"
 msgstr "正在等待子代理程式的第一則訊息…"
+
+msgid "Waiting for your input"
+msgstr "等待你的輸入"
 
 msgid "Waitlist signups"
 msgstr "候補名單註冊"
@@ -17028,6 +17463,9 @@ msgstr "支援哪些AI編碼代理程式？"
 msgid "Who can open this page from its link"
 msgstr "誰可以通過連結開啟這個頁面"
 
+msgid "Who can open this workspace"
+msgstr "誰可以開啟此工作區"
+
 msgid "Whole site"
 msgstr "整站"
 
@@ -17122,11 +17560,17 @@ msgstr "已從PR建立工作區"
 msgid "Workspace details"
 msgstr "工作區詳細資料"
 
+msgid "Workspace ID"
+msgstr "工作區ID"
+
 msgid "Workspace ID copied"
 msgstr "已複製工作區ID"
 
 msgid "Workspace layout"
 msgstr "工作區佈局"
+
+msgid "Workspace name"
+msgstr "工作區名稱"
 
 msgid "Workspace name (optional)"
 msgstr "工作區名稱（可選）"

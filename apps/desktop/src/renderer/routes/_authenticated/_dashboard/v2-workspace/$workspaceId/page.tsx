@@ -35,6 +35,7 @@ import { useWorkspace } from "../providers/WorkspaceProvider";
 import { AddTabMenu } from "./components/AddTabMenu";
 import { BackgroundTerminalsButton } from "./components/BackgroundTerminalsButton";
 import { ChangesControl } from "./components/ChangesControl";
+import { CloudWorkspaceTabBarControls } from "./components/CloudWorkspaceTabBarControls";
 import { V2NotificationStatusIndicator } from "./components/V2NotificationStatusIndicator";
 import { V2PresetsBar } from "./components/V2PresetsBar";
 import { V2WorkspaceOpenInButton } from "./components/V2WorkspaceOpenInButton";
@@ -466,6 +467,7 @@ function V2WorkspaceContent() {
 							}
 							renderTabBarTrailing={() => (
 								<div className="flex items-center gap-1">
+									<CloudWorkspaceTabBarControls workspaceId={workspaceId} />
 									{/* The expanded sidebar's header owns the ports pill; the
 									    tab bar only hosts it for the collapsed rail, where
 									    neither the header cluster nor the TopBar is visible. */}

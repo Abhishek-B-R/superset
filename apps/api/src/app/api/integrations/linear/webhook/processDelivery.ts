@@ -370,7 +370,6 @@ async function processIssueEvent(
 			assigneeAvatarUrl,
 			estimate: issue.estimate ?? null,
 			dueDate: issue.dueDate ? new Date(issue.dueDate) : null,
-			labels: issue.labels.map((l) => l.name),
 			...(branchName ? { branch: branchName } : {}),
 			startedAt: issue.startedAt ? new Date(issue.startedAt) : null,
 			completedAt: issue.completedAt ? new Date(issue.completedAt) : null,

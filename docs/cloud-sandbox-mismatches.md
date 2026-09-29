@@ -78,6 +78,21 @@ own subscribers stay live as before. Reaches a box only through a
 host-service release. **Open:** mobile receives the field and renders nothing
 for it yet.
 
+**Nobody on the box knows who is in it.** A host is one person's machine, so
+a workspace row implies its owner and the sidebar never had to say. A cloud
+workspace is opened by any member of the organization, and host-service inside
+it sees only tickets, not people; the only thing that knows who opened a box
+is the API that minted the ticket. So `cloudWorkspace.access` with `wake`
+(the open workspace's keepalive, every ten minutes) upserts
+`cloud_workspace_presence` (workspace, user, first/last seen) and the list
+returns each row's creator and everyone who has opened it. A person is
+"active" while their last wake is under fifteen minutes old; the presence
+change rides the same realtime patch as the agent status, so open clients
+update the row without a list refetch. Addressing a listed workspace
+(`wake: false`) records nothing: every sidebar addresses every ready box.
+**Open:** presence is only ever written, never trimmed; the CLI and MCP count
+as being in a box because they wake it too.
+
 **A woken sandbox answers seconds after the wake, and every pane reconnects
 at once.** A resumed session has no processes; `wake` starts host-service
 and returns before it listens. The open workspace's hook therefore holds the

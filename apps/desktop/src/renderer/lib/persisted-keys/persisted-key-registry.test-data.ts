@@ -84,6 +84,14 @@ export const PERSISTED_KEY_REGISTRY: ReadonlyArray<
 		["workspace-sidebar-store"],
 	],
 	[
+		"src/renderer/routes/_authenticated/_dashboard/stores/cloudSidebarStore/cloudSidebarStore.ts",
+		["cloud-sidebar"],
+	],
+	[
+		"src/renderer/routes/_authenticated/_dashboard/stores/listDisplayStore/listDisplayStore.ts",
+		["list-display"],
+	],
+	[
 		"src/renderer/stores/sidebar-sections-collapse.ts",
 		["sidebar-workspaces-collapse"],
 	],
@@ -198,15 +206,11 @@ export const PERSISTED_KEY_REGISTRY: ReadonlyArray<
 		["lastSelectedDiffCommentNewAgentConfigId"],
 	],
 	[
-		"src/renderer/routes/_authenticated/_dashboard/tasks/$taskId/components/PropertiesSidebar/components/OpenInWorkspaceV2/OpenInWorkspaceV2.tsx",
-		["lastSelectedV2TaskAgent"],
-	],
-	[
 		"src/renderer/routes/_authenticated/_dashboard/tasks/components/TasksView/components/TasksTopBar/components/RunIssuesInWorkspacePopover/RunIssuesInWorkspacePopover.tsx",
 		["lastSelectedV2IssueBatchAgent"],
 	],
 	[
-		"src/renderer/routes/_authenticated/_dashboard/tasks/components/TasksView/components/TasksTopBar/components/RunInWorkspacePopoverV2/RunInWorkspacePopoverV2.tsx",
+		"src/renderer/routes/_authenticated/_dashboard/tasks/components/RunInWorkspacePopoverV2/RunInWorkspacePopoverV2.tsx",
 		["lastSelectedV2TaskBatchAgent"],
 	],
 	[

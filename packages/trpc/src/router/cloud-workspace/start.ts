@@ -1,9 +1,10 @@
 import { db } from "@superset/db/client";
-import { cloudWorkspaces, environments } from "@superset/db/schema";
+import { cloudWorkspaces, environments, tasks } from "@superset/db/schema";
 import type { CloudAgentLaunch } from "@superset/shared/cloud-agent-launch";
 import { Client } from "@upstash/qstash";
-import { and, eq, isNull } from "drizzle-orm";
+import { and, eq, inArray, isNull } from "drizzle-orm";
 import { env } from "../../env";
+import { anchorAttachments } from "../../lib/attachments";
 import {
 	githubRepositoriesOutOfReach,
 	githubUserTokenFor,
@@ -16,11 +17,13 @@ import {
 	workspaceBranchName,
 } from "../../lib/sandbox";
 import { userError } from "../../trpc";
+import { recordCloudWorkspaceActivity } from "./activity";
 import {
 	FALLBACK_NAME,
 	provisionCloudWorkspace,
 	sandboxNameFor,
 } from "./provision";
+import { linkTask } from "./record";
 import { transitionCloudWorkspace } from "./transition";
 
 const qstash = new Client({ token: env.QSTASH_TOKEN });
@@ -82,9 +85,13 @@ export async function startCloudWorkspace(args: {
 	/** Omitted when nobody typed one; then the prompt names it. */
 	name?: string;
 	prompt?: string;
+	/** What the person typed, kept on the record when it differs from the agent's prompt. */
+	typedPrompt?: string;
 	/** Omitted = the repo's default branch. */
 	branch?: string;
 	launch?: CloudAgentLaunch;
+	taskIds?: string[];
+	attachmentFileIds?: string[];
 }) {
 	const environment = await loadUsableEnvironment(args);
 
@@ -141,6 +148,7 @@ export async function startCloudWorkspace(args: {
 			status: "provisioning",
 			environmentId: environment.id,
 			createdByUserId: args.userId,
+			prompt: (args.typedPrompt ?? args.prompt)?.trim() || null,
 		})
 		.returning();
 	if (!row) {
@@ -153,6 +161,34 @@ export async function startCloudWorkspace(args: {
 	await recordWorkspaceRepositories({
 		cloudWorkspaceId: row.id,
 		repositories,
+	});
+	const actor = { kind: "user" as const, userId: args.userId };
+	await recordCloudWorkspaceActivity(db, row.id, actor, { event: "created" });
+	if (args.taskIds?.length) {
+		const ownTasks = await db
+			.select({ id: tasks.id })
+			.from(tasks)
+			.where(
+				and(
+					inArray(tasks.id, args.taskIds),
+					eq(tasks.organizationId, args.organizationId),
+					isNull(tasks.deletedAt),
+				),
+			);
+		for (const task of ownTasks) {
+			await linkTask({ cloudWorkspaceId: row.id, taskId: task.id, actor });
+		}
+	}
+	await anchorAttachments({
+		parentKind: "cloud_workspace_prompt",
+		parentId: row.id,
+		organizationId: args.organizationId,
+		fileIds: args.attachmentFileIds ?? [],
+	}).catch((error) => {
+		console.error(
+			`[cloud-workspace] could not keep the prompt's files for ${row.id}`,
+			error,
+		);
 	});
 
 	// Naming reads the prompt, and only when nobody typed a name.
