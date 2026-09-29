@@ -14,21 +14,17 @@ import {
 	useState,
 	useSyncExternalStore,
 } from "react";
-import { env } from "renderer/env.renderer";
 import { useTerminalAppearance } from "renderer/hooks/useTerminalAppearance";
-import { useV2UserPreferences } from "renderer/hooks/useV2UserPreferences";
 import { useHotkey } from "renderer/hotkeys";
 import {
 	actionLabel,
 	type FolderClickPolicy,
 	folderIntentLabel,
-	type LinkAction,
 	LinkHoverHint,
 	useTerminalFilePolicy,
 	useTerminalFolderPolicy,
 	useTerminalUrlPolicy,
 } from "renderer/lib/clickPolicy";
-import { parseSupersetPageUrl } from "renderer/lib/parseSupersetPageUrl";
 import {
 	type ConnectionState,
 	terminalRuntimeRegistry,
@@ -85,7 +81,6 @@ export function TerminalPane({
 	const filePolicy = useTerminalFilePolicy();
 	const urlPolicy = useTerminalUrlPolicy();
 	const folderPolicy = useTerminalFolderPolicy();
-	const { preferences } = useV2UserPreferences();
 	const {
 		hoveredLink,
 		liveHoveredLinkRef,
@@ -345,16 +340,6 @@ export function TerminalPane({
 					);
 				},
 				onUrlClick: (event, url) => {
-					const pageSlug = parseSupersetPageUrl(url, env.NEXT_PUBLIC_WEB_URL);
-					if (pageSlug) {
-						event.preventDefault();
-						runUrlLinkAction(
-							linkActionDepsRef.current,
-							url,
-							preferences.pageOpenAction,
-						);
-						return;
-					}
 					const action = urlPolicy.getAction(event);
 					if (action === null) {
 						showHint(event.clientX, event.clientY);
@@ -378,7 +363,6 @@ export function TerminalPane({
 		filePolicy,
 		urlPolicy,
 		folderPolicy,
-		preferences.pageOpenAction,
 	]);
 
 	// Publish what a right-click landed on so the pane context menu (built in
@@ -670,7 +654,6 @@ export function TerminalPane({
 					urlPolicy,
 					folderPolicy,
 					worktreePath,
-					preferences.pageOpenAction,
 				)}
 				hoverPosition={hoveredLink}
 				clickHint={hint}
@@ -690,7 +673,6 @@ function resolveHoverLabel(
 	urlPolicy: ReturnType<typeof useTerminalUrlPolicy>,
 	folderPolicy: FolderClickPolicy,
 	worktreePath: string | undefined,
-	pageOpenAction: LinkAction,
 ): string | null {
 	if (!hovered) return null;
 	const event = {
@@ -699,11 +681,7 @@ function resolveHoverLabel(
 		shiftKey: hovered.shift,
 	};
 	if (hovered.info.kind === "url") {
-		const pageSlug = parseSupersetPageUrl(
-			hovered.info.url,
-			env.NEXT_PUBLIC_WEB_URL,
-		);
-		const action = pageSlug ? pageOpenAction : urlPolicy.getAction(event);
+		const action = urlPolicy.getAction(event);
 		return action ? actionLabel(action, "url") : null;
 	}
 	if (hovered.info.isDirectory) {

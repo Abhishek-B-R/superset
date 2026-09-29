@@ -138,10 +138,7 @@ export function BrowserLinkSettings({
 									/>
 								</Label>
 								<p className="text-xs text-muted-foreground">
-									<Trans>
-										Where Page links in terminals, chat messages, and task
-										markdown open when clicked.
-									</Trans>
+									<Trans>Where pages open from a workspace's Pages menu.</Trans>
 								</p>
 							</div>
 							<Select

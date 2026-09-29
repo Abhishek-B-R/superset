@@ -17424,8 +17424,8 @@ msgstr "Auf welchem Platz stehst du?"
 msgid "Where does my code run?"
 msgstr "Wo läuft mein Code?"
 
-msgid "Where Page links in terminals, chat messages, and task markdown open when clicked."
-msgstr "Wohin Seiten-Links in Terminals, Chatnachrichten und Aufgaben-Markdown beim Klicken geöffnet werden."
+msgid "Where pages open from a workspace's Pages menu."
+msgstr "Wo Seiten aus dem Seiten-Menü eines Arbeitsbereichs geöffnet werden."
 
 msgid "Where serious teams are"
 msgstr "Wo ernsthafte Teams stehen"

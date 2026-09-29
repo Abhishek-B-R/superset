@@ -17424,8 +17424,8 @@ msgstr "Waar sta jij?"
 msgid "Where does my code run?"
 msgstr "Waar draait mijn code?"
 
-msgid "Where Page links in terminals, chat messages, and task markdown open when clicked."
-msgstr "Waar Pagina-links in terminals, chatberichten en taak-markdown worden geopend bij een klik."
+msgid "Where pages open from a workspace's Pages menu."
+msgstr "Waar pagina's uit het Pagina's-menu van een werkruimte worden geopend."
 
 msgid "Where serious teams are"
 msgstr "Waar serieuze teams staan"

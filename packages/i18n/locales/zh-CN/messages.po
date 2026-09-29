@@ -17424,8 +17424,8 @@ msgstr "你排第几？"
 msgid "Where does my code run?"
 msgstr "我的代码在哪里运行？"
 
-msgid "Where Page links in terminals, chat messages, and task markdown open when clicked."
-msgstr "终端、聊天消息和任务 Markdown 中的页面链接点击后在何处打开。"
+msgid "Where pages open from a workspace's Pages menu."
+msgstr "从工作区的页面菜单打开页面的位置。"
 
 msgid "Where serious teams are"
 msgstr "认真的团队都在这里"

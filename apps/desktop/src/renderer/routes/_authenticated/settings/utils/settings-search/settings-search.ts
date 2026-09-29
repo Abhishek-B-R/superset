@@ -1340,7 +1340,7 @@ export const SETTINGS_ITEMS: SettingsItem[] = [
 		section: "browser",
 		title: "Pages",
 		description:
-			"Whether Page links (in terminals, chat, and task markdown) open inside Superset or the system browser",
+			"Whether pages from a workspace's Pages menu open inside Superset or the system browser",
 		keywords: [
 			"links",
 			"page",
