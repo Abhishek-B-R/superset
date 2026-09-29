@@ -386,12 +386,50 @@ export interface ConnectorIdentity {
 	user: { id: string; label: string | null } | null;
 }
 
+interface JsonRpcMessage {
+	id?: number;
+	result?: Record<string, unknown>;
+	error?: { message?: string };
+}
+
+/**
+ * A streamable-HTTP MCP server answers either a plain JSON object or an SSE
+ * body, and an SSE event may split its payload across several `data:` lines
+ * (joined with a newline) and carry more than one event. Reassemble the events
+ * and return the JSON-RPC message whose id matches the request.
+ */
+function readJsonRpc(text: string, id: number): JsonRpcMessage {
+	const trimmed = text.trim();
+	if (trimmed.startsWith("{")) return JSON.parse(trimmed) as JsonRpcMessage;
+
+	const messages: JsonRpcMessage[] = [];
+	for (const event of text.split(/\r?\n\r?\n/)) {
+		const data = event
+			.split(/\r?\n/)
+			.filter((line) => line.startsWith("data:"))
+			.map((line) => line.slice(5).replace(/^ /, ""))
+			.join("\n");
+		if (!data) continue;
+		try {
+			messages.push(JSON.parse(data) as JsonRpcMessage);
+		} catch {
+			// Skip a non-JSON event (comments, keep-alives).
+		}
+	}
+	const match =
+		messages.find((message) => message.id === id) ?? messages.at(-1);
+	if (!match)
+		throw new Error(`no JSON-RPC message in a ${text.length}-byte response`);
+	return match;
+}
+
 async function mcpIdentity(
 	slug: string,
 	probe: { mcp: string; tool: string; arguments: Record<string, unknown> },
 	accessToken: string,
 ): Promise<Record<string, unknown>> {
 	let session: string | null = null;
+	let protocolVersion: string | null = null;
 	let requestId = 0;
 
 	const post = async (body: Record<string, unknown>) => {
@@ -404,6 +442,9 @@ async function mcpIdentity(
 					"Content-Type": "application/json",
 					Accept: "application/json, text/event-stream",
 					...(session ? { "Mcp-Session-Id": session } : {}),
+					...(protocolVersion
+						? { "MCP-Protocol-Version": protocolVersion }
+						: {}),
 				},
 				body: JSON.stringify(body),
 			},
@@ -417,26 +458,14 @@ async function mcpIdentity(
 		method: string,
 		params: Record<string, unknown>,
 	): Promise<Record<string, unknown>> => {
-		const response = await post({
-			jsonrpc: "2.0",
-			id: ++requestId,
-			method,
-			params,
-		});
+		const id = ++requestId;
+		const response = await post({ jsonrpc: "2.0", id, method, params });
 		const text = await response.text();
 		if (!response.ok)
 			throw new Error(
 				`Connector "${slug}" identity probe failed: ${response.status} ${text.slice(0, 200)}`,
 			);
-		// Streamable HTTP servers answer either plain JSON or a one-event SSE body.
-		const events = text
-			.split("\n")
-			.filter((line) => line.startsWith("data:"))
-			.map((line) => line.slice(5).trim());
-		const message = JSON.parse(events.at(-1) ?? text) as {
-			result?: Record<string, unknown>;
-			error?: { message?: string };
-		};
+		const message = readJsonRpc(text, id);
 		if (message.error)
 			throw new Error(
 				`Connector "${slug}" identity probe failed: ${message.error.message}`,
@@ -444,33 +473,55 @@ async function mcpIdentity(
 		return message.result ?? {};
 	};
 
-	await request("initialize", {
-		protocolVersion: "2025-06-18",
-		capabilities: {},
-		clientInfo: { name: "superset-connectors", version: "1.0.0" },
-	});
-	await post({ jsonrpc: "2.0", method: "notifications/initialized" });
+	try {
+		const init = await request("initialize", {
+			protocolVersion: "2025-06-18",
+			capabilities: {},
+			clientInfo: { name: "superset-connectors", version: "1.0.0" },
+		});
+		if (typeof init.protocolVersion === "string")
+			protocolVersion = init.protocolVersion;
+		await post({ jsonrpc: "2.0", method: "notifications/initialized" });
 
-	const result = (await request("tools/call", {
-		name: probe.tool,
-		arguments: probe.arguments,
-	})) as {
-		structuredContent?: Record<string, unknown>;
-		content?: { type: string; text?: string }[];
-		isError?: boolean;
-	};
+		const result = (await request("tools/call", {
+			name: probe.tool,
+			arguments: probe.arguments,
+		})) as {
+			structuredContent?: Record<string, unknown>;
+			content?: { type: string; text?: string }[];
+			isError?: boolean;
+		};
 
-	const firstText = result.content?.find(
-		(item) => typeof item.text === "string",
-	)?.text;
-	if (result.isError)
-		throw new Error(
-			`Connector "${slug}" identity tool errored: ${firstText?.slice(0, 200) ?? "no detail"}`,
-		);
-	if (result.structuredContent) return result.structuredContent;
-	if (!firstText)
-		throw new Error(`Connector "${slug}" identity tool returned no content.`);
-	return JSON.parse(firstText) as Record<string, unknown>;
+		const firstText = result.content?.find(
+			(item) => typeof item.text === "string",
+		)?.text;
+		if (result.isError)
+			throw new Error(
+				`Connector "${slug}" identity tool errored: ${firstText?.slice(0, 200) ?? "no detail"}`,
+			);
+		if (result.structuredContent) return result.structuredContent;
+		if (!firstText)
+			throw new Error(`Connector "${slug}" identity tool returned no content.`);
+		return JSON.parse(firstText) as Record<string, unknown>;
+	} finally {
+		if (session)
+			await credentialFetch(
+				probe.mcp,
+				{
+					method: "DELETE",
+					headers: {
+						Authorization: `Bearer ${accessToken}`,
+						"Mcp-Session-Id": session,
+						...(protocolVersion
+							? { "MCP-Protocol-Version": protocolVersion }
+							: {}),
+					},
+				},
+				`Connector "${slug}" identity`,
+			).catch(() => {
+				// Best-effort teardown; the grant's tokens are what actually persist.
+			});
+	}
 }
 
 export async function probeIdentity(

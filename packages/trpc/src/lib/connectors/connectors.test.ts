@@ -176,12 +176,24 @@ describe("probeIdentity", () => {
 	});
 
 	test("sentry_mcp asks the MCP server who the token belongs to", async () => {
-		const calls: { method: string; params?: { name?: string } }[] = [];
+		const calls: {
+			method?: string;
+			httpMethod: string;
+			protocolHeader: string | null;
+			params?: { name?: string };
+		}[] = [];
 		globalThis.fetch = (async (_url: string, init: RequestInit) => {
-			const body = JSON.parse(String(init.body)) as (typeof calls)[number] & {
-				id?: number;
-			};
-			calls.push(body);
+			const headers = new Headers(init.headers);
+			const body = init.body
+				? (JSON.parse(String(init.body)) as { id?: number; method?: string })
+				: {};
+			calls.push({
+				method: body.method,
+				httpMethod: init.method ?? "GET",
+				protocolHeader: headers.get("MCP-Protocol-Version"),
+				params: (body as { params?: { name?: string } }).params,
+			});
+			if (init.method === "DELETE") return new Response(null, { status: 204 });
 			if (body.id === undefined) return new Response(null, { status: 202 });
 			const result =
 				body.method === "tools/call"
@@ -190,11 +202,29 @@ describe("probeIdentity", () => {
 								user: { id: "42", name: "Harshith", email: "h@tegon.ai" },
 							},
 						}
-					: { serverInfo: { name: "Sentry MCP" } };
-			return new Response(
-				`event: message\ndata: ${JSON.stringify({ jsonrpc: "2.0", id: body.id, result })}\n\n`,
-				{ status: 200, headers: { "Content-Type": "text/event-stream" } },
+					: {
+							protocolVersion: "2025-06-18",
+							serverInfo: { name: "Sentry MCP" },
+						};
+			// A response whose JSON spans several SSE data: lines (rejoined with a
+			// newline), followed by a keep-alive comment event — the shape that
+			// broke a naive "last data: line" parser.
+			const payload = JSON.stringify(
+				{ jsonrpc: "2.0", id: body.id, result },
+				null,
+				1,
 			);
+			const dataLines = payload
+				.split("\n")
+				.map((line) => `data: ${line}`)
+				.join("\n");
+			return new Response(`event: message\n${dataLines}\n\n: keep-alive\n\n`, {
+				status: 200,
+				headers: {
+					"Content-Type": "text/event-stream",
+					"mcp-session-id": "sess-1",
+				},
+			});
 		}) as unknown as typeof fetch;
 
 		const identity = await probeIdentity(
@@ -203,12 +233,16 @@ describe("probeIdentity", () => {
 			"mcp-test",
 		);
 
-		expect(calls.map((c) => c.method)).toEqual([
+		expect(calls.map((c) => c.method ?? `[${c.httpMethod}]`)).toEqual([
 			"initialize",
 			"notifications/initialized",
 			"tools/call",
+			"[DELETE]",
 		]);
 		expect(calls[2]?.params?.name).toBe("execute_sentry_tool");
+		// The negotiated version rides along on every request after initialize.
+		expect(calls[1]?.protocolHeader).toBe("2025-06-18");
+		expect(calls[2]?.protocolHeader).toBe("2025-06-18");
 		expect(identity.account).toEqual({ id: "42", label: "h@tegon.ai" });
 		expect(identity.user).toEqual({ id: "42", label: "Harshith" });
 	});
