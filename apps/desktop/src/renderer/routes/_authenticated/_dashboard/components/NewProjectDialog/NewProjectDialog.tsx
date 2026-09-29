@@ -30,6 +30,7 @@ interface NewProjectDialogProps {
 	initialName?: string;
 	initialState?: TaskProjectState;
 	people: { id: string; name: string; image: string | null }[];
+	onInvite?: () => void;
 	defaultLeadId: string | null;
 	isCreating: boolean;
 	onOpenChange: (open: boolean) => void;
@@ -41,6 +42,7 @@ export function NewProjectDialog({
 	initialName = "",
 	initialState = "planned",
 	people,
+	onInvite,
 	defaultLeadId,
 	isCreating,
 	onOpenChange,
@@ -177,6 +179,7 @@ export function NewProjectDialog({
 						<ProjectPropertyChips
 							value={{ state, leadUserId, startDate, targetDate }}
 							people={people}
+							onInvite={onInvite}
 							onChange={(changes) => {
 								if (changes.state) setState(changes.state);
 								if (changes.leadUserId !== undefined)

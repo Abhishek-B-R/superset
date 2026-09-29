@@ -20,12 +20,14 @@ const EMPTY_VALUE = "text-muted-foreground";
 interface ProjectRecordSideProps {
 	project: ProjectRecord;
 	people: { id: string; name: string; image: string | null }[];
+	onInvite?: () => void;
 	onChange: (changes: ProjectRecordChanges) => void;
 }
 
 export function ProjectRecordSide({
 	project,
 	people,
+	onInvite,
 	onChange,
 }: ProjectRecordSideProps) {
 	const { formatDate } = useFormat();
@@ -54,6 +56,7 @@ export function ProjectRecordSide({
 				<PropertyRow label={<Trans>Lead</Trans>}>
 					<ProjectLeadPicker
 						people={people}
+						onInvite={onInvite}
 						value={project.lead?.id ?? null}
 						onChange={(leadUserId) => onChange({ leadUserId })}
 					>

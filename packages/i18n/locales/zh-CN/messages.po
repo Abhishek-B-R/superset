@@ -1694,9 +1694,6 @@ msgstr "已向{where}添加1个文件"
 msgid "Added only when launching with a prompt — e.g. <0>--</0>, <1>--prompt</1>, <2>-i</2>."
 msgstr "仅在带提示词启动时添加，例如<0>--</0>、<1>--prompt</1>、<2>-i</2>。"
 
-msgid "Adding members will increase your subscription cost, prorated to your billing cycle."
-msgstr "添加成员会增加订阅费用，并按账单周期按比例计算。"
-
 msgid "Address Comments with Agent"
 msgstr "用智能体处理评论"
 
@@ -8220,9 +8217,6 @@ msgstr "邀请成员"
 
 msgid "Invite Member"
 msgstr "邀请成员"
-
-msgid "Invite people..."
-msgstr "邀请他人..."
 
 msgid "Invite teammate"
 msgstr "邀请团队成员"
@@ -16170,9 +16164,6 @@ msgstr "此视图出错了"
 
 msgid "This week"
 msgstr "本周"
-
-msgid "This will affect your billing"
-msgstr "这会影响你的账单"
 
 msgid "This will change your organization's public URL. Make sure to update any bookmarks or shared links."
 msgstr "这会更改组织的公开URL。请记得更新书签和已分享的链接。"

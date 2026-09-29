@@ -1694,9 +1694,6 @@ msgstr "{where} konumuna 1 dosya eklendi"
 msgid "Added only when launching with a prompt — e.g. <0>--</0>, <1>--prompt</1>, <2>-i</2>."
 msgstr "Yalnızca istemle başlatılırken eklenir — örn. <0>--</0>, <1>--prompt</1>, <2>-i</2>."
 
-msgid "Adding members will increase your subscription cost, prorated to your billing cycle."
-msgstr "Üye eklemek, faturalandırma döngünüze orantılanarak abonelik maliyetinizi artırır."
-
 msgid "Address Comments with Agent"
 msgstr "Yorumları ajanla ele al"
 
@@ -8220,9 +8217,6 @@ msgstr "Üye davet et"
 
 msgid "Invite Member"
 msgstr "Üye davet et"
-
-msgid "Invite people..."
-msgstr "Kişileri davet et..."
 
 msgid "Invite teammate"
 msgstr "Takım arkadaşı davet et"
@@ -16170,9 +16164,6 @@ msgstr "Bu görünüm bir hatayla karşılaştı"
 
 msgid "This week"
 msgstr "Bu hafta"
-
-msgid "This will affect your billing"
-msgstr "Bu, faturalandırmanızı etkiler"
 
 msgid "This will change your organization's public URL. Make sure to update any bookmarks or shared links."
 msgstr "Bu, kuruluşunuzun herkese açık URL'sini değiştirir. Yer imlerinizi veya paylaşılan bağlantıları güncellemeyi unutmayın."

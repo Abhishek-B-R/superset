@@ -15,6 +15,7 @@ import { NewProjectDialog } from "renderer/routes/_authenticated/_dashboard/comp
 import { useCloudWorkspaceListItems } from "renderer/routes/_authenticated/_dashboard/hooks/useCloudWorkspaceListItems";
 import { useCopyShareLink } from "renderer/routes/_authenticated/_dashboard/hooks/useCopyShareLink";
 import { useOrganizationPeople } from "renderer/routes/_authenticated/_dashboard/hooks/useOrganizationPeople";
+import { useInviteMember } from "renderer/routes/_authenticated/hooks/useInviteMember";
 import { useOptimisticActions } from "renderer/routes/_authenticated/hooks/useOptimisticActions";
 import { TASK_LIST_REFETCH_INTERVAL } from "../../../components/TasksView/hooks/useTasksData";
 import { useTaskLabelMutations } from "../../hooks/useTaskLabelMutations";
@@ -53,6 +54,7 @@ export function TaskRecordScreen({
 	const copyShareLink = useCopyShareLink();
 	const openUrl = electronTrpc.external.openUrl.useMutation();
 	const { people, currentUserId } = useOrganizationPeople();
+	const inviteMember = useInviteMember();
 	const [newProjectName, setNewProjectName] = useState<string | null>(null);
 	const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
 
@@ -370,6 +372,7 @@ export function TaskRecordScreen({
 				open={newProjectName !== null}
 				initialName={newProjectName ?? ""}
 				people={people}
+				onInvite={inviteMember}
 				defaultLeadId={currentUserId}
 				isCreating={createProject.isPending}
 				onOpenChange={(open) => {

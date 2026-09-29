@@ -23,6 +23,7 @@ interface ProjectsListProps {
 	sort: ProjectSort;
 	onOpen: (projectId: string) => void;
 	people: { id: string; name: string; image: string | null }[];
+	onInvite?: () => void;
 	onUpdate: (projectId: string, changes: ProjectChanges) => void;
 }
 
@@ -32,6 +33,7 @@ export function ProjectsList({
 	sort,
 	onOpen,
 	people,
+	onInvite,
 	onUpdate,
 }: ProjectsListProps) {
 	if (projects.length === 0) {
@@ -88,6 +90,7 @@ export function ProjectsList({
 						project={project}
 						onOpen={() => onOpen(project.id)}
 						people={people}
+						onInvite={onInvite}
 						onUpdate={(changes) => onUpdate(project.id, changes)}
 					/>
 				))}

@@ -23,12 +23,14 @@ export interface ProjectProperties {
 interface ProjectPropertyChipsProps {
 	value: ProjectProperties;
 	people: { id: string; name: string; image: string | null }[];
+	onInvite?: () => void;
 	onChange: (changes: Partial<ProjectProperties>) => void;
 }
 
 export function ProjectPropertyChips({
 	value,
 	people,
+	onInvite,
 	onChange,
 }: ProjectPropertyChipsProps) {
 	const { formatDate } = useFormat();
@@ -50,6 +52,7 @@ export function ProjectPropertyChips({
 			</ProjectStatePicker>
 			<ProjectLeadPicker
 				people={people}
+				onInvite={onInvite}
 				value={value.leadUserId}
 				onChange={(leadUserId) => onChange({ leadUserId })}
 			>

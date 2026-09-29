@@ -9,6 +9,7 @@ import { cloudTrpc } from "renderer/lib/cloud-trpc";
 import { useCloudWorkspaceListItems } from "renderer/routes/_authenticated/_dashboard/hooks/useCloudWorkspaceListItems";
 import { useOrganizationPeople } from "renderer/routes/_authenticated/_dashboard/hooks/useOrganizationPeople";
 import { sortCloudWorkspaces } from "renderer/routes/_authenticated/_dashboard/utils/groupCloudWorkspaces";
+import { useInviteMember } from "renderer/routes/_authenticated/hooks/useInviteMember";
 import type { ProjectRecord, ProjectTab } from "../../types";
 import { ProjectRecordView } from "../ProjectRecordView";
 
@@ -28,6 +29,7 @@ export function ProjectRecordScreen({
 	const now = useNow(NOW_TICK_MS);
 	const utils = cloudTrpc.useUtils();
 	const { people } = useOrganizationPeople();
+	const inviteMember = useInviteMember();
 	const { workspaces: allWorkspaces = [] } = useCloudWorkspaces();
 	const projectWorkspaces = allWorkspaces.filter(
 		(workspace) => workspace.projectId === projectId,
@@ -99,6 +101,7 @@ export function ProjectRecordScreen({
 			tab={tab}
 			now={now}
 			people={people}
+			onInvite={inviteMember}
 			onTabChange={(next) =>
 				void navigate({
 					to: "/projects/$projectId",

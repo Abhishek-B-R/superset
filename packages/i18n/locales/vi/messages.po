@@ -1694,9 +1694,6 @@ msgstr "Đã thêm 1 tệp vào {where}"
 msgid "Added only when launching with a prompt — e.g. <0>--</0>, <1>--prompt</1>, <2>-i</2>."
 msgstr "Chỉ thêm vào khi khởi chạy kèm prompt — ví dụ <0>--</0>, <1>--prompt</1>, <2>-i</2>."
 
-msgid "Adding members will increase your subscription cost, prorated to your billing cycle."
-msgstr "Thêm thành viên sẽ làm tăng chi phí đăng ký, tính theo tỷ lệ trong chu kỳ thanh toán của bạn."
-
 msgid "Address Comments with Agent"
 msgstr "Xử lý bình luận bằng agent"
 
@@ -8220,9 +8217,6 @@ msgstr "Mời thành viên"
 
 msgid "Invite Member"
 msgstr "Mời thành viên"
-
-msgid "Invite people..."
-msgstr "Mời người khác..."
 
 msgid "Invite teammate"
 msgstr "Mời đồng đội"
@@ -16170,9 +16164,6 @@ msgstr "Khung hiển thị này gặp lỗi"
 
 msgid "This week"
 msgstr "Tuần này"
-
-msgid "This will affect your billing"
-msgstr "Việc này ảnh hưởng tới hóa đơn của bạn"
 
 msgid "This will change your organization's public URL. Make sure to update any bookmarks or shared links."
 msgstr "Thao tác này sẽ đổi URL công khai của tổ chức. Hãy nhớ cập nhật các dấu trang hoặc liên kết đã chia sẻ."

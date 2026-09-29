@@ -17,6 +17,7 @@ interface ProjectRecordViewProps {
 	tab: ProjectTab;
 	now: Date;
 	people: { id: string; name: string; image: string | null }[];
+	onInvite?: () => void;
 	onTabChange: (tab: ProjectTab) => void;
 	onBack: () => void;
 	onChange: (changes: ProjectRecordChanges) => void;
@@ -34,6 +35,7 @@ export function ProjectRecordView({
 	tab,
 	now,
 	people,
+	onInvite,
 	onTabChange,
 	onBack,
 	onChange,
@@ -97,6 +99,7 @@ export function ProjectRecordView({
 					<ProjectRecordSide
 						project={project}
 						people={people}
+						onInvite={onInvite}
 						onChange={onChange}
 					/>
 				</div>

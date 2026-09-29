@@ -1,15 +1,16 @@
 import { Trans, useLingui } from "@lingui/react/macro";
-import { Avatar } from "@superset/ui/atoms/Avatar";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
+	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@superset/ui/dropdown-menu";
 import { useMemo, useState } from "react";
 import { HiOutlineUserCircle } from "react-icons/hi2";
 import { cloudTrpc } from "renderer/lib/cloud-trpc";
 import { useOptimisticActions } from "renderer/routes/_authenticated/hooks/useOptimisticActions";
+import { AssigneeMenuItems } from "../../../../../../../components/TasksView/components/shared/AssigneeMenuItems";
 import type { TaskWithStatus } from "../../../../../../../components/TasksView/hooks/useTasksTable";
 
 interface AssigneePropertyProps {
@@ -99,38 +100,14 @@ export function AssigneeProperty({ task }: AssigneePropertyProps) {
 				</button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="start" className="w-56">
-				<div className="max-h-64 overflow-y-auto">
-					<DropdownMenuItem
-						onSelect={() => handleSelectUser(null)}
-						className="flex items-center gap-2"
-					>
-						<HiOutlineUserCircle className="w-5 h-5 text-muted-foreground shrink-0" />
-						<span>
-							<Trans>No assignee</Trans>
-						</span>
-						{!task.assigneeId && !task.assigneeExternalId && (
-							<span className="ml-auto text-xs text-muted-foreground">✓</span>
-						)}
-					</DropdownMenuItem>
-					{users.map((user) => (
-						<DropdownMenuItem
-							key={user.id}
-							onSelect={() => handleSelectUser(user.id)}
-							className="flex items-center gap-2"
-						>
-							<Avatar size="xs" fullName={user.name} image={user.image} />
-							<div className="flex flex-col">
-								<span>{user.name}</span>
-								<span className="text-xs text-muted-foreground">
-									{user.email}
-								</span>
-							</div>
-							{user.id === task.assigneeId && (
-								<span className="ml-auto text-xs text-muted-foreground">✓</span>
-							)}
-						</DropdownMenuItem>
-					))}
-				</div>
+				<AssigneeMenuItems
+					users={users}
+					currentAssigneeId={task.assigneeId}
+					hasExternalAssignee={!!task.assigneeExternalId}
+					onSelect={handleSelectUser}
+					MenuItem={DropdownMenuItem}
+					MenuSeparator={DropdownMenuSeparator}
+				/>
 			</DropdownMenuContent>
 		</DropdownMenu>
 	);
