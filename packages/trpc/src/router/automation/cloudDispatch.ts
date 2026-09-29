@@ -3,7 +3,7 @@ import { cloudWorkspaces, environments, members } from "@superset/db/schema";
 import { CLOUD_AGENT_PROMPT_MAX_LENGTH } from "@superset/shared/cloud-agent-launch";
 import { SUPERSET_USER_ID_HEADER } from "@superset/shared/host-routing";
 import { and, eq } from "drizzle-orm";
-import { assertCloudAccess } from "../../lib/cloud-guards";
+import { cloudAccess } from "../../lib/cloud-guards";
 import {
 	environmentRepositoryRows,
 	primaryRepository,
@@ -11,6 +11,7 @@ import {
 	sandboxHostSecretFor,
 } from "../../lib/sandbox";
 import { startCloudWorkspace } from "../cloud-workspace/start";
+import { transitionCloudWorkspace } from "../cloud-workspace/transition";
 import {
 	markSandboxUnavailable,
 	wakeCloudWorkspace,
@@ -26,10 +27,18 @@ import {
 	replacePin,
 } from "./run";
 
-/** Inside the dispatch functions' 60 s, so a slow box fails the run instead of stranding it. */
 export const CLOUD_DISPATCH_DEADLINE_MS = 30_000;
 
+/** Starting a box takes a few seconds of API calls; don't begin one this close to the deadline. */
+const NEW_WORKSPACE_MARGIN_MS = 5_000;
+
 const STRANDED_PROVISIONING_MS = 10 * 60_000;
+
+const deadlineFailure = () =>
+	new RunFailure(
+		`the cloud workspace should have started but did not answer within ${CLOUD_DISPATCH_DEADLINE_MS / 1000} seconds`,
+		"cloud_not_ready",
+	);
 
 type CloudWorkspaceRow = typeof cloudWorkspaces.$inferSelect;
 
@@ -47,30 +56,29 @@ export function runInCloud(args: {
 	} | null;
 	placed: (workspace: RunWorkspace | null) => void;
 }): Promise<AgentRunResult | null> {
+	const startedAt = Date.now();
+	// The race stops the wait, not the work, so each step that starts something checks the time.
+	const requireTime = (ms = 0) => {
+		if (Date.now() - startedAt > CLOUD_DISPATCH_DEADLINE_MS - ms) {
+			throw deadlineFailure();
+		}
+	};
 	let timer: ReturnType<typeof setTimeout> | undefined;
 	const deadline = new Promise<never>((_, reject) => {
 		timer = setTimeout(
-			() =>
-				reject(
-					new RunFailure(
-						`the cloud workspace should have started but did not answer within ${CLOUD_DISPATCH_DEADLINE_MS / 1000} seconds`,
-						"cloud_not_ready",
-					),
-				),
+			() => reject(deadlineFailure()),
 			CLOUD_DISPATCH_DEADLINE_MS,
 		);
 	});
-	return Promise.race([startRun(args), deadline]).finally(() =>
+	return Promise.race([startRun(args, requireTime), deadline]).finally(() =>
 		clearTimeout(timer),
 	);
 }
 
-async function startRun({
-	automation,
-	prompt,
-	event,
-	placed,
-}: Parameters<typeof runInCloud>[0]): Promise<AgentRunResult | null> {
+async function startRun(
+	{ automation, prompt, event, placed }: Parameters<typeof runInCloud>[0],
+	requireTime: (ms?: number) => void,
+): Promise<AgentRunResult | null> {
 	await assertOwnerMayUseCloud(automation);
 
 	if (automation.cloudWorkspaceId) {
@@ -95,6 +103,7 @@ async function startRun({
 			headers,
 			signal: AbortSignal.timeout(10_000),
 		});
+		requireTime();
 		return hostServiceMutation<
 			{
 				workspaceId: string;
@@ -124,14 +133,16 @@ async function startRun({
 			null,
 		);
 	}
+	const branch = event
+		? await pullRequestBranch(event, automation.environmentId)
+		: undefined;
+	requireTime(NEW_WORKSPACE_MARGIN_MS);
 	const created = await startCloudWorkspace({
 		organizationId: automation.organizationId,
 		userId: automation.ownerUserId,
 		environmentId: automation.environmentId,
 		name: automation.name.slice(0, 200),
-		branch: event
-			? await pullRequestBranch(event, automation.environmentId)
-			: undefined,
+		branch,
 		launch: { agent: automation.agent, prompt },
 	});
 	placed({ cloudWorkspaceId: created.id });
@@ -145,7 +156,6 @@ async function startRun({
 	return null;
 }
 
-/** Both can change after the automation was saved. */
 async function assertOwnerMayUseCloud(
 	automation: DispatchableAutomation,
 ): Promise<void> {
@@ -165,7 +175,19 @@ async function assertOwnerMayUseCloud(
 			"cloud_access_denied",
 		);
 	}
-	await assertCloudAccess({ userId: automation.ownerUserId, session: null });
+	const { enabled } = await cloudAccess({
+		userId: automation.ownerUserId,
+		session: null,
+	});
+	if (enabled === undefined) {
+		throw new RunFailure("could not check the owner's cloud access", null);
+	}
+	if (!enabled) {
+		throw new RunFailure(
+			"the automation's owner can no longer use cloud workspaces",
+			"cloud_access_denied",
+		);
+	}
 }
 
 /** The pinned cloud workspace, awake, or null when it is gone. */
@@ -180,6 +202,11 @@ async function reachablePin(
 	}
 	if (row.status === "provisioning") {
 		if (Date.now() - row.createdAt.getTime() > STRANDED_PROVISIONING_MS) {
+			await transitionCloudWorkspace({
+				id: row.id,
+				from: ["provisioning"],
+				to: "failed",
+			});
 			return null;
 		}
 		throw new RunFailure(

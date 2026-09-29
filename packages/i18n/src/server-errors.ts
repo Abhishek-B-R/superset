@@ -145,6 +145,12 @@ export const serverErrorMessages: Record<
 				message: "A cloud automation needs an environment or a cloud workspace",
 			}),
 		),
+	"serverError.automation.cloudPromptTooLong": (params) =>
+		i18n._(
+			msg({
+				message: `A cloud automation's instructions can be at most ${params?.max} characters`,
+			}),
+		),
 	"serverError.automation.cloudWorkspaceNotYours": () =>
 		i18n._(
 			msg({

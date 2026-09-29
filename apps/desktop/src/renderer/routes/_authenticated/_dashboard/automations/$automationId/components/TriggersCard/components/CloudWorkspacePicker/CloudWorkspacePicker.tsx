@@ -14,8 +14,10 @@ import { LuCloud, LuPlus, LuTriangleAlert } from "react-icons/lu";
 import { PickerTrigger } from "renderer/components/PickerTrigger";
 
 interface CloudWorkspacePickerProps {
-	/** Only the caller's own: a run wakes a box with its creator's credentials. */
+	/** The choices: only the caller's own, since a run wakes a box with its creator's credentials. */
 	workspaces: { id: string; name: string }[] | undefined;
+	/** Every cloud workspace in the organization, to name a pin that isn't one of the choices. */
+	allWorkspaces: { id: string; name: string; status: string }[] | undefined;
 	value: string | null;
 	onChange: (cloudWorkspaceId: string | null) => void;
 	className?: string;
@@ -24,6 +26,7 @@ interface CloudWorkspacePickerProps {
 
 export function CloudWorkspacePicker({
 	workspaces,
+	allWorkspaces,
 	value,
 	onChange,
 	className,
@@ -31,13 +34,15 @@ export function CloudWorkspacePicker({
 }: CloudWorkspacePickerProps) {
 	const { t } = useLingui();
 	const [open, setOpen] = useState(false);
-	const selected = value
-		? (workspaces?.find((row) => row.id === value) ?? null)
+	const pinned = value
+		? (allWorkspaces?.find((row) => row.id === value) ?? null)
 		: null;
-	const resolving = !!value && workspaces === undefined;
-	// The run replaces a gone pin with a new workspace and re-pins, so this
-	// only lasts until the next run.
-	const missing = !!value && !selected && !resolving;
+	const resolving = !!value && allWorkspaces === undefined;
+	const missing =
+		!!value &&
+		!resolving &&
+		(!pinned || pinned.status === "failed" || pinned.status === "deleted");
+	const selected = missing ? null : pinned;
 	const label = selected
 		? selected.name
 		: resolving

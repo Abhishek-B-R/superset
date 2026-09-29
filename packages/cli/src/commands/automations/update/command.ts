@@ -82,6 +82,8 @@ export default command({
 			!targetHostId &&
 			(options.workspace !== undefined ||
 				options.project !== undefined ||
+				options.session ||
+				options.tag?.length ||
 				(options.cloud && !options.environment))
 				? await ctx.api.automation.get.query({ id })
 				: null;

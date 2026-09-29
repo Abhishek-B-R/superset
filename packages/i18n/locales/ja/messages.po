@@ -1217,6 +1217,10 @@ msgstr "新しいSupersetの準備ができました"
 msgid "A cloud automation needs an environment or a cloud workspace"
 msgstr "クラウドオートメーションには環境またはクラウドワークスペースが必要です"
 
+#. placeholder {0}: params?.max
+msgid "A cloud automation's instructions can be at most {0} characters"
+msgstr "クラウドオートメーションの指示は最大 {0} 文字までです"
+
 #. js-lingui-explicit-id
 msgid "serverError.common.cloudWorkspaceCannotCallThis"
 msgstr "クラウドワークスペースからは {path} を呼び出せません。サインイン済みのクライアントから実行してください。"

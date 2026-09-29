@@ -1217,6 +1217,10 @@ msgstr "Lepší verze Superset je připravena"
 msgid "A cloud automation needs an environment or a cloud workspace"
 msgstr "Cloudová automatizace potřebuje prostředí nebo cloudový pracovní prostor"
 
+#. placeholder {0}: params?.max
+msgid "A cloud automation's instructions can be at most {0} characters"
+msgstr "Pokyny cloudové automatizace mohou mít nejvýše {0} znaků"
+
 #. js-lingui-explicit-id
 msgid "serverError.common.cloudWorkspaceCannotCallThis"
 msgstr "Cloudový workspace nemůže volat {path}. Spusť to z klienta, kde jsi přihlášený."

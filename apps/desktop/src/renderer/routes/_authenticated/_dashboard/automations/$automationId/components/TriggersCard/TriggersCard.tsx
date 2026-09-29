@@ -198,6 +198,7 @@ export function TriggersCard({
 						<CloudWorkspacePicker
 							className={SCOPE_CHIP}
 							workspaces={ownCloudWorkspaces}
+							allWorkspaces={cloudWorkspaces}
 							value={scope.cloudWorkspaceId}
 							disabled={readOnly}
 							onChange={(cloudWorkspaceId) =>

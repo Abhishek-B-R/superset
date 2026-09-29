@@ -1217,6 +1217,10 @@ msgstr "A better Superset is ready"
 msgid "A cloud automation needs an environment or a cloud workspace"
 msgstr "A cloud automation needs an environment or a cloud workspace"
 
+#. placeholder {0}: params?.max
+msgid "A cloud automation's instructions can be at most {0} characters"
+msgstr "A cloud automation's instructions can be at most {0} characters"
+
 #. js-lingui-explicit-id
 msgid "serverError.common.cloudWorkspaceCannotCallThis"
 msgstr "A cloud workspace cannot call {path}. Run this from a client you are signed into."

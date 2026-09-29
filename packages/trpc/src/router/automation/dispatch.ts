@@ -10,6 +10,7 @@ import {
 	v2Projects,
 	v2UsersHosts,
 } from "@superset/db/schema";
+import { CLOUD_AGENT_PROMPT_MAX_LENGTH } from "@superset/shared/cloud-agent-launch";
 import { parseGitHubRemote } from "@superset/shared/github-remote";
 import {
 	buildHostRoutingKey,
@@ -155,7 +156,12 @@ export async function dispatchAutomation(
 				const event = await causeEvent(cause);
 				return runInCloud({
 					automation,
-					prompt: runPrompt(automation, cause, event),
+					prompt: runPrompt(
+						automation,
+						cause,
+						event,
+						CLOUD_AGENT_PROMPT_MAX_LENGTH,
+					),
 					event,
 					placed,
 				});
@@ -343,6 +349,7 @@ function runPrompt(
 	automation: DispatchableAutomation,
 	cause: RunCause,
 	event: Awaited<ReturnType<typeof causeEvent>>,
+	maxLength?: number,
 ): string {
 	return promptWithTriggerContext(
 		automation.prompt,
@@ -352,6 +359,7 @@ function runPrompt(
 			scheduledFor: cause.scheduledFor,
 		},
 		event,
+		maxLength,
 	);
 }
 

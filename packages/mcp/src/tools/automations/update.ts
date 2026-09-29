@@ -40,7 +40,7 @@ export function register(server: McpServer): void {
 				.boolean()
 				.optional()
 				.describe(
-					"Continue the agent session the previous run left, instead of starting another. Requires a pinned v2WorkspaceId.",
+					"Continue the agent session the previous run left, instead of starting another. Requires a pinned v2WorkspaceId or cloudWorkspaceId.",
 				),
 			rrule: z.string().min(1).max(500).optional(),
 			dtstart: z

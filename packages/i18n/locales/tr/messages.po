@@ -1217,6 +1217,10 @@ msgstr "Daha iyi bir Superset hazır"
 msgid "A cloud automation needs an environment or a cloud workspace"
 msgstr "Bulut otomasyonu için bir ortam veya bulut çalışma alanı gerekir"
 
+#. placeholder {0}: params?.max
+msgid "A cloud automation's instructions can be at most {0} characters"
+msgstr "Bulut otomasyonunun talimatları en fazla {0} karakter olabilir"
+
 #. js-lingui-explicit-id
 msgid "serverError.common.cloudWorkspaceCannotCallThis"
 msgstr "Bulut çalışma alanı {path} çağıramaz. Bunu oturum açtığın bir istemciden yap."

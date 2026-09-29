@@ -15,7 +15,11 @@ import {
 	planAllowsAutomations,
 	planTierFromSubscription,
 } from "@superset/shared/billing";
-import { isCloudAgentId } from "@superset/shared/cloud-agent-launch";
+import {
+	CLOUD_AGENT_PROMPT_MAX_LENGTH,
+	isCloudAgentId,
+} from "@superset/shared/cloud-agent-launch";
+import { CLOUD_HOST_ID } from "@superset/shared/host-routing";
 import {
 	describeSchedule,
 	nextOccurrenceAfter,
@@ -128,6 +132,23 @@ async function verifyHostAccess(
 			code: "FORBIDDEN",
 			message: "You don't have access to this host",
 			i18nKey: "serverError.automation.youDonTHaveAccess",
+		});
+	}
+}
+
+/** Room for the trigger block the dispatcher puts ahead of the instructions. */
+const CLOUD_PROMPT_MAX_LENGTH = CLOUD_AGENT_PROMPT_MAX_LENGTH - 2_000;
+
+function assertPromptFitsTarget(targetHostId: string | null, prompt: string) {
+	if (
+		targetHostId === CLOUD_HOST_ID &&
+		prompt.length > CLOUD_PROMPT_MAX_LENGTH
+	) {
+		throw userError({
+			code: "BAD_REQUEST",
+			message: `A cloud automation's instructions can be at most ${CLOUD_PROMPT_MAX_LENGTH} characters`,
+			i18nKey: "serverError.automation.cloudPromptTooLong",
+			params: { max: CLOUD_PROMPT_MAX_LENGTH },
 		});
 	}
 }
@@ -423,6 +444,7 @@ export const automationRouter = {
 				},
 				input.agent,
 			);
+			assertPromptFitsTarget(target.targetHostId, input.prompt);
 
 			// Only the legacy shape carries a top-level schedule; a trigger set
 			// describes its own, or has none at all.
@@ -534,6 +556,10 @@ export const automationRouter = {
 					continueAgentSession: input.continueAgentSession,
 				},
 				input.agent ?? existing.agent,
+			);
+			assertPromptFitsTarget(
+				target.targetHostId,
+				input.prompt ?? existing.prompt,
 			);
 
 			const nextRrule = input.rrule ?? existing.rrule;
@@ -661,6 +687,7 @@ export const automationRouter = {
 			if (existing.prompt === input.prompt) {
 				return { ...existing, scheduleText: safeDescribeRrule(existing) };
 			}
+			assertPromptFitsTarget(existing.targetHostId, input.prompt);
 
 			const updated = await dbWs.transaction(async (tx) => {
 				const [row] = await tx

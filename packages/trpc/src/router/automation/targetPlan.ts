@@ -12,7 +12,6 @@ export interface AutomationTarget {
 	continueAgentSession: boolean;
 }
 
-/** A new automation is an update from here. */
 export const NO_TARGET: AutomationTarget = {
 	targetHostId: null,
 	v2ProjectId: null,
@@ -210,10 +209,12 @@ function planCloud(
 			continueAgentSession: false,
 		},
 		hostsToVerify: [],
+		// Only a named environment is checked: one taken from a pin is a fallback, and an
+		// archived one must not block pinning a box that works.
 		cloud: {
 			environmentToVerify:
-				environmentId && environmentId !== existingEnvironmentId
-					? environmentId
+				input.environmentId && input.environmentId !== existingEnvironmentId
+					? input.environmentId
 					: null,
 		},
 	};

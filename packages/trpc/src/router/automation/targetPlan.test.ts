@@ -130,7 +130,7 @@ describe("planTarget in the cloud", () => {
 			cloudWorkspaceId: OTHER_BOX,
 			environmentId: OTHER_ENV,
 		});
-		expect(plan.cloud).toEqual({ environmentToVerify: OTHER_ENV });
+		expect(plan.cloud).toEqual({ environmentToVerify: null });
 
 		const named = planTarget(
 			pinnedInCloud,
