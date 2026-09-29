@@ -87,6 +87,9 @@ msgstr "(近日公開)"
 msgid "(disabled)"
 msgstr "(無効)"
 
+msgid "(edited)"
+msgstr "（編集済み）"
+
 msgid "(external)"
 msgstr "(外部)"
 
@@ -158,6 +161,10 @@ msgstr "{0, plural, one {非表示のプロジェクト #件} other {非表示�
 msgid "{0, plural, one {# history item} other {# history items}}"
 msgstr "{0, plural, one {#件の履歴} other {#件の履歴}}"
 
+#. placeholder {0}: chosenLabels.length
+msgid "{0, plural, one {# label} other {# labels}}"
+msgstr "{0, plural, other {# 個のラベル}}"
+
 #. placeholder {0}: result.imported
 msgid "{0, plural, one {# login} other {# logins}}"
 msgstr "{0, plural, one {#件のログイン情報} other {#件のログイン情報}}"
@@ -166,10 +173,16 @@ msgstr "{0, plural, one {#件のログイン情報} other {#件のログイン�
 msgid "{0, plural, one {# passed} other {# passed}}"
 msgstr "{0, plural, one {#件成功} other {#件成功}}"
 
+#. placeholder {0}: chosenLeads.length
+#. placeholder {0}: chosenPeople.length
+msgid "{0, plural, one {# person} other {# people}}"
+msgstr "{0, plural, other {# 人}}"
+
 #. placeholder {0}: selectedProjects.length
 msgid "{0, plural, one {# project selected.} other {# projects selected.}}"
 msgstr "{0, plural, one {#件のプロジェクトを選択中。} other {#件のプロジェクトを選択中。}}"
 
+#. placeholder {0}: chosenProjects.length
 #. placeholder {0}: projectFilters.length
 msgid "{0, plural, one {# project} other {# projects}}"
 msgstr "{0, plural, one {# 件のプロジェクト} other {# 件のプロジェクト}}"
@@ -562,6 +575,103 @@ msgstr "全トークンの{0}% · {1}トークン"
 msgid "{0}% of total cost · {1} tokens · * at API list rates"
 msgstr "総コストの{0}% · {1}トークン · * API定価換算"
 
+msgid "{actor} added the label {label}"
+msgstr "{actor}がラベル {label} を追加しました"
+
+msgid "{actor} added the task to {to}"
+msgstr "{actor}がタスクを {to} に追加しました"
+
+msgid "{actor} added the workspace to {project}"
+msgstr "{actor}がワークスペースを {project} に追加しました"
+
+msgid "{actor} archived the workspace"
+msgstr "{actor}がワークスペースをアーカイブしました"
+
+msgid "{actor} assigned the task to {to}"
+msgstr "{actor}がタスクを {to} に割り当てました"
+
+msgid "{actor} assigned themselves"
+msgstr "{actor}が自分に割り当てました"
+
+msgid "{actor} changed the priority from {from} to {to}"
+msgstr "{actor}が優先度を {from} から {to} に変更しました"
+
+msgid "{actor} cleared the status"
+msgstr "{actor}がステータスをクリアしました"
+
+msgid "{actor} created the task"
+msgstr "{actor}がタスクを作成しました"
+
+msgid "{actor} created the workspace from environment {environment}"
+msgstr "{actor}が環境 {environment} からワークスペースを作成しました"
+
+msgid "{actor} edited the description"
+msgstr "{actor}が説明を編集しました"
+
+msgid "{actor} joined"
+msgstr "{actor}が参加しました"
+
+msgid "{actor} linked {chip}"
+msgstr "{actor}が{chip}をリンクしました"
+
+msgid "{actor} linked {chip} · suggested by {suggestedBy}"
+msgstr "{actor}が{chip}をリンクしました · {suggestedBy}の提案"
+
+msgid "{actor} linked the workspace {workspace}"
+msgstr "{actor}がワークスペース {workspace} をリンクしました"
+
+msgid "{actor} made the workspace private"
+msgstr "{actor}がワークスペースを非公開にしました"
+
+msgid "{actor} moved the task from {from} to {to}"
+msgstr "{actor}がタスクを {from} から {to} に移動しました"
+
+msgid "{actor} opened {badge}"
+msgstr "{actor}が{badge}を作成しました"
+
+msgid "{actor} published {chip}"
+msgstr "{actor}が{chip}を公開しました"
+
+msgid "{actor} removed the assignee"
+msgstr "{actor}が担当者を外しました"
+
+msgid "{actor} removed the label {label}"
+msgstr "{actor}がラベル {label} を削除しました"
+
+msgid "{actor} removed the priority"
+msgstr "{actor}が優先度を外しました"
+
+msgid "{actor} removed the project"
+msgstr "{actor}がプロジェクトを外しました"
+
+msgid "{actor} removed the task from {from}"
+msgstr "{actor}がタスクを {from} から外しました"
+
+msgid "{actor} renamed the task to {title}"
+msgstr "{actor}がタスク名を {title} に変更しました"
+
+#. placeholder {0}: entry.to
+msgid "{actor} renamed the workspace to <0>{0}</0>"
+msgstr "{actor}がワークスペース名を<0>{0}</0>に変更しました"
+
+msgid "{actor} set the priority to {to}"
+msgstr "{actor}が優先度を {to} に設定しました"
+
+msgid "{actor} set the status to {to}"
+msgstr "{actor}がステータスを {to} に設定しました"
+
+msgid "{actor} shared the workspace with the organization"
+msgstr "{actor}がワークスペースを組織と共有しました"
+
+msgid "{actor} unassigned {from}"
+msgstr "{actor}が {from} の割り当てを外しました"
+
+msgid "{actor} unlinked {chip}"
+msgstr "{actor}が{chip}のリンクを解除しました"
+
+msgid "{actor} unlinked the workspace {workspace}"
+msgstr "{actor}がワークスペース {workspace} のリンクを解除しました"
+
 msgid "{actual} so far · ~{projected} projected"
 msgstr "現時点で{actual} · 予測は約{projected}"
 
@@ -592,6 +702,9 @@ msgstr "{configTitle}のフォントサイズ"
 
 msgid "{cookieCount} cookies — forget this site"
 msgstr "{cookieCount}件のCookie — このサイトを削除"
+
+msgid "{count, plural, one {# active port — show details} other {# active ports — show details}}"
+msgstr "{count, plural, one {#個のアクティブなポート — 詳細を表示} other {#個のアクティブなポート — 詳細を表示}}"
 
 msgid "{count, plural, one {# Check Failed} other {# Checks Failed}}"
 msgstr "{count, plural, one {#件のチェックが失敗} other {#件のチェックが失敗}}"
@@ -965,6 +1078,9 @@ msgstr "{uncommittedCount, plural, one {#件のファイルが変更されまし
 
 msgid "{updatedLabel} restored to defaults"
 msgstr "{updatedLabel}をデフォルトに復元しました"
+
+msgid "{uploading, plural, one {Uploading # file…} other {Uploading # files…}}"
+msgstr "{uploading, plural, other {# 件のファイルをアップロード中…}}"
 
 msgid "{used} used"
 msgstr "{used} 使用済み"
@@ -1392,6 +1508,10 @@ msgstr "アクティベーション、使い始めてからの利用量、そし
 msgid "Active"
 msgstr "有効"
 
+msgctxt "presence"
+msgid "Active"
+msgstr "アクティブ"
+
 msgid "active {lastActive}"
 msgstr "{lastActive}にアクティブ"
 
@@ -1426,6 +1546,9 @@ msgstr "{0}アカウントを追加"
 msgid "Add a comment…"
 msgstr "コメントを追加…"
 
+msgid "Add a description…"
+msgstr "説明を追加…"
+
 msgid "Add a lifecycle run script in Project Settings or mark a terminal script as the workspace run."
 msgstr "プロジェクト設定でライフサイクルの実行スクリプトを追加するか、ターミナルスクリプトをワークスペース実行に指定してください。"
 
@@ -1434,6 +1557,9 @@ msgstr "プロジェクトを追加するとGitHub issueが表示されます。
 
 msgid "Add a project to see pull requests."
 msgstr "プロジェクトを追加するとプルリクエストが表示されます。"
+
+msgid "Add a short summary…"
+msgstr "短い概要を追加…"
 
 msgid "Add account"
 msgstr "アカウントを追加"
@@ -1493,6 +1619,9 @@ msgstr "ファイルやアプリなどを追加(@)"
 msgid "Add issue #{0} to workspace"
 msgstr "issue #{0}をワークスペースに追加"
 
+msgid "Add label"
+msgstr "ラベルを追加"
+
 msgid "Add listening agent"
 msgstr "コメントを受け取るエージェントを追加"
 
@@ -1523,6 +1652,9 @@ msgstr "セットアップコマンドを1行に1つずつ追加..."
 msgid "Add tag…"
 msgstr "タグを追加…"
 
+msgid "Add task"
+msgstr "タスクを追加"
+
 msgid "Add tax ID"
 msgstr "税IDを追加"
 
@@ -1535,11 +1667,20 @@ msgstr "テストのない危険なコードにテストを追加…"
 msgid "Add tests where they're missing"
 msgstr "テストが不足している箇所に追加"
 
+msgid "Add this label"
+msgstr "このラベルを追加"
+
 msgid "Add to Dictionary"
 msgstr "辞書に追加"
 
+msgid "Add to project"
+msgstr "プロジェクトに追加"
+
 msgid "Add to prompt"
 msgstr "プロンプトに追加"
+
+msgid "Add to sidebar"
+msgstr "サイドバーに追加"
 
 msgid "Add to workspace"
 msgstr "ワークスペースに追加"
@@ -1619,6 +1760,9 @@ msgstr "エージェントが完了しました"
 msgid "Agent Independence"
 msgstr "エージェント非依存"
 
+msgid "Agent is working"
+msgstr "エージェントが作業中です"
+
 msgid "Agent launch configuration"
 msgstr "エージェント起動設定"
 
@@ -1642,6 +1786,9 @@ msgstr "同じ差分において、エージェントのレビューが人間の
 
 msgid "Agent reviewers catch planted regressions at parity with median human reviewers in blind tests."
 msgstr "ブラインドテストで、エージェントのレビュアーが仕込まれたリグレッションを人間のレビュアーの中央値と同等に検出する。"
+
+msgid "Agent run failed"
+msgstr "エージェントの実行に失敗しました"
 
 msgid "Agent self-verification"
 msgstr "エージェントの自己検証"
@@ -2151,6 +2298,10 @@ msgstr "環境をアーカイブ"
 msgid "Archived"
 msgstr "アーカイブ済み"
 
+#. placeholder {0}: formatCompactRelativeTime(archivedAt, now)
+msgid "Archived · {0}"
+msgstr "アーカイブ済み · {0}"
+
 msgid "Are you sure you want to delete this file? This action cannot be undone."
 msgstr "このファイルを削除してもよろしいですか?この操作は元に戻せません。"
 
@@ -2229,6 +2380,9 @@ msgstr "名前を挙げられるチームが少なくとも1つ、当社を含�
 msgid "at once"
 msgstr "同時"
 
+msgid "Attach files"
+msgstr "ファイルを添付"
+
 msgid "Attached"
 msgstr "接続中"
 
@@ -2261,9 +2415,6 @@ msgstr "添付ファイルのアップロードに失敗しました: {0}"
 
 msgid "Attachment was not uploaded — send the bytes first"
 msgstr "添付ファイルがアップロードされていません — 先にデータを送信してください"
-
-msgid "Attachments are not wired yet"
-msgstr "添付ファイルはまだ対応していません"
 
 msgid "Attachments need an online host"
 msgstr "添付にはオンラインのホストが必要です"
@@ -2478,9 +2629,6 @@ msgstr "連携に戻る"
 
 msgid "Back to pages"
 msgstr "ページ"
-
-msgid "Back to tasks"
-msgstr "タスクに戻る"
 
 msgid "Back to the leaderboard"
 msgstr "リーダーボードに戻る"
@@ -2914,6 +3062,10 @@ msgstr "返信をキャンセル"
 msgid "Canceled"
 msgstr "キャンセル済み"
 
+msgctxt "project state"
+msgid "Canceled"
+msgstr "キャンセル"
+
 msgid "Canceling..."
 msgstr "キャンセル中..."
 
@@ -2979,8 +3131,17 @@ msgstr "思考プロセス"
 msgid "Change avatar"
 msgstr "アバターを変更"
 
+msgid "Change icon"
+msgstr "アイコンを変更"
+
 msgid "Change location"
 msgstr "場所を変更"
+
+msgid "Change or add labels…"
+msgstr "ラベルを変更または追加…"
+
+msgid "Change or add tasks…"
+msgstr "タスクを変更または追加…"
 
 msgid "Change organization logo"
 msgstr "組織のロゴを変更"
@@ -3106,6 +3267,9 @@ msgstr "当座+普通+Treasuryの推移。段差は資金調達のトランシ�
 msgid "Checking agents…"
 msgstr "エージェントを確認中…"
 
+msgid "Checking environments…"
+msgstr "環境を確認中…"
+
 msgid "Checking host…"
 msgstr "ホストを確認中…"
 
@@ -3216,6 +3380,9 @@ msgstr "閲覧データを消去"
 
 msgid "Clear data"
 msgstr "データを消去"
+
+msgid "Clear date"
+msgstr "日付をクリア"
 
 msgid "Clear filter"
 msgstr "フィルターをクリア"
@@ -3523,6 +3690,9 @@ msgstr "クラウドサンドボックスは {account} では有効になって�
 msgid "Cloud workspace"
 msgstr "クラウドワークスペース"
 
+msgid "Cloud workspaces"
+msgstr "クラウドワークスペース"
+
 msgid "Cloud workspaces ignore this variable. Agents sign in under Settings › Agents instead."
 msgstr "クラウドワークスペースはこの変数を無視します。エージェントは代わりに「設定 › エージェント」でサインインします。"
 
@@ -3638,6 +3808,9 @@ msgstr "ワークスペースのセットアップ、ティアダウン、実行
 msgid "Comment"
 msgstr "コメント"
 
+msgid "Comment actions"
+msgstr "コメントの操作"
+
 msgid "Comment added"
 msgstr "コメント追加"
 
@@ -3726,6 +3899,10 @@ msgstr "デフォルトスタイルと比較"
 msgid "complete"
 msgstr "終了"
 
+msgid "Completed"
+msgstr "完了"
+
+msgctxt "project state"
 msgid "Completed"
 msgstr "完了"
 
@@ -4135,6 +4312,9 @@ msgstr "IDをコピー"
 msgid "Copy IDs"
 msgstr "IDをコピー"
 
+msgid "Copy image"
+msgstr "画像をコピー"
+
 msgid "Copy import path"
 msgstr "インポートパスをコピー"
 
@@ -4193,6 +4373,9 @@ msgstr "選択範囲をコピー"
 msgid "Copy session ID"
 msgstr "セッション ID をコピー"
 
+msgid "Copy task ID"
+msgstr "タスク ID をコピー"
+
 msgid "Copy terminal ID"
 msgstr "ターミナルIDをコピー"
 
@@ -4243,6 +4426,9 @@ msgstr "共有バージョンを変更できませんでした"
 
 msgid "Could not change who can see this page"
 msgstr "このページを見られる人を変更できませんでした"
+
+msgid "Could not change who can see this workspace"
+msgstr "このワークスペースを閲覧できる人を変更できませんでした"
 
 msgid "Could not check your plan. Check your connection and try again."
 msgstr "プランを確認できませんでした。接続を確認してもう一度お試しください。"
@@ -4438,6 +4624,9 @@ msgstr "ブランチを更新できませんでした"
 msgid "serverError.plugins.credentialUnverified"
 msgstr "認証情報を確認できませんでした: {reason}"
 
+msgid "Couldn't ask the workspace for a description"
+msgstr "ワークスペースに説明を依頼できませんでした"
+
 msgid "Couldn't confirm star status — check that the GitHub CLI (`gh`) is installed, signed in, and that you have a network connection"
 msgstr "スター状態を確認できませんでした — GitHub CLI (`gh`) がインストール・サインイン済みで、ネットワーク接続があることを確認してください"
 
@@ -4452,6 +4641,9 @@ msgstr "コメントをコピーできませんでした"
 
 msgid "Couldn't copy path"
 msgstr "パスをコピーできませんでした"
+
+msgid "Couldn't copy the image"
+msgstr "画像をコピーできませんでした"
 
 msgid "Couldn't create workspace"
 msgstr "ワークスペースを作成できませんでした"
@@ -4553,6 +4745,9 @@ msgstr "保存できませんでした — 再試行中…"
 msgid "Couldn't save edits"
 msgstr "編集を保存できませんでした"
 
+msgid "Couldn't save the change"
+msgstr "変更を保存できませんでした"
+
 msgid "Couldn't send comment"
 msgstr "コメントを送信できませんでした"
 
@@ -4598,6 +4793,9 @@ msgstr "プルリクエストを更新できませんでした"
 msgid "Couldn't update thread"
 msgstr "スレッドを更新できませんでした"
 
+msgid "Couldn't upload {name}"
+msgstr "{name} をアップロードできませんでした"
+
 msgid "Couldn’t verify"
 msgstr "確認できませんでした"
 
@@ -4609,6 +4807,9 @@ msgstr "CPUコア数"
 
 msgid "Create"
 msgstr "作成"
+
+msgid "Create \"{newLabel}\""
+msgstr "「{newLabel}」を作成"
 
 msgid "Create a native provider fork with the same conversation context. The original session stays unchanged."
 msgstr "同じ会話コンテキストを持つネイティブのフォークをプロバイダー側に作成します。元のセッションは変更されません。"
@@ -4624,6 +4825,9 @@ msgstr "デスクトップのタスクビューから新しいタスクを作成
 
 msgid "Create a new workspace"
 msgstr "新しいワークスペースを作成"
+
+msgid "Create a project to group tasks and cloud workspaces."
+msgstr "タスクとクラウドワークスペースをまとめるプロジェクトを作成します。"
 
 msgid "Create a task for fixing the login bug"
 msgstr "ログインのバグを直すタスクを作って"
@@ -4680,6 +4884,15 @@ msgstr "PRを作成"
 msgid "Create PR failed: {0}"
 msgstr "PRの作成に失敗しました: {0}"
 
+msgid "Create project"
+msgstr "プロジェクトを作成"
+
+msgid "Create project \"{newName}\""
+msgstr "プロジェクト「{newName}」を作成"
+
+msgid "Create project…"
+msgstr "プロジェクトを作成…"
+
 msgid "Create pull request"
 msgstr "プルリクエストを作成"
 
@@ -4732,6 +4945,15 @@ msgstr "{0}を作成しました"
 msgid "Created {0} · Last used {1}"
 msgstr "作成 {0} · 最終使用 {1}"
 
+msgid "Created {ago}"
+msgstr "{ago}に作成"
+
+msgid "created {createdAgo}"
+msgstr "{createdAgo}に作成"
+
+msgid "Created {createdAgo}"
+msgstr "{createdAgo}に作成"
+
 msgid "Created {createdAtLabel}"
 msgstr "{createdAtLabel}に作成"
 
@@ -4753,11 +4975,11 @@ msgstr "1件のフォルダを{where}に作成しました"
 msgid "Created by"
 msgstr "作成者"
 
+msgid "Created by <0/> · {createdAgo}"
+msgstr "作成者 <0/> · {createdAgo}"
+
 msgid "Created team \"{trimmedName}\""
 msgstr "チーム「{trimmedName}」を作成しました"
-
-msgid "created the issue"
-msgstr "がissueを作成しました"
 
 msgid "creating"
 msgstr "作成中"
@@ -4776,6 +4998,9 @@ msgstr "セッションを作成中"
 
 msgid "Creating session: {name}"
 msgstr "セッションを作成中: {name}"
+
+msgid "Creating the sandbox"
+msgstr "サンドボックスを作成中"
 
 msgid "Creating workspace"
 msgstr "ワークスペースを作成中"
@@ -5073,6 +5298,9 @@ msgstr "グループを削除"
 msgid "Delete host"
 msgstr "ホストを削除"
 
+msgid "Delete image"
+msgstr "画像を削除"
+
 msgid "Delete local branch on workspace removal"
 msgstr "ワークスペース削除時にローカルブランチも削除"
 
@@ -5105,6 +5333,12 @@ msgstr "チームを削除"
 
 msgid "Delete this"
 msgstr "これを削除"
+
+msgid "Delete this comment?"
+msgstr "このコメントを削除しますか？"
+
+msgid "Delete this task?"
+msgstr "このタスクを削除しますか？"
 
 msgid "Delete this workspace?"
 msgstr "このワークスペースを削除しますか?"
@@ -5156,6 +5390,9 @@ msgstr "削除済みまたは利用不可 — 別のものを選んでくださ�
 
 msgid "Deleted projects can be restored for 30 days, with the workspaces that were deleted with them. After that they are removed; the repository folder and worktrees with uncommitted changes stay on disk."
 msgstr "削除したプロジェクトは、一緒に削除されたワークスペースとともに 30 日間復元できます。その後は完全に削除されますが、リポジトリのフォルダーと未コミットの変更があるワークツリーはディスクに残ります。"
+
+msgid "Deleted user"
+msgstr "削除されたユーザー"
 
 msgid "Deleted workspaces, but couldn’t finish updating the sidebar"
 msgstr "ワークスペースは削除しましたが、サイドバーの更新を完了できませんでした"
@@ -5449,6 +5686,9 @@ msgstr "エラーを閉じる"
 
 msgid "Dismiss resume prompt"
 msgstr "再開プロンプトを閉じる"
+
+msgid "Dismiss suggestion"
+msgstr "提案を却下"
 
 msgid "Dismiss suggestions"
 msgstr "提案を閉じる"
@@ -5750,12 +5990,18 @@ msgstr "実行スクリプトを編集"
 msgid "Edit script"
 msgstr "スクリプトを編集"
 
+msgid "Edit your comment…"
+msgstr "コメントを編集…"
+
 msgid "Edited"
 msgstr "編集"
 
 msgctxt "github release action"
 msgid "Edited"
 msgstr "編集"
+
+msgid "Edited {ago}"
+msgstr "{ago}に編集"
 
 msgid "Editing"
 msgstr "編集"
@@ -6258,8 +6504,14 @@ msgstr "アカウントの削除に失敗しました"
 msgid "Failed to delete automation"
 msgstr "オートメーションを削除できませんでした"
 
+msgid "Failed to delete host"
+msgstr "ホストを削除できませんでした"
+
 msgid "Failed to delete organization"
 msgstr "組織の削除に失敗しました"
+
+msgid "Failed to delete task"
+msgstr "タスクを削除できませんでした"
 
 msgid "Failed to delete team"
 msgstr "チームの削除に失敗しました"
@@ -6410,8 +6662,14 @@ msgstr "名前の変更に失敗しました"
 msgid "Failed to rename branch"
 msgstr "ブランチ名の変更に失敗しました"
 
+msgid "Failed to rename host"
+msgstr "ホスト名を変更できませんでした"
+
 msgid "Failed to rename session"
 msgstr "セッションの名前の変更に失敗しました"
+
+msgid "Failed to rename workspace"
+msgstr "ワークスペース名を変更できませんでした"
 
 msgid "Failed to reorder"
 msgstr "並べ替えに失敗しました"
@@ -6518,12 +6776,6 @@ msgstr "サインインに失敗しました。もう一度お試しください
 msgid "Failed to sign up. Please try again."
 msgstr "サインアップに失敗しました。もう一度お試しください。"
 
-msgid "Failed to start agent"
-msgstr "エージェントの起動に失敗しました"
-
-msgid "Failed to start agent session."
-msgstr "エージェントセッションの開始に失敗しました。"
-
 msgid "Failed to start the selected automations"
 msgstr "選択したオートメーションを開始できませんでした"
 
@@ -6560,8 +6812,26 @@ msgstr "ロゴの更新に失敗しました"
 msgid "Failed to update name"
 msgstr "名前の更新に失敗しました"
 
+msgid "Failed to update role"
+msgstr "ロールを更新できませんでした"
+
 msgid "Failed to update setting"
 msgstr "設定の更新に失敗しました"
+
+msgid "Failed to update task assignee"
+msgstr "タスクの担当者を更新できませんでした"
+
+msgid "Failed to update task description"
+msgstr "タスクの説明を更新できませんでした"
+
+msgid "Failed to update task priority"
+msgstr "タスクの優先度を更新できませんでした"
+
+msgid "Failed to update task status"
+msgstr "タスクのステータスを更新できませんでした"
+
+msgid "Failed to update task title"
+msgstr "タスクのタイトルを更新できませんでした"
 
 msgid "Failed to update team. Please try again."
 msgstr "チームを更新できませんでした。もう一度お試しください。"
@@ -6712,6 +6982,9 @@ msgstr "プロジェクトを絞り込み…"
 
 msgid "Filter workspaces…"
 msgstr "ワークスペースを絞り込み…"
+
+msgid "Filter…"
+msgstr "フィルター…"
 
 msgid "Filters"
 msgstr "フィルター"
@@ -7031,6 +7304,9 @@ msgstr "全般"
 msgid "General access"
 msgstr "一般的なアクセス"
 
+msgid "Generate"
+msgstr "生成"
+
 msgid "Generate a key to use with MCP servers."
 msgstr "MCPサーバーで使用するキーを生成します。"
 
@@ -7051,6 +7327,9 @@ msgstr "生成中"
 
 msgid "Generating..."
 msgstr "生成中..."
+
+msgid "Generating…"
+msgstr "生成中…"
 
 msgid "Get an API key"
 msgstr "APIキーを取得"
@@ -7202,6 +7481,9 @@ msgstr "Slack連携の設定へ"
 msgid "Go to Superset"
 msgstr "Supersetへ移動"
 
+msgid "Go to workspace"
+msgstr "ワークスペースへ移動"
+
 msgid "Google did not grant lasting access. Remove Superset from your Google account's third-party access and try again."
 msgstr "Googleが継続的なアクセスを許可しませんでした。GoogleアカウントのサードパーティアクセスからSupersetを削除して、もう一度お試しください。"
 
@@ -7228,6 +7510,9 @@ msgstr "Claude CodeやCodexなどに加えて、GrokとKimi Codeが仲間に加�
 
 msgid "Group actions"
 msgstr "グループの操作"
+
+msgid "Group by"
+msgstr "グループ化"
 
 msgid "Group new branches under a folder."
 msgstr "新しいブランチをフォルダにまとめます。"
@@ -7568,6 +7853,9 @@ msgstr "{company}のリーダーボードで、エージェント使用量{token
 msgid "Icon"
 msgstr "アイコン"
 
+msgid "Icons"
+msgstr "アイコン"
+
 msgid "ID"
 msgstr "ID"
 
@@ -7604,6 +7892,9 @@ msgstr "画像がブロックされました"
 #. placeholder {0}: src ?? "(empty)"
 msgid "Image blocked: {0}"
 msgstr "画像がブロックされました: {0}"
+
+msgid "Image copied"
+msgstr "画像をコピーしました"
 
 msgid "Image is too large (max 10MB)"
 msgstr "画像が大きすぎます(最大10MB)"
@@ -7689,6 +7980,9 @@ msgstr "{0}件中{imported}件のワークツリーをインポートしまし�
 msgid "Imported {joinedMessages}"
 msgstr "{joinedMessages}をインポートしました"
 
+msgid "Imported from Linear"
+msgstr "Linear からインポート"
+
 msgid "Importing..."
 msgstr "インポート中..."
 
@@ -7718,6 +8012,10 @@ msgstr "わずか数か月で、Wix、DoorDash、Netflixといった企業を含
 
 msgid "In progress"
 msgstr "作業中"
+
+msgctxt "project state"
+msgid "In progress"
+msgstr "進行中"
 
 msgid "In Progress"
 msgstr "進行中"
@@ -7757,6 +8055,9 @@ msgstr "情報"
 
 msgid "Information"
 msgstr "情報"
+
+msgid "Initial prompt"
+msgstr "最初のプロンプト"
 
 msgid "Initialize Git"
 msgstr "Gitを初期化"
@@ -7901,6 +8202,9 @@ msgstr "入力に誤りがあります。"
 msgid "Invalid installation response. Please try again."
 msgstr "インストールのレスポンスが無効です。もう一度お試しください。"
 
+msgid "Invalid label"
+msgstr "無効なラベル"
+
 msgid "Invalid OAuth response. Please try again."
 msgstr "OAuthのレスポンスが無効です。もう一度お試しください。"
 
@@ -8006,6 +8310,9 @@ msgstr "IssueのURLは{repoMismatch}と一致する必要があります。"
 msgid "Issue…"
 msgstr "Issue…"
 
+msgid "It can't be brought back."
+msgstr "元に戻すことはできません。"
+
 msgid "It keeps the title from your prompt."
 msgstr "プロンプトから付けたタイトルのままになります。"
 
@@ -8027,8 +8334,14 @@ msgstr "斜体"
 msgid "Item"
 msgstr "Item"
 
+msgid "Its comments and history go with it."
+msgstr "コメントと履歴も削除されます。"
+
 msgid "Its own branch and copy of the files"
 msgstr "独自のブランチとファイルのコピー"
+
+msgid "Its replies go with it."
+msgstr "返信も一緒に削除されます。"
 
 msgid "Its workspaces and terminals are unavailable until it restarts — use the Superset tray menu > Host Service > Restart."
 msgstr "再起動するまで、そのワークスペースとターミナルは利用できません — Supersetのトレイメニューから「ホストサービス」>「再起動」を実行してください。"
@@ -8283,6 +8596,9 @@ msgstr "新しいターミナルタブを開くたびにこのターミナルス
 msgid "Layout"
 msgstr "レイアウト"
 
+msgid "Lead"
+msgstr "リード"
+
 msgid "Leaderboard"
 msgstr "リーダーボード"
 
@@ -8303,6 +8619,9 @@ msgstr "コメントを入力(任意)"
 
 msgid "Leave a comment…"
 msgstr "コメントを入力…"
+
+msgid "Leave a reply…"
+msgstr "返信を入力…"
 
 msgid "Leave a summary…"
 msgstr "要約を入力…"
@@ -8457,6 +8776,9 @@ msgstr "プルリクエストをリンク"
 msgid "Link task"
 msgstr "タスクをリンク"
 
+msgid "Link this task"
+msgstr "このタスクをリンク"
+
 msgid "Linked {slug} to workspace"
 msgstr "{slug}をワークスペースにリンクしました"
 
@@ -8609,9 +8931,6 @@ msgstr "レビューを読み込み中..."
 
 msgid "Loading sessions…"
 msgstr "セッションを読み込み中…"
-
-msgid "Loading task..."
-msgstr "タスクを読み込み中..."
 
 msgid "Loading terminal scripts..."
 msgstr "ターミナルスクリプトを読み込み中..."
@@ -9587,6 +9906,9 @@ msgstr "このマシンでClaudeやCodexの使用がまだ見つかりません�
 msgid "No cloud workspaces yet"
 msgstr "クラウドワークスペースはまだありません"
 
+msgid "No color"
+msgstr "色なし"
+
 msgid "No command configured."
 msgstr "コマンドが設定されていません。"
 
@@ -9674,6 +9996,9 @@ msgstr "この期間のファネルデータはありません"
 msgid "No git remote detected"
 msgstr "gitリモートが検出されませんでした"
 
+msgid "No grouping"
+msgstr "グループ化なし"
+
 msgid "No groups yet"
 msgstr "グループはまだありません"
 
@@ -9698,6 +10023,9 @@ msgstr "ホストはまだありません。"
 msgid "No icon"
 msgstr "アイコンなし"
 
+msgid "No icons match."
+msgstr "一致するアイコンはありません。"
+
 msgid "No Internet Connection"
 msgstr "インターネット接続がありません"
 
@@ -9715,6 +10043,9 @@ msgstr "既知の作成者はいません"
 
 msgid "No labels"
 msgstr "ラベルなし"
+
+msgid "No lead"
+msgstr "リードなし"
 
 msgid "No listening agents"
 msgstr "コメントを受け取るエージェントはいません"
@@ -9821,6 +10152,9 @@ msgstr "プロジェクトが選択されていません"
 
 msgid "No project<0>session</0>"
 msgstr "プロジェクトなし<0>セッション</0>"
+
+msgid "No projects"
+msgstr "プロジェクトなし"
 
 msgid "No projects available"
 msgstr "利用できるプロジェクトがありません"
@@ -9930,6 +10264,12 @@ msgstr "タスクが見つかりません"
 msgid "No tasks found."
 msgstr "タスクが見つかりません。"
 
+msgid "No tasks in this project yet."
+msgstr "このプロジェクトにはまだタスクがありません。"
+
+msgid "No tasks or pull requests yet"
+msgstr "タスクやプルリクエストはまだありません"
+
 msgid "No tasks yet"
 msgstr "タスクはまだありません"
 
@@ -9995,6 +10335,9 @@ msgstr "ワークスペース実行コマンドが設定されていません"
 
 msgid "No workspaces found."
 msgstr "ワークスペースが見つかりません。"
+
+msgid "No workspaces in this project yet."
+msgstr "このプロジェクトにはまだワークスペースがありません。"
 
 msgid "No workspaces match your filters"
 msgstr "フィルターに一致するワークスペースがありません"
@@ -10340,11 +10683,17 @@ msgstr "組織の設定を更新できるのはオーナーのみです"
 msgid "Only people who opted in appear here."
 msgstr "参加を選んだ人だけがここに表示されます。"
 
+msgid "Only the author can change a comment"
+msgstr "コメントを変更できるのは作成者だけです"
+
 msgid "Only the author can edit a comment"
 msgstr "コメントを編集できるのは投稿者のみです"
 
 msgid "Only the host owner can set its wake command"
 msgstr "ウェイクコマンドを設定できるのはホストのオーナーのみです"
+
+msgid "Only the owner can change this"
+msgstr "変更できるのは所有者のみです"
 
 msgid "Only the owner can run this automation"
 msgstr "このオートメーションを実行できるのは所有者のみです"
@@ -10444,6 +10793,9 @@ msgstr "コマンドパレットを開く"
 
 msgid "Open comment on GitHub"
 msgstr "GitHubでコメントを開く"
+
+msgid "Open details"
+msgstr "詳細を開く"
 
 msgid "Open DevTools"
 msgstr "DevToolsを開く"
@@ -10593,9 +10945,6 @@ msgstr "T3 Chatで開く"
 msgid "Open in tab"
 msgstr "タブで開く"
 
-msgid "Open in workspace"
-msgstr "ワークスペースで開く"
-
 msgid "Open in…"
 msgstr "アプリで開く…"
 
@@ -10670,6 +11019,9 @@ msgstr "プルリクエストを開く"
 msgid "Open pull request #{0}"
 msgstr "プルリクエスト#{0}を開く"
 
+msgid "Open pull request #{number}"
+msgstr "プルリクエスト#{number}を開く"
+
 msgid "Open pull request in GitHub"
 msgstr "GitHubでプルリクエストを開く"
 
@@ -10714,9 +11066,6 @@ msgstr "システム設定を開く"
 
 msgid "Open task {title}"
 msgstr "タスク{title}を開く"
-
-msgid "Open task actions"
-msgstr "タスクの操作を開く"
 
 msgid "Open task externally"
 msgstr "タスクを外部で開く"
@@ -10783,9 +11132,6 @@ msgstr "OpenAIがこのAPIキーを拒否しました。"
 
 msgid "Opened"
 msgstr "オープン"
-
-msgid "Opened existing workspace"
-msgstr "既存のワークスペースを開きました"
 
 msgid "opened PR #841 for review"
 msgstr "レビュー用にPR #841を作成"
@@ -11146,6 +11492,10 @@ msgstr "夜間クリーンアップのオートメーションを一時停止し
 msgid "Paused"
 msgstr "一時停止中"
 
+msgctxt "project state"
+msgid "Paused"
+msgstr "一時停止"
+
 msgid "Pay now"
 msgstr "今すぐ支払う"
 
@@ -11169,6 +11519,9 @@ msgstr "最速ペース"
 
 msgid "Pending Invitations"
 msgstr "保留中の招待"
+
+msgid "People"
+msgstr "メンバー"
 
 msgid "People whose first paywall view was in the last {PAYWALL_FUNNEL_WEEKS} weeks, and how far they got. A stage counts anyone who reached it after that view, so recent cohorts are still maturing."
 msgstr "最初にペイウォールを見たのが過去{PAYWALL_FUNNEL_WEEKS}週間内の人と、どこまで進んだか。各ステージはその閲覧後に到達した人を数えるため、最近のコホートはまだ成熟していません。"
@@ -11206,6 +11559,9 @@ msgstr "権限"
 
 msgid "Persistent access to Documents, Downloads, Desktop, and iCloud."
 msgstr "書類、ダウンロード、デスクトップ、iCloudへの継続的なアクセス。"
+
+msgid "Person"
+msgstr "人"
 
 msgid "Personal"
 msgstr "個人"
@@ -11306,6 +11662,10 @@ msgstr "プラン"
 
 msgid "Plan restored"
 msgstr "プランを復元しました"
+
+msgctxt "project state"
+msgid "Planned"
+msgstr "計画中"
 
 msgid "Planning the tooltip refactor"
 msgstr "tooltipのリファクタリングを計画中"
@@ -11416,6 +11776,10 @@ msgstr "PR #{0} ({1})"
 #. placeholder {0}: created.number
 msgid "PR #{0} created"
 msgstr "PR #{0} を作成しました"
+
+#. placeholder {0}: i18n._(LABEL[state])
+msgid "PR #{number} — {0}"
+msgstr "PR #{number} — {0}"
 
 msgid "PR Closed"
 msgstr "PRはクローズ済み"
@@ -11611,6 +11975,9 @@ msgstr "生産性"
 
 msgid "Profile name"
 msgstr "プロファイル名"
+
+msgid "Progress"
+msgstr "進捗"
 
 msgid "Progress · Spinner"
 msgstr "Progress · Spinner"
@@ -11894,6 +12261,9 @@ msgstr "Radix Tooltipのドキュメント"
 msgid "RAM Share"
 msgstr "RAMシェア"
 
+msgid "Random icon"
+msgstr "ランダムなアイコン"
+
 msgid "Rank"
 msgstr "順位"
 
@@ -12086,6 +12456,9 @@ msgstr "次に Claude Code を実行すると更新されます。"
 
 msgid "Refreshes when OpenCode next runs."
 msgstr "次に OpenCode を実行すると更新されます。"
+
+msgid "Regenerate"
+msgstr "再生成"
 
 msgid "Region"
 msgstr "リージョン"
@@ -12971,6 +13344,9 @@ msgstr "SAML SSOとSCIMプロビジョニング"
 msgid "San Francisco"
 msgstr "サンフランシスコ"
 
+msgid "Sandbox stopped responding"
+msgstr "サンドボックスが応答しなくなりました"
+
 msgid "Save"
 msgstr "保存"
 
@@ -12991,6 +13367,9 @@ msgstr "編集を保存"
 
 msgid "Save edits (⌘S)"
 msgstr "編集を保存 (⌘S)"
+
+msgid "Save environment"
+msgstr "環境を保存"
 
 msgid "Save failed: {message}"
 msgstr "保存に失敗しました: {message}"
@@ -13013,7 +13392,7 @@ msgstr "保存するとURLが表示されます"
 msgid "Saved"
 msgstr "保存済み"
 
-#. placeholder {0}: created?.name
+#. placeholder {0}: created?.name ?? name.trim()
 msgid "Saved \"{0}\" as an environment"
 msgstr "「{0}」を環境として保存しました"
 
@@ -13193,8 +13572,14 @@ msgstr "プラグインを検索"
 msgid "Search previous prompts..."
 msgstr "以前のプロンプトを検索..."
 
+msgid "Search projects"
+msgstr "プロジェクトを検索"
+
 msgid "Search projects..."
 msgstr "プロジェクトを検索..."
+
+msgid "Search projects…"
+msgstr "プロジェクトを検索…"
 
 msgid "Search pull requests"
 msgstr "プルリクエストを検索"
@@ -13593,6 +13978,9 @@ msgstr "セッション · コスト上位{0}件"
 msgid "Set color to {0}"
 msgstr "色を{0}に設定"
 
+msgid "Set date"
+msgstr "日付を設定"
+
 msgid "Set group color"
 msgstr "グループの色を設定"
 
@@ -13606,8 +13994,14 @@ msgstr "パスワードを設定"
 msgid "Set Password"
 msgstr "パスワードを設定"
 
+msgid "Set project…"
+msgstr "プロジェクトを設定…"
+
 msgid "Set Run"
 msgstr "実行を設定"
+
+msgid "Set this project"
+msgstr "このプロジェクトに設定"
 
 msgid "Set up"
 msgstr "設定する"
@@ -13688,6 +14082,9 @@ msgstr "このページを共有"
 
 msgid "Share via…"
 msgstr "共有方法を選択…"
+
+msgid "Share workspace"
+msgstr "ワークスペースを共有"
 
 msgid "Shared across sessions using this login."
 msgstr "このログインを使用するセッション間で共有されます。"
@@ -13775,6 +14172,9 @@ msgstr "差分パネルを表示"
 
 msgid "Show emails"
 msgstr "メールを表示"
+
+msgid "Show everyone who opened this workspace"
+msgstr "このワークスペースを開いた全員を表示"
 
 msgid "Show file tree"
 msgstr "ファイルツリーを表示"
@@ -14088,6 +14488,9 @@ msgstr "小"
 msgid "Smoother onboarding"
 msgstr "よりスムーズなオンボーディング"
 
+msgid "Snapshots this workspace as it is now, with everything installed in it. New workspaces from the environment start from that snapshot."
+msgstr "このワークスペースを、インストール済みのものも含めて現在の状態でスナップショットします。この環境から作る新しいワークスペースは、そのスナップショットから始まります。"
+
 msgid "Snooze"
 msgstr "スヌーズ"
 
@@ -14339,6 +14742,10 @@ msgstr "1日あたりの獲得スター"
 msgid "Stars gained per week"
 msgstr "1週間あたりの獲得スター"
 
+msgctxt "project date"
+msgid "Start"
+msgstr "開始日"
+
 msgid "Start a {harness} session"
 msgstr "{harness}セッションを開始"
 
@@ -14371,6 +14778,9 @@ msgstr "ブラウジングを開始"
 
 msgid "Start coding agents, follow them live, and review the diff from your phone. Available on the App Store; Android is coming soon."
 msgstr "スマートフォンからコーディングエージェントを起動し、ライブで見守り、差分をレビュー。App Store で配信中。Android 版は近日公開。"
+
+msgid "Start date"
+msgstr "開始日"
 
 msgid "Start free. Upgrade when your team outgrows it. Enterprise plans for organizations with advanced security and compliance needs."
 msgstr "無料で始められます。チームの規模に合わなくなったらアップグレードを。高度なセキュリティとコンプライアンスが必要な組織にはEnterpriseプランがあります。"
@@ -14952,8 +15362,15 @@ msgstr "Supersetに相談する"
 msgid "Tap anything on the page to comment on it"
 msgstr "ページ上の要素をタップしてコメントできます"
 
+msgctxt "project date"
+msgid "Target"
+msgstr "目標日"
+
 msgid "Target agent"
 msgstr "対象のエージェント"
+
+msgid "Target date"
+msgstr "目標日"
 
 msgid "Target host is offline"
 msgstr "対象ホストはオフラインです"
@@ -14963,6 +15380,9 @@ msgstr "targetHostIdがワークスペースのホストと一致しません"
 
 msgid "Task"
 msgstr "タスク"
+
+msgid "Task ID copied"
+msgstr "タスク ID をコピーしました"
 
 msgid "Task Launch"
 msgstr "タスク起動"
@@ -14987,9 +15407,6 @@ msgstr "タスクをLinearに同期しました"
 
 msgid "Task title"
 msgstr "タスクのタイトル"
-
-msgid "Task title..."
-msgstr "タスクのタイトル..."
 
 msgid "Tasks"
 msgstr "タスク"
@@ -15337,6 +15754,9 @@ msgstr "リンクが間違っているか、ページが削除されたか、ア
 msgid "The linked agent is missing or disabled. Showing the snapshot."
 msgstr "リンクされたエージェントが見つからないか無効です。スナップショットを表示しています。"
 
+msgid "The local change was rolled back."
+msgstr "ローカルの変更は元に戻されました。"
+
 msgid "The local host service is unavailable for {organization} on {device}. Status: {status}. {recovery}"
 msgstr "{device}の{organization}でローカルのホストサービスが利用できません。ステータス: {status}。{recovery}"
 
@@ -15479,6 +15899,9 @@ msgstr "ワークスペースは作成されている可能性があります。
 
 msgid "The workspace this automation is pinned to no longer exists on its host. Pin a different one in the automation's settings."
 msgstr "このオートメーションがピン留めされているワークスペースは、ホスト上に存在しなくなりました。オートメーションの設定で別のワークスペースをピン留めしてください。"
+
+msgid "The workspace's repositories, as they are checked out now."
+msgstr "現在チェックアウトされている状態のワークスペースのリポジトリ。"
 
 msgid "The worktree and any uncommitted changes will be removed. This cannot be undone."
 msgstr "ワークツリーと未コミットの変更が削除されます。この操作は元に戻せません。"
@@ -15850,6 +16273,9 @@ msgstr "チケットから本番まで中央値1日未満"
 
 msgid "Tier"
 msgstr "ティア"
+
+msgid "Time"
+msgstr "時間"
 
 msgid "Time range"
 msgstr "期間"
@@ -16305,6 +16731,9 @@ msgstr "無制限"
 msgid "Unlimited users"
 msgstr "ユーザー数無制限"
 
+msgid "Unlink task"
+msgstr "タスクのリンクを解除"
+
 msgid "Unmute notifications"
 msgstr "通知のミュートを解除"
 
@@ -16692,6 +17121,9 @@ msgstr "ファイルを表示"
 msgid "View files changed"
 msgstr "変更されたファイルを表示"
 
+msgid "View full size"
+msgstr "フルサイズで表示"
+
 msgid "View in GitHub"
 msgstr "GitHubで見る"
 
@@ -16771,6 +17203,9 @@ msgstr "サインインを待機中…"
 
 msgid "Waiting for the subagent's first message…"
 msgstr "サブエージェントの最初のメッセージを待っています…"
+
+msgid "Waiting for your input"
+msgstr "入力を待っています"
 
 msgid "Waitlist signups"
 msgstr "ウェイトリスト登録"
@@ -17058,6 +17493,9 @@ msgstr "どのAIコーディングエージェントに対応していますか?
 msgid "Who can open this page from its link"
 msgstr "リンクからこのページを開ける人"
 
+msgid "Who can open this workspace"
+msgstr "このワークスペースを開ける人"
+
 msgid "Whole site"
 msgstr "サイト全体"
 
@@ -17152,11 +17590,17 @@ msgstr "PRからワークスペースを作成しました"
 msgid "Workspace details"
 msgstr "ワークスペースの詳細"
 
+msgid "Workspace ID"
+msgstr "ワークスペースID"
+
 msgid "Workspace ID copied"
 msgstr "ワークスペースIDをコピーしました"
 
 msgid "Workspace layout"
 msgstr "ワークスペースのレイアウト"
+
+msgid "Workspace name"
+msgstr "ワークスペース名"
 
 msgid "Workspace name (optional)"
 msgstr "ワークスペース名(任意)"

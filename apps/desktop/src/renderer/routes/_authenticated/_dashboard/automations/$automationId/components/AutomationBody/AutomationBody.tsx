@@ -13,7 +13,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { LuTriangleAlert } from "react-icons/lu";
 import { EmojiTextInput } from "renderer/components/EmojiTextInput";
-import { MarkdownEditor } from "renderer/components/MarkdownEditor";
+import { RichText } from "renderer/components/RichText";
 import { CLOUD_AGENT_CHOICES } from "renderer/hooks/useV2AgentChoices/cloud-agent-choices";
 import { apiTrpcClient } from "renderer/lib/api-trpc-client";
 import { useWorkspaceHostOptions } from "renderer/routes/_authenticated/components/DashboardNewWorkspaceModal/components/DashboardNewWorkspaceForm/components/DevicePicker/hooks/useWorkspaceHostOptions/useWorkspaceHostOptions";
@@ -291,8 +291,8 @@ export function AutomationBody({
 						</span>
 						<div className="flex flex-col rounded-xl border border-border bg-card/40">
 							<div className="min-h-[240px] px-4 py-3">
-								<MarkdownEditor
-									content={draft.prompt}
+								<RichText
+									value={draft.prompt}
 									// No onSave: it fires on blur, which would save twice.
 									onChange={(next: string) => edit({ prompt: next })}
 									editable={!readOnly}

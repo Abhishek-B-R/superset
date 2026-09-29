@@ -16,6 +16,7 @@ import { electronTrpc } from "renderer/lib/electron-trpc";
 import { DashboardSidebar } from "renderer/routes/_authenticated/_dashboard/components/DashboardSidebar";
 import { DashboardSidebarPortsProvider } from "renderer/routes/_authenticated/_dashboard/components/DashboardSidebar/providers/DashboardSidebarPortsProvider";
 import { PortForwardsProvider } from "renderer/routes/_authenticated/_dashboard/components/DashboardSidebar/providers/PortForwardsProvider";
+import { useCloudSidebarStore } from "renderer/routes/_authenticated/_dashboard/stores/cloudSidebarStore";
 import { useDevSeedV2Sidebar } from "renderer/routes/_authenticated/hooks/useDevSeedV2Sidebar";
 import { useHostWorkspaces } from "renderer/routes/_authenticated/providers/HostWorkspacesProvider";
 import { useLocalHostService } from "renderer/routes/_authenticated/providers/LocalHostServiceProvider";
@@ -37,6 +38,7 @@ import { ContentBoundary } from "../components/ContentBoundary";
 import { AddRepositoryModals } from "./components/AddRepositoryModals";
 import { CrossVersionMismatchState } from "./components/CrossVersionMismatchState";
 import { RemotePortForwarder } from "./components/RemotePortForwarder";
+import { SaveAsEnvironmentMount } from "./components/SaveAsEnvironmentMount";
 import { TopBar } from "./components/TopBar";
 
 export const Route = createFileRoute("/_authenticated/_dashboard")({
@@ -70,11 +72,14 @@ function DashboardLayout() {
 		const stopAgentStateSync = syncPersistedStoreAcrossWindows(
 			useV2NotificationStore,
 		);
+		const stopCloudSidebarSync =
+			syncPersistedStoreAcrossWindows(useCloudSidebarStore);
 
 		return () => {
 			stopWorkspaceSidebarSync();
 			stopSectionCollapseSync();
 			stopAgentStateSync();
+			stopCloudSidebarSync();
 		};
 	}, []);
 	// Get current workspace from route to pre-select project in new workspace modal
@@ -100,6 +105,8 @@ function DashboardLayout() {
 		matchRoute({ to: "/pull-requests", fuzzy: true }) !== false ||
 		matchRoute({ to: "/plugins", fuzzy: true }) !== false ||
 		matchRoute({ to: "/pages", fuzzy: true }) !== false ||
+		matchRoute({ to: "/cloud-workspaces", fuzzy: true }) !== false ||
+		matchRoute({ to: "/projects", fuzzy: true }) !== false ||
 		matchRoute({ to: "/v2-workspaces", fuzzy: true }) !== false;
 	const versionMismatch =
 		(isV2CloudEnabled && onV1WorkspaceRoute) ||
@@ -243,7 +250,7 @@ function DashboardLayout() {
 	// tab bar's leading inset. Only a fully closed sidebar keeps the TopBar,
 	// whose inset then keeps content clear of the macOS traffic lights. The
 	// new-workspace page brings its own drag strip, and the dashboard views
-	// (automations/tasks/workspaces) carry drag fillers in their own headers,
+	// (automations/tasks/workspaces/cloud workspaces/projects) carry drag fillers in their own headers,
 	// so they hide the TopBar whenever the expanded sidebar sits outside the
 	// column — otherwise it renders as an empty strip above their headers.
 	const hideTopBar =
@@ -304,6 +311,7 @@ function DashboardLayout() {
 						className="flex h-full shrink-0"
 					/>
 					<AddRepositoryModals />
+					<SaveAsEnvironmentMount />
 					{deleteTarget && (
 						<DeleteWorkspaceDialog
 							workspaceId={deleteTarget.workspaceId}

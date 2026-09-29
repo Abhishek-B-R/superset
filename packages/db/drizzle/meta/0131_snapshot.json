@@ -1,5 +1,5 @@
 {
-  "id": "0e93677e-6e13-4384-819e-7aa45524518c",
+  "id": "aceeb2a3-86f9-4400-aba6-fd078a923bcc",
   "prevId": "f166d12e-c334-4dcd-8a27-31ba3791cd38",
   "version": "7",
   "dialect": "postgresql",
@@ -5402,27 +5402,6 @@
           "method": "btree",
           "with": {}
         },
-        "automation_runs_org_created_idx": {
-          "name": "automation_runs_org_created_idx",
-          "columns": [
-            {
-              "expression": "organization_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "created_at",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
         "automation_runs_status_idx": {
           "name": "automation_runs_status_idx",
           "columns": [
@@ -6129,6 +6108,471 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public.cloud_workspace_activity": {
+      "name": "cloud_workspace_activity",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "cloud_workspace_id": {
+          "name": "cloud_workspace_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "actor_kind": {
+          "name": "actor_kind",
+          "type": "actor_kind",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "actor_user_id": {
+          "name": "actor_user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "event": {
+          "name": "event",
+          "type": "cloud_workspace_activity_event",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "from_name": {
+          "name": "from_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "to_name": {
+          "name": "to_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "from_visibility": {
+          "name": "from_visibility",
+          "type": "cloud_workspace_visibility",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "to_visibility": {
+          "name": "to_visibility",
+          "type": "cloud_workspace_visibility",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "from_project_id": {
+          "name": "from_project_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "to_project_id": {
+          "name": "to_project_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "added_label_ids": {
+          "name": "added_label_ids",
+          "type": "uuid[]",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "removed_label_ids": {
+          "name": "removed_label_ids",
+          "type": "uuid[]",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "linked_task_id": {
+          "name": "linked_task_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "unlinked_task_id": {
+          "name": "unlinked_task_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "pr_url": {
+          "name": "pr_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "page_id": {
+          "name": "page_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "suggestion_id": {
+          "name": "suggestion_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "cloud_workspace_activity_workspace_created_idx": {
+          "name": "cloud_workspace_activity_workspace_created_idx",
+          "columns": [
+            {
+              "expression": "cloud_workspace_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "cloud_workspace_activity_linked_task_id_idx": {
+          "name": "cloud_workspace_activity_linked_task_id_idx",
+          "columns": [
+            {
+              "expression": "linked_task_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "cloud_workspace_activity_unlinked_task_id_idx": {
+          "name": "cloud_workspace_activity_unlinked_task_id_idx",
+          "columns": [
+            {
+              "expression": "unlinked_task_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "cloud_workspace_activity_cloud_workspace_id_cloud_workspaces_id_fk": {
+          "name": "cloud_workspace_activity_cloud_workspace_id_cloud_workspaces_id_fk",
+          "tableFrom": "cloud_workspace_activity",
+          "tableTo": "cloud_workspaces",
+          "columnsFrom": [
+            "cloud_workspace_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "cloud_workspace_activity_actor_user_id_users_id_fk": {
+          "name": "cloud_workspace_activity_actor_user_id_users_id_fk",
+          "tableFrom": "cloud_workspace_activity",
+          "tableTo": "users",
+          "schemaTo": "auth",
+          "columnsFrom": [
+            "actor_user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "cloud_workspace_activity_from_project_id_task_projects_id_fk": {
+          "name": "cloud_workspace_activity_from_project_id_task_projects_id_fk",
+          "tableFrom": "cloud_workspace_activity",
+          "tableTo": "task_projects",
+          "columnsFrom": [
+            "from_project_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "cloud_workspace_activity_to_project_id_task_projects_id_fk": {
+          "name": "cloud_workspace_activity_to_project_id_task_projects_id_fk",
+          "tableFrom": "cloud_workspace_activity",
+          "tableTo": "task_projects",
+          "columnsFrom": [
+            "to_project_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "cloud_workspace_activity_linked_task_id_tasks_id_fk": {
+          "name": "cloud_workspace_activity_linked_task_id_tasks_id_fk",
+          "tableFrom": "cloud_workspace_activity",
+          "tableTo": "tasks",
+          "columnsFrom": [
+            "linked_task_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "cloud_workspace_activity_unlinked_task_id_tasks_id_fk": {
+          "name": "cloud_workspace_activity_unlinked_task_id_tasks_id_fk",
+          "tableFrom": "cloud_workspace_activity",
+          "tableTo": "tasks",
+          "columnsFrom": [
+            "unlinked_task_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "cloud_workspace_activity_page_id_pages_id_fk": {
+          "name": "cloud_workspace_activity_page_id_pages_id_fk",
+          "tableFrom": "cloud_workspace_activity",
+          "tableTo": "pages",
+          "columnsFrom": [
+            "page_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "cloud_workspace_activity_suggestion_id_suggestions_id_fk": {
+          "name": "cloud_workspace_activity_suggestion_id_suggestions_id_fk",
+          "tableFrom": "cloud_workspace_activity",
+          "tableTo": "suggestions",
+          "columnsFrom": [
+            "suggestion_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.cloud_workspace_labels": {
+      "name": "cloud_workspace_labels",
+      "schema": "",
+      "columns": {
+        "cloud_workspace_id": {
+          "name": "cloud_workspace_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "label_id": {
+          "name": "label_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "cloud_workspace_labels_label_id_idx": {
+          "name": "cloud_workspace_labels_label_id_idx",
+          "columns": [
+            {
+              "expression": "label_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "cloud_workspace_labels_cloud_workspace_id_cloud_workspaces_id_fk": {
+          "name": "cloud_workspace_labels_cloud_workspace_id_cloud_workspaces_id_fk",
+          "tableFrom": "cloud_workspace_labels",
+          "tableTo": "cloud_workspaces",
+          "columnsFrom": [
+            "cloud_workspace_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "cloud_workspace_labels_label_id_task_labels_id_fk": {
+          "name": "cloud_workspace_labels_label_id_task_labels_id_fk",
+          "tableFrom": "cloud_workspace_labels",
+          "tableTo": "task_labels",
+          "columnsFrom": [
+            "label_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "cloud_workspace_labels_cloud_workspace_id_label_id_pk": {
+          "name": "cloud_workspace_labels_cloud_workspace_id_label_id_pk",
+          "columns": [
+            "cloud_workspace_id",
+            "label_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.cloud_workspace_presence": {
+      "name": "cloud_workspace_presence",
+      "schema": "",
+      "columns": {
+        "cloud_workspace_id": {
+          "name": "cloud_workspace_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "first_seen_at": {
+          "name": "first_seen_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "last_seen_at": {
+          "name": "last_seen_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "cloud_workspace_presence_user_id_idx": {
+          "name": "cloud_workspace_presence_user_id_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "cloud_workspace_presence_cloud_workspace_id_cloud_workspaces_id_fk": {
+          "name": "cloud_workspace_presence_cloud_workspace_id_cloud_workspaces_id_fk",
+          "tableFrom": "cloud_workspace_presence",
+          "tableTo": "cloud_workspaces",
+          "columnsFrom": [
+            "cloud_workspace_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "cloud_workspace_presence_user_id_users_id_fk": {
+          "name": "cloud_workspace_presence_user_id_users_id_fk",
+          "tableFrom": "cloud_workspace_presence",
+          "tableTo": "users",
+          "schemaTo": "auth",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "cloud_workspace_presence_cloud_workspace_id_user_id_pk": {
+          "name": "cloud_workspace_presence_cloud_workspace_id_user_id_pk",
+          "columns": [
+            "cloud_workspace_id",
+            "user_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.cloud_workspace_repositories": {
       "name": "cloud_workspace_repositories",
       "schema": "",
@@ -6219,6 +6663,116 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public.cloud_workspace_tasks": {
+      "name": "cloud_workspace_tasks",
+      "schema": "",
+      "columns": {
+        "cloud_workspace_id": {
+          "name": "cloud_workspace_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "task_id": {
+          "name": "task_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "linked_by_kind": {
+          "name": "linked_by_kind",
+          "type": "actor_kind",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "linked_by_user_id": {
+          "name": "linked_by_user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "cloud_workspace_tasks_task_id_idx": {
+          "name": "cloud_workspace_tasks_task_id_idx",
+          "columns": [
+            {
+              "expression": "task_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "cloud_workspace_tasks_cloud_workspace_id_cloud_workspaces_id_fk": {
+          "name": "cloud_workspace_tasks_cloud_workspace_id_cloud_workspaces_id_fk",
+          "tableFrom": "cloud_workspace_tasks",
+          "tableTo": "cloud_workspaces",
+          "columnsFrom": [
+            "cloud_workspace_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "cloud_workspace_tasks_task_id_tasks_id_fk": {
+          "name": "cloud_workspace_tasks_task_id_tasks_id_fk",
+          "tableFrom": "cloud_workspace_tasks",
+          "tableTo": "tasks",
+          "columnsFrom": [
+            "task_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "cloud_workspace_tasks_linked_by_user_id_users_id_fk": {
+          "name": "cloud_workspace_tasks_linked_by_user_id_users_id_fk",
+          "tableFrom": "cloud_workspace_tasks",
+          "tableTo": "users",
+          "schemaTo": "auth",
+          "columnsFrom": [
+            "linked_by_user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "cloud_workspace_tasks_cloud_workspace_id_task_id_pk": {
+          "name": "cloud_workspace_tasks_cloud_workspace_id_task_id_pk",
+          "columns": [
+            "cloud_workspace_id",
+            "task_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.cloud_workspaces": {
       "name": "cloud_workspaces",
       "schema": "",
@@ -6281,6 +6835,14 @@
           "notNull": true,
           "default": "'provisioning'"
         },
+        "visibility": {
+          "name": "visibility",
+          "type": "cloud_workspace_visibility",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'org'"
+        },
         "environment_id": {
           "name": "environment_id",
           "type": "uuid",
@@ -6302,6 +6864,24 @@
         "agent_status_at": {
           "name": "agent_status_at",
           "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "prompt": {
+          "name": "prompt",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "project_id": {
+          "name": "project_id",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": false
         },
@@ -6375,6 +6955,19 @@
             "id"
           ],
           "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "cloud_workspaces_project_id_task_projects_id_fk": {
+          "name": "cloud_workspaces_project_id_task_projects_id_fk",
+          "tableFrom": "cloud_workspaces",
+          "tableTo": "task_projects",
+          "columnsFrom": [
+            "project_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
           "onUpdate": "no action"
         },
         "cloud_workspaces_created_by_user_id_users_id_fk": {
@@ -9206,6 +9799,1207 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public.suggestions": {
+      "name": "suggestions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "organization_id": {
+          "name": "organization_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "kind": {
+          "name": "kind",
+          "type": "suggestion_kind",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "subject_type": {
+          "name": "subject_type",
+          "type": "suggestion_entity",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "subject_id": {
+          "name": "subject_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "object_type": {
+          "name": "object_type",
+          "type": "suggestion_entity",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "object_id": {
+          "name": "object_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "payload": {
+          "name": "payload",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "reason": {
+          "name": "reason",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "source": {
+          "name": "source",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "suggestion_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'pending'"
+        },
+        "proposed_by_kind": {
+          "name": "proposed_by_kind",
+          "type": "actor_kind",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "proposed_by_user_id": {
+          "name": "proposed_by_user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "automation_id": {
+          "name": "automation_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "decided_by_user_id": {
+          "name": "decided_by_user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "decided_at": {
+          "name": "decided_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "suggestions_kind_subject_object_unique": {
+          "name": "suggestions_kind_subject_object_unique",
+          "columns": [
+            {
+              "expression": "kind",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "subject_type",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "subject_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "object_type",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "object_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "suggestions_subject_status_idx": {
+          "name": "suggestions_subject_status_idx",
+          "columns": [
+            {
+              "expression": "subject_type",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "subject_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "suggestions_organization_id_status_idx": {
+          "name": "suggestions_organization_id_status_idx",
+          "columns": [
+            {
+              "expression": "organization_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "suggestions_organization_id_organizations_id_fk": {
+          "name": "suggestions_organization_id_organizations_id_fk",
+          "tableFrom": "suggestions",
+          "tableTo": "organizations",
+          "schemaTo": "auth",
+          "columnsFrom": [
+            "organization_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "suggestions_proposed_by_user_id_users_id_fk": {
+          "name": "suggestions_proposed_by_user_id_users_id_fk",
+          "tableFrom": "suggestions",
+          "tableTo": "users",
+          "schemaTo": "auth",
+          "columnsFrom": [
+            "proposed_by_user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "suggestions_automation_id_automations_id_fk": {
+          "name": "suggestions_automation_id_automations_id_fk",
+          "tableFrom": "suggestions",
+          "tableTo": "automations",
+          "columnsFrom": [
+            "automation_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "suggestions_decided_by_user_id_users_id_fk": {
+          "name": "suggestions_decided_by_user_id_users_id_fk",
+          "tableFrom": "suggestions",
+          "tableTo": "users",
+          "schemaTo": "auth",
+          "columnsFrom": [
+            "decided_by_user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.task_activity": {
+      "name": "task_activity",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "task_id": {
+          "name": "task_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "actor_kind": {
+          "name": "actor_kind",
+          "type": "actor_kind",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "actor_user_id": {
+          "name": "actor_user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "from_title": {
+          "name": "from_title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "to_title": {
+          "name": "to_title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "from_status_id": {
+          "name": "from_status_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "to_status_id": {
+          "name": "to_status_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "from_priority": {
+          "name": "from_priority",
+          "type": "task_priority",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "to_priority": {
+          "name": "to_priority",
+          "type": "task_priority",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "from_assignee_id": {
+          "name": "from_assignee_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "to_assignee_id": {
+          "name": "to_assignee_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "from_project_id": {
+          "name": "from_project_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "to_project_id": {
+          "name": "to_project_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "description_edited": {
+          "name": "description_edited",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "added_label_ids": {
+          "name": "added_label_ids",
+          "type": "uuid[]",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "removed_label_ids": {
+          "name": "removed_label_ids",
+          "type": "uuid[]",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "task_activity_task_created_idx": {
+          "name": "task_activity_task_created_idx",
+          "columns": [
+            {
+              "expression": "task_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "task_activity_actor_user_id_idx": {
+          "name": "task_activity_actor_user_id_idx",
+          "columns": [
+            {
+              "expression": "actor_user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "task_activity_from_status_id_idx": {
+          "name": "task_activity_from_status_id_idx",
+          "columns": [
+            {
+              "expression": "from_status_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "task_activity_to_status_id_idx": {
+          "name": "task_activity_to_status_id_idx",
+          "columns": [
+            {
+              "expression": "to_status_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "task_activity_from_assignee_id_idx": {
+          "name": "task_activity_from_assignee_id_idx",
+          "columns": [
+            {
+              "expression": "from_assignee_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "task_activity_to_assignee_id_idx": {
+          "name": "task_activity_to_assignee_id_idx",
+          "columns": [
+            {
+              "expression": "to_assignee_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "task_activity_from_project_id_idx": {
+          "name": "task_activity_from_project_id_idx",
+          "columns": [
+            {
+              "expression": "from_project_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "task_activity_to_project_id_idx": {
+          "name": "task_activity_to_project_id_idx",
+          "columns": [
+            {
+              "expression": "to_project_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "task_activity_task_id_tasks_id_fk": {
+          "name": "task_activity_task_id_tasks_id_fk",
+          "tableFrom": "task_activity",
+          "tableTo": "tasks",
+          "columnsFrom": [
+            "task_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "task_activity_actor_user_id_users_id_fk": {
+          "name": "task_activity_actor_user_id_users_id_fk",
+          "tableFrom": "task_activity",
+          "tableTo": "users",
+          "schemaTo": "auth",
+          "columnsFrom": [
+            "actor_user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "task_activity_from_status_id_task_statuses_id_fk": {
+          "name": "task_activity_from_status_id_task_statuses_id_fk",
+          "tableFrom": "task_activity",
+          "tableTo": "task_statuses",
+          "columnsFrom": [
+            "from_status_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "task_activity_to_status_id_task_statuses_id_fk": {
+          "name": "task_activity_to_status_id_task_statuses_id_fk",
+          "tableFrom": "task_activity",
+          "tableTo": "task_statuses",
+          "columnsFrom": [
+            "to_status_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "task_activity_from_assignee_id_users_id_fk": {
+          "name": "task_activity_from_assignee_id_users_id_fk",
+          "tableFrom": "task_activity",
+          "tableTo": "users",
+          "schemaTo": "auth",
+          "columnsFrom": [
+            "from_assignee_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "task_activity_to_assignee_id_users_id_fk": {
+          "name": "task_activity_to_assignee_id_users_id_fk",
+          "tableFrom": "task_activity",
+          "tableTo": "users",
+          "schemaTo": "auth",
+          "columnsFrom": [
+            "to_assignee_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "task_activity_from_project_id_task_projects_id_fk": {
+          "name": "task_activity_from_project_id_task_projects_id_fk",
+          "tableFrom": "task_activity",
+          "tableTo": "task_projects",
+          "columnsFrom": [
+            "from_project_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "task_activity_to_project_id_task_projects_id_fk": {
+          "name": "task_activity_to_project_id_task_projects_id_fk",
+          "tableFrom": "task_activity",
+          "tableTo": "task_projects",
+          "columnsFrom": [
+            "to_project_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.task_comments": {
+      "name": "task_comments",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "task_id": {
+          "name": "task_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "author_user_id": {
+          "name": "author_user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "parent_comment_id": {
+          "name": "parent_comment_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "body": {
+          "name": "body",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "edited_at": {
+          "name": "edited_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "task_comments_task_created_idx": {
+          "name": "task_comments_task_created_idx",
+          "columns": [
+            {
+              "expression": "task_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "task_comments_author_user_id_idx": {
+          "name": "task_comments_author_user_id_idx",
+          "columns": [
+            {
+              "expression": "author_user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "task_comments_parent_comment_id_idx": {
+          "name": "task_comments_parent_comment_id_idx",
+          "columns": [
+            {
+              "expression": "parent_comment_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "task_comments_task_id_tasks_id_fk": {
+          "name": "task_comments_task_id_tasks_id_fk",
+          "tableFrom": "task_comments",
+          "tableTo": "tasks",
+          "columnsFrom": [
+            "task_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "task_comments_author_user_id_users_id_fk": {
+          "name": "task_comments_author_user_id_users_id_fk",
+          "tableFrom": "task_comments",
+          "tableTo": "users",
+          "schemaTo": "auth",
+          "columnsFrom": [
+            "author_user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "task_comments_parent_comment_id_task_comments_id_fk": {
+          "name": "task_comments_parent_comment_id_task_comments_id_fk",
+          "tableFrom": "task_comments",
+          "tableTo": "task_comments",
+          "columnsFrom": [
+            "parent_comment_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.task_label_assignments": {
+      "name": "task_label_assignments",
+      "schema": "",
+      "columns": {
+        "task_id": {
+          "name": "task_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "label_id": {
+          "name": "label_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "task_label_assignments_label_id_idx": {
+          "name": "task_label_assignments_label_id_idx",
+          "columns": [
+            {
+              "expression": "label_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "task_label_assignments_task_id_tasks_id_fk": {
+          "name": "task_label_assignments_task_id_tasks_id_fk",
+          "tableFrom": "task_label_assignments",
+          "tableTo": "tasks",
+          "columnsFrom": [
+            "task_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "task_label_assignments_label_id_task_labels_id_fk": {
+          "name": "task_label_assignments_label_id_task_labels_id_fk",
+          "tableFrom": "task_label_assignments",
+          "tableTo": "task_labels",
+          "columnsFrom": [
+            "label_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "task_label_assignments_task_id_label_id_pk": {
+          "name": "task_label_assignments_task_id_label_id_pk",
+          "columns": [
+            "task_id",
+            "label_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.task_labels": {
+      "name": "task_labels",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "organization_id": {
+          "name": "organization_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "team_id": {
+          "name": "team_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "color": {
+          "name": "color",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "parent_id": {
+          "name": "parent_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "task_labels_organization_id_name_unique": {
+          "name": "task_labels_organization_id_name_unique",
+          "columns": [
+            {
+              "expression": "organization_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "name",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "task_labels_organization_id_organizations_id_fk": {
+          "name": "task_labels_organization_id_organizations_id_fk",
+          "tableFrom": "task_labels",
+          "tableTo": "organizations",
+          "schemaTo": "auth",
+          "columnsFrom": [
+            "organization_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "task_labels_team_id_teams_id_fk": {
+          "name": "task_labels_team_id_teams_id_fk",
+          "tableFrom": "task_labels",
+          "tableTo": "teams",
+          "schemaTo": "auth",
+          "columnsFrom": [
+            "team_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "task_labels_parent_id_task_labels_id_fk": {
+          "name": "task_labels_parent_id_task_labels_id_fk",
+          "tableFrom": "task_labels",
+          "tableTo": "task_labels",
+          "columnsFrom": [
+            "parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.task_project_tasks": {
+      "name": "task_project_tasks",
+      "schema": "",
+      "columns": {
+        "project_id": {
+          "name": "project_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "task_id": {
+          "name": "task_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "task_project_tasks_project_id_idx": {
+          "name": "task_project_tasks_project_id_idx",
+          "columns": [
+            {
+              "expression": "project_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "task_project_tasks_project_id_task_projects_id_fk": {
+          "name": "task_project_tasks_project_id_task_projects_id_fk",
+          "tableFrom": "task_project_tasks",
+          "tableTo": "task_projects",
+          "columnsFrom": [
+            "project_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "task_project_tasks_task_id_tasks_id_fk": {
+          "name": "task_project_tasks_task_id_tasks_id_fk",
+          "tableFrom": "task_project_tasks",
+          "tableTo": "tasks",
+          "columnsFrom": [
+            "task_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "task_project_tasks_task_id_unique": {
+          "name": "task_project_tasks_task_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "task_id"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.task_projects": {
+      "name": "task_projects",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "organization_id": {
+          "name": "organization_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "icon": {
+          "name": "icon",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "color": {
+          "name": "color",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "state": {
+          "name": "state",
+          "type": "task_project_state",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'planned'"
+        },
+        "lead_user_id": {
+          "name": "lead_user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "start_date": {
+          "name": "start_date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "target_date": {
+          "name": "target_date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "task_projects_organization_id_idx": {
+          "name": "task_projects_organization_id_idx",
+          "columns": [
+            {
+              "expression": "organization_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "task_projects_organization_id_organizations_id_fk": {
+          "name": "task_projects_organization_id_organizations_id_fk",
+          "tableFrom": "task_projects",
+          "tableTo": "organizations",
+          "schemaTo": "auth",
+          "columnsFrom": [
+            "organization_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "task_projects_lead_user_id_users_id_fk": {
+          "name": "task_projects_lead_user_id_users_id_fk",
+          "tableFrom": "task_projects",
+          "tableTo": "users",
+          "schemaTo": "auth",
+          "columnsFrom": [
+            "lead_user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.task_statuses": {
       "name": "task_statuses",
       "schema": "",
@@ -11136,6 +12930,14 @@
         "hidden"
       ]
     },
+    "public.actor_kind": {
+      "name": "actor_kind",
+      "schema": "public",
+      "values": [
+        "user",
+        "system"
+      ]
+    },
     "public.agent_credential_kind": {
       "name": "agent_credential_kind",
       "schema": "public",
@@ -11153,7 +12955,10 @@
         "doc",
         "chat_session",
         "comment",
-        "page"
+        "page",
+        "cloud_workspace_prompt",
+        "task_comment",
+        "project_description"
       ]
     },
     "public.automation_prompt_source": {
@@ -11214,6 +13019,18 @@
         "notion"
       ]
     },
+    "public.cloud_workspace_activity_event": {
+      "name": "cloud_workspace_activity_event",
+      "schema": "public",
+      "values": [
+        "created",
+        "archived",
+        "joined",
+        "description_edited",
+        "run_finished",
+        "run_failed"
+      ]
+    },
     "public.cloud_workspace_status": {
       "name": "cloud_workspace_status",
       "schema": "public",
@@ -11222,6 +13039,14 @@
         "ready",
         "failed",
         "deleted"
+      ]
+    },
+    "public.cloud_workspace_visibility": {
+      "name": "cloud_workspace_visibility",
+      "schema": "public",
+      "values": [
+        "just_me",
+        "org"
       ]
     },
     "public.command_status": {
@@ -11340,6 +13165,40 @@
         "everyone"
       ]
     },
+    "public.suggestion_entity": {
+      "name": "suggestion_entity",
+      "schema": "public",
+      "values": [
+        "cloud_workspace",
+        "task",
+        "task_project",
+        "task_label",
+        "pull_request"
+      ]
+    },
+    "public.suggestion_kind": {
+      "name": "suggestion_kind",
+      "schema": "public",
+      "values": [
+        "set_field",
+        "rewrite",
+        "relate",
+        "link_task",
+        "add_link",
+        "create_task"
+      ]
+    },
+    "public.suggestion_status": {
+      "name": "suggestion_status",
+      "schema": "public",
+      "values": [
+        "pending",
+        "accepted",
+        "dismissed",
+        "stale",
+        "superseded"
+      ]
+    },
     "public.task_priority": {
       "name": "task_priority",
       "schema": "public",
@@ -11349,6 +13208,17 @@
         "medium",
         "low",
         "none"
+      ]
+    },
+    "public.task_project_state": {
+      "name": "task_project_state",
+      "schema": "public",
+      "values": [
+        "planned",
+        "started",
+        "paused",
+        "completed",
+        "canceled"
       ]
     },
     "public.task_status": {
