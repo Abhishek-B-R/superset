@@ -1214,6 +1214,12 @@ msgstr "더 나은 인앱 브라우저입니다. 변경 사항을 미리 보고,
 msgid "A better Superset is ready"
 msgstr "더 나은 Superset이 준비되었습니다"
 
+msgid "A cloud automation needs an environment or a cloud workspace"
+msgstr "클라우드 자동화에는 환경 또는 클라우드 워크스페이스가 필요합니다"
+
+msgid "A cloud automation's instructions can be at most {max} characters"
+msgstr "클라우드 자동화의 지침은 최대 {max}자까지 입력할 수 있습니다"
+
 #. js-lingui-explicit-id
 msgid "serverError.common.cloudWorkspaceCannotCallThis"
 msgstr "클라우드 워크스페이스에서는 {path}를 호출할 수 없습니다. 로그인한 클라이언트에서 실행하세요."
@@ -1915,6 +1921,9 @@ msgstr "에이전트가 여러 파일에 걸친 변경을 처음부터 끝까지
 
 msgid "An agent writes whole functions and files while a human watches every step and approves every command. One agent, one human. Faster, but still serial."
 msgstr "에이전트가 함수와 파일 전체를 작성하는 동안 사람이 모든 단계를 지켜보고 모든 명령을 승인합니다. 에이전트 하나에 사람 하나. 더 빠르지만 여전히 순차적입니다."
+
+msgid "An automation can only use a cloud workspace you created"
+msgstr "자동화는 내가 만든 클라우드 워크스페이스만 사용할 수 있습니다"
 
 msgid "An error occurred"
 msgstr "오류가 발생했습니다"
@@ -11246,9 +11255,6 @@ msgstr "PID"
 msgid "Pin"
 msgstr "고정"
 
-msgid "Pin a workspace to continue its agent session between runs"
-msgstr "실행 간에 에이전트 세션을 계속하려면 워크스페이스를 고정하세요"
-
 msgid "Pin workspaces above your projects, then ⌘-click a batch to move, group, or delete them all at once."
 msgstr "워크스페이스를 프로젝트 위에 고정하고, ⌘ 클릭으로 여러 개를 골라 한 번에 옮기거나, 묶거나, 삭제하세요."
 
@@ -15165,8 +15171,14 @@ msgstr "앱은 {appVersion}이지만 다른 것(오래된 CLI나 다른 Superset
 msgid "The associated device isn't reachable right now"
 msgstr "연결된 기기에 지금 접근할 수 없습니다"
 
+msgid "The automation's owner can't use cloud workspaces in this organization anymore. Ask them to check their access, or run the automation on a device."
+msgstr "자동화 소유자가 더 이상 이 조직에서 클라우드 워크스페이스를 사용할 수 없습니다. 소유자에게 액세스 권한을 확인해 달라고 요청하거나, 기기에서 자동화를 실행하세요."
+
 msgid "The best agent will change.<0/>Your workflow shouldn't."
 msgstr "최고의 에이전트는 바뀝니다.<0/>워크플로는 그럴 필요 없습니다."
+
+msgid "The cloud workspace should have started but didn't answer in time. The next run tries again."
+msgstr "클라우드 워크스페이스가 시작되었어야 하지만 제시간에 응답하지 않았습니다. 다음 실행에서 다시 시도합니다."
 
 msgid "The config repository must be one of the environment's repositories"
 msgstr "구성 리포지토리는 환경의 리포지토리 중 하나여야 합니다"
@@ -15200,6 +15212,9 @@ msgstr "배차원의 등장"
 
 msgid "The endpoint must use https."
 msgstr "엔드포인트는 https를 사용해야 합니다."
+
+msgid "The environment this automation starts cloud workspaces from was archived or has no repositories. Pick another environment in the automation's settings."
+msgstr "이 자동화가 클라우드 워크스페이스를 시작하는 환경이 보관되었거나 리포지토리가 없습니다. 자동화 설정에서 다른 환경을 선택하세요."
 
 msgid "The factory"
 msgstr "공장"
@@ -15485,6 +15500,9 @@ msgstr "이 {plugin} 계정은 이미 다른 Superset 조직에 연결되어 있
 
 msgid "This action is irreversible."
 msgstr "이 동작은 되돌릴 수 없습니다."
+
+msgid "This agent can't run in a cloud workspace"
+msgstr "이 에이전트는 클라우드 워크스페이스에서 실행할 수 없습니다"
 
 msgid "This agent no longer exists on the selected device (its agents may have been reset). Runs will fail until you pick a new one."
 msgstr "이 에이전트는 선택한 기기에 더 이상 존재하지 않습니다 (에이전트가 초기화되었을 수 있습니다). 새 에이전트를 선택할 때까지 실행이 실패합니다."

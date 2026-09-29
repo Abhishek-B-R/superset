@@ -1214,6 +1214,12 @@ msgstr "Ein besserer In-App-Browser: Änderungen in der Vorschau ansehen und ein
 msgid "A better Superset is ready"
 msgstr "Eine bessere Version von Superset ist bereit"
 
+msgid "A cloud automation needs an environment or a cloud workspace"
+msgstr "Eine Cloud-Automatisierung braucht eine Umgebung oder einen Cloud-Arbeitsbereich"
+
+msgid "A cloud automation's instructions can be at most {max} characters"
+msgstr "Die Anweisungen einer Cloud-Automatisierung dürfen höchstens {max} Zeichen lang sein"
+
 #. js-lingui-explicit-id
 msgid "serverError.common.cloudWorkspaceCannotCallThis"
 msgstr "Ein Cloud-Workspace kann {path} nicht aufrufen. Führe das in einem Client aus, in dem du angemeldet bist."
@@ -1915,6 +1921,9 @@ msgstr "Ein Agent führt Änderungen über mehrere Dateien vollständig durch."
 
 msgid "An agent writes whole functions and files while a human watches every step and approves every command. One agent, one human. Faster, but still serial."
 msgstr "Ein Agent schreibt ganze Funktionen und Dateien, während ein Mensch jeden Schritt beobachtet und jeden Befehl freigibt. Ein Agent, ein Mensch. Schneller, aber weiterhin seriell."
+
+msgid "An automation can only use a cloud workspace you created"
+msgstr "Eine Automatisierung kann nur einen Cloud-Arbeitsbereich verwenden, den du erstellt hast"
 
 msgid "An error occurred"
 msgstr "Ein Fehler ist aufgetreten"
@@ -11246,9 +11255,6 @@ msgstr "PID"
 msgid "Pin"
 msgstr "Anheften"
 
-msgid "Pin a workspace to continue its agent session between runs"
-msgstr "Hefte einen Workspace an, um seine Agent-Sitzung über Läufe hinweg fortzusetzen"
-
 msgid "Pin workspaces above your projects, then ⌘-click a batch to move, group, or delete them all at once."
 msgstr "Hefte Arbeitsbereiche über deine Projekte, dann per ⌘-Klick eine Auswahl treffen und alle auf einmal verschieben, gruppieren oder löschen."
 
@@ -15165,8 +15171,14 @@ msgstr "Die App ist auf {appVersion}, hängt aber an einem Host-Dienst, den etwa
 msgid "The associated device isn't reachable right now"
 msgstr "Das zugehörige Gerät ist gerade nicht erreichbar"
 
+msgid "The automation's owner can't use cloud workspaces in this organization anymore. Ask them to check their access, or run the automation on a device."
+msgstr "Der Eigentümer der Automatisierung kann in dieser Organisation keine Cloud-Arbeitsbereiche mehr verwenden. Bitte ihn, seinen Zugriff zu prüfen, oder führe die Automatisierung auf einem Gerät aus."
+
 msgid "The best agent will change.<0/>Your workflow shouldn't."
 msgstr "Der beste Agent wird wechseln.<0/>Dein Workflow nicht."
+
+msgid "The cloud workspace should have started but didn't answer in time. The next run tries again."
+msgstr "Der Cloud-Arbeitsbereich hätte starten sollen, hat aber nicht rechtzeitig geantwortet. Der nächste Lauf versucht es erneut."
 
 msgid "The config repository must be one of the environment's repositories"
 msgstr "Das Konfigurations-Repository muss eines der Repositories der Umgebung sein"
@@ -15200,6 +15212,9 @@ msgstr "Der Disponent tritt auf"
 
 msgid "The endpoint must use https."
 msgstr "Der Endpunkt muss https verwenden."
+
+msgid "The environment this automation starts cloud workspaces from was archived or has no repositories. Pick another environment in the automation's settings."
+msgstr "Die Umgebung, aus der diese Automatisierung Cloud-Arbeitsbereiche startet, wurde archiviert oder hat keine Repositories. Wähle in den Einstellungen der Automatisierung eine andere Umgebung."
 
 msgid "The factory"
 msgstr "Die Fabrik"
@@ -15485,6 +15500,9 @@ msgstr "Dieses {plugin}-Konto ist bereits mit einer anderen Superset-Organisatio
 
 msgid "This action is irreversible."
 msgstr "Diese Aktion ist nicht umkehrbar."
+
+msgid "This agent can't run in a cloud workspace"
+msgstr "Dieser Agent kann nicht in einem Cloud-Arbeitsbereich laufen"
 
 msgid "This agent no longer exists on the selected device (its agents may have been reset). Runs will fail until you pick a new one."
 msgstr "Diesen Agenten gibt es auf dem gewählten Gerät nicht mehr (seine Agenten wurden möglicherweise zurückgesetzt). Läufe schlagen fehl, bis du einen neuen auswählst."

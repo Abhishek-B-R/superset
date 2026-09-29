@@ -108,6 +108,9 @@ export const automationRunErrorCodeValues = [
 	"host_offline",
 	"agent_not_found",
 	"workspace_not_found",
+	"cloud_not_ready",
+	"cloud_access_denied",
+	"cloud_environment_unusable",
 ] as const;
 export const automationRunErrorCodeEnum = z.enum(automationRunErrorCodeValues);
 export type AutomationRunErrorCode = z.infer<typeof automationRunErrorCodeEnum>;

@@ -1214,6 +1214,12 @@ msgstr "Un meilleur navigateur intégré : prévisualisez vos changements et cli
 msgid "A better Superset is ready"
 msgstr "Une meilleure version de Superset est prête"
 
+msgid "A cloud automation needs an environment or a cloud workspace"
+msgstr "Une automatisation cloud nécessite un environnement ou un espace de travail cloud"
+
+msgid "A cloud automation's instructions can be at most {max} characters"
+msgstr "Les instructions d'une automatisation cloud peuvent contenir au maximum {max} caractères"
+
 #. js-lingui-explicit-id
 msgid "serverError.common.cloudWorkspaceCannotCallThis"
 msgstr "Un espace de travail cloud ne peut pas appeler {path}. Faites-le depuis un client où vous êtes connecté."
@@ -1915,6 +1921,9 @@ msgstr "Un agent mène des changements multi-fichiers de bout en bout."
 
 msgid "An agent writes whole functions and files while a human watches every step and approves every command. One agent, one human. Faster, but still serial."
 msgstr "Un agent écrit des fonctions et des fichiers entiers pendant qu'un humain surveille chaque étape et approuve chaque commande. Un agent, un humain. Plus rapide, mais toujours en série."
+
+msgid "An automation can only use a cloud workspace you created"
+msgstr "Une automatisation ne peut utiliser qu'un espace de travail cloud que vous avez créé"
 
 msgid "An error occurred"
 msgstr "Une erreur s'est produite"
@@ -11246,9 +11255,6 @@ msgstr "PID"
 msgid "Pin"
 msgstr "Épingler"
 
-msgid "Pin a workspace to continue its agent session between runs"
-msgstr "Épinglez un espace de travail pour continuer sa session d'agent entre les exécutions"
-
 msgid "Pin workspaces above your projects, then ⌘-click a batch to move, group, or delete them all at once."
 msgstr "Épinglez des espaces de travail au-dessus de vos projets, puis sélectionnez-en un lot avec ⌘ + clic pour les déplacer, les grouper ou les supprimer d'un coup."
 
@@ -15165,8 +15171,14 @@ msgstr "L'application est en {appVersion} mais reliée à un service d'hôte lan
 msgid "The associated device isn't reachable right now"
 msgstr "L'appareil associé n'est pas joignable pour le moment"
 
+msgid "The automation's owner can't use cloud workspaces in this organization anymore. Ask them to check their access, or run the automation on a device."
+msgstr "Le propriétaire de l'automatisation ne peut plus utiliser d'espaces de travail cloud dans cette organisation. Demandez-lui de vérifier son accès, ou exécutez l'automatisation sur un appareil."
+
 msgid "The best agent will change.<0/>Your workflow shouldn't."
 msgstr "Le meilleur agent changera.<0/>Pas votre façon de travailler."
+
+msgid "The cloud workspace should have started but didn't answer in time. The next run tries again."
+msgstr "L'espace de travail cloud aurait dû démarrer, mais n'a pas répondu à temps. La prochaine exécution réessaiera."
 
 msgid "The config repository must be one of the environment's repositories"
 msgstr "Le dépôt de configuration doit être l'un des dépôts de l'environnement"
@@ -15200,6 +15212,9 @@ msgstr "Le répartiteur apparaît"
 
 msgid "The endpoint must use https."
 msgstr "Le point de terminaison doit utiliser https."
+
+msgid "The environment this automation starts cloud workspaces from was archived or has no repositories. Pick another environment in the automation's settings."
+msgstr "L'environnement à partir duquel cette automatisation démarre des espaces de travail cloud a été archivé ou ne contient aucun dépôt. Choisissez un autre environnement dans les paramètres de l'automatisation."
 
 msgid "The factory"
 msgstr "L'usine"
@@ -15485,6 +15500,9 @@ msgstr "Ce compte {plugin} est déjà connecté par une autre organisation Super
 
 msgid "This action is irreversible."
 msgstr "Cette action est irréversible."
+
+msgid "This agent can't run in a cloud workspace"
+msgstr "Cet agent ne peut pas s'exécuter dans un espace de travail cloud"
 
 msgid "This agent no longer exists on the selected device (its agents may have been reset). Runs will fail until you pick a new one."
 msgstr "Cet agent n'existe plus sur l'appareil sélectionné (ses agents ont peut-être été réinitialisés). Les exécutions échoueront tant que vous n'en aurez pas choisi un nouveau."

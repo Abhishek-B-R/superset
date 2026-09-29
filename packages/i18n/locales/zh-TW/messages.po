@@ -1214,6 +1214,12 @@ msgstr "更好用的應用程式內瀏覽器：預覽改動，點選任意元素
 msgid "A better Superset is ready"
 msgstr "更好的 Superset 已準備就緒"
 
+msgid "A cloud automation needs an environment or a cloud workspace"
+msgstr "雲端自動化需要一個環境或一個雲端工作區"
+
+msgid "A cloud automation's instructions can be at most {max} characters"
+msgstr "雲端自動化的指示最多 {max} 個字元"
+
 #. js-lingui-explicit-id
 msgid "serverError.common.cloudWorkspaceCannotCallThis"
 msgstr "雲端工作區無法呼叫 {path}。請在你已登入的用戶端中執行。"
@@ -1915,6 +1921,9 @@ msgstr "代理程式能端到端完成跨檔案改動。"
 
 msgid "An agent writes whole functions and files while a human watches every step and approves every command. One agent, one human. Faster, but still serial."
 msgstr "代理程式寫出完整的函式和檔案，人類盯著每一步、批准每一條命令。一個代理程式，一個人。更快，但仍是序列。"
+
+msgid "An automation can only use a cloud workspace you created"
+msgstr "自動化只能使用你建立的雲端工作區"
 
 msgid "An error occurred"
 msgstr "發生錯誤"
@@ -11246,9 +11255,6 @@ msgstr "PID"
 msgid "Pin"
 msgstr "固定"
 
-msgid "Pin a workspace to continue its agent session between runs"
-msgstr "釘選一個工作區，以便在多次執行之間繼續其代理程式工作階段"
-
 msgid "Pin workspaces above your projects, then ⌘-click a batch to move, group, or delete them all at once."
 msgstr "把工作區固定在專案上方，再⌘點選批次選中，一次性移動、分組或刪除。"
 
@@ -15165,8 +15171,14 @@ msgstr "應用程式版本為 {appVersion}，但連接的是由其他程式（�
 msgid "The associated device isn't reachable right now"
 msgstr "關聯的裝置現在連不上"
 
+msgid "The automation's owner can't use cloud workspaces in this organization anymore. Ask them to check their access, or run the automation on a device."
+msgstr "此自動化的擁有者已無法在此組織中使用雲端工作區。請對方檢查存取權限，或在裝置上執行此自動化。"
+
 msgid "The best agent will change.<0/>Your workflow shouldn't."
 msgstr "最好的代理程式會變。<0/>你的工作流不該變。"
+
+msgid "The cloud workspace should have started but didn't answer in time. The next run tries again."
+msgstr "雲端工作區應該已經啟動，但沒有及時回應。下次執行時會重試。"
 
 msgid "The config repository must be one of the environment's repositories"
 msgstr "設定儲存庫必須是該環境的儲存庫之一"
@@ -15200,6 +15212,9 @@ msgstr "排程員出現"
 
 msgid "The endpoint must use https."
 msgstr "端點必須使用 https。"
+
+msgid "The environment this automation starts cloud workspaces from was archived or has no repositories. Pick another environment in the automation's settings."
+msgstr "此自動化用來啟動雲端工作區的環境已被封存或沒有儲存庫。請在自動化的設定中選擇其他環境。"
 
 msgid "The factory"
 msgstr "工廠"
@@ -15485,6 +15500,9 @@ msgstr "這個 {plugin} 帳戶已由另一個 Superset 組織連接。"
 
 msgid "This action is irreversible."
 msgstr "此操作不可逆。"
+
+msgid "This agent can't run in a cloud workspace"
+msgstr "此代理程式無法在雲端工作區中執行"
 
 msgid "This agent no longer exists on the selected device (its agents may have been reset). Runs will fail until you pick a new one."
 msgstr "所選裝置上已不存在這個代理程式（它的代理程式可能被重置過）。在你選擇新的代理程式之前，執行都會失敗。"
