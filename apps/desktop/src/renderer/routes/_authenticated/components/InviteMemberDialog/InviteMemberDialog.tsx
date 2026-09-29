@@ -1,6 +1,10 @@
 import { Trans, useLingui } from "@lingui/react/macro";
 import { errorMessage } from "@superset/i18n/errors";
-import { canInvite, type OrganizationRole } from "@superset/shared/auth";
+import {
+	canInvite,
+	getInvitableRoles,
+	type OrganizationRole,
+} from "@superset/shared/auth";
 import { Button } from "@superset/ui/button";
 import {
 	Dialog,
@@ -20,36 +24,36 @@ import {
 	SelectValue,
 } from "@superset/ui/select";
 import { toast } from "@superset/ui/sonner";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { useActiveOrganizationId } from "renderer/hooks/useActiveOrganizationId";
 import { authClient } from "renderer/lib/auth-client";
 import { cloudTrpc } from "renderer/lib/cloud-trpc";
 import { organizationRoleName } from "renderer/lib/organizationRoleName";
+import { useOrganizationRole } from "renderer/routes/_authenticated/hooks/useOrganizationRole";
+import { useInviteMemberDialogStore } from "renderer/stores/invite-member-dialog";
 
-interface InviteMemberDialogProps {
-	open: boolean;
-	onOpenChange: (open: boolean) => void;
-	organizationId: string;
-	organizationName: string;
-	invitableRoles: OrganizationRole[];
-	currentUserRole: OrganizationRole;
-}
-
-export function InviteMemberDialog({
-	open,
-	onOpenChange,
-	organizationId,
-	organizationName,
-	invitableRoles,
-	currentUserRole,
-}: InviteMemberDialogProps) {
+export function InviteMemberDialog() {
 	const { t } = useLingui();
+	const open = useInviteMemberDialogStore((state) => state.isOpen);
+	const onOpenChange = useInviteMemberDialogStore((state) => state.setOpen);
+	const organizationId = useActiveOrganizationId();
+	const { data: organizations } =
+		cloudTrpc.organization.list.useQuery(undefined);
+	const organizationName =
+		organizations?.find((org) => org.id === organizationId)?.name ?? "";
+	const currentUserRole = useOrganizationRole();
+	const invitableRoles = currentUserRole
+		? getInvitableRoles(currentUserRole)
+		: [];
 	const [email, setEmail] = useState("");
 	const [role, setRole] = useState<OrganizationRole>("member");
 	const [isInviting, setIsInviting] = useState(false);
+	const emailInputRef = useRef<HTMLInputElement>(null);
 	const utils = cloudTrpc.useUtils();
 
 	const handleInvite = async () => {
-		if (!canInvite(currentUserRole, role)) {
+		if (!organizationId) return;
+		if (!currentUserRole || !canInvite(currentUserRole, role)) {
 			const roleName = organizationRoleName(role);
 			toast.error(
 				t({
@@ -92,7 +96,13 @@ export function InviteMemberDialog({
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent>
+			{/* Opened from menus that hand focus back to their trigger as they close. */}
+			<DialogContent
+				onFocusOutside={(event) => {
+					event.preventDefault();
+					emailInputRef.current?.focus();
+				}}
+			>
 				<DialogHeader>
 					<DialogTitle>
 						<Trans>Invite Member</Trans>
@@ -111,6 +121,7 @@ export function InviteMemberDialog({
 							<Trans>Email</Trans>
 						</Label>
 						<Input
+							ref={emailInputRef}
 							id="email"
 							type="email"
 							placeholder={t({

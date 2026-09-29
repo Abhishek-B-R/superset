@@ -1694,9 +1694,6 @@ msgstr "Přidán 1 soubor do {where}"
 msgid "Added only when launching with a prompt — e.g. <0>--</0>, <1>--prompt</1>, <2>-i</2>."
 msgstr "Přidá se jen při spuštění s promptem — např. <0>--</0>, <1>--prompt</1>, <2>-i</2>."
 
-msgid "Adding members will increase your subscription cost, prorated to your billing cycle."
-msgstr "Přidáním členů vzroste cena předplatného, poměrně k vašemu fakturačnímu cyklu."
-
 msgid "Address Comments with Agent"
 msgstr "Vyřešit komentáře agentem"
 
@@ -8220,9 +8217,6 @@ msgstr "Pozvat člena"
 
 msgid "Invite Member"
 msgstr "Pozvat člena"
-
-msgid "Invite people..."
-msgstr "Pozvat lidi..."
 
 msgid "Invite teammate"
 msgstr "Pozvat kolegu"
@@ -16170,9 +16164,6 @@ msgstr "V tomto zobrazení došlo k chybě"
 
 msgid "This week"
 msgstr "Tento týden"
-
-msgid "This will affect your billing"
-msgstr "Ovlivní to vaši fakturaci"
 
 msgid "This will change your organization's public URL. Make sure to update any bookmarks or shared links."
 msgstr "Tímto se změní veřejná URL vaší organizace. Nezapomeňte aktualizovat záložky a sdílené odkazy."

@@ -1694,9 +1694,6 @@ msgstr "1件のファイルを{where}に追加しました"
 msgid "Added only when launching with a prompt — e.g. <0>--</0>, <1>--prompt</1>, <2>-i</2>."
 msgstr "プロンプト付きで起動するときのみ追加されます — 例: <0>--</0>、<1>--prompt</1>、<2>-i</2>。"
 
-msgid "Adding members will increase your subscription cost, prorated to your billing cycle."
-msgstr "メンバーを追加するとサブスクリプション費用が増え、請求サイクルに応じて日割り計算されます。"
-
 msgid "Address Comments with Agent"
 msgstr "エージェントでコメントに対応"
 
@@ -8220,9 +8217,6 @@ msgstr "メンバーを招待"
 
 msgid "Invite Member"
 msgstr "メンバーを招待"
-
-msgid "Invite people..."
-msgstr "メンバーを招待..."
 
 msgid "Invite teammate"
 msgstr "メンバーを招待"
@@ -16170,9 +16164,6 @@ msgstr "このビューでエラーが発生しました"
 
 msgid "This week"
 msgstr "今週"
-
-msgid "This will affect your billing"
-msgstr "請求に影響します"
 
 msgid "This will change your organization's public URL. Make sure to update any bookmarks or shared links."
 msgstr "組織の公開URLが変わります。ブックマークや共有リンクを忘れずに更新してください。"

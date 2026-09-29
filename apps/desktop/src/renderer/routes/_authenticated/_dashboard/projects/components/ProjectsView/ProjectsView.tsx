@@ -8,6 +8,7 @@ import { cloudTrpc } from "renderer/lib/cloud-trpc";
 import { NewProjectDialog } from "renderer/routes/_authenticated/_dashboard/components/NewProjectDialog";
 import { useOrganizationPeople } from "renderer/routes/_authenticated/_dashboard/hooks/useOrganizationPeople";
 import { useListDisplayStore } from "renderer/routes/_authenticated/_dashboard/stores/listDisplayStore";
+import { useInviteMember } from "renderer/routes/_authenticated/hooks/useInviteMember";
 import type { ProjectsSearch } from "../../types";
 import { ProjectsHeader } from "./components/ProjectsHeader";
 import { ProjectsList } from "./components/ProjectsList";
@@ -31,6 +32,7 @@ export function ProjectsView({ search }: ProjectsViewProps) {
 		{ enabled: organizationId !== null },
 	);
 	const { people, currentUserId } = useOrganizationPeople();
+	const inviteMember = useInviteMember();
 	const setSearch = (patch: Partial<ProjectsSearch>) => {
 		const next = { ...search, ...patch };
 		navigate({
@@ -130,6 +132,7 @@ export function ProjectsView({ search }: ProjectsViewProps) {
 							needle.length > 0 || status.length > 0 || leads.length > 0
 						}
 						people={people}
+						onInvite={inviteMember}
 						onUpdate={(projectId, changes) =>
 							updateProject.mutate({ id: projectId, ...changes })
 						}
@@ -142,6 +145,7 @@ export function ProjectsView({ search }: ProjectsViewProps) {
 			<NewProjectDialog
 				open={isNewProjectOpen}
 				people={people}
+				onInvite={inviteMember}
 				defaultLeadId={currentUserId}
 				isCreating={createProject.isPending}
 				onOpenChange={onNewProjectOpenChange}

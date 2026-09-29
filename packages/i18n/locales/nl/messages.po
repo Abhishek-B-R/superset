@@ -1694,9 +1694,6 @@ msgstr "1 bestand toegevoegd aan {where}"
 msgid "Added only when launching with a prompt — e.g. <0>--</0>, <1>--prompt</1>, <2>-i</2>."
 msgstr "Alleen toegevoegd bij starten met een prompt — bijv. <0>--</0>, <1>--prompt</1>, <2>-i</2>."
 
-msgid "Adding members will increase your subscription cost, prorated to your billing cycle."
-msgstr "Leden toevoegen verhoogt de kosten van je abonnement, naar rato van je factuurcyclus."
-
 msgid "Address Comments with Agent"
 msgstr "Opmerkingen afhandelen met agent"
 
@@ -8220,9 +8217,6 @@ msgstr "Lid uitnodigen"
 
 msgid "Invite Member"
 msgstr "Lid uitnodigen"
-
-msgid "Invite people..."
-msgstr "Mensen uitnodigen..."
 
 msgid "Invite teammate"
 msgstr "Teamgenoot uitnodigen"
@@ -16170,9 +16164,6 @@ msgstr "Deze weergave liep tegen een fout aan"
 
 msgid "This week"
 msgstr "Deze week"
-
-msgid "This will affect your billing"
-msgstr "Dit heeft gevolgen voor je facturering"
 
 msgid "This will change your organization's public URL. Make sure to update any bookmarks or shared links."
 msgstr "Hiermee verandert de publieke URL van je organisatie. Werk bladwijzers en gedeelde links bij."

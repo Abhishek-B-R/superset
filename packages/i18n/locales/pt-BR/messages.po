@@ -1694,9 +1694,6 @@ msgstr "1 arquivo adicionado a {where}"
 msgid "Added only when launching with a prompt — e.g. <0>--</0>, <1>--prompt</1>, <2>-i</2>."
 msgstr "Adicionados só ao iniciar com um prompt — ex.: <0>--</0>, <1>--prompt</1>, <2>-i</2>."
 
-msgid "Adding members will increase your subscription cost, prorated to your billing cycle."
-msgstr "Adicionar membros aumenta o custo da sua assinatura, proporcional ao ciclo de cobrança."
-
 msgid "Address Comments with Agent"
 msgstr "Resolver comentários com um agente"
 
@@ -8220,9 +8217,6 @@ msgstr "Convidar membro"
 
 msgid "Invite Member"
 msgstr "Convidar membro"
-
-msgid "Invite people..."
-msgstr "Convidar pessoas..."
 
 msgid "Invite teammate"
 msgstr "Convidar colega"
@@ -16170,9 +16164,6 @@ msgstr "Esta visualização deu erro"
 
 msgid "This week"
 msgstr "Esta semana"
-
-msgid "This will affect your billing"
-msgstr "Isso afeta o seu faturamento"
 
 msgid "This will change your organization's public URL. Make sure to update any bookmarks or shared links."
 msgstr "Isso muda a URL pública da sua organização. Atualize seus favoritos ou links compartilhados."

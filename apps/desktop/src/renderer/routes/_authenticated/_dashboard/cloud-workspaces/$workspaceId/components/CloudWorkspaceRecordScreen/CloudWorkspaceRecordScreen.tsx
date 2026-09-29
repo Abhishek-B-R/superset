@@ -23,6 +23,7 @@ import { useOpenPullRequestInApp } from "renderer/routes/_authenticated/_dashboa
 import { useOrganizationPeople } from "renderer/routes/_authenticated/_dashboard/hooks/useOrganizationPeople";
 import { useSetCloudWorkspaceVisibility } from "renderer/routes/_authenticated/_dashboard/hooks/useSetCloudWorkspaceVisibility";
 import { useCloudSidebarStore } from "renderer/routes/_authenticated/_dashboard/stores/cloudSidebarStore";
+import { useInviteMember } from "renderer/routes/_authenticated/hooks/useInviteMember";
 import { useSaveImageToDownloads } from "renderer/routes/_authenticated/hooks/useSaveImageToDownloads";
 import { useDeleteWorkspaceIntent } from "renderer/stores/delete-workspace-intent";
 import { useSaveAsEnvironmentIntent } from "renderer/stores/save-as-environment-intent";
@@ -89,6 +90,7 @@ export function CloudWorkspaceRecordScreen({
 	} = useCloudWorkspaceRecordMutations(workspaceId);
 	const [newProjectName, setNewProjectName] = useState<string | null>(null);
 	const { people, currentUserId } = useOrganizationPeople();
+	const inviteMember = useInviteMember();
 	const createProject = cloudTrpc.taskProject.create.useMutation({
 		onSuccess: (project) => {
 			void utils.taskProject.list.invalidate();
@@ -288,6 +290,7 @@ export function CloudWorkspaceRecordScreen({
 				open={newProjectName !== null}
 				initialName={newProjectName ?? ""}
 				people={people}
+				onInvite={inviteMember}
 				defaultLeadId={currentUserId}
 				isCreating={createProject.isPending}
 				onOpenChange={(open) => {

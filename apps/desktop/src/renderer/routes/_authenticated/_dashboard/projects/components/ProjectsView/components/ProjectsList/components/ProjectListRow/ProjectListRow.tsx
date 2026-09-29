@@ -25,6 +25,7 @@ const stopRowEvent = (event: SyntheticEvent) => event.stopPropagation();
 interface ProjectListRowProps {
 	project: TaskProjectRow;
 	people: { id: string; name: string; image: string | null }[];
+	onInvite?: () => void;
 	onOpen: () => void;
 	onUpdate: (changes: ProjectChanges) => void;
 }
@@ -32,6 +33,7 @@ interface ProjectListRowProps {
 export function ProjectListRow({
 	project,
 	people,
+	onInvite,
 	onOpen,
 	onUpdate,
 }: ProjectListRowProps) {
@@ -74,6 +76,7 @@ export function ProjectListRow({
 			<td className="pr-4" onClick={stopRowEvent} onKeyDown={stopRowEvent}>
 				<ProjectLeadPicker
 					people={people}
+					onInvite={onInvite}
 					value={project.lead?.userId ?? null}
 					onChange={(leadUserId) => onUpdate({ leadUserId })}
 				>

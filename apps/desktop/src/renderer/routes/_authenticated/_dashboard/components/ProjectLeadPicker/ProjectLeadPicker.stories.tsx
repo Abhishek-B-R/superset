@@ -37,3 +37,7 @@ export const WithLead: Story = {};
 export const NoLead: Story = {
 	args: { value: null },
 };
+
+export const WithInvite: Story = {
+	args: { onInvite: fn() },
+};

@@ -1694,9 +1694,6 @@ msgstr "Menambahkan 1 file ke {where}"
 msgid "Added only when launching with a prompt — e.g. <0>--</0>, <1>--prompt</1>, <2>-i</2>."
 msgstr "Ditambahkan hanya saat menjalankan dengan prompt — mis. <0>--</0>, <1>--prompt</1>, <2>-i</2>."
 
-msgid "Adding members will increase your subscription cost, prorated to your billing cycle."
-msgstr "Menambah anggota akan menaikkan biaya langganan Anda, dihitung prorata terhadap siklus penagihan Anda."
-
 msgid "Address Comments with Agent"
 msgstr "Tanggapi Komentar dengan Agen"
 
@@ -8220,9 +8217,6 @@ msgstr "Undang anggota"
 
 msgid "Invite Member"
 msgstr "Undang Anggota"
-
-msgid "Invite people..."
-msgstr "Undang orang..."
 
 msgid "Invite teammate"
 msgstr "Undang rekan tim"
@@ -16170,9 +16164,6 @@ msgstr "Tampilan ini mengalami kesalahan"
 
 msgid "This week"
 msgstr "Minggu ini"
-
-msgid "This will affect your billing"
-msgstr "Ini akan memengaruhi penagihan Anda"
 
 msgid "This will change your organization's public URL. Make sure to update any bookmarks or shared links."
 msgstr "Ini akan mengubah URL publik organisasi Anda. Pastikan memperbarui bookmark atau tautan yang sudah dibagikan."

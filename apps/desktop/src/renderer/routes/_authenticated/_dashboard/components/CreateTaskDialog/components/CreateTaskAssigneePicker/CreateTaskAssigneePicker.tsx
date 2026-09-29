@@ -8,10 +8,17 @@ import {
 	CommandInput,
 	CommandItem,
 	CommandList,
+	CommandSeparator,
 } from "@superset/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@superset/ui/popover";
 import { useMemo, useState } from "react";
-import { HiCheck, HiChevronDown, HiOutlineUserCircle } from "react-icons/hi2";
+import {
+	HiCheck,
+	HiChevronDown,
+	HiOutlineUserCircle,
+	HiOutlineUserPlus,
+} from "react-icons/hi2";
+import { useInviteMember } from "renderer/routes/_authenticated/hooks/useInviteMember";
 
 interface CreateTaskAssigneePickerProps {
 	users: Pick<SelectUser, "id" | "name" | "email" | "image">[];
@@ -27,6 +34,7 @@ export function CreateTaskAssigneePicker({
 	const { t } = useLingui();
 	const [open, setOpen] = useState(false);
 	const [search, setSearch] = useState("");
+	const inviteMember = useInviteMember();
 
 	const selectedUser = useMemo(
 		() => users.find((user) => user.id === value) ?? null,
@@ -129,6 +137,24 @@ export function CreateTaskAssigneePicker({
 							</CommandGroup>
 						)}
 					</CommandList>
+					{inviteMember && (
+						<>
+							<CommandSeparator />
+							<CommandGroup>
+								<CommandItem
+									onSelect={() => {
+										handleOpenChange(false);
+										inviteMember();
+									}}
+								>
+									<HiOutlineUserPlus className="size-4" />
+									<span className="text-sm">
+										<Trans>Invite member</Trans>
+									</span>
+								</CommandItem>
+							</CommandGroup>
+						</>
+					)}
 				</Command>
 			</PopoverContent>
 		</Popover>
