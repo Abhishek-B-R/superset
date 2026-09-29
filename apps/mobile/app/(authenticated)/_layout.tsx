@@ -82,10 +82,6 @@ export default function AuthenticatedLayout() {
 					...glassHeaderOptions,
 				}}
 			/>
-			{/* Not a formSheet: UIKit keeps the home-indicator inset under a custom
-			    detent even when it lifts the sheet above the keyboard, leaving a
-			    34pt dead strip under the composer. The screen docks itself to the
-			    keyboard instead, like the home composer. */}
 			<Stack.Screen
 				name="pages/[slug]/comment"
 				options={{

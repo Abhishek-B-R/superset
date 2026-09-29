@@ -3,7 +3,6 @@ import { msg } from "@lingui/core/macro";
 
 export interface QuickPreset {
 	id: string;
-	/** SF Symbol name, drawn by the native menu rather than by us. */
 	symbol: string;
 	body: MessageDescriptor;
 }

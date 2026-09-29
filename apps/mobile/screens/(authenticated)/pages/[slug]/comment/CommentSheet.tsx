@@ -22,8 +22,6 @@ export function CommentSheet() {
 	const { t } = useLingui();
 	const router = useRouter();
 	const navigation = useNavigation();
-	// Pinned at mount: the parent screen clears the pick when it regains focus,
-	// which would otherwise empty this sheet while the user is still in it.
 	const [pick] = useState(() => {
 		const state = usePageCommentStore.getState();
 		return {
@@ -51,8 +49,6 @@ export function CommentSheet() {
 
 	const post = async (text: string, intent?: CommentIntent) => {
 		const { anchor, version } = pick;
-		// Resolving here would read as success to the composer, which clears the
-		// draft on it — nothing was sent, so this has to reject.
 		if (!anchor || version === null || inFlight.current) {
 			throw new Error(t({ message: "Try again" }));
 		}

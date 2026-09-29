@@ -167,8 +167,6 @@ export function PageDetailScreen({
 		}
 		if (message.type === "pick") {
 			if (!selectionRef.current) {
-				// Committing the selection locks the frame, so it only happens
-				// once the sheet it locks for is actually on its way.
 				if (!startCommentRef.current(message.anchor)) return;
 				const next = { anchor: message.anchor, rect: message.rect };
 				selectionRef.current = next;
@@ -322,8 +320,6 @@ export function PageDetailScreen({
 						onError={() => setFailedSrc(viewUrl)}
 					/>
 
-					{/* Rects arrive in document coordinates, which the frame's
-					    contentInset has pushed down the screen by insetTop. */}
 					<View
 						className="absolute inset-x-0 bottom-0 overflow-hidden"
 						style={{ top: headerHeight }}
