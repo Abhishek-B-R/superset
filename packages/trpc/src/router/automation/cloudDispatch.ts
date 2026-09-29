@@ -29,24 +29,11 @@ import {
 
 export const CLOUD_DISPATCH_DEADLINE_MS = 30_000;
 
-/** Starting a box takes a few seconds of API calls; don't begin one this close to the deadline. */
-const NEW_WORKSPACE_MARGIN_MS = 5_000;
-
 const STRANDED_PROVISIONING_MS = 10 * 60_000;
-
-const deadlineFailure = () =>
-	new RunFailure(
-		`the cloud workspace should have started but did not answer within ${CLOUD_DISPATCH_DEADLINE_MS / 1000} seconds`,
-		"cloud_not_ready",
-	);
 
 type CloudWorkspaceRow = typeof cloudWorkspaces.$inferSelect;
 
-/**
- * Runs the agent in the pinned cloud workspace, woken and reached directly (a sandbox is never on
- * the relay). With no pin, or a pin that is gone, a new workspace starts and becomes the pin.
- */
-export function runInCloud(args: {
+type RunInCloudArgs = {
 	automation: DispatchableAutomation;
 	prompt: string;
 	event: {
@@ -55,30 +42,90 @@ export function runInCloud(args: {
 		payload: unknown;
 	} | null;
 	placed: (workspace: RunWorkspace | null) => void;
-}): Promise<AgentRunResult | null> {
-	const startedAt = Date.now();
-	// The race stops the wait, not the work, so each step that starts something checks the time.
-	const requireTime = (ms = 0) => {
-		if (Date.now() - startedAt > CLOUD_DISPATCH_DEADLINE_MS - ms) {
-			throw deadlineFailure();
-		}
-	};
+};
+
+type Launch =
+	| {
+			kind: "pinned";
+			row: CloudWorkspaceRow;
+			hostTarget: string;
+			headers: Record<string, string>;
+			continueTerminalId: string | undefined;
+	  }
+	| { kind: "new"; environmentId: string; branch: string | undefined };
+
+/**
+ * Runs the agent in the pinned cloud workspace, woken and reached directly (a sandbox is never on
+ * the relay). With no pin, or a pin that is gone, a new workspace starts and becomes the pin.
+ */
+export async function runInCloud(
+	args: RunInCloudArgs,
+): Promise<AgentRunResult | null> {
+	// The deadline bounds getting ready; sending the agent or starting the box is never cut off.
+	const launch = await withDeadline(prepareLaunch(args));
+	const { automation, prompt, placed } = args;
+
+	if (launch.kind === "pinned") {
+		return hostServiceMutation<
+			{
+				workspaceId: string;
+				agent: string;
+				prompt: string;
+				continueTerminalId?: string;
+			},
+			AgentRunResult
+		>({ baseUrl: launch.hostTarget, headers: launch.headers }, "agents.run", {
+			workspaceId: launch.row.id,
+			agent: automation.agent,
+			prompt,
+			...(launch.continueTerminalId
+				? { continueTerminalId: launch.continueTerminalId }
+				: {}),
+		});
+	}
+
+	const created = await startCloudWorkspace({
+		organizationId: automation.organizationId,
+		userId: automation.ownerUserId,
+		environmentId: launch.environmentId,
+		name: automation.name.slice(0, 200),
+		branch: launch.branch,
+		launch: { agent: automation.agent, prompt },
+	});
+	placed({ cloudWorkspaceId: created.id });
+	if (automation.cloudWorkspaceId) {
+		await replacePin(
+			automation.id,
+			{ cloudWorkspaceId: automation.cloudWorkspaceId },
+			created.id,
+		);
+	}
+	return null;
+}
+
+function withDeadline<T>(work: Promise<T>): Promise<T> {
 	let timer: ReturnType<typeof setTimeout> | undefined;
 	const deadline = new Promise<never>((_, reject) => {
 		timer = setTimeout(
-			() => reject(deadlineFailure()),
+			() =>
+				reject(
+					new RunFailure(
+						`the cloud workspace should have started but did not answer within ${CLOUD_DISPATCH_DEADLINE_MS / 1000} seconds`,
+						"cloud_not_ready",
+					),
+				),
 			CLOUD_DISPATCH_DEADLINE_MS,
 		);
 	});
-	return Promise.race([startRun(args, requireTime), deadline]).finally(() =>
-		clearTimeout(timer),
-	);
+	return Promise.race([work, deadline]).finally(() => clearTimeout(timer));
 }
 
-async function startRun(
-	{ automation, prompt, event, placed }: Parameters<typeof runInCloud>[0],
-	requireTime: (ms?: number) => void,
-): Promise<AgentRunResult | null> {
+async function prepareLaunch({
+	automation,
+	prompt,
+	event,
+	placed,
+}: RunInCloudArgs): Promise<Launch> {
 	await assertOwnerMayUseCloud(automation);
 
 	if (automation.cloudWorkspaceId) {
@@ -103,21 +150,7 @@ async function startRun(
 			headers,
 			signal: AbortSignal.timeout(10_000),
 		});
-		requireTime();
-		return hostServiceMutation<
-			{
-				workspaceId: string;
-				agent: string;
-				prompt: string;
-				continueTerminalId?: string;
-			},
-			AgentRunResult
-		>({ baseUrl: pinned.hostTarget, headers }, "agents.run", {
-			workspaceId: pinned.row.id,
-			agent: automation.agent,
-			prompt,
-			...(continueTerminalId ? { continueTerminalId } : {}),
-		});
+		return { kind: "pinned", ...pinned, headers, continueTerminalId };
 	}
 
 	placed(null);
@@ -133,27 +166,13 @@ async function startRun(
 			null,
 		);
 	}
-	const branch = event
-		? await pullRequestBranch(event, automation.environmentId)
-		: undefined;
-	requireTime(NEW_WORKSPACE_MARGIN_MS);
-	const created = await startCloudWorkspace({
-		organizationId: automation.organizationId,
-		userId: automation.ownerUserId,
+	return {
+		kind: "new",
 		environmentId: automation.environmentId,
-		name: automation.name.slice(0, 200),
-		branch,
-		launch: { agent: automation.agent, prompt },
-	});
-	placed({ cloudWorkspaceId: created.id });
-	if (automation.cloudWorkspaceId) {
-		await replacePin(
-			automation.id,
-			{ cloudWorkspaceId: automation.cloudWorkspaceId },
-			created.id,
-		);
-	}
-	return null;
+		branch: event
+			? await pullRequestBranch(event, automation.environmentId)
+			: undefined,
+	};
 }
 
 async function assertOwnerMayUseCloud(

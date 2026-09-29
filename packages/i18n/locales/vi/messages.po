@@ -1217,9 +1217,8 @@ msgstr "Phiên bản Superset tốt hơn đã sẵn sàng"
 msgid "A cloud automation needs an environment or a cloud workspace"
 msgstr "Tự động hóa trên cloud cần một environment hoặc một workspace cloud"
 
-#. placeholder {0}: params?.max
-msgid "A cloud automation's instructions can be at most {0} characters"
-msgstr "Hướng dẫn của một automation trên cloud tối đa {0} ký tự"
+msgid "A cloud automation's instructions can be at most {max} characters"
+msgstr "Hướng dẫn của một automation trên cloud tối đa {max} ký tự"
 
 #. js-lingui-explicit-id
 msgid "serverError.common.cloudWorkspaceCannotCallThis"

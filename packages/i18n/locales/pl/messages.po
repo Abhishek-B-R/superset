@@ -1217,9 +1217,8 @@ msgstr "Lepsza wersja Superset jest gotowa"
 msgid "A cloud automation needs an environment or a cloud workspace"
 msgstr "Automatyzacja w chmurze wymaga środowiska lub obszaru roboczego w chmurze"
 
-#. placeholder {0}: params?.max
-msgid "A cloud automation's instructions can be at most {0} characters"
-msgstr "Instrukcje automatyzacji w chmurze mogą mieć maksymalnie {0} znaków"
+msgid "A cloud automation's instructions can be at most {max} characters"
+msgstr "Instrukcje automatyzacji w chmurze mogą mieć maksymalnie {max} znaków"
 
 #. js-lingui-explicit-id
 msgid "serverError.common.cloudWorkspaceCannotCallThis"

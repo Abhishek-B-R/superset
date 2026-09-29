@@ -84,6 +84,7 @@ export default command({
 				options.project !== undefined ||
 				options.session ||
 				options.tag?.length ||
+				options.clearTags ||
 				(options.cloud && !options.environment))
 				? await ctx.api.automation.get.query({ id })
 				: null;
@@ -96,6 +97,7 @@ export default command({
 				"--project": options.project,
 				"--session": options.session,
 				"--tag": options.tag?.length ? options.tag : undefined,
+				"--clear-tags": options.clearTags,
 			});
 		}
 

@@ -1,4 +1,5 @@
 import { msg } from "@lingui/core/macro";
+import { formatNumber } from "./format";
 import { i18n } from "./index";
 
 // Catalog entries for user-facing server errors. Each entry pairs a stable
@@ -145,12 +146,14 @@ export const serverErrorMessages: Record<
 				message: "A cloud automation needs an environment or a cloud workspace",
 			}),
 		),
-	"serverError.automation.cloudPromptTooLong": (params) =>
-		i18n._(
+	"serverError.automation.cloudPromptTooLong": (params) => {
+		const max = formatNumber(Number(params?.max));
+		return i18n._(
 			msg({
-				message: `A cloud automation's instructions can be at most ${params?.max} characters`,
+				message: `A cloud automation's instructions can be at most ${max} characters`,
 			}),
-		),
+		);
+	},
 	"serverError.automation.cloudWorkspaceNotYours": () =>
 		i18n._(
 			msg({

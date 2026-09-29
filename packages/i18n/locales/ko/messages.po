@@ -1217,9 +1217,8 @@ msgstr "더 나은 Superset이 준비되었습니다"
 msgid "A cloud automation needs an environment or a cloud workspace"
 msgstr "클라우드 자동화에는 환경 또는 클라우드 워크스페이스가 필요합니다"
 
-#. placeholder {0}: params?.max
-msgid "A cloud automation's instructions can be at most {0} characters"
-msgstr "클라우드 자동화의 지침은 최대 {0}자까지 입력할 수 있습니다"
+msgid "A cloud automation's instructions can be at most {max} characters"
+msgstr "클라우드 자동화의 지침은 최대 {max}자까지 입력할 수 있습니다"
 
 #. js-lingui-explicit-id
 msgid "serverError.common.cloudWorkspaceCannotCallThis"

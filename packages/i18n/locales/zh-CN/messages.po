@@ -1217,9 +1217,8 @@ msgstr "更好的 Superset 已准备就绪"
 msgid "A cloud automation needs an environment or a cloud workspace"
 msgstr "云端自动化需要一个环境或一个云端工作区"
 
-#. placeholder {0}: params?.max
-msgid "A cloud automation's instructions can be at most {0} characters"
-msgstr "云端自动化的指令最多 {0} 个字符"
+msgid "A cloud automation's instructions can be at most {max} characters"
+msgstr "云端自动化的指令最多 {max} 个字符"
 
 #. js-lingui-explicit-id
 msgid "serverError.common.cloudWorkspaceCannotCallThis"

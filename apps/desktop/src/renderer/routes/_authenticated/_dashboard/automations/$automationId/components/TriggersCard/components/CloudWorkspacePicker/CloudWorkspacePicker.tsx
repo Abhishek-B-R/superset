@@ -38,10 +38,10 @@ export function CloudWorkspacePicker({
 		? (allWorkspaces?.find((row) => row.id === value) ?? null)
 		: null;
 	const resolving = !!value && allWorkspaces === undefined;
-	const missing =
-		!!value &&
-		!resolving &&
-		(!pinned || pinned.status === "failed" || pinned.status === "deleted");
+	const gone = pinned?.status === "failed" || pinned?.status === "deleted";
+	// A viewer who isn't the owner may not see the owner's workspaces at all.
+	const unseen = !!value && !resolving && !pinned && !!disabled;
+	const missing = !!value && !resolving && !unseen && (!pinned || gone);
 	const selected = missing ? null : pinned;
 	const label = selected
 		? selected.name
@@ -49,13 +49,17 @@ export function CloudWorkspacePicker({
 			? t({
 					message: "Loading…",
 				})
-			: missing
+			: unseen
 				? t({
-						message: "Workspace not found",
+						message: "Cloud workspace",
 					})
-				: t({
-						message: "New workspace",
-					});
+				: missing
+					? t({
+							message: "Workspace not found",
+						})
+					: t({
+							message: "New workspace",
+						});
 
 	return (
 		<Popover open={open} onOpenChange={(next) => !disabled && setOpen(next)}>
@@ -66,7 +70,7 @@ export function CloudWorkspacePicker({
 					icon={
 						missing ? (
 							<LuTriangleAlert className="size-4 shrink-0" />
-						) : selected || resolving ? (
+						) : selected || resolving || unseen ? (
 							<LuCloud className="size-4 shrink-0" />
 						) : (
 							<LuPlus className="size-4 shrink-0" />

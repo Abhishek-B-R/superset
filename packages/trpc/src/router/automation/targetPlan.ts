@@ -209,8 +209,7 @@ function planCloud(
 			continueAgentSession: false,
 		},
 		hostsToVerify: [],
-		// Only a named environment is checked: one taken from a pin is a fallback, and an
-		// archived one must not block pinning a box that works.
+		// Only a named environment is checked; one taken from a pin is just the fallback.
 		cloud: {
 			environmentToVerify:
 				input.environmentId && input.environmentId !== existingEnvironmentId
