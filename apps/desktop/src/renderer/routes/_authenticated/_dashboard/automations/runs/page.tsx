@@ -40,8 +40,12 @@ export const Route = createFileRoute(
 	"/_authenticated/_dashboard/automations/runs/",
 )({
 	component: AutomationRunsPage,
-	validateSearch: (search: Record<string, unknown>): { status?: "failed" } =>
-		search.status === "failed" ? { status: "failed" } : {},
+	validateSearch: (
+		search: Record<string, unknown>,
+	): { status?: "failed"; scope?: "mine" } => ({
+		...(search.status === "failed" ? { status: "failed" as const } : {}),
+		...(search.scope === "mine" ? { scope: "mine" as const } : {}),
+	}),
 });
 
 type Scope = "all" | "mine";
@@ -55,8 +59,8 @@ function AutomationRunsPage() {
 	const utils = cloudTrpc.useUtils();
 	const { gateFeature } = usePaywall();
 
-	const { status: statusParam } = Route.useSearch();
-	const [scope, setScope] = useState<Scope>("all");
+	const { status: statusParam, scope: scopeParam } = Route.useSearch();
+	const [scope, setScope] = useState<Scope>(scopeParam ?? "all");
 	const [status, setStatus] = useState<StatusFilter>(statusParam ?? "all");
 	const [selected, setSelected] = useState<Set<string>>(new Set());
 	const [expanded, setExpanded] = useState<Set<string>>(new Set());

@@ -555,36 +555,39 @@ function AutomationsPage() {
 									</TabsTrigger>
 								</TabsList>
 							</Tabs>
-							{!tabEmpty && (
-								<div className="flex items-center gap-2">
-									<Button
-										type="button"
-										variant="ghost"
-										size="sm"
-										className="h-8 gap-1.5 px-3 text-muted-foreground hover:text-foreground"
-										onClick={() => navigate({ to: "/automations/runs" })}
-									>
-										<span>
-											<Trans>All runs</Trans>
-										</span>
-										<LuArrowUpRight className="size-3.5" />
-									</Button>
-									<div className="relative">
-										<LuSearch className="pointer-events-none absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
-										<Input
-											value={search}
-											onChange={(e) => setSearch(e.target.value)}
-											placeholder={t({
-												message: "Search",
-											})}
-											aria-label={t({
-												message: "Search automations",
-											})}
-											className="h-8 w-44 pl-8"
-										/>
-									</div>
+							<div className="flex items-center gap-2">
+								<Button
+									type="button"
+									variant="ghost"
+									size="sm"
+									className="h-8 gap-1.5 px-3 text-muted-foreground hover:text-foreground"
+									onClick={() =>
+										navigate({
+											to: "/automations/runs",
+											search: scope === "mine" ? { scope: "mine" } : {},
+										})
+									}
+								>
+									<span>
+										<Trans>All runs</Trans>
+									</span>
+									<LuArrowUpRight className="size-3.5" />
+								</Button>
+								<div className="relative">
+									<LuSearch className="pointer-events-none absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
+									<Input
+										value={search}
+										onChange={(e) => setSearch(e.target.value)}
+										placeholder={t({
+											message: "Search",
+										})}
+										aria-label={t({
+											message: "Search automations",
+										})}
+										className="h-8 w-44 pl-8"
+									/>
 								</div>
-							)}
+							</div>
 						</div>
 					)}
 
