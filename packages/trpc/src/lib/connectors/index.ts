@@ -386,6 +386,93 @@ export interface ConnectorIdentity {
 	user: { id: string; label: string | null } | null;
 }
 
+async function mcpIdentity(
+	slug: string,
+	probe: { mcp: string; tool: string; arguments: Record<string, unknown> },
+	accessToken: string,
+): Promise<Record<string, unknown>> {
+	let session: string | null = null;
+	let requestId = 0;
+
+	const post = async (body: Record<string, unknown>) => {
+		const response = await credentialFetch(
+			probe.mcp,
+			{
+				method: "POST",
+				headers: {
+					Authorization: `Bearer ${accessToken}`,
+					"Content-Type": "application/json",
+					Accept: "application/json, text/event-stream",
+					...(session ? { "Mcp-Session-Id": session } : {}),
+				},
+				body: JSON.stringify(body),
+			},
+			`Connector "${slug}" identity`,
+		);
+		session = response.headers.get("mcp-session-id") ?? session;
+		return response;
+	};
+
+	const request = async (
+		method: string,
+		params: Record<string, unknown>,
+	): Promise<Record<string, unknown>> => {
+		const response = await post({
+			jsonrpc: "2.0",
+			id: ++requestId,
+			method,
+			params,
+		});
+		const text = await response.text();
+		if (!response.ok)
+			throw new Error(
+				`Connector "${slug}" identity probe failed: ${response.status} ${text.slice(0, 200)}`,
+			);
+		// Streamable HTTP servers answer either plain JSON or a one-event SSE body.
+		const events = text
+			.split("\n")
+			.filter((line) => line.startsWith("data:"))
+			.map((line) => line.slice(5).trim());
+		const message = JSON.parse(events.at(-1) ?? text) as {
+			result?: Record<string, unknown>;
+			error?: { message?: string };
+		};
+		if (message.error)
+			throw new Error(
+				`Connector "${slug}" identity probe failed: ${message.error.message}`,
+			);
+		return message.result ?? {};
+	};
+
+	await request("initialize", {
+		protocolVersion: "2025-06-18",
+		capabilities: {},
+		clientInfo: { name: "superset-connectors", version: "1.0.0" },
+	});
+	await post({ jsonrpc: "2.0", method: "notifications/initialized" });
+
+	const result = (await request("tools/call", {
+		name: probe.tool,
+		arguments: probe.arguments,
+	})) as {
+		structuredContent?: Record<string, unknown>;
+		content?: { type: string; text?: string }[];
+		isError?: boolean;
+	};
+
+	const firstText = result.content?.find(
+		(item) => typeof item.text === "string",
+	)?.text;
+	if (result.isError)
+		throw new Error(
+			`Connector "${slug}" identity tool errored: ${firstText?.slice(0, 200) ?? "no detail"}`,
+		);
+	if (result.structuredContent) return result.structuredContent;
+	if (!firstText)
+		throw new Error(`Connector "${slug}" identity tool returned no content.`);
+	return JSON.parse(firstText) as Record<string, unknown>;
+}
+
 export async function probeIdentity(
 	slug: string,
 	method: ConnectorMethod,
@@ -421,6 +508,8 @@ export async function probeIdentity(
 			throw new Error(
 				`Connector "${slug}" identity probe failed: ${response.status}`,
 			);
+	} else if ("mcp" in probe) {
+		payload = await mcpIdentity(slug, probe, accessToken);
 	} else {
 		if (!tokenPayload)
 			throw new Error(

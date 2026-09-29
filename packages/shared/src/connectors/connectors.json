@@ -321,19 +321,16 @@
 				{
 					"type": "oauth2",
 					"label": "OAuth 2.0",
-					"authorization_url": "https://sentry.io/oauth/authorize/",
-					"token_url": "https://sentry.io/oauth/token/",
-					"scopes": [
-						"org:read",
-						"project:write",
-						"team:write",
-						"event:write",
-						"alerts:write"
-					],
-					"scope_separator": " ",
-					"token_request_auth_method": "client_secret_post",
-					"requires_env": ["SENTRY_MCP_CLIENT_ID", "SENTRY_MCP_CLIENT_SECRET"],
+					"client": "dynamic",
+					"authorization_url": "https://mcp.sentry.dev/mcp",
+					"scopes": [],
 					"identity": {
+						"mcp": "https://mcp.sentry.dev/mcp",
+						"tool": "execute_sentry_tool",
+						"arguments": {
+							"name": "whoami",
+							"arguments": {}
+						},
 						"account": {
 							"id": "$.user.id",
 							"label": "$.user.email"
@@ -345,7 +342,7 @@
 					},
 					"bind": {
 						"headers": {
-							"Authorization": "Sentry-Bearer ${config.access_token}"
+							"Authorization": "Bearer ${config.access_token}"
 						}
 					}
 				}

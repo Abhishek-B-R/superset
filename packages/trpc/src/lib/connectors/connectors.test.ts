@@ -22,8 +22,6 @@ const ENV = {
 	SENTRY_CLIENT_ID: "xc",
 	SENTRY_CLIENT_SECRET: "xs",
 	SENTRY_APP_SLUG: "superset-app",
-	SENTRY_MCP_CLIENT_ID: "mc",
-	SENTRY_MCP_CLIENT_SECRET: "ms",
 };
 
 const original: Record<string, string | undefined> = {};
@@ -177,21 +175,40 @@ describe("probeIdentity", () => {
 		expect(identity.user).toEqual({ id: "u-9", label: null });
 	});
 
-	test("sentry_mcp reads its identity from the token response", async () => {
-		globalThis.fetch = (() => {
-			throw new Error("probeIdentity made a request it did not need");
+	test("sentry_mcp asks the MCP server who the token belongs to", async () => {
+		const calls: { method: string; params?: { name?: string } }[] = [];
+		globalThis.fetch = (async (_url: string, init: RequestInit) => {
+			const body = JSON.parse(String(init.body)) as (typeof calls)[number] & {
+				id?: number;
+			};
+			calls.push(body);
+			if (body.id === undefined) return new Response(null, { status: 202 });
+			const result =
+				body.method === "tools/call"
+					? {
+							structuredContent: {
+								user: { id: "42", name: "Harshith", email: "h@tegon.ai" },
+							},
+						}
+					: { serverInfo: { name: "Sentry MCP" } };
+			return new Response(
+				`event: message\ndata: ${JSON.stringify({ jsonrpc: "2.0", id: body.id, result })}\n\n`,
+				{ status: 200, headers: { "Content-Type": "text/event-stream" } },
+			);
 		}) as unknown as typeof fetch;
 
 		const identity = await probeIdentity(
 			"sentry_mcp",
 			connectorMethod(requireConnector("sentry_mcp")),
-			"sen-test",
-			undefined,
-			{
-				user: { id: "42", name: "Harshith", email: "h@tegon.ai" },
-			},
+			"mcp-test",
 		);
 
+		expect(calls.map((c) => c.method)).toEqual([
+			"initialize",
+			"notifications/initialized",
+			"tools/call",
+		]);
+		expect(calls[2]?.params?.name).toBe("execute_sentry_tool");
 		expect(identity.account).toEqual({ id: "42", label: "h@tegon.ai" });
 		expect(identity.user).toEqual({ id: "42", label: "Harshith" });
 	});
