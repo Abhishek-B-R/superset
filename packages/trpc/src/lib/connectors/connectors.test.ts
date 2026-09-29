@@ -206,9 +206,9 @@ describe("probeIdentity", () => {
 							protocolVersion: "2025-06-18",
 							serverInfo: { name: "Sentry MCP" },
 						};
-			// A response whose JSON spans several SSE data: lines (rejoined with a
-			// newline), followed by a keep-alive comment event — the shape that
-			// broke a naive "last data: line" parser.
+			// A body that exercises the parser: a leading server notification
+			// (must be ignored), then the real response whose JSON spans several
+			// SSE data: lines, then a keep-alive comment.
 			const payload = JSON.stringify(
 				{ jsonrpc: "2.0", id: body.id, result },
 				null,
@@ -218,13 +218,21 @@ describe("probeIdentity", () => {
 				.split("\n")
 				.map((line) => `data: ${line}`)
 				.join("\n");
-			return new Response(`event: message\n${dataLines}\n\n: keep-alive\n\n`, {
-				status: 200,
-				headers: {
-					"Content-Type": "text/event-stream",
-					"mcp-session-id": "sess-1",
+			const notification = `event: message\ndata: ${JSON.stringify({
+				jsonrpc: "2.0",
+				method: "notifications/message",
+				params: { level: "info" },
+			})}`;
+			return new Response(
+				`${notification}\n\nevent: message\n${dataLines}\n\n: keep-alive\n\n`,
+				{
+					status: 200,
+					headers: {
+						"Content-Type": "text/event-stream",
+						"mcp-session-id": "sess-1",
+					},
 				},
-			});
+			);
 		}) as unknown as typeof fetch;
 
 		const identity = await probeIdentity(

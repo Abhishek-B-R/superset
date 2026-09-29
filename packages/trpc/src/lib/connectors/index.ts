@@ -387,39 +387,56 @@ export interface ConnectorIdentity {
 }
 
 interface JsonRpcMessage {
-	id?: number;
+	id?: number | string;
+	method?: string;
 	result?: Record<string, unknown>;
 	error?: { message?: string };
 }
 
+const isJsonRpcResponse = (message: JsonRpcMessage): boolean =>
+	message.result !== undefined || message.error !== undefined;
+
 /**
  * A streamable-HTTP MCP server answers either a plain JSON object or an SSE
  * body, and an SSE event may split its payload across several `data:` lines
- * (joined with a newline) and carry more than one event. Reassemble the events
- * and return the JSON-RPC message whose id matches the request.
+ * (joined with a newline) and carry more than one event, some of which are
+ * server-initiated notifications rather than our answer. Reassemble the events
+ * and return the response whose id matches the request, ignoring comments,
+ * keep-alives, and interleaved notifications.
  */
 function readJsonRpc(text: string, id: number): JsonRpcMessage {
-	const trimmed = text.trim();
-	if (trimmed.startsWith("{")) return JSON.parse(trimmed) as JsonRpcMessage;
-
 	const messages: JsonRpcMessage[] = [];
-	for (const event of text.split(/\r?\n\r?\n/)) {
-		const data = event
-			.split(/\r?\n/)
-			.filter((line) => line.startsWith("data:"))
-			.map((line) => line.slice(5).replace(/^ /, ""))
-			.join("\n");
-		if (!data) continue;
+	const consider = (candidate: string) => {
+		if (!candidate) return;
 		try {
-			messages.push(JSON.parse(data) as JsonRpcMessage);
+			messages.push(JSON.parse(candidate) as JsonRpcMessage);
 		} catch {
-			// Skip a non-JSON event (comments, keep-alives).
+			// Not JSON — an SSE comment or keep-alive; ignore it.
+		}
+	};
+
+	const trimmed = text.trim();
+	if (trimmed.startsWith("{")) {
+		consider(trimmed);
+	} else {
+		for (const event of text.split(/\r?\n\r?\n/)) {
+			consider(
+				event
+					.split(/\r?\n/)
+					.filter((line) => line.startsWith("data:"))
+					.map((line) => line.slice(5).replace(/^ /, ""))
+					.join("\n"),
+			);
 		}
 	}
+
 	const match =
-		messages.find((message) => message.id === id) ?? messages.at(-1);
+		messages.find(
+			(message) =>
+				message.id !== undefined && String(message.id) === String(id),
+		) ?? messages.filter(isJsonRpcResponse).at(-1);
 	if (!match)
-		throw new Error(`no JSON-RPC message in a ${text.length}-byte response`);
+		throw new Error(`no JSON-RPC response in a ${text.length}-byte body`);
 	return match;
 }
 
