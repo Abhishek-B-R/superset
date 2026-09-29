@@ -17424,8 +17424,8 @@ msgstr "あなたの順位は?"
 msgid "Where does my code run?"
 msgstr "コードはどこで実行されますか?"
 
-msgid "Where Page links in terminals, chat messages, and task markdown open when clicked."
-msgstr "ターミナル、チャットメッセージ、タスクの Markdown 内のページリンクをクリックしたときの開き先。"
+msgid "Where pages open from a workspace's Pages menu."
+msgstr "ワークスペースのページメニューからページを開く場所。"
 
 msgid "Where serious teams are"
 msgstr "本気のチームの現在地"
