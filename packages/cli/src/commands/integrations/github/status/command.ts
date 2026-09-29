@@ -25,7 +25,7 @@ export default command({
 			});
 		return {
 			data: { installation, repositories: repositories.length },
-			message: `Installed on ${installation.accountLogin}${installation.suspended ? " (suspended)" : ""}; ${repositories.length} repositories. List them with: superset environments repos`,
+			message: `Installed on ${installation.accountLogin}${installation.suspended ? " (suspended)" : ""}; ${repositories.length} ${repositories.length === 1 ? "repository" : "repositories"}. List them with: superset environments repos`,
 		};
 	},
 });
