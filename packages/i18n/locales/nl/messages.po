@@ -2890,9 +2890,6 @@ msgstr "Bewerkingen annuleren"
 msgid "Cancel plan"
 msgstr "Plan opzeggen"
 
-msgid "Cancel reply"
-msgstr "Reactie annuleren"
-
 msgid "Canceled"
 msgstr "Geannuleerd"
 
@@ -12209,9 +12206,6 @@ msgstr "Antwoorden"
 
 msgid "Reply to thread…"
 msgstr "Reageren op thread…"
-
-msgid "Replying to {replyingTo}"
-msgstr "Antwoord aan {replyingTo}"
 
 msgid "repo"
 msgstr "repo"

@@ -2890,9 +2890,6 @@ msgstr "Hủy chỉnh sửa"
 msgid "Cancel plan"
 msgstr "Hủy gói"
 
-msgid "Cancel reply"
-msgstr "Hủy trả lời"
-
 msgid "Canceled"
 msgstr "Đã hủy"
 
@@ -12209,9 +12206,6 @@ msgstr "Trả lời"
 
 msgid "Reply to thread…"
 msgstr "Trả lời luồng…"
-
-msgid "Replying to {replyingTo}"
-msgstr "Đang trả lời {replyingTo}"
 
 msgid "repo"
 msgstr "repo"

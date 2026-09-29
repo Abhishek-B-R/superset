@@ -2890,9 +2890,6 @@ msgstr "Zrušit úpravy"
 msgid "Cancel plan"
 msgstr "Zrušit tarif"
 
-msgid "Cancel reply"
-msgstr "Zrušit odpověď"
-
 msgid "Canceled"
 msgstr "Zrušeno"
 
@@ -12209,9 +12206,6 @@ msgstr "Odpovědět"
 
 msgid "Reply to thread…"
 msgstr "Odpovědět do vlákna…"
-
-msgid "Replying to {replyingTo}"
-msgstr "Odpověď pro {replyingTo}"
 
 msgid "repo"
 msgstr "repo"

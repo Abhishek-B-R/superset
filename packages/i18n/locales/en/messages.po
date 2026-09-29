@@ -2890,9 +2890,6 @@ msgstr "Cancel edits"
 msgid "Cancel plan"
 msgstr "Cancel plan"
 
-msgid "Cancel reply"
-msgstr "Cancel reply"
-
 msgid "Canceled"
 msgstr "Canceled"
 
@@ -12209,9 +12206,6 @@ msgstr "Reply"
 
 msgid "Reply to thread…"
 msgstr "Reply to thread…"
-
-msgid "Replying to {replyingTo}"
-msgstr "Replying to {replyingTo}"
 
 msgid "repo"
 msgstr "repo"
