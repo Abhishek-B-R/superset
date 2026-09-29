@@ -87,6 +87,9 @@ msgstr "(Yakında)"
 msgid "(disabled)"
 msgstr "(devre dışı)"
 
+msgid "(edited)"
+msgstr "(düzenlendi)"
+
 msgid "(external)"
 msgstr "(harici)"
 
@@ -158,6 +161,10 @@ msgstr "{0, plural, one {# gizli proje} other {# gizli proje}}"
 msgid "{0, plural, one {# history item} other {# history items}}"
 msgstr "{0, plural, one {# geçmiş öğesi} other {# geçmiş öğesi}}"
 
+#. placeholder {0}: chosenLabels.length
+msgid "{0, plural, one {# label} other {# labels}}"
+msgstr "{0, plural, one {# etiket} other {# etiket}}"
+
 #. placeholder {0}: result.imported
 msgid "{0, plural, one {# login} other {# logins}}"
 msgstr "{0, plural, one {# oturum bilgisi} other {# oturum bilgisi}}"
@@ -166,10 +173,16 @@ msgstr "{0, plural, one {# oturum bilgisi} other {# oturum bilgisi}}"
 msgid "{0, plural, one {# passed} other {# passed}}"
 msgstr "{0, plural, one {# geçti} other {# geçti}}"
 
+#. placeholder {0}: chosenLeads.length
+#. placeholder {0}: chosenPeople.length
+msgid "{0, plural, one {# person} other {# people}}"
+msgstr "{0, plural, one {# kişi} other {# kişi}}"
+
 #. placeholder {0}: selectedProjects.length
 msgid "{0, plural, one {# project selected.} other {# projects selected.}}"
 msgstr "{0, plural, one {# proje seçildi.} other {# proje seçildi.}}"
 
+#. placeholder {0}: chosenProjects.length
 #. placeholder {0}: projectFilters.length
 msgid "{0, plural, one {# project} other {# projects}}"
 msgstr "{0, plural, one {# proje} other {# proje}}"
@@ -562,6 +575,103 @@ msgstr "tüm token'ların %{0} kadarı · {1} token"
 msgid "{0}% of total cost · {1} tokens · * at API list rates"
 msgstr "toplam maliyetin %{0} kadarı · {1} token · * API liste fiyatlarıyla"
 
+msgid "{actor} added the label {label}"
+msgstr "{actor} {label} etiketini ekledi"
+
+msgid "{actor} added the task to {to}"
+msgstr "{actor} görevi {to} projesine ekledi"
+
+msgid "{actor} added the workspace to {project}"
+msgstr "{actor} çalışma alanını {project} projesine ekledi"
+
+msgid "{actor} archived the workspace"
+msgstr "{actor} çalışma alanını arşivledi"
+
+msgid "{actor} assigned the task to {to}"
+msgstr "{actor} görevi {to} kişisine atadı"
+
+msgid "{actor} assigned themselves"
+msgstr "{actor} görevi kendine atadı"
+
+msgid "{actor} changed the priority from {from} to {to}"
+msgstr "{actor} önceliği {from} değerinden {to} değerine değiştirdi"
+
+msgid "{actor} cleared the status"
+msgstr "{actor} durumu temizledi"
+
+msgid "{actor} created the task"
+msgstr "{actor} görevi oluşturdu"
+
+msgid "{actor} created the workspace from environment {environment}"
+msgstr "{actor} çalışma alanını {environment} ortamından oluşturdu"
+
+msgid "{actor} edited the description"
+msgstr "{actor} açıklamayı düzenledi"
+
+msgid "{actor} joined"
+msgstr "{actor} katıldı"
+
+msgid "{actor} linked {chip}"
+msgstr "{actor}, {chip} bağlantısını ekledi"
+
+msgid "{actor} linked {chip} · suggested by {suggestedBy}"
+msgstr "{actor}, {chip} bağlantısını ekledi · {suggestedBy} önerdi"
+
+msgid "{actor} linked the workspace {workspace}"
+msgstr "{actor} {workspace} çalışma alanını bağladı"
+
+msgid "{actor} made the workspace private"
+msgstr "{actor} çalışma alanını gizli yaptı"
+
+msgid "{actor} moved the task from {from} to {to}"
+msgstr "{actor} görevi {from} durumundan {to} durumuna taşıdı"
+
+msgid "{actor} opened {badge}"
+msgstr "{actor}, {badge} açtı"
+
+msgid "{actor} published {chip}"
+msgstr "{actor}, {chip} yayımladı"
+
+msgid "{actor} removed the assignee"
+msgstr "{actor} atanan kişiyi kaldırdı"
+
+msgid "{actor} removed the label {label}"
+msgstr "{actor} {label} etiketini kaldırdı"
+
+msgid "{actor} removed the priority"
+msgstr "{actor} önceliği kaldırdı"
+
+msgid "{actor} removed the project"
+msgstr "{actor} projeyi kaldırdı"
+
+msgid "{actor} removed the task from {from}"
+msgstr "{actor} görevi {from} projesinden çıkardı"
+
+msgid "{actor} renamed the task to {title}"
+msgstr "{actor} görevin adını {title} olarak değiştirdi"
+
+#. placeholder {0}: entry.to
+msgid "{actor} renamed the workspace to <0>{0}</0>"
+msgstr "{actor} çalışma alanının adını <0>{0}</0> olarak değiştirdi"
+
+msgid "{actor} set the priority to {to}"
+msgstr "{actor} önceliği {to} olarak ayarladı"
+
+msgid "{actor} set the status to {to}"
+msgstr "{actor} durumu {to} olarak ayarladı"
+
+msgid "{actor} shared the workspace with the organization"
+msgstr "{actor} çalışma alanını kuruluşla paylaştı"
+
+msgid "{actor} unassigned {from}"
+msgstr "{actor} {from} atamasını kaldırdı"
+
+msgid "{actor} unlinked {chip}"
+msgstr "{actor}, {chip} bağlantısını kaldırdı"
+
+msgid "{actor} unlinked the workspace {workspace}"
+msgstr "{actor} {workspace} çalışma alanının bağlantısını kaldırdı"
+
 msgid "{actual} so far · ~{projected} projected"
 msgstr "şu ana kadar {actual} · ~{projected} öngörülüyor"
 
@@ -592,6 +702,9 @@ msgstr "{configTitle} yazı tipi boyutu"
 
 msgid "{cookieCount} cookies — forget this site"
 msgstr "{cookieCount} çerez — bu siteyi unut"
+
+msgid "{count, plural, one {# active port — show details} other {# active ports — show details}}"
+msgstr "{count, plural, one {# etkin port — ayrıntıları göster} other {# etkin port — ayrıntıları göster}}"
 
 msgid "{count, plural, one {# Check Failed} other {# Checks Failed}}"
 msgstr "{count, plural, one {# kontrol başarısız} other {# kontrol başarısız}}"
@@ -962,6 +1075,9 @@ msgstr "{uncommittedCount, plural, one {# dosya değişti} other {# dosya deği�
 
 msgid "{updatedLabel} restored to defaults"
 msgstr "{updatedLabel} varsayılanlara geri yüklendi"
+
+msgid "{uploading, plural, one {Uploading # file…} other {Uploading # files…}}"
+msgstr "{uploading, plural, other {# dosya yükleniyor…}}"
 
 msgid "{used} used"
 msgstr "{used} kullanıldı"
@@ -1389,6 +1505,10 @@ msgstr "Aktivasyon, içeri girdikten sonra ne kadar kullandıkları ve geri dön
 msgid "Active"
 msgstr "Etkin"
 
+msgctxt "presence"
+msgid "Active"
+msgstr "Etkin"
+
 msgid "active {lastActive}"
 msgstr "{lastActive} aktif"
 
@@ -1423,6 +1543,9 @@ msgstr "{0} hesabı ekle"
 msgid "Add a comment…"
 msgstr "Yorum ekle…"
 
+msgid "Add a description…"
+msgstr "Açıklama ekleyin…"
+
 msgid "Add a lifecycle run script in Project Settings or mark a terminal script as the workspace run."
 msgstr "Proje Ayarları'nda bir yaşam döngüsü çalıştırma betiği ekleyin veya bir terminal betiğini çalışma alanı çalıştırması olarak işaretleyin."
 
@@ -1431,6 +1554,9 @@ msgstr "GitHub issue'larını görmek için bir proje ekleyin."
 
 msgid "Add a project to see pull requests."
 msgstr "Pull request'leri görmek için bir proje ekleyin."
+
+msgid "Add a short summary…"
+msgstr "Kısa bir özet ekleyin…"
 
 msgid "Add account"
 msgstr "Hesap ekle"
@@ -1490,6 +1616,9 @@ msgstr "Dosya, uygulama ve daha fazlasını ekleyin (@)"
 msgid "Add issue #{0} to workspace"
 msgstr "#{0} issue'sunu çalışma alanına ekle"
 
+msgid "Add label"
+msgstr "Etiket ekle"
+
 msgid "Add listening agent"
 msgstr "Dinleyen ajan ekle"
 
@@ -1520,6 +1649,9 @@ msgstr "Kurulum komutlarını her satıra bir tane olacak şekilde ekleyin..."
 msgid "Add tag…"
 msgstr "Etiket ekle…"
 
+msgid "Add task"
+msgstr "Görev ekle"
+
 msgid "Add tax ID"
 msgstr "Vergi kimliği ekle"
 
@@ -1532,11 +1664,20 @@ msgstr "Test edilmemiş en riskli kod için test ekle…"
 msgid "Add tests where they're missing"
 msgstr "Eksik olan yerlere test ekle"
 
+msgid "Add this label"
+msgstr "Bu etiketi ekle"
+
 msgid "Add to Dictionary"
 msgstr "Sözlüğe ekle"
 
+msgid "Add to project"
+msgstr "Projeye ekle"
+
 msgid "Add to prompt"
 msgstr "İsteme ekle"
+
+msgid "Add to sidebar"
+msgstr "Kenar çubuğuna ekle"
 
 msgid "Add to workspace"
 msgstr "Çalışma alanına ekle"
@@ -1616,6 +1757,9 @@ msgstr "Ajan bitirdi"
 msgid "Agent Independence"
 msgstr "Ajan bağımsızlığı"
 
+msgid "Agent is working"
+msgstr "Ajan çalışıyor"
+
 msgid "Agent launch configuration"
 msgstr "Ajan başlatma yapılandırması"
 
@@ -1639,6 +1783,9 @@ msgstr "Ajan incelemesi, aynı farklarda insan incelemesiyle aynı düzeyde regr
 
 msgid "Agent reviewers catch planted regressions at parity with median human reviewers in blind tests."
 msgstr "Ajan inceleyiciler, kör testlerde yerleştirilmiş regresyonları medyan insan inceleyicilerle aynı düzeyde yakalar."
+
+msgid "Agent run failed"
+msgstr "Ajan çalıştırması başarısız oldu"
 
 msgid "Agent self-verification"
 msgstr "Ajan öz doğrulaması"
@@ -2145,6 +2292,10 @@ msgstr "Ortamı arşivle"
 msgid "Archived"
 msgstr "Arşivlenmiş"
 
+#. placeholder {0}: formatCompactRelativeTime(archivedAt, now)
+msgid "Archived · {0}"
+msgstr "Arşivlendi · {0}"
+
 msgid "Are you sure you want to delete this file? This action cannot be undone."
 msgstr "Bu dosyayı silmek istediğinizden emin misiniz? Bu işlem geri alınamaz."
 
@@ -2223,6 +2374,9 @@ msgstr "Adını verebileceğimiz en az bir takım, bizimki de dahil, tam bir çe
 msgid "at once"
 msgstr "aynı anda"
 
+msgid "Attach files"
+msgstr "Dosya ekle"
+
 msgid "Attached"
 msgstr "Bağlı"
 
@@ -2255,9 +2409,6 @@ msgstr "Ek yüklenemedi: {0}"
 
 msgid "Attachment was not uploaded — send the bytes first"
 msgstr "Ek yüklenmedi — önce verileri gönderin"
-
-msgid "Attachments are not wired yet"
-msgstr "Ekler henüz bağlanmadı"
 
 msgid "Attachments need an online host"
 msgstr "Ekler için çevrimiçi bir host gerekir"
@@ -2466,9 +2617,6 @@ msgstr "Entegrasyonlara dön"
 
 msgid "Back to pages"
 msgstr "Sayfalara dön"
-
-msgid "Back to tasks"
-msgstr "Görevlere dön"
 
 msgid "Back to the leaderboard"
 msgstr "Lider tablosuna dön"
@@ -2902,6 +3050,10 @@ msgstr "Yanıtı iptal et"
 msgid "Canceled"
 msgstr "İptal edildi"
 
+msgctxt "project state"
+msgid "Canceled"
+msgstr "İptal edildi"
+
 msgid "Canceling..."
 msgstr "İptal ediliyor..."
 
@@ -2967,8 +3119,17 @@ msgstr "Düşünce zinciri"
 msgid "Change avatar"
 msgstr "Avatarı değiştir"
 
+msgid "Change icon"
+msgstr "Simgeyi değiştir"
+
 msgid "Change location"
 msgstr "Konumu değiştir"
+
+msgid "Change or add labels…"
+msgstr "Etiketleri değiştir veya ekle…"
+
+msgid "Change or add tasks…"
+msgstr "Görevleri değiştir veya ekle…"
 
 msgid "Change organization logo"
 msgstr "Kuruluş logosunu değiştir"
@@ -3204,6 +3365,9 @@ msgstr "Tarama verilerini temizle"
 
 msgid "Clear data"
 msgstr "Verileri temizle"
+
+msgid "Clear date"
+msgstr "Tarihi temizle"
 
 msgid "Clear filter"
 msgstr "Filtreyi temizle"
@@ -3511,6 +3675,9 @@ msgstr "Bulut sandbox'ları {account} için etkin değil. Erişim için Superset
 msgid "Cloud workspace"
 msgstr "Bulut çalışma alanı"
 
+msgid "Cloud workspaces"
+msgstr "Bulut çalışma alanları"
+
 msgid "Cloud workspaces ignore this variable. Agents sign in under Settings › Agents instead."
 msgstr "Bulut çalışma alanları bu değişkeni yok sayar. Ajanlar bunun yerine Ayarlar › Ajanlar bölümünden oturum açar."
 
@@ -3626,6 +3793,9 @@ msgstr "Çalışma alanı kurulumu, kapatması ve Çalıştır düğmesi için �
 msgid "Comment"
 msgstr "Yorum yap"
 
+msgid "Comment actions"
+msgstr "Yorum işlemleri"
+
 msgid "Comment added"
 msgstr "Yorum eklendi"
 
@@ -3714,6 +3884,10 @@ msgstr "Varsayılan stille karşılaştırıldı"
 msgid "complete"
 msgstr "tamamlandı"
 
+msgid "Completed"
+msgstr "Tamamlandı"
+
+msgctxt "project state"
 msgid "Completed"
 msgstr "Tamamlandı"
 
@@ -4126,6 +4300,9 @@ msgstr "Kimliği kopyala"
 msgid "Copy IDs"
 msgstr "Kimlikleri kopyala"
 
+msgid "Copy image"
+msgstr "Görseli kopyala"
+
 msgid "Copy import path"
 msgstr "İçe aktarma yolunu kopyala"
 
@@ -4184,6 +4361,9 @@ msgstr "Seçimi kopyala"
 msgid "Copy session ID"
 msgstr "Oturum kimliğini kopyala"
 
+msgid "Copy task ID"
+msgstr "Görev kimliğini kopyala"
+
 msgid "Copy terminal ID"
 msgstr "Terminal kimliğini kopyala"
 
@@ -4234,6 +4414,9 @@ msgstr "Paylaşılan sürüm değiştirilemedi"
 
 msgid "Could not change who can see this page"
 msgstr "Bu sayfayı kimlerin görebileceği değiştirilemedi"
+
+msgid "Could not change who can see this workspace"
+msgstr "Bu çalışma alanını kimlerin görebileceği değiştirilemedi"
 
 msgid "Could not check your plan. Check your connection and try again."
 msgstr "Planınız kontrol edilemedi. Bağlantınızı kontrol edip tekrar deneyin."
@@ -4429,6 +4612,9 @@ msgstr "Dal güncellenemedi"
 msgid "serverError.plugins.credentialUnverified"
 msgstr "Kimlik bilgisi doğrulanamadı: {reason}"
 
+msgid "Couldn't ask the workspace for a description"
+msgstr "Çalışma alanından açıklama istenemedi"
+
 msgid "Couldn't confirm star status — check that the GitHub CLI (`gh`) is installed, signed in, and that you have a network connection"
 msgstr "Yıldız durumu doğrulanamadı — GitHub CLI'nin (`gh`) kurulu ve oturum açmış olduğunu ve ağ bağlantınızın bulunduğunu kontrol edin"
 
@@ -4443,6 +4629,9 @@ msgstr "Yorum kopyalanamadı"
 
 msgid "Couldn't copy path"
 msgstr "Yol kopyalanamadı"
+
+msgid "Couldn't copy the image"
+msgstr "Görsel kopyalanamadı"
 
 msgid "Couldn't create workspace"
 msgstr "Çalışma alanı oluşturulamadı"
@@ -4538,6 +4727,9 @@ msgstr "Kaydedilemedi — yeniden deneniyor…"
 msgid "Couldn't save edits"
 msgstr "Düzenlemeler kaydedilemedi"
 
+msgid "Couldn't save the change"
+msgstr "Değişiklik kaydedilemedi"
+
 msgid "Couldn't send comment"
 msgstr "Yorum gönderilemedi"
 
@@ -4583,6 +4775,9 @@ msgstr "Pull request güncellenemedi"
 msgid "Couldn't update thread"
 msgstr "Konu güncellenemedi"
 
+msgid "Couldn't upload {name}"
+msgstr "{name} yüklenemedi"
+
 msgid "Couldn’t verify"
 msgstr "Doğrulanamadı"
 
@@ -4594,6 +4789,9 @@ msgstr "CPU çekirdeği"
 
 msgid "Create"
 msgstr "Oluştur"
+
+msgid "Create \"{newLabel}\""
+msgstr "\"{newLabel}\" oluştur"
 
 msgid "Create a native provider fork with the same conversation context. The original session stays unchanged."
 msgstr "Sağlayıcıda aynı konuşma bağlamına sahip yerel bir fork oluşturur. Özgün oturum değişmeden kalır."
@@ -4609,6 +4807,9 @@ msgstr "Masaüstü görevler görünümünden yeni bir görev oluşturun."
 
 msgid "Create a new workspace"
 msgstr "Yeni bir çalışma alanı oluşturun"
+
+msgid "Create a project to group tasks and cloud workspaces."
+msgstr "Görevleri ve bulut çalışma alanlarını gruplamak için bir proje oluşturun."
 
 msgid "Create a task for fixing the login bug"
 msgstr "Oturum açma hatasını düzeltmek için bir görev oluştur"
@@ -4665,6 +4866,15 @@ msgstr "PR oluştur"
 msgid "Create PR failed: {0}"
 msgstr "PR oluşturulamadı: {0}"
 
+msgid "Create project"
+msgstr "Proje oluştur"
+
+msgid "Create project \"{newName}\""
+msgstr "\"{newName}\" projesini oluştur"
+
+msgid "Create project…"
+msgstr "Proje oluştur…"
+
 msgid "Create pull request"
 msgstr "Pull request oluştur"
 
@@ -4717,6 +4927,15 @@ msgstr "{0} oluşturuldu"
 msgid "Created {0} · Last used {1}"
 msgstr "Oluşturulma {0} · Son kullanım {1}"
 
+msgid "Created {ago}"
+msgstr "{ago} oluşturuldu"
+
+msgid "created {createdAgo}"
+msgstr "{createdAgo} oluşturuldu"
+
+msgid "Created {createdAgo}"
+msgstr "{createdAgo} oluşturuldu"
+
 msgid "Created {createdAtLabel}"
 msgstr "Oluşturulma: {createdAtLabel}"
 
@@ -4738,11 +4957,11 @@ msgstr "{where} konumunda 1 klasör oluşturuldu"
 msgid "Created by"
 msgstr "Oluşturan"
 
+msgid "Created by <0/> · {createdAgo}"
+msgstr "Oluşturan: <0/> · {createdAgo}"
+
 msgid "Created team \"{trimmedName}\""
 msgstr "\"{trimmedName}\" takımı oluşturuldu"
-
-msgid "created the issue"
-msgstr "issue'yu oluşturdu"
 
 msgid "creating"
 msgstr "oluşturuluyor"
@@ -4761,6 +4980,9 @@ msgstr "Oturum oluşturuluyor"
 
 msgid "Creating session: {name}"
 msgstr "Oturum oluşturuluyor: {name}"
+
+msgid "Creating the sandbox"
+msgstr "Sandbox oluşturuluyor"
 
 msgid "Creating workspace"
 msgstr "Çalışma alanı oluşturuluyor"
@@ -5058,6 +5280,9 @@ msgstr "Grubu sil"
 msgid "Delete host"
 msgstr "Host'u sil"
 
+msgid "Delete image"
+msgstr "Görseli sil"
+
 msgid "Delete local branch on workspace removal"
 msgstr "Çalışma alanı kaldırılırken yerel dalı sil"
 
@@ -5090,6 +5315,12 @@ msgstr "Takımı sil"
 
 msgid "Delete this"
 msgstr "Bunu sil"
+
+msgid "Delete this comment?"
+msgstr "Bu yorum silinsin mi?"
+
+msgid "Delete this task?"
+msgstr "Bu görev silinsin mi?"
 
 msgid "Delete this workspace?"
 msgstr "Bu çalışma alanı silinsin mi?"
@@ -5141,6 +5372,9 @@ msgstr "silinmiş veya kullanılamıyor — başka birini seçin"
 
 msgid "Deleted projects can be restored for 30 days, with the workspaces that were deleted with them. After that they are removed; the repository folder and worktrees with uncommitted changes stay on disk."
 msgstr "Silinen projeler, onlarla birlikte silinen çalışma alanlarıyla birlikte 30 gün boyunca geri yüklenebilir. Sonrasında kaldırılırlar; depo klasörü ve commit edilmemiş değişiklikler içeren worktree'ler diskte kalır."
+
+msgid "Deleted user"
+msgstr "Silinmiş kullanıcı"
 
 msgid "Deleted workspaces, but couldn’t finish updating the sidebar"
 msgstr "Çalışma alanları silindi, ancak kenar çubuğu güncellenemedi"
@@ -5434,6 +5668,9 @@ msgstr "Hatayı kapat"
 
 msgid "Dismiss resume prompt"
 msgstr "Sürdürme istemini kapat"
+
+msgid "Dismiss suggestion"
+msgstr "Öneriyi yoksay"
 
 msgid "Dismiss suggestions"
 msgstr "Önerileri kapat"
@@ -5735,12 +5972,18 @@ msgstr "Çalıştırma betiğini düzenle"
 msgid "Edit script"
 msgstr "Betiği düzenle"
 
+msgid "Edit your comment…"
+msgstr "Yorumunu düzenle…"
+
 msgid "Edited"
 msgstr "Düzenlendi"
 
 msgctxt "github release action"
 msgid "Edited"
 msgstr "Düzenlendi"
+
+msgid "Edited {ago}"
+msgstr "{ago} düzenlendi"
 
 msgid "Editing"
 msgstr "Düzenleme"
@@ -6240,8 +6483,14 @@ msgstr "Hesap silinemedi"
 msgid "Failed to delete automation"
 msgstr "Otomasyon silinemedi"
 
+msgid "Failed to delete host"
+msgstr "Ana makine silinemedi"
+
 msgid "Failed to delete organization"
 msgstr "Kuruluş silinemedi"
+
+msgid "Failed to delete task"
+msgstr "Görev silinemedi"
 
 msgid "Failed to delete team"
 msgstr "Takım silinemedi"
@@ -6392,8 +6641,14 @@ msgstr "Yeniden adlandırılamadı"
 msgid "Failed to rename branch"
 msgstr "Dal yeniden adlandırılamadı"
 
+msgid "Failed to rename host"
+msgstr "Ana makine yeniden adlandırılamadı"
+
 msgid "Failed to rename session"
 msgstr "Oturumu yeniden adlandırma başarısız oldu"
+
+msgid "Failed to rename workspace"
+msgstr "Çalışma alanı yeniden adlandırılamadı"
 
 msgid "Failed to reorder"
 msgstr "Yeniden sıralanamadı"
@@ -6506,12 +6761,6 @@ msgstr "Oturum açılamadı. Lütfen yeniden deneyin."
 msgid "Failed to sign up. Please try again."
 msgstr "Kaydolunamadı. Lütfen yeniden deneyin."
 
-msgid "Failed to start agent"
-msgstr "Ajan başlatılamadı"
-
-msgid "Failed to start agent session."
-msgstr "Ajan oturumu başlatılamadı."
-
 msgid "Failed to stop workspace run command"
 msgstr "Çalışma alanı çalıştırma komutu durdurulamadı"
 
@@ -6545,8 +6794,26 @@ msgstr "Logo güncellenemedi"
 msgid "Failed to update name"
 msgstr "Ad güncellenemedi"
 
+msgid "Failed to update role"
+msgstr "Rol güncellenemedi"
+
 msgid "Failed to update setting"
 msgstr "Ayar güncellenemedi"
+
+msgid "Failed to update task assignee"
+msgstr "Görevin atanan kişisi güncellenemedi"
+
+msgid "Failed to update task description"
+msgstr "Görev açıklaması güncellenemedi"
+
+msgid "Failed to update task priority"
+msgstr "Görev önceliği güncellenemedi"
+
+msgid "Failed to update task status"
+msgstr "Görev durumu güncellenemedi"
+
+msgid "Failed to update task title"
+msgstr "Görev başlığı güncellenemedi"
 
 msgid "Failed to update team. Please try again."
 msgstr "Takım güncellenemedi. Lütfen yeniden deneyin."
@@ -6697,6 +6964,9 @@ msgstr "Projeleri filtrele…"
 
 msgid "Filter workspaces…"
 msgstr "Çalışma alanlarını filtrele…"
+
+msgid "Filter…"
+msgstr "Filtrele…"
 
 msgid "filtering"
 msgstr "filtreleniyor"
@@ -7019,6 +7289,9 @@ msgstr "Genel"
 msgid "General access"
 msgstr "Genel erişim"
 
+msgid "Generate"
+msgstr "Oluştur"
+
 msgid "Generate a key to use with MCP servers."
 msgstr "MCP sunucularıyla kullanmak için bir anahtar oluşturun."
 
@@ -7039,6 +7312,9 @@ msgstr "Üretiliyor"
 
 msgid "Generating..."
 msgstr "Oluşturuluyor..."
+
+msgid "Generating…"
+msgstr "Oluşturuluyor…"
 
 msgid "Get an API key"
 msgstr "API anahtarı alın"
@@ -7190,6 +7466,9 @@ msgstr "Slack entegrasyon ayarlarına git"
 msgid "Go to Superset"
 msgstr "Superset'e git"
 
+msgid "Go to workspace"
+msgstr "Çalışma alanına git"
+
 msgid "Google did not grant lasting access. Remove Superset from your Google account's third-party access and try again."
 msgstr "Google kalıcı erişim vermedi. Superset'i Google hesabınızın üçüncü taraf erişiminden kaldırıp yeniden deneyin."
 
@@ -7216,6 +7495,9 @@ msgstr "Grok ve Kimi Code, Claude Code, Codex ve diğerlerinin yanına katılıy
 
 msgid "Group actions"
 msgstr "Grup eylemleri"
+
+msgid "Group by"
+msgstr "Gruplama ölçütü"
 
 msgid "Group new branches under a folder."
 msgstr "Yeni dalları bir klasör altında toplayın."
@@ -7553,6 +7835,9 @@ msgstr "{tokens} token ajan kullanımıyla {company} lider tablosunda #{rank} s�
 msgid "Icon"
 msgstr "Simge"
 
+msgid "Icons"
+msgstr "Simgeler"
+
 msgid "ID"
 msgstr "Kimlik"
 
@@ -7589,6 +7874,9 @@ msgstr "Görsel engellendi"
 #. placeholder {0}: src ?? "(empty)"
 msgid "Image blocked: {0}"
 msgstr "Görsel engellendi: {0}"
+
+msgid "Image copied"
+msgstr "Görsel kopyalandı"
 
 msgid "Image is too large (max 10MB)"
 msgstr "Görsel çok büyük (en fazla 10MB)"
@@ -7674,6 +7962,9 @@ msgstr "{0} worktree'den {imported} tanesi içe aktarıldı: {1}"
 msgid "Imported {joinedMessages}"
 msgstr "İçe aktarıldı: {joinedMessages}"
 
+msgid "Imported from Linear"
+msgstr "Linear’dan içe aktarıldı"
+
 msgid "Importing..."
 msgstr "İçe aktarılıyor..."
 
@@ -7701,6 +7992,10 @@ msgstr "Tüm projelerde"
 msgid "In just a few months, <0>tens of thousands of engineers</0> run Superset as their primary IDE, at companies like Wix, DoorDash, and Netflix."
 msgstr "Yalnızca birkaç ayda <0>on binlerce mühendis</0> Superset'i birincil IDE'si olarak kullanmaya başladı; Wix, DoorDash ve Netflix gibi şirketlerde."
 
+msgid "In progress"
+msgstr "Devam ediyor"
+
+msgctxt "project state"
 msgid "In progress"
 msgstr "Devam ediyor"
 
@@ -7742,6 +8037,9 @@ msgstr "Bilgi"
 
 msgid "Information"
 msgstr "Bilgi"
+
+msgid "Initial prompt"
+msgstr "İlk istem"
 
 msgid "Initialize Git"
 msgstr "Git'i başlat"
@@ -7886,6 +8184,9 @@ msgstr "Geçersiz giriş algılandı."
 msgid "Invalid installation response. Please try again."
 msgstr "Geçersiz kurulum yanıtı. Lütfen yeniden deneyin."
 
+msgid "Invalid label"
+msgstr "Geçersiz etiket"
+
 msgid "Invalid OAuth response. Please try again."
 msgstr "Geçersiz OAuth yanıtı. Lütfen yeniden deneyin."
 
@@ -7991,6 +8292,9 @@ msgstr "Issue URL'si {repoMismatch} ile eşleşmeli."
 msgid "Issue…"
 msgstr "Issue…"
 
+msgid "It can't be brought back."
+msgstr "Geri getirilemez."
+
 msgid "It keeps the title from your prompt."
 msgstr "İsteminizdeki başlık korunur."
 
@@ -8012,8 +8316,14 @@ msgstr "İtalik"
 msgid "Item"
 msgstr "Öğe"
 
+msgid "Its comments and history go with it."
+msgstr "Yorumları ve geçmişi de silinir."
+
 msgid "Its own branch and copy of the files"
 msgstr "Kendi dalı ve dosyaların kendi kopyası"
+
+msgid "Its replies go with it."
+msgstr "Yanıtları da silinir."
 
 msgid "Its workspaces and terminals are unavailable until it restarts — use the Superset tray menu > Host Service > Restart."
 msgstr "Yeniden başlayana kadar çalışma alanları ve terminalleri kullanılamaz — Superset tepsi menüsünde Host hizmeti > Yeniden başlat yolunu kullanın."
@@ -8268,6 +8578,9 @@ msgstr "Yeni bir terminal sekmesi açıldığında bu terminal betiğini başlat
 msgid "Layout"
 msgstr "Düzen"
 
+msgid "Lead"
+msgstr "Lider"
+
 msgid "Leaderboard"
 msgstr "Lider tablosu"
 
@@ -8288,6 +8601,9 @@ msgstr "Yorum bırakın (isteğe bağlı)"
 
 msgid "Leave a comment…"
 msgstr "Bir yorum bırakın…"
+
+msgid "Leave a reply…"
+msgstr "Yanıt yaz…"
 
 msgid "Leave a summary…"
 msgstr "Bir özet bırakın…"
@@ -8442,6 +8758,9 @@ msgstr "Pull request bağla"
 msgid "Link task"
 msgstr "Görev bağla"
 
+msgid "Link this task"
+msgstr "Bu görevi bağla"
+
 msgid "Linked {slug} to workspace"
 msgstr "{slug} çalışma alanına bağlandı"
 
@@ -8594,9 +8913,6 @@ msgstr "İnceleme yükleniyor..."
 
 msgid "Loading sessions…"
 msgstr "Oturumlar yükleniyor…"
-
-msgid "Loading task..."
-msgstr "Görev yükleniyor..."
 
 msgid "Loading terminal scripts..."
 msgstr "Terminal betikleri yükleniyor..."
@@ -9566,6 +9882,9 @@ msgstr "Bu makinede henüz Claude veya Codex kullanımı bulunamadı. Şimdi kat
 msgid "No cloud workspaces yet"
 msgstr "Henüz bulut çalışma alanı yok"
 
+msgid "No color"
+msgstr "Renk yok"
+
 msgid "No command configured."
 msgstr "Yapılandırılmış komut yok."
 
@@ -9653,6 +9972,9 @@ msgstr "Bu dönem için huni verisi yok"
 msgid "No git remote detected"
 msgstr "Git remote algılanmadı"
 
+msgid "No grouping"
+msgstr "Gruplama yok"
+
 msgid "No groups yet"
 msgstr "Henüz grup yok"
 
@@ -9677,6 +9999,9 @@ msgstr "Henüz host yok."
 msgid "No icon"
 msgstr "Simge yok"
 
+msgid "No icons match."
+msgstr "Eşleşen simge yok."
+
 msgid "No Internet Connection"
 msgstr "İnternet bağlantısı yok"
 
@@ -9694,6 +10019,9 @@ msgstr "Bilinen oluşturan yok"
 
 msgid "No labels"
 msgstr "Etiket yok"
+
+msgid "No lead"
+msgstr "Lider yok"
 
 msgid "No listening agents"
 msgstr "Dinleyen ajan yok"
@@ -9797,6 +10125,9 @@ msgstr "Proje seçilmedi"
 
 msgid "No project<0>session</0>"
 msgstr "Proje yok<0>oturum</0>"
+
+msgid "No projects"
+msgstr "Proje yok"
 
 msgid "No projects available"
 msgstr "Kullanılabilir proje yok"
@@ -9906,6 +10237,12 @@ msgstr "Görev bulunamadı"
 msgid "No tasks found."
 msgstr "Görev bulunamadı."
 
+msgid "No tasks in this project yet."
+msgstr "Bu projede henüz görev yok."
+
+msgid "No tasks or pull requests yet"
+msgstr "Henüz görev veya pull request yok"
+
 msgid "No tasks yet"
 msgstr "Henüz görev yok"
 
@@ -9971,6 +10308,9 @@ msgstr "Yapılandırılmış çalışma alanı çalıştırma komutu yok"
 
 msgid "No workspaces found."
 msgstr "Çalışma alanı bulunamadı."
+
+msgid "No workspaces in this project yet."
+msgstr "Bu projede henüz çalışma alanı yok."
 
 msgid "No workspaces match your filters"
 msgstr "Filtrelerinizle eşleşen çalışma alanı yok"
@@ -10313,11 +10653,17 @@ msgstr "Kuruluş ayarlarını yalnızca sahipler güncelleyebilir"
 msgid "Only people who opted in appear here."
 msgstr "Burada yalnızca katılmayı seçenler görünür."
 
+msgid "Only the author can change a comment"
+msgstr "Yorumu yalnızca yazarı değiştirebilir"
+
 msgid "Only the author can edit a comment"
 msgstr "Bir yorumu yalnızca yazarı düzenleyebilir"
 
 msgid "Only the host owner can set its wake command"
 msgstr "Uyandırma komutunu yalnızca host sahibi ayarlayabilir"
+
+msgid "Only the owner can change this"
+msgstr "Bunu yalnızca sahibi değiştirebilir"
 
 msgid "Only the owner can run this automation"
 msgstr "Bu otomasyonu yalnızca sahibi çalıştırabilir"
@@ -10417,6 +10763,9 @@ msgstr "Komut paletini aç"
 
 msgid "Open comment on GitHub"
 msgstr "Yorumu GitHub'da aç"
+
+msgid "Open details"
+msgstr "Ayrıntıları aç"
 
 msgid "Open DevTools"
 msgstr "DevTools'u aç"
@@ -10566,9 +10915,6 @@ msgstr "T3 Chat'te aç"
 msgid "Open in tab"
 msgstr "Sekmede aç"
 
-msgid "Open in workspace"
-msgstr "Çalışma alanında aç"
-
 msgid "Open in…"
 msgstr "Şununla aç…"
 
@@ -10643,6 +10989,9 @@ msgstr "Pull request aç"
 msgid "Open pull request #{0}"
 msgstr "#{0} pull request'ini aç"
 
+msgid "Open pull request #{number}"
+msgstr "#{number} pull request'ini aç"
+
 msgid "Open pull request in GitHub"
 msgstr "Pull request'i GitHub'da aç"
 
@@ -10687,9 +11036,6 @@ msgstr "Sistem Ayarları'nı aç"
 
 msgid "Open task {title}"
 msgstr "Görevi aç: {title}"
-
-msgid "Open task actions"
-msgstr "Görev eylemlerini aç"
 
 msgid "Open task externally"
 msgstr "Görevi harici olarak aç"
@@ -10753,9 +11099,6 @@ msgstr "OpenAI bu API anahtarını reddetti."
 
 msgid "Opened"
 msgstr "Açıldı"
-
-msgid "Opened existing workspace"
-msgstr "Mevcut çalışma alanı açıldı"
 
 msgid "opened PR #841 for review"
 msgstr "inceleme için PR #841 açtı"
@@ -11116,6 +11459,10 @@ msgstr "Gece temizlik otomasyonunu duraklat"
 msgid "Paused"
 msgstr "Duraklatıldı"
 
+msgctxt "project state"
+msgid "Paused"
+msgstr "Duraklatıldı"
+
 msgid "Pay now"
 msgstr "Şimdi öde"
 
@@ -11139,6 +11486,9 @@ msgstr "Zirve hız"
 
 msgid "Pending Invitations"
 msgstr "Bekleyen davetler"
+
+msgid "People"
+msgstr "Kişiler"
 
 msgid "People whose first paywall view was in the last {PAYWALL_FUNNEL_WEEKS} weeks, and how far they got. A stage counts anyone who reached it after that view, so recent cohorts are still maturing."
 msgstr "Ödeme duvarını ilk kez son {PAYWALL_FUNNEL_WEEKS} hafta içinde gören kişiler ve nereye kadar geldikleri. Bir aşama, o görüntülemeden sonra oraya ulaşan herkesi sayar; bu yüzden yeni kohortlar hâlâ olgunlaşıyor."
@@ -11176,6 +11526,9 @@ msgstr "İzinler"
 
 msgid "Persistent access to Documents, Downloads, Desktop, and iCloud."
 msgstr "Belgeler, İndirilenler, Masaüstü ve iCloud'a kalıcı erişim."
+
+msgid "Person"
+msgstr "Kişi"
 
 msgid "Personal"
 msgstr "Kişisel"
@@ -11276,6 +11629,10 @@ msgstr "Plan"
 
 msgid "Plan restored"
 msgstr "Plan geri yüklendi"
+
+msgctxt "project state"
+msgid "Planned"
+msgstr "Planlandı"
 
 msgid "Planning the tooltip refactor"
 msgstr "Tooltip yeniden düzenlemesi planlanıyor"
@@ -11386,6 +11743,10 @@ msgstr "PR #{0} ({1})"
 #. placeholder {0}: created.number
 msgid "PR #{0} created"
 msgstr "PR #{0} oluşturuldu"
+
+#. placeholder {0}: i18n._(LABEL[state])
+msgid "PR #{number} — {0}"
+msgstr "PR #{number} — {0}"
 
 msgid "PR Closed"
 msgstr "PR kapatıldı"
@@ -11581,6 +11942,9 @@ msgstr "Verimlilik"
 
 msgid "Profile name"
 msgstr "Profil adı"
+
+msgid "Progress"
+msgstr "İlerleme"
 
 msgid "Progress · Spinner"
 msgstr "İlerleme · Spinner"
@@ -11864,6 +12228,9 @@ msgstr "Radix Tooltip belgeleri"
 msgid "RAM Share"
 msgstr "RAM payı"
 
+msgid "Random icon"
+msgstr "Rastgele simge"
+
 msgid "Rank"
 msgstr "Sıra"
 
@@ -12056,6 +12423,9 @@ msgstr "Claude Code bir sonraki çalıştığında yenilenir."
 
 msgid "Refreshes when OpenCode next runs."
 msgstr "OpenCode bir sonraki çalıştığında yenilenir."
+
+msgid "Regenerate"
+msgstr "Yeniden oluştur"
 
 msgid "Region"
 msgstr "Bölge"
@@ -12941,6 +13311,9 @@ msgstr "SAML SSO ve SCIM sağlama"
 msgid "San Francisco"
 msgstr "San Francisco"
 
+msgid "Sandbox stopped responding"
+msgstr "Sandbox yanıt vermiyor"
+
 msgid "Save"
 msgstr "Kaydet"
 
@@ -12961,6 +13334,9 @@ msgstr "Düzenlemeleri kaydet"
 
 msgid "Save edits (⌘S)"
 msgstr "Düzenlemeleri kaydet (⌘S)"
+
+msgid "Save environment"
+msgstr "Ortamı kaydet"
 
 msgid "Save failed: {message}"
 msgstr "Kaydedilemedi: {message}"
@@ -12983,7 +13359,7 @@ msgstr "URL için kaydedin"
 msgid "Saved"
 msgstr "Kaydedildi"
 
-#. placeholder {0}: created?.name
+#. placeholder {0}: created?.name ?? name.trim()
 msgid "Saved \"{0}\" as an environment"
 msgstr "\"{0}\" ortam olarak kaydedildi"
 
@@ -13163,8 +13539,14 @@ msgstr "Eklentilerde ara"
 msgid "Search previous prompts..."
 msgstr "Önceki istemlerde ara..."
 
+msgid "Search projects"
+msgstr "Projelerde ara"
+
 msgid "Search projects..."
 msgstr "Proje ara..."
+
+msgid "Search projects…"
+msgstr "Projelerde ara…"
 
 msgid "Search pull requests"
 msgstr "Pull request'lerde ara"
@@ -13557,6 +13939,9 @@ msgstr "Oturumlar · maliyete göre ilk {0}"
 msgid "Set color to {0}"
 msgstr "Rengi şuna ayarla: {0}"
 
+msgid "Set date"
+msgstr "Tarih belirle"
+
 msgid "Set group color"
 msgstr "Grup rengini ayarla"
 
@@ -13570,8 +13955,14 @@ msgstr "Parola belirle"
 msgid "Set Password"
 msgstr "Parolayı belirle"
 
+msgid "Set project…"
+msgstr "Projeyi ayarla…"
+
 msgid "Set Run"
 msgstr "Çalıştırmayı ayarla"
+
+msgid "Set this project"
+msgstr "Bu projeyi ayarla"
 
 msgid "Set up"
 msgstr "Kur"
@@ -13652,6 +14043,9 @@ msgstr "Bu sayfayı paylaş"
 
 msgid "Share via…"
 msgstr "Şununla paylaş…"
+
+msgid "Share workspace"
+msgstr "Çalışma alanını paylaş"
 
 msgid "Shared across sessions using this login."
 msgstr "Bu hesabı kullanan oturumlar arasında paylaşılır."
@@ -13742,6 +14136,9 @@ msgstr "Fark panelini göster"
 
 msgid "Show emails"
 msgstr "E-postaları göster"
+
+msgid "Show everyone who opened this workspace"
+msgstr "Bu çalışma alanını açan herkesi göster"
 
 msgid "Show file tree"
 msgstr "Dosya ağacını göster"
@@ -14055,6 +14452,9 @@ msgstr "Küçük"
 msgid "Smoother onboarding"
 msgstr "Daha akıcı ilk kurulum"
 
+msgid "Snapshots this workspace as it is now, with everything installed in it. New workspaces from the environment start from that snapshot."
+msgstr "Bu çalışma alanının, içine kurulan her şeyle birlikte şu anki halinin anlık görüntüsünü alır. Bu ortamdan açılan yeni çalışma alanları bu anlık görüntüden başlar."
+
 msgid "Snooze"
 msgstr "Ertele"
 
@@ -14306,6 +14706,10 @@ msgstr "Gün başına kazanılan yıldız"
 msgid "Stars gained per week"
 msgstr "Hafta başına kazanılan yıldız"
 
+msgctxt "project date"
+msgid "Start"
+msgstr "Başlangıç"
+
 msgid "Start a {harness} session"
 msgstr "{harness} oturumu başlatın"
 
@@ -14338,6 +14742,9 @@ msgstr "Taramaya başlayın"
 
 msgid "Start coding agents, follow them live, and review the diff from your phone. Available on the App Store; Android is coming soon."
 msgstr "Telefonunuzdan kodlama ajanlarını başlatın, canlı takip edin ve diff'i inceleyin. App Store'da mevcut; Android yakında geliyor."
+
+msgid "Start date"
+msgstr "Başlangıç tarihi"
 
 msgid "Start free. Upgrade when your team outgrows it. Enterprise plans for organizations with advanced security and compliance needs."
 msgstr "Ücretsiz başlayın. Takımınız büyüdüğünde yükseltin. Gelişmiş güvenlik ve uyumluluk ihtiyaçları olan kuruluşlar için Enterprise planları."
@@ -14919,8 +15326,15 @@ msgstr "Superset ile konuşun"
 msgid "Tap anything on the page to comment on it"
 msgstr "Yorum yapmak için sayfadaki herhangi bir yere dokun"
 
+msgctxt "project date"
+msgid "Target"
+msgstr "Hedef"
+
 msgid "Target agent"
 msgstr "Hedef ajan"
+
+msgid "Target date"
+msgstr "Hedef tarih"
 
 msgid "Target host is offline"
 msgstr "Hedef host çevrimdışı"
@@ -14930,6 +15344,9 @@ msgstr "targetHostId, çalışma alanının host'uyla eşleşmiyor"
 
 msgid "Task"
 msgstr "Görev"
+
+msgid "Task ID copied"
+msgstr "Görev kimliği kopyalandı"
 
 msgid "Task Launch"
 msgstr "Görev başlatma"
@@ -14954,9 +15371,6 @@ msgstr "Görev Linear'a eşitlendi"
 
 msgid "Task title"
 msgstr "Görev başlığı"
-
-msgid "Task title..."
-msgstr "Görev başlığı..."
 
 msgid "Tasks"
 msgstr "Görevler"
@@ -15310,6 +15724,9 @@ msgstr "Bağlantı yanlış olabilir, sayfa silinmiş olabilir ya da erişiminiz
 msgid "The linked agent is missing or disabled. Showing the snapshot."
 msgstr "Bağlı ajan eksik veya devre dışı. Anlık görüntü gösteriliyor."
 
+msgid "The local change was rolled back."
+msgstr "Yerel değişiklik geri alındı."
+
 msgid "The local host service is unavailable for {organization} on {device}. Status: {status}. {recovery}"
 msgstr "{device} üzerinde {organization} için yerel host hizmeti kullanılamıyor. Durum: {status}. {recovery}"
 
@@ -15452,6 +15869,9 @@ msgstr "Çalışma alanı yine de oluşturulmuş olabilir. Göründüğünde bu 
 
 msgid "The workspace this automation is pinned to no longer exists on its host. Pin a different one in the automation's settings."
 msgstr "Bu otomasyonun sabitlendiği çalışma alanı artık ana makinesinde yok. Otomasyonun ayarlarından başka bir tanesini sabitleyin."
+
+msgid "The workspace's repositories, as they are checked out now."
+msgstr "Çalışma alanının depoları, şu anki halleriyle."
 
 msgid "The worktree and any uncommitted changes will be removed. This cannot be undone."
 msgstr "Worktree ve commit'lenmemiş tüm değişiklikler kaldırılacak. Bu geri alınamaz."
@@ -15823,6 +16243,9 @@ msgstr "Biletten üretime bir günün altında, medyan"
 
 msgid "Tier"
 msgstr "Katman"
+
+msgid "Time"
+msgstr "Zaman"
 
 msgid "Time range"
 msgstr "Zaman aralığı"
@@ -16275,6 +16698,9 @@ msgstr "Sınırsız"
 msgid "Unlimited users"
 msgstr "Sınırsız kullanıcı"
 
+msgid "Unlink task"
+msgstr "Görevin bağlantısını kaldır"
+
 msgid "Unmute notifications"
 msgstr "Bildirimlerin sesini aç"
 
@@ -16662,6 +17088,9 @@ msgstr "Dosyayı görüntüle"
 msgid "View files changed"
 msgstr "Değişen dosyaları görüntüle"
 
+msgid "View full size"
+msgstr "Tam boyutta görüntüle"
+
 msgid "View in GitHub"
 msgstr "GitHub'da görüntüle"
 
@@ -16741,6 +17170,9 @@ msgstr "Oturum açma bekleniyor…"
 
 msgid "Waiting for the subagent's first message…"
 msgstr "Alt ajanın ilk mesajı bekleniyor…"
+
+msgid "Waiting for your input"
+msgstr "Girdinizi bekliyor"
 
 msgid "Waitlist signups"
 msgstr "Bekleme listesi kayıtları"
@@ -17028,6 +17460,9 @@ msgstr "Hangi AI kodlama ajanları destekleniyor?"
 msgid "Who can open this page from its link"
 msgstr "Bu sayfayı bağlantısından kimlerin açabileceği"
 
+msgid "Who can open this workspace"
+msgstr "Bu çalışma alanını kimler açabilir"
+
 msgid "Whole site"
 msgstr "Tüm site"
 
@@ -17122,11 +17557,17 @@ msgstr "PR'dan çalışma alanı oluşturuldu"
 msgid "Workspace details"
 msgstr "Çalışma alanı ayrıntıları"
 
+msgid "Workspace ID"
+msgstr "Çalışma alanı kimliği"
+
 msgid "Workspace ID copied"
 msgstr "Çalışma alanı kimliği kopyalandı"
 
 msgid "Workspace layout"
 msgstr "Çalışma alanı düzeni"
+
+msgid "Workspace name"
+msgstr "Çalışma alanı adı"
 
 msgid "Workspace name (optional)"
 msgstr "Çalışma alanı adı (isteğe bağlı)"

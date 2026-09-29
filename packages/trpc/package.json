@@ -16,6 +16,10 @@
 			"types": "./src/lib/sandbox/index.ts",
 			"default": "./src/lib/sandbox/index.ts"
 		},
+		"./lib/document-files": {
+			"types": "./src/lib/document-files/index.ts",
+			"default": "./src/lib/document-files/index.ts"
+		},
 		"./lib/github-user": {
 			"types": "./src/lib/github-user/index.ts",
 			"default": "./src/lib/github-user/index.ts"
