@@ -4902,9 +4902,6 @@ msgstr "AI로 만들기"
 msgid "Create workspace"
 msgstr "워크스페이스 만들기"
 
-msgid "Create workspace with options"
-msgstr "옵션으로 워크스페이스 만들기"
-
 msgid "Create workspaces, launch agents, and read their output from any terminal or script. macOS and Linux."
 msgstr "어떤 터미널이나 스크립트에서든 워크스페이스를 만들고, 에이전트를 실행하고, 출력을 확인하세요. macOS와 Linux를 지원합니다."
 

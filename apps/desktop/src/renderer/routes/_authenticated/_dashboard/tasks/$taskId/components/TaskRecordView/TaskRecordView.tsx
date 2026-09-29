@@ -30,7 +30,6 @@ interface TaskRecordViewProps {
 	onAddLabel: (name: string) => void;
 	onRemoveLabel: (labelId: string) => void;
 	onBack: () => void;
-	onStartWork: () => void;
 	onRename: (title: string) => void;
 	onSaveDescription: (description: string | null) => void;
 	onCopyLink: () => void;
@@ -62,7 +61,6 @@ export function TaskRecordView({
 	onAddLabel,
 	onRemoveLabel,
 	onBack,
-	onStartWork,
 	onRename,
 	onSaveDescription,
 	onCopyLink,
@@ -85,7 +83,6 @@ export function TaskRecordView({
 				<TaskRecordTopBar
 					task={task}
 					onBack={onBack}
-					onStartWork={onStartWork}
 					onCopyLink={onCopyLink}
 					onCopyId={onCopyId}
 					onOpenExternal={onOpenExternal}

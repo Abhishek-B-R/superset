@@ -4902,9 +4902,6 @@ msgstr "Tạo bằng AI"
 msgid "Create workspace"
 msgstr "Tạo workspace"
 
-msgid "Create workspace with options"
-msgstr "Tạo không gian làm việc với tùy chọn"
-
 msgid "Create workspaces, launch agents, and read their output from any terminal or script. macOS and Linux."
 msgstr "Tạo workspace, khởi chạy agent và đọc kết quả của chúng từ bất kỳ terminal hoặc script nào. macOS và Linux."
 

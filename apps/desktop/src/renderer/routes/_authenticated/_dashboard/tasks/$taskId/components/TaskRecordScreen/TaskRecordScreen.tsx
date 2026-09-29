@@ -7,7 +7,6 @@ import { useActiveOrganizationId } from "renderer/hooks/useActiveOrganizationId"
 import { useCloudWorkspaces } from "renderer/hooks/useCloudWorkspaces";
 import { useCopyToClipboard } from "renderer/hooks/useCopyToClipboard";
 import { useNow } from "renderer/hooks/useNow";
-import { useOpenNewWorkspace } from "renderer/hooks/useOpenNewWorkspace";
 import { authClient } from "renderer/lib/auth-client";
 import { cloudTrpc } from "renderer/lib/cloud-trpc";
 import { electronTrpc } from "renderer/lib/electron-trpc";
@@ -17,7 +16,6 @@ import { useCloudWorkspaceListItems } from "renderer/routes/_authenticated/_dash
 import { useCopyShareLink } from "renderer/routes/_authenticated/_dashboard/hooks/useCopyShareLink";
 import { useOrganizationPeople } from "renderer/routes/_authenticated/_dashboard/hooks/useOrganizationPeople";
 import { useOptimisticActions } from "renderer/routes/_authenticated/hooks/useOptimisticActions";
-import { useNewWorkspaceDraftStore } from "renderer/stores/new-workspace-draft";
 import { TASK_LIST_REFETCH_INTERVAL } from "../../../components/TasksView/hooks/useTasksData";
 import { useTaskLabelMutations } from "../../hooks/useTaskLabelMutations";
 import type {
@@ -57,9 +55,6 @@ export function TaskRecordScreen({
 	const { people, currentUserId } = useOrganizationPeople();
 	const [newProjectName, setNewProjectName] = useState<string | null>(null);
 	const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
-	const resetDraft = useNewWorkspaceDraftStore((state) => state.resetDraft);
-	const updateDraft = useNewWorkspaceDraftStore((state) => state.updateDraft);
-	const openNewWorkspace = useOpenNewWorkspace();
 
 	const { data: taskRecord, isPending: isTaskPending } =
 		cloudTrpc.task.byIdOrSlug.useQuery(taskId, {
@@ -293,22 +288,6 @@ export function TaskRecordScreen({
 				onAddLabel={(name) => addLabel.mutate({ taskId: task.id, name })}
 				onRemoveLabel={removeLabel}
 				onBack={onBack}
-				onStartWork={() => {
-					resetDraft();
-					updateDraft({
-						linkedIssues: [
-							{
-								slug: task.slug,
-								title: task.title,
-								source: "internal",
-								taskId: task.id,
-								url: task.externalUrl ?? undefined,
-								branch: task.branch ?? undefined,
-							},
-						],
-					});
-					openNewWorkspace();
-				}}
 				onRename={(title) => taskActions.updateTitle(task.id, title)}
 				onSaveDescription={(description) =>
 					taskActions.updateDescription(task.id, description ?? "")

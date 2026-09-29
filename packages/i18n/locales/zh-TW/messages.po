@@ -4902,9 +4902,6 @@ msgstr "用AI建立"
 msgid "Create workspace"
 msgstr "建立工作區"
 
-msgid "Create workspace with options"
-msgstr "使用選項建立工作區"
-
 msgid "Create workspaces, launch agents, and read their output from any terminal or script. macOS and Linux."
 msgstr "在任何終端機或指令碼中建立工作區、啟動 agent 並讀取其輸出。支援 macOS 與 Linux。"
 

@@ -4902,9 +4902,6 @@ msgstr "Créer avec l'IA"
 msgid "Create workspace"
 msgstr "Créer un espace de travail"
 
-msgid "Create workspace with options"
-msgstr "Créer un espace de travail avec des options"
-
 msgid "Create workspaces, launch agents, and read their output from any terminal or script. macOS and Linux."
 msgstr "Créez des espaces de travail, lancez des agents et lisez leur sortie depuis n'importe quel terminal ou script. macOS et Linux."
 

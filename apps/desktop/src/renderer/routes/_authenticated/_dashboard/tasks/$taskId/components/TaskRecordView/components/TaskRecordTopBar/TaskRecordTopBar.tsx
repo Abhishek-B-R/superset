@@ -1,13 +1,7 @@
 import { Trans, useLingui } from "@lingui/react/macro";
 import { Button } from "@superset/ui/button";
 import { ButtonGroup } from "@superset/ui/button-group";
-import {
-	LuArrowRight,
-	LuChevronDown,
-	LuChevronRight,
-	LuHash,
-	LuLink,
-} from "react-icons/lu";
+import { LuArrowRight, LuChevronRight, LuHash, LuLink } from "react-icons/lu";
 import { RecordIconButton } from "renderer/routes/_authenticated/_dashboard/components/RecordIconButton";
 import { RunInWorkspacePopoverV2 } from "../../../../../components/RunInWorkspacePopoverV2";
 import { TaskRecordMenu } from "./components/TaskRecordMenu";
@@ -21,7 +15,6 @@ interface TaskRecordTopBarProps {
 		branch: string | null;
 	};
 	onBack: () => void;
-	onStartWork: () => void;
 	onCopyLink: () => void;
 	onCopyId: () => void;
 	onOpenExternal?: () => void;
@@ -31,7 +24,6 @@ interface TaskRecordTopBarProps {
 export function TaskRecordTopBar({
 	task,
 	onBack,
-	onStartWork,
 	onCopyLink,
 	onCopyId,
 	onOpenExternal,
@@ -66,27 +58,17 @@ export function TaskRecordTopBar({
 					</RecordIconButton>
 					<TaskRecordMenu onOpenExternal={onOpenExternal} onDelete={onDelete} />
 				</ButtonGroup>
-				<ButtonGroup>
-					<Button variant="outline" size="sm" onClick={onStartWork}>
-						<Trans>Create workspace</Trans>
-						<LuArrowRight className="size-3.5" />
-					</Button>
-					<RunInWorkspacePopoverV2
-						tasks={[task]}
-						onComplete={() => {}}
-						align="end"
-						trigger={
-							<Button
-								variant="outline"
-								size="sm"
-								className="px-2"
-								aria-label={t({ message: "Create workspace with options" })}
-							>
-								<LuChevronDown className="size-3.5" />
-							</Button>
-						}
-					/>
-				</ButtonGroup>
+				<RunInWorkspacePopoverV2
+					tasks={[task]}
+					onComplete={() => {}}
+					align="end"
+					trigger={
+						<Button variant="outline" size="sm">
+							<Trans>Create workspace</Trans>
+							<LuArrowRight className="size-3.5" />
+						</Button>
+					}
+				/>
 			</div>
 		</div>
 	);
