@@ -5,10 +5,15 @@ import { i18n } from "@superset/i18n";
 import type { CommentIntent } from "@superset/shared/page-comments";
 import { useNavigation, useRouter } from "expo-router";
 import { useEffect, useRef, useState } from "react";
-import { Alert, View } from "react-native";
-import { Text } from "@/components/ui/text";
+import { Alert, Pressable, View } from "react-native";
+import Animated, {
+	useAnimatedKeyboard,
+	useAnimatedStyle,
+} from "react-native-reanimated";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { errorCopy } from "@/lib/errors";
 import { CommentComposer } from "../components/CommentComposer";
+import { ComposerCard } from "../components/ComposerCard";
 import { QuickReplies } from "../components/QuickReplies";
 import { usePageCommentUser } from "../hooks/usePageCommentUser";
 import { usePageCommentStore } from "../stores/pageCommentStore";
@@ -28,6 +33,11 @@ export function CommentSheet() {
 		};
 	});
 	const user = usePageCommentUser();
+	const insets = useSafeAreaInsets();
+	const keyboard = useAnimatedKeyboard();
+	const lift = useAnimatedStyle(() => ({
+		paddingBottom: Math.max(keyboard.height.value, insets.bottom) + 8,
+	}));
 	const store = usePageComments({
 		pageId: pick.pageId ?? "",
 		version: pick.version ?? 0,
@@ -70,33 +80,32 @@ export function CommentSheet() {
 	};
 
 	return (
-		<View className="gap-2 px-4 pt-4 pb-3">
-			{pick.anchor?.text ? (
-				<View className="border-muted-foreground/30 flex-row border-l-2 pl-2.5">
-					<Text
-						className="text-muted-foreground text-[13px] leading-[17px]"
-						numberOfLines={1}
-					>
-						{pick.anchor.text}
-					</Text>
-				</View>
-			) : null}
-
-			<CommentComposer
-				autoFocus
-				placeholder={t({ message: "Write a comment" })}
-				pending={store.submitting}
-				onSubmit={(body) => post(body)}
-				actions={({ hasDraft }) => (
-					<QuickReplies
-						disabled={store.submitting || hasDraft}
-						onQuick={(quick: MessageDescriptor, intent: CommentIntent) => {
-							void postQuick(i18n._(quick), intent);
-						}}
-						onPreset={(preset) => void postQuick(preset)}
-					/>
-				)}
+		<View className="flex-1 justify-end">
+			<Pressable
+				accessibilityRole="button"
+				accessibilityLabel={t({ message: "Close" })}
+				className="absolute inset-0 bg-black/40"
+				onPress={() => router.back()}
 			/>
+			<Animated.View style={lift} className="mx-3">
+				<ComposerCard>
+					<CommentComposer
+						autoFocus
+						placeholder={t({ message: "Write a comment" })}
+						pending={store.submitting}
+						onSubmit={(body) => post(body)}
+						actions={({ hasDraft }) => (
+							<QuickReplies
+								disabled={store.submitting || hasDraft}
+								onQuick={(quick: MessageDescriptor, intent: CommentIntent) => {
+									void postQuick(i18n._(quick), intent);
+								}}
+								onPreset={(preset) => void postQuick(preset)}
+							/>
+						)}
+					/>
+				</ComposerCard>
+			</Animated.View>
 		</View>
 	);
 }

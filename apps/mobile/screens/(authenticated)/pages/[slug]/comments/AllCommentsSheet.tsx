@@ -22,8 +22,6 @@ const VISIBLE_REPLIES = 2;
 
 interface ReplyTarget {
 	threadId: string;
-	name: string;
-	excerpt: string;
 }
 
 type PendingScroll = "end" | { threadId: string; atBottom: boolean };
@@ -82,22 +80,14 @@ export function AllCommentsSheet() {
 		if (!thread) return;
 		if (thread.resolved) setShowResolved(true);
 		setExpanded((previous) => ({ ...previous, [thread.id]: true }));
-		setReplyingTo({
-			threadId: thread.id,
-			name: thread.comments[0]?.authorName ?? "",
-			excerpt: thread.comments[0]?.body ?? "",
-		});
+		setReplyingTo({ threadId: thread.id });
 		pendingScroll.current = { threadId: thread.id, atBottom: false };
 		setFocusThreadId(null);
 	}, [focusThreadId, threads, setFocusThreadId]);
 
 	const startReply = (thread: ServerThread) => {
 		setExpanded((previous) => ({ ...previous, [thread.id]: true }));
-		setReplyingTo({
-			threadId: thread.id,
-			name: thread.comments[0]?.authorName ?? "",
-			excerpt: thread.comments[0]?.body ?? "",
-		});
+		setReplyingTo({ threadId: thread.id });
 		scrollToThread(thread.id);
 		composerRef.current?.focus();
 	};
@@ -141,7 +131,7 @@ export function AllCommentsSheet() {
 
 			<ScrollView
 				ref={scrollRef}
-				className="bg-background flex-1"
+				className="flex-1"
 				contentContainerClassName="px-4 pb-4 pt-1"
 				contentInsetAdjustmentBehavior="automatic"
 				keyboardShouldPersistTaps="handled"
@@ -281,10 +271,7 @@ export function AllCommentsSheet() {
 				<ReplyBar
 					key={replyingTo.threadId}
 					ref={composerRef}
-					replyingTo={replyingTo.name}
-					excerpt={replyingTo.excerpt}
 					pending={store.submitting}
-					onCancelReply={() => setReplyingTo(null)}
 					onSubmit={submit}
 				/>
 			) : null}
