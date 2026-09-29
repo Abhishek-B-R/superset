@@ -3044,9 +3044,6 @@ msgstr "Cancel edits"
 msgid "Cancel plan"
 msgstr "Cancel plan"
 
-msgid "Cancel reply"
-msgstr "Cancel reply"
-
 msgid "Canceled"
 msgstr "Canceled"
 
@@ -5316,6 +5313,10 @@ msgstr "Delete session \"{workspaceName}\"?"
 msgid "Delete team"
 msgstr "Delete team"
 
+msgid "Delete this"
+msgstr "Delete this"
+
+msgctxt "quick reply button"
 msgid "Delete this"
 msgstr "Delete this"
 
@@ -9001,6 +9002,10 @@ msgstr "Looking for installed browsers…"
 msgid "Looks good"
 msgstr "Looks good"
 
+msgctxt "quick reply button"
+msgid "Looks good"
+msgstr "Looks good"
+
 msgid "Low"
 msgstr "Low"
 
@@ -12192,6 +12197,10 @@ msgstr "Quick Create Workspace"
 msgid "Quick feedback"
 msgstr "Quick feedback"
 
+msgctxt "quick reply button"
+msgid "Quick feedback"
+msgstr "Quick feedback"
+
 msgid "Quick Open File"
 msgstr "Quick Open File"
 
@@ -12706,9 +12715,6 @@ msgstr "Reply"
 
 msgid "Reply to thread…"
 msgstr "Reply to thread…"
-
-msgid "Replying to {replyingTo}"
-msgstr "Replying to {replyingTo}"
 
 msgid "repo"
 msgstr "repo"

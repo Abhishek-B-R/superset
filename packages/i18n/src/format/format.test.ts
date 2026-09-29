@@ -100,6 +100,18 @@ describe("formatRelativeTime", () => {
 		).toBe("3d ago");
 	});
 
+	test("a timestamp that leads the clock still reads as the present", () => {
+		const justPosted = new Date(NOW.getTime() + 400);
+		expect(formatCompactRelativeTime(justPosted, NOW)).toBe("now");
+		expect(formatCompactRelativeTime(NOW, NOW)).toBe("now");
+	});
+
+	test("a real future time keeps the future tense", () => {
+		expect(
+			formatCompactRelativeTime(new Date(NOW.getTime() + 2 * 3600 * 1000), NOW),
+		).toBe("in 2h");
+	});
+
 	test("age fits two digits and a unit", () => {
 		const now = new Date("2026-08-28T12:00:00Z").getTime();
 		const minute = 60 * 1000;

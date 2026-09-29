@@ -3044,9 +3044,6 @@ msgstr "Cancelar las ediciones"
 msgid "Cancel plan"
 msgstr "Cancelar el plan"
 
-msgid "Cancel reply"
-msgstr "Cancelar respuesta"
-
 msgid "Canceled"
 msgstr "Cancelado"
 
@@ -5316,6 +5313,10 @@ msgstr "¿Eliminar la sesión \"{workspaceName}\"?"
 msgid "Delete team"
 msgstr "Eliminar el equipo"
 
+msgid "Delete this"
+msgstr "Eliminar esto"
+
+msgctxt "quick reply button"
 msgid "Delete this"
 msgstr "Eliminar esto"
 
@@ -9001,6 +9002,10 @@ msgstr "Buscando navegadores instalados…"
 msgid "Looks good"
 msgstr "Se ve bien"
 
+msgctxt "quick reply button"
+msgid "Looks good"
+msgstr "Se ve bien"
+
 msgid "Low"
 msgstr "Baja"
 
@@ -12192,6 +12197,10 @@ msgstr "Creación rápida de espacio de trabajo"
 msgid "Quick feedback"
 msgstr "Comentario rápido"
 
+msgctxt "quick reply button"
+msgid "Quick feedback"
+msgstr "Comentario rápido"
+
 msgid "Quick Open File"
 msgstr "Apertura rápida de archivo"
 
@@ -12706,9 +12715,6 @@ msgstr "Responder"
 
 msgid "Reply to thread…"
 msgstr "Responder al hilo…"
-
-msgid "Replying to {replyingTo}"
-msgstr "Respondiendo a {replyingTo}"
 
 msgid "repo"
 msgstr "repo"

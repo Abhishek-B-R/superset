@@ -3044,9 +3044,6 @@ msgstr "Batalkan suntingan"
 msgid "Cancel plan"
 msgstr "Batalkan paket"
 
-msgid "Cancel reply"
-msgstr "Batalkan balasan"
-
 msgid "Canceled"
 msgstr "Dibatalkan"
 
@@ -5316,6 +5313,10 @@ msgstr "Hapus sesi \"{workspaceName}\"?"
 msgid "Delete team"
 msgstr "Hapus tim"
 
+msgid "Delete this"
+msgstr "Hapus ini"
+
+msgctxt "quick reply button"
 msgid "Delete this"
 msgstr "Hapus ini"
 
@@ -9001,6 +9002,10 @@ msgstr "Mencari browser yang terpasang…"
 msgid "Looks good"
 msgstr "Terlihat bagus"
 
+msgctxt "quick reply button"
+msgid "Looks good"
+msgstr "Terlihat bagus"
+
 msgid "Low"
 msgstr "Rendah"
 
@@ -12192,6 +12197,10 @@ msgstr "Buat Workspace Cepat"
 msgid "Quick feedback"
 msgstr "Masukan cepat"
 
+msgctxt "quick reply button"
+msgid "Quick feedback"
+msgstr "Masukan cepat"
+
 msgid "Quick Open File"
 msgstr "Buka File Cepat"
 
@@ -12706,9 +12715,6 @@ msgstr "Balas"
 
 msgid "Reply to thread…"
 msgstr "Balas thread…"
-
-msgid "Replying to {replyingTo}"
-msgstr "Membalas {replyingTo}"
 
 msgid "repo"
 msgstr "repo"

@@ -3044,9 +3044,6 @@ msgstr "편집 취소"
 msgid "Cancel plan"
 msgstr "플랜 해지"
 
-msgid "Cancel reply"
-msgstr "답글 취소"
-
 msgid "Canceled"
 msgstr "취소됨"
 
@@ -5316,6 +5313,10 @@ msgstr "세션 \"{workspaceName}\"을(를) 삭제할까요?"
 msgid "Delete team"
 msgstr "팀 삭제"
 
+msgid "Delete this"
+msgstr "이것을 삭제"
+
+msgctxt "quick reply button"
 msgid "Delete this"
 msgstr "이것을 삭제"
 
@@ -9001,6 +9002,10 @@ msgstr "설치된 브라우저를 찾는 중…"
 msgid "Looks good"
 msgstr "좋아 보입니다"
 
+msgctxt "quick reply button"
+msgid "Looks good"
+msgstr "좋아 보입니다"
+
 msgid "Low"
 msgstr "낮음"
 
@@ -12192,6 +12197,10 @@ msgstr "워크스페이스 빠른 생성"
 msgid "Quick feedback"
 msgstr "빠른 피드백"
 
+msgctxt "quick reply button"
+msgid "Quick feedback"
+msgstr "빠른 피드백"
+
 msgid "Quick Open File"
 msgstr "파일 빠른 열기"
 
@@ -12706,9 +12715,6 @@ msgstr "답글"
 
 msgid "Reply to thread…"
 msgstr "스레드에 답글…"
-
-msgid "Replying to {replyingTo}"
-msgstr "{replyingTo}님에게 답글 작성 중"
 
 msgid "repo"
 msgstr "리포"

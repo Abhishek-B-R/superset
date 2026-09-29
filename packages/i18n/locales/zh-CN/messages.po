@@ -3044,9 +3044,6 @@ msgstr "取消编辑"
 msgid "Cancel plan"
 msgstr "取消方案"
 
-msgid "Cancel reply"
-msgstr "取消回复"
-
 msgid "Canceled"
 msgstr "已取消"
 
@@ -5316,6 +5313,10 @@ msgstr "删除会话“{workspaceName}”？"
 msgid "Delete team"
 msgstr "删除团队"
 
+msgid "Delete this"
+msgstr "删除这里"
+
+msgctxt "quick reply button"
 msgid "Delete this"
 msgstr "删除这里"
 
@@ -9001,6 +9002,10 @@ msgstr "正在查找已安装的浏览器…"
 msgid "Looks good"
 msgstr "看起来不错"
 
+msgctxt "quick reply button"
+msgid "Looks good"
+msgstr "看起来不错"
+
 msgid "Low"
 msgstr "低"
 
@@ -12192,6 +12197,10 @@ msgstr "快速创建工作区"
 msgid "Quick feedback"
 msgstr "快速反馈"
 
+msgctxt "quick reply button"
+msgid "Quick feedback"
+msgstr "快速反馈"
+
 msgid "Quick Open File"
 msgstr "快速打开文件"
 
@@ -12706,9 +12715,6 @@ msgstr "回复"
 
 msgid "Reply to thread…"
 msgstr "回复讨论串…"
-
-msgid "Replying to {replyingTo}"
-msgstr "正在回复 {replyingTo}"
 
 msgid "repo"
 msgstr "仓库"
