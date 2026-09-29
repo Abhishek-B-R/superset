@@ -27,6 +27,7 @@ import {
 	ilike,
 	inArray,
 	isNotNull,
+	isNull,
 	lt,
 	notExists,
 	or,
@@ -44,6 +45,7 @@ import { decodePageCursor, encodePageCursor } from "./cursor";
 import { pageUrl } from "./page-url";
 import { publishPage } from "./publish";
 import { isEntryPathConflict } from "./publish-rules";
+import { pageReportRouter } from "./reports";
 import {
 	clearPageWatchSchema,
 	createPageSchema,
@@ -73,6 +75,13 @@ import {
 } from "./storage";
 import { enqueuePageThumbnail } from "./thumbnail";
 import { watchState } from "./watch";
+import {
+	claimPageWatch,
+	finishPageWatchDelivery,
+	releasePageWatch,
+	renewPageWatch,
+	reservePageWatchDelivery,
+} from "./watch-ownership";
 import { assertWorkspaceAccess } from "./workspace-access";
 
 function visibilityFilter(userId: string) {
@@ -376,6 +385,7 @@ async function listPageBatch({
 
 export const pageRouter = {
 	assets: pageAssetRouter,
+	...pageReportRouter,
 
 	/**
 	 * A page with no versions yet. Assets stage against a page id, so a first
@@ -611,8 +621,9 @@ export const pageRouter = {
 			})
 			.from(workspacePages)
 			.where(eq(workspacePages.pageId, page.id));
+		const { watchState: _ownership, ...pageDetails } = page;
 		return {
-			...page,
+			...pageDetails,
 			url: pageUrl(page.slug),
 			viewUrl: pageViewUrl({
 				baseUrl: env.USERCONTENT_URL,
@@ -710,7 +721,7 @@ export const pageRouter = {
 						? { description: input.description }
 						: {}),
 				})
-				.where(eq(pages.id, page.id))
+				.where(and(eq(pages.id, page.id), isNull(pages.takenDownAt)))
 				.returning();
 
 			if (!updated) {
@@ -739,7 +750,7 @@ export const pageRouter = {
 			const [updated] = await db
 				.update(pages)
 				.set({ visibility: input.visibility })
-				.where(eq(pages.id, page.id))
+				.where(and(eq(pages.id, page.id), isNull(pages.takenDownAt)))
 				.returning();
 
 			if (!updated) {
@@ -761,6 +772,89 @@ export const pageRouter = {
 			return { id: updated.id, visibility: updated.visibility };
 		}),
 
+	claimWatch: protectedProcedure
+		.input(
+			z.object({
+				id: pageFields.id,
+				token: z.uuid(),
+				agentId: pageFields.agentId.nullable(),
+			}),
+		)
+		.mutation(async ({ ctx, input }) => {
+			const organizationId = await requireActiveOrgMembership(ctx);
+			const page = await loadPage({
+				id: input.id,
+				organizationId,
+				userId: ctx.session.user.id,
+			});
+			assertPageWritable(page, ctx.session.user.id);
+			return claimPageWatch(input);
+		}),
+	renewWatch: protectedProcedure
+		.input(z.object({ id: pageFields.id, token: z.uuid() }))
+		.mutation(async ({ ctx, input }) => {
+			const organizationId = await requireActiveOrgMembership(ctx);
+			const page = await loadPage({
+				id: input.id,
+				organizationId,
+				userId: ctx.session.user.id,
+			});
+			assertPageWritable(page, ctx.session.user.id);
+			return renewPageWatch(input);
+		}),
+	releaseWatch: protectedProcedure
+		.input(z.object({ id: pageFields.id, token: z.uuid() }))
+		.mutation(async ({ ctx, input }) => {
+			const organizationId = await requireActiveOrgMembership(ctx);
+			const page = await loadPage({
+				id: input.id,
+				organizationId,
+				userId: ctx.session.user.id,
+			});
+			assertPageWritable(page, ctx.session.user.id);
+			return releasePageWatch(input);
+		}),
+	reserveWatchDelivery: protectedProcedure
+		.input(
+			z.object({
+				id: pageFields.id,
+				token: z.uuid(),
+				commentIds: z.array(z.uuid()).max(1000),
+				pings: z
+					.record(z.uuid(), z.number().int().min(0).max(5))
+					.refine((p) => Object.keys(p).length <= 1000),
+			}),
+		)
+		.mutation(async ({ ctx, input }) => {
+			const organizationId = await requireActiveOrgMembership(ctx);
+			const page = await loadPage({
+				id: input.id,
+				organizationId,
+				userId: ctx.session.user.id,
+			});
+			assertPageWritable(page, ctx.session.user.id);
+			return reservePageWatchDelivery(input);
+		}),
+	finishWatchDelivery: protectedProcedure
+		.input(
+			z.object({
+				id: pageFields.id,
+				token: z.uuid(),
+				reservationId: z.uuid(),
+				delivered: z.boolean(),
+			}),
+		)
+		.mutation(async ({ ctx, input }) => {
+			const organizationId = await requireActiveOrgMembership(ctx);
+			const page = await loadPage({
+				id: input.id,
+				organizationId,
+				userId: ctx.session.user.id,
+			});
+			assertPageWritable(page, ctx.session.user.id);
+			return finishPageWatchDelivery(input);
+		}),
+
 	setWatch: protectedProcedure
 		.input(setPageWatchSchema)
 		.mutation(async ({ ctx, input }) => {
@@ -775,7 +869,7 @@ export const pageRouter = {
 					watchedByAgent: input.agentId,
 					watchHeartbeatAt: new Date(),
 				})
-				.where(eq(pages.id, page.id));
+				.where(and(eq(pages.id, page.id), sql`${pages.watchState} IS NULL`));
 
 			return { id: page.id };
 		}),
@@ -791,7 +885,7 @@ export const pageRouter = {
 			await db
 				.update(pages)
 				.set({ watchedByAgent: null, watchHeartbeatAt: null })
-				.where(eq(pages.id, page.id));
+				.where(and(eq(pages.id, page.id), sql`${pages.watchState} IS NULL`));
 
 			return { id: page.id };
 		}),
@@ -843,7 +937,7 @@ export const pageRouter = {
 			const [updated] = await db
 				.update(pages)
 				.set({ sharedVersion: resolved })
-				.where(eq(pages.id, page.id))
+				.where(and(eq(pages.id, page.id), isNull(pages.takenDownAt)))
 				.returning();
 
 			if (!updated) {
@@ -1088,6 +1182,7 @@ export const pageRouter = {
 				.where(eq(pages.slug, input.slug))
 				.limit(1);
 			if (!page || page.visibility !== "everyone") return null;
+			if (page.takenDownAt) return null;
 
 			const version = servedVersion(
 				page.sharedVersion,

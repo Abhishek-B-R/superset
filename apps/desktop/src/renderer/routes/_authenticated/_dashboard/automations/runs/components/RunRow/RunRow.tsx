@@ -9,16 +9,20 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@superset/ui/tooltip";
 import { cn } from "@superset/ui/utils";
 import { useNavigate } from "@tanstack/react-router";
 import { LuChevronRight, LuExternalLink } from "react-icons/lu";
-import { TRIGGER_PROVIDERS } from "renderer/routes/_authenticated/_dashboard/automations/components/providers";
+import {
+	TRIGGER_PROVIDERS,
+	type TriggerProvider,
+} from "renderer/routes/_authenticated/_dashboard/automations/components/providers";
 import { providerLabelText } from "renderer/routes/_authenticated/_dashboard/automations/components/TriggersEditor/triggerMenu";
 import { RUN_STATUS_META } from "renderer/routes/_authenticated/_dashboard/automations/utils/runStatus";
 import { RunPayloadPanel } from "../RunPayloadPanel";
 
 export type OrgRun = RouterOutputs["automation"]["listOrgRuns"]["runs"][number];
 
-const PROVIDER_BY_KIND = new Map(
-	TRIGGER_PROVIDERS.map((provider) => [provider.kind, provider]),
-);
+const PROVIDER_BY_KIND = new Map<
+	NonNullable<OrgRun["triggerKind"]>,
+	TriggerProvider
+>(TRIGGER_PROVIDERS.map((provider) => [provider.kind, provider]));
 
 interface RunRowProps {
 	run: OrgRun;

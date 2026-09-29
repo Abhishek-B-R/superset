@@ -23,7 +23,7 @@ import { Tabs, TabsList, TabsTrigger } from "@superset/ui/tabs";
 import { cn } from "@superset/ui/utils";
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import {
 	LuArrowLeft,
 	LuHistory,
@@ -34,7 +34,6 @@ import { GATED_FEATURES, usePaywall } from "renderer/components/Paywall";
 import { apiTrpcClient } from "renderer/lib/api-trpc-client";
 import { cloudTrpc } from "renderer/lib/cloud-trpc";
 import { DATA_TABLE_HEAD_CELL } from "renderer/routes/_authenticated/_dashboard/components/DataTableHeader";
-import { useFailedAutomations } from "renderer/routes/_authenticated/_dashboard/hooks/useFailedAutomations";
 import { RunRow } from "./components/RunRow";
 
 export const Route = createFileRoute(
@@ -55,11 +54,6 @@ function AutomationRunsPage() {
 	const navigate = useNavigate();
 	const utils = cloudTrpc.useUtils();
 	const { gateFeature } = usePaywall();
-
-	const { markMyFailuresSeen } = useFailedAutomations();
-	useEffect(() => {
-		markMyFailuresSeen();
-	}, [markMyFailuresSeen]);
 
 	const { status: statusParam } = Route.useSearch();
 	const [scope, setScope] = useState<Scope>("all");

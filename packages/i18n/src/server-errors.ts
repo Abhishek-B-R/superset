@@ -1,4 +1,5 @@
 import { msg } from "@lingui/core/macro";
+import { formatNumber } from "./format";
 import { i18n } from "./index";
 
 // Catalog entries for user-facing server errors. Each entry pairs a stable
@@ -131,6 +132,32 @@ export const serverErrorMessages: Record<
 		i18n._(
 			msg({
 				message: "Automation not found",
+			}),
+		),
+	"serverError.automation.cloudAgentUnsupported": () =>
+		i18n._(
+			msg({
+				message: "This agent can't run in a cloud workspace",
+			}),
+		),
+	"serverError.automation.cloudNeedsEnvironment": () =>
+		i18n._(
+			msg({
+				message: "A cloud automation needs an environment or a cloud workspace",
+			}),
+		),
+	"serverError.automation.cloudPromptTooLong": (params) => {
+		const max = formatNumber(Number(params?.max));
+		return i18n._(
+			msg({
+				message: `A cloud automation's instructions can be at most ${max} characters`,
+			}),
+		);
+	},
+	"serverError.automation.cloudWorkspaceNotYours": () =>
+		i18n._(
+			msg({
+				message: "An automation can only use a cloud workspace you created",
 			}),
 		),
 	"serverError.automation.continueNeedsPinnedWorkspace": () =>
@@ -381,6 +408,12 @@ export const serverErrorMessages: Record<
 				message: "Only owners can delete projects",
 			}),
 		),
+	"serverError.integration.repositoryNotInstalled": (params) =>
+		i18n._(
+			msg({
+				message: `${params?.repoFullName} is not a repository the GitHub App is installed on`,
+			}),
+		),
 	"serverError.integration.sentryRejectedTheToken": () =>
 		i18n._(
 			msg({
@@ -560,6 +593,36 @@ export const serverErrorMessages: Record<
 		i18n._(
 			msg({
 				message: "Provide either id or slug",
+			}),
+		),
+	"serverError.page.reportNotFound": () =>
+		i18n._(
+			msg({
+				message: "Report not found",
+			}),
+		),
+	"serverError.page.reportRateLimitingIsNot": () =>
+		i18n._(
+			msg({
+				message: "Page report rate limiting is not configured",
+			}),
+		),
+	"serverError.page.reportingIsBrieflyUnavailable": () =>
+		i18n._(
+			msg({
+				message: "Reporting is briefly unavailable. Try again shortly.",
+			}),
+		),
+	"serverError.page.thisPageWasTakenDown": () =>
+		i18n._(
+			msg({
+				message: "This page was taken down and can no longer be changed",
+			}),
+		),
+	"serverError.page.tooManyReportsTryAgainLater": () =>
+		i18n._(
+			msg({
+				message: "Too many reports. Try again later.",
 			}),
 		),
 	"serverError.page.thisPageIsBeingPublishedFrom": () =>

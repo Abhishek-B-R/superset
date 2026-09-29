@@ -61,13 +61,13 @@ import {
 	SortableHeader,
 	type SortDirection,
 } from "renderer/routes/_authenticated/_dashboard/components/SortableHeader";
-import { useFailedAutomations } from "renderer/routes/_authenticated/_dashboard/hooks/useFailedAutomations";
 import { AGENT_STORAGE_KEY } from "renderer/routes/_authenticated/components/DashboardNewWorkspaceModal/components/DashboardNewWorkspaceForm/PromptGroup/types";
 import { useLocalHostService } from "renderer/routes/_authenticated/providers/LocalHostServiceProvider";
 import { AutomationRow } from "./components/AutomationRow";
 import { AutomationStatCards } from "./components/AutomationStatCards";
 import { AutomationsEmptyState } from "./components/AutomationsEmptyState";
 import { HostOfflineRunDialog } from "./components/HostOfflineRunDialog";
+import { useFailedAutomations } from "./hooks/useFailedAutomations";
 import type { AutomationTemplate } from "./templates";
 import { matchAgentChoice, portableAgentValue } from "./utils/agentIdentity";
 import { dispatchErrorCode, runErrorHelp } from "./utils/runErrorHelp";

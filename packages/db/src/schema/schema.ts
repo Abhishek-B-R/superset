@@ -1,3 +1,4 @@
+import type { ActiveAgentStatus } from "@superset/shared/agent-status";
 import { desc, sql } from "drizzle-orm";
 import {
 	bigint,
@@ -18,6 +19,7 @@ import {
 	uuid,
 } from "drizzle-orm/pg-core";
 import { organizations, users } from "./auth";
+import type { PageReportReason } from "./enums";
 import {
 	agentCredentialKindValues,
 	automationPromptSourceValues,
@@ -36,6 +38,7 @@ import {
 	pageCommentAnchorKindValues,
 	pageCommentAuthorKindValues,
 	pageCommentIntentValues,
+	pageReportStatusValues,
 	pageVisibilityValues,
 	taskPriorityValues,
 	taskStatusEnumValues,
@@ -98,6 +101,11 @@ export const pageCommentAuthorKind = pgEnum(
 export const pageCommentIntent = pgEnum(
 	"page_comment_intent",
 	pageCommentIntentValues,
+);
+
+export const pageReportStatus = pgEnum(
+	"page_report_status",
+	pageReportStatusValues,
 );
 
 export const taskStatuses = pgTable(
@@ -645,6 +653,8 @@ export const environments = pgTable(
 		provider: text().notNull().default("vercel"),
 		sourceKind: environmentSourceKind("source_kind").notNull(),
 		sourceRef: text("source_ref").notNull(),
+		/** Where its golden lives and every box forked from it runs; a snapshot only exists in its region. */
+		region: text().notNull().default("sfo1"),
 		/** The sandbox bundle every workspace of this environment boots on; null keeps the image's own. */
 		bundleSha: text("bundle_sha"),
 		/**
@@ -670,10 +680,6 @@ export const environments = pgTable(
 	},
 	(table) => [
 		index("environments_organization_id_idx").on(table.organizationId),
-		unique("environments_organization_id_name_unique").on(
-			table.organizationId,
-			table.name,
-		),
 	],
 );
 
@@ -752,7 +758,9 @@ export const cloudWorkspaces = pgTable(
 		// never to display one — a rename lands on the sandbox and leaves these
 		// behind.
 		name: text().notNull(),
+		/** The branch the sandbox works on, cut from `baseBranch` at create. */
 		branch: text().notNull(),
+		baseBranch: text("base_branch").notNull(),
 		provider: text().notNull().default("vercel"),
 		providerSandboxId: text("provider_sandbox_id").notNull(),
 		sandboxUrl: text("sandbox_url"),
@@ -761,6 +769,8 @@ export const cloudWorkspaces = pgTable(
 			.notNull()
 			.references(() => environments.id),
 		hostVersion: text("host_version"),
+		agentStatus: text("agent_status").$type<ActiveAgentStatus>(),
+		agentStatusAt: timestamp("agent_status_at", { withTimezone: true }),
 		deletedAt: timestamp("deleted_at", { withTimezone: true }),
 		createdByUserId: uuid("created_by_user_id").references(() => users.id, {
 			onDelete: "set null",
@@ -1076,6 +1086,15 @@ export const automations = pgTable(
 		v2ProjectId: uuid("v2_project_id"),
 		v2WorkspaceId: uuid("v2_workspace_id"),
 
+		// With targetHostId "cloud"; v2WorkspaceId is only ever a host's workspace.
+		cloudWorkspaceId: uuid("cloud_workspace_id").references(
+			() => cloudWorkspaces.id,
+			{ onDelete: "set null" },
+		),
+		environmentId: uuid("environment_id").references(() => environments.id, {
+			onDelete: "set null",
+		}),
+
 		// Workspace tags applied to each run's created workspace, so scheduled
 		// runs file themselves into the matching sidebar folders. Stored
 		// normalized (see @superset/shared/workspace-tags). Defaults to
@@ -1085,10 +1104,10 @@ export const automations = pgTable(
 
 		// Deliver each run's prompt into the agent session the previous run
 		// left behind, rather than starting another beside it. Needs a pinned
-		// v2WorkspaceId — that is where the session lives. Off by default: a
-		// run that lands in a conversation already holding context behaves
-		// differently from one starting clean, and that is a choice to make
-		// per automation rather than a default to inherit.
+		// v2WorkspaceId or cloudWorkspaceId — that is where the session lives.
+		// Off by default: a run that lands in a conversation already holding
+		// context behaves differently from one starting clean, and that is a
+		// choice to make per automation rather than a default to inherit.
 		continueAgentSession: boolean("continue_agent_session")
 			.notNull()
 			.default(false),
@@ -1242,12 +1261,9 @@ export const automationEvents = pgTable(
 			t.receivedAt,
 		),
 		index("automation_events_resource_idx").on(t.resourceKey),
-		// The pruner scans oldest-first for rows that still have a body. Without
-		// this the planner walks automation_events_org_received_idx end to end and
-		// sorts, per batch. Partial, so it shrinks as the backlog drains.
-		index("automation_events_prunable_idx")
-			.on(t.receivedAt)
-			.where(sql`${t.payload} IS NOT NULL`),
+		// Retention deletes oldest-first. Without this the planner walks
+		// automation_events_org_received_idx end to end and sorts, per batch.
+		index("automation_events_received_at_idx").on(t.receivedAt),
 	],
 );
 
@@ -1280,6 +1296,10 @@ export const automationRuns = pgTable(
 
 		hostId: text("host_id"),
 		v2WorkspaceId: uuid("v2_workspace_id"),
+		cloudWorkspaceId: uuid("cloud_workspace_id").references(
+			() => cloudWorkspaces.id,
+			{ onDelete: "set null" },
+		),
 
 		sessionKind: automationSessionKind("session_kind"),
 		chatSessionId: uuid("chat_session_id").references(() => chatSessions.id, {
@@ -1318,6 +1338,10 @@ export const automationRuns = pgTable(
 		index("automation_runs_org_created_idx").on(t.organizationId, t.createdAt),
 		index("automation_runs_status_idx").on(t.status),
 		index("automation_runs_workspace_idx").on(t.v2WorkspaceId),
+		index("automation_runs_cloud_workspace_idx").on(t.cloudWorkspaceId),
+		// ON DELETE SET NULL on event_id resolves through this; without it every
+		// automation_events row deleted by retention scans this table.
+		index("automation_runs_event_idx").on(t.eventId),
 	],
 );
 
@@ -1439,6 +1463,19 @@ export const desktopNotices = pgTable(
 export type InsertDesktopNotice = typeof desktopNotices.$inferInsert;
 export type SelectDesktopNotice = typeof desktopNotices.$inferSelect;
 
+export interface PageWatchOwnership {
+	token: string;
+	seenCommentIds: string[];
+	pings: Record<string, number>;
+	reservation: {
+		id: string;
+		expiresAt: number;
+		commentIds: string[];
+		pings: Record<string, number>;
+	} | null;
+	lastFinishedReservationId: string | null;
+}
+
 export const pages = pgTable(
 	"pages",
 	{
@@ -1454,7 +1491,14 @@ export const pages = pgTable(
 		description: text(),
 		visibility: pageVisibility().notNull().default("just_me"),
 		sharedVersion: integer("shared_version"),
+		takenDownAt: timestamp("taken_down_at", { withTimezone: true }),
+		takenDownByUserId: uuid("taken_down_by_user_id").references(
+			() => users.id,
+			{ onDelete: "set null" },
+		),
+		takenDownNote: text("taken_down_note"),
 		watchedByAgent: text("watched_by_agent"),
+		watchState: jsonb("watch_state").$type<PageWatchOwnership>(),
 		watchHeartbeatAt: timestamp("watch_heartbeat_at", { withTimezone: true }),
 		createdAt: timestamp("created_at", { withTimezone: true })
 			.notNull()
@@ -1509,6 +1553,46 @@ export const pageVersions = pgTable(
 
 export type InsertPageVersion = typeof pageVersions.$inferInsert;
 export type SelectPageVersion = typeof pageVersions.$inferSelect;
+
+export const pageReports = pgTable(
+	"page_reports",
+	{
+		id: uuid().primaryKey().defaultRandom(),
+		pageId: uuid("page_id")
+			.notNull()
+			.references(() => pages.id, { onDelete: "cascade" }),
+		reportedVersion: integer("reported_version"),
+		reason: text().notNull().$type<PageReportReason>(),
+		details: text(),
+		status: pageReportStatus().notNull().default("open"),
+		reportedByUserId: uuid("reported_by_user_id").references(() => users.id, {
+			onDelete: "set null",
+		}),
+		reporterEmail: text("reporter_email"),
+		// A reporter who is not signed in still has to be rate limitable and
+		// groupable across reports without us holding their address.
+		reporterIpHash: text("reporter_ip_hash"),
+		reviewedByUserId: uuid("reviewed_by_user_id").references(() => users.id, {
+			onDelete: "set null",
+		}),
+		reviewedAt: timestamp("reviewed_at", { withTimezone: true }),
+		reviewNote: text("review_note"),
+		createdAt: timestamp("created_at", { withTimezone: true })
+			.notNull()
+			.defaultNow(),
+	},
+	(table) => [
+		index("page_reports_status_created_at_idx").on(
+			table.status,
+			desc(table.createdAt),
+		),
+		index("page_reports_page_id_idx").on(table.pageId),
+		index("page_reports_reporter_ip_hash_idx").on(table.reporterIpHash),
+	],
+);
+
+export type InsertPageReport = typeof pageReports.$inferInsert;
+export type SelectPageReport = typeof pageReports.$inferSelect;
 
 export const workspacePages = pgTable(
 	"workspace_pages",

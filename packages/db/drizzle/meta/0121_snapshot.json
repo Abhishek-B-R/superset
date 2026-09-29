@@ -1,5 +1,5 @@
 {
-  "id": "016b67cd-635a-41fe-a300-54fea5c1d3fa",
+  "id": "61128269-6a70-4659-be04-190128d60075",
   "prevId": "fa374306-8070-4c3f-aec6-d4431f1bd163",
   "version": "7",
   "dialect": "postgresql",
@@ -5397,27 +5397,6 @@
           "method": "btree",
           "with": {}
         },
-        "automation_runs_org_created_idx": {
-          "name": "automation_runs_org_created_idx",
-          "columns": [
-            {
-              "expression": "organization_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "created_at",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
         "automation_runs_status_idx": {
           "name": "automation_runs_status_idx",
           "columns": [
@@ -8303,6 +8282,12 @@
         "watched_by_agent": {
           "name": "watched_by_agent",
           "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "watch_state": {
+          "name": "watch_state",
+          "type": "jsonb",
           "primaryKey": false,
           "notNull": false
         },
