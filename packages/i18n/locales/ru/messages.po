@@ -4966,9 +4966,6 @@ msgstr "Создана {createdDate}"
 msgid "Created {createdDirs} folders in {where}"
 msgstr "В {where} создано папок: {createdDirs}"
 
-msgid "Created <0>· 7d</0>"
-msgstr "Создано <0>· 7 дн.</0>"
-
 msgid "Created 1 folder in {where}"
 msgstr "В {where} создана 1 папка"
 
@@ -6365,8 +6362,8 @@ msgctxt "agent status"
 msgid "Failed"
 msgstr "Ошибка"
 
-msgid "Failed <0>· 7d</0>"
-msgstr "С ошибкой <0>· 7 дн.</0>"
+msgid "Failed runs <0>· 7d</0>"
+msgstr "Неудачные запуски <0>· 7 дн.</0>"
 
 msgid "Failed to accept invitation"
 msgstr "Не удалось принять приглашение"
@@ -14980,6 +14977,9 @@ msgstr "Успех"
 msgid "Success!"
 msgstr "Успешно!"
 
+msgid "Successful runs <0>· 7d</0>"
+msgstr "Успешные запуски <0>· 7 дн.</0>"
+
 msgid "Suggested"
 msgstr "Предложения"
 
@@ -16441,6 +16441,9 @@ msgstr "Итого"
 
 msgid "Total agent sessions"
 msgstr "Всего сессий агентов"
+
+msgid "Total automations"
+msgstr "Всего автоматизаций"
 
 msgid "total cash"
 msgstr "общий остаток"

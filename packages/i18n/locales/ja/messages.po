@@ -4966,9 +4966,6 @@ msgstr "{createdDate}に作成"
 msgid "Created {createdDirs} folders in {where}"
 msgstr "{createdDirs}件のフォルダを{where}に作成しました"
 
-msgid "Created <0>· 7d</0>"
-msgstr "作成 <0>· 7日</0>"
-
 msgid "Created 1 folder in {where}"
 msgstr "1件のフォルダを{where}に作成しました"
 
@@ -6365,8 +6362,8 @@ msgctxt "agent status"
 msgid "Failed"
 msgstr "失敗"
 
-msgid "Failed <0>· 7d</0>"
-msgstr "失敗 <0>· 7日</0>"
+msgid "Failed runs <0>· 7d</0>"
+msgstr "失敗した実行 <0>· 7日</0>"
 
 msgid "Failed to accept invitation"
 msgstr "招待を承諾できませんでした"
@@ -14980,6 +14977,9 @@ msgstr "成功"
 msgid "Success!"
 msgstr "成功しました!"
 
+msgid "Successful runs <0>· 7d</0>"
+msgstr "成功した実行 <0>· 7日</0>"
+
 msgid "Suggested"
 msgstr "提案"
 
@@ -16441,6 +16441,9 @@ msgstr "合計"
 
 msgid "Total agent sessions"
 msgstr "エージェントセッションの合計"
+
+msgid "Total automations"
+msgstr "自動化の合計"
 
 msgid "total cash"
 msgstr "総現金"

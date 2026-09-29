@@ -4966,9 +4966,6 @@ msgstr "Oluşturulma: {createdDate}"
 msgid "Created {createdDirs} folders in {where}"
 msgstr "{where} konumunda {createdDirs} klasör oluşturuldu"
 
-msgid "Created <0>· 7d</0>"
-msgstr "Oluşturulan <0>· 7g</0>"
-
 msgid "Created 1 folder in {where}"
 msgstr "{where} konumunda 1 klasör oluşturuldu"
 
@@ -6365,8 +6362,8 @@ msgctxt "agent status"
 msgid "Failed"
 msgstr "Başarısız"
 
-msgid "Failed <0>· 7d</0>"
-msgstr "Başarısız <0>· 7g</0>"
+msgid "Failed runs <0>· 7d</0>"
+msgstr "Başarısız çalıştırmalar <0>· 7g</0>"
 
 msgid "Failed to accept invitation"
 msgstr "Davet kabul edilemedi"
@@ -14980,6 +14977,9 @@ msgstr "Başarılı"
 msgid "Success!"
 msgstr "Başarılı!"
 
+msgid "Successful runs <0>· 7d</0>"
+msgstr "Başarılı çalıştırmalar <0>· 7g</0>"
+
 msgid "Suggested"
 msgstr "Önerilen"
 
@@ -16441,6 +16441,9 @@ msgstr "Toplam"
 
 msgid "Total agent sessions"
 msgstr "Toplam ajan oturumu"
+
+msgid "Total automations"
+msgstr "Toplam otomasyon"
 
 msgid "total cash"
 msgstr "toplam nakit"

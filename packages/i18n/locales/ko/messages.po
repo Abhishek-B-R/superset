@@ -4966,9 +4966,6 @@ msgstr "{createdDate} 생성"
 msgid "Created {createdDirs} folders in {where}"
 msgstr "{where}에 폴더 {createdDirs}개를 만들었습니다"
 
-msgid "Created <0>· 7d</0>"
-msgstr "생성됨 <0>· 7일</0>"
-
 msgid "Created 1 folder in {where}"
 msgstr "{where}에 폴더 1개를 만들었습니다"
 
@@ -6365,8 +6362,8 @@ msgctxt "agent status"
 msgid "Failed"
 msgstr "실패"
 
-msgid "Failed <0>· 7d</0>"
-msgstr "실패 <0>· 7일</0>"
+msgid "Failed runs <0>· 7d</0>"
+msgstr "실패한 실행 <0>· 7일</0>"
 
 msgid "Failed to accept invitation"
 msgstr "초대를 수락하지 못했습니다"
@@ -14980,6 +14977,9 @@ msgstr "성공"
 msgid "Success!"
 msgstr "성공!"
 
+msgid "Successful runs <0>· 7d</0>"
+msgstr "성공한 실행 <0>· 7일</0>"
+
 msgid "Suggested"
 msgstr "추천"
 
@@ -16441,6 +16441,9 @@ msgstr "합계"
 
 msgid "Total agent sessions"
 msgstr "전체 에이전트 세션"
+
+msgid "Total automations"
+msgstr "전체 자동화"
 
 msgid "total cash"
 msgstr "총 현금"

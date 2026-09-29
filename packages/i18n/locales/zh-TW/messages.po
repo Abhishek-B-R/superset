@@ -4966,9 +4966,6 @@ msgstr "創建於{createdDate}"
 msgid "Created {createdDirs} folders in {where}"
 msgstr "已在{where}建立{createdDirs}個資料夾"
 
-msgid "Created <0>· 7d</0>"
-msgstr "已建立 <0>· 7天</0>"
-
 msgid "Created 1 folder in {where}"
 msgstr "已在{where}建立1個資料夾"
 
@@ -6365,8 +6362,8 @@ msgctxt "agent status"
 msgid "Failed"
 msgstr "失敗"
 
-msgid "Failed <0>· 7d</0>"
-msgstr "失敗 <0>· 7天</0>"
+msgid "Failed runs <0>· 7d</0>"
+msgstr "失敗執行 <0>· 7天</0>"
 
 msgid "Failed to accept invitation"
 msgstr "接受邀請失敗"
@@ -14980,6 +14977,9 @@ msgstr "成功"
 msgid "Success!"
 msgstr "成功！"
 
+msgid "Successful runs <0>· 7d</0>"
+msgstr "成功執行 <0>· 7天</0>"
+
 msgid "Suggested"
 msgstr "推薦"
 
@@ -16441,6 +16441,9 @@ msgstr "合計"
 
 msgid "Total agent sessions"
 msgstr "代理程式會話總數"
+
+msgid "Total automations"
+msgstr "自動化總數"
 
 msgid "total cash"
 msgstr "現金總額"

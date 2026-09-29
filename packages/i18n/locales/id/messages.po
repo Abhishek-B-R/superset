@@ -4966,9 +4966,6 @@ msgstr "Dibuat {createdDate}"
 msgid "Created {createdDirs} folders in {where}"
 msgstr "Membuat {createdDirs} folder di {where}"
 
-msgid "Created <0>· 7d</0>"
-msgstr "Dibuat <0>· 7h</0>"
-
 msgid "Created 1 folder in {where}"
 msgstr "Membuat 1 folder di {where}"
 
@@ -6365,8 +6362,8 @@ msgctxt "agent status"
 msgid "Failed"
 msgstr "Gagal"
 
-msgid "Failed <0>· 7d</0>"
-msgstr "Gagal <0>· 7h</0>"
+msgid "Failed runs <0>· 7d</0>"
+msgstr "Eksekusi gagal <0>· 7h</0>"
 
 msgid "Failed to accept invitation"
 msgstr "Gagal menerima undangan"
@@ -14980,6 +14977,9 @@ msgstr "Berhasil"
 msgid "Success!"
 msgstr "Berhasil!"
 
+msgid "Successful runs <0>· 7d</0>"
+msgstr "Eksekusi berhasil <0>· 7h</0>"
+
 msgid "Suggested"
 msgstr "Disarankan"
 
@@ -16441,6 +16441,9 @@ msgstr "Total"
 
 msgid "Total agent sessions"
 msgstr "Total sesi agen"
+
+msgid "Total automations"
+msgstr "Total otomatisasi"
 
 msgid "total cash"
 msgstr "total kas"

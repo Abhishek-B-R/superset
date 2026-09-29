@@ -269,30 +269,13 @@ function AutomationsPage() {
 		return tabVisible.filter((a) => a.name.toLowerCase().includes(query));
 	}, [tabVisible, search]);
 
-	// Counts the latest run per automation, the only run history the cloud
-	// serves for a whole org in one read. Org-wide on purpose: the cards
-	// describe the org's automation health and the Failed card links into the
-	// org-wide All runs filter, so the Mine/Team tabs only filter the table.
-	const runStats = useMemo(() => {
-		const cutoff = now.getTime() - 7 * 24 * 60 * 60 * 1000;
-		let created7d = 0;
-		let failed7d = 0;
-		for (const automation of automations) {
-			const run = lastRunById.get(automation.id);
-			if (!run || run.at < cutoff) continue;
-			if (run.status === "dispatched") created7d++;
-			else if (
-				run.status === "dispatch_failed" ||
-				run.status === "skipped_offline"
-			)
-				failed7d++;
-		}
-		return {
-			created7d,
-			failed7d,
-			active: automations.filter((a) => a.enabled).length,
-		};
-	}, [lastRunById, automations, now]);
+	// Org-wide on purpose: the cards describe the org's automation health and
+	// link into the org-wide All runs views, so the Mine/Team tabs only
+	// filter the table.
+	const { data: orgRunStats } = cloudTrpc.automation.orgRunStats.useQuery(
+		undefined,
+		{ refetchInterval: 60_000, staleTime: 30_000 },
+	);
 
 	const [sortField, setSortField] = useState<AutomationSortField | null>(null);
 	const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
@@ -513,14 +496,18 @@ function AutomationsPage() {
 								</div>
 							) : (
 								<AutomationStatCards
-									active={runStats.active}
-									created7d={runStats.created7d}
-									failed7d={runStats.failed7d}
+									totalAutomations={automations.length}
+									succeeded7d={orgRunStats?.succeeded ?? 0}
+									failed7d={orgRunStats?.failed ?? 0}
+									buckets={orgRunStats?.buckets ?? Array(28).fill(0)}
 									onShowFailed={() =>
 										navigate({
 											to: "/automations/runs",
 											search: { status: "failed" },
 										})
+									}
+									onShowHistory={() =>
+										navigate({ to: "/automations/runs", search: {} })
 									}
 								/>
 							)}

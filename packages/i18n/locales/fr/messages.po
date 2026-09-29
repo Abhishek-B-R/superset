@@ -4966,9 +4966,6 @@ msgstr "Créée {createdDate}"
 msgid "Created {createdDirs} folders in {where}"
 msgstr "{createdDirs} dossiers créés dans {where}"
 
-msgid "Created <0>· 7d</0>"
-msgstr "Créés <0>· 7 j</0>"
-
 msgid "Created 1 folder in {where}"
 msgstr "1 dossier créé dans {where}"
 
@@ -6365,8 +6362,8 @@ msgctxt "agent status"
 msgid "Failed"
 msgstr "Échec"
 
-msgid "Failed <0>· 7d</0>"
-msgstr "Échecs <0>· 7 j</0>"
+msgid "Failed runs <0>· 7d</0>"
+msgstr "Exécutions échouées <0>· 7 j</0>"
 
 msgid "Failed to accept invitation"
 msgstr "Échec de l'acceptation de l'invitation"
@@ -14980,6 +14977,9 @@ msgstr "Succès"
 msgid "Success!"
 msgstr "Succès !"
 
+msgid "Successful runs <0>· 7d</0>"
+msgstr "Exécutions réussies <0>· 7 j</0>"
+
 msgid "Suggested"
 msgstr "Suggestions"
 
@@ -16441,6 +16441,9 @@ msgstr "Total"
 
 msgid "Total agent sessions"
 msgstr "Total des sessions d'agents"
+
+msgid "Total automations"
+msgstr "Total des automatisations"
 
 msgid "total cash"
 msgstr "trésorerie totale"

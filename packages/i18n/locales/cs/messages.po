@@ -4966,9 +4966,6 @@ msgstr "Vytvořeno {createdDate}"
 msgid "Created {createdDirs} folders in {where}"
 msgstr "Vytvořeno {createdDirs} složek v {where}"
 
-msgid "Created <0>· 7d</0>"
-msgstr "Vytvořeno <0>· 7 d</0>"
-
 msgid "Created 1 folder in {where}"
 msgstr "Vytvořena 1 složka v {where}"
 
@@ -6365,8 +6362,8 @@ msgctxt "agent status"
 msgid "Failed"
 msgstr "Selhalo"
 
-msgid "Failed <0>· 7d</0>"
-msgstr "Selhalo <0>· 7 d</0>"
+msgid "Failed runs <0>· 7d</0>"
+msgstr "Neúspěšná spuštění <0>· 7 d</0>"
 
 msgid "Failed to accept invitation"
 msgstr "Nepodařilo se přijmout pozvánku"
@@ -14980,6 +14977,9 @@ msgstr "Úspěch"
 msgid "Success!"
 msgstr "Hotovo!"
 
+msgid "Successful runs <0>· 7d</0>"
+msgstr "Úspěšná spuštění <0>· 7 d</0>"
+
 msgid "Suggested"
 msgstr "Návrhy"
 
@@ -16441,6 +16441,9 @@ msgstr "Celkem"
 
 msgid "Total agent sessions"
 msgstr "Celkem relací agentů"
+
+msgid "Total automations"
+msgstr "Celkem automatizací"
 
 msgid "total cash"
 msgstr "hotovost celkem"

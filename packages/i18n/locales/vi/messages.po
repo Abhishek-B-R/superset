@@ -4966,9 +4966,6 @@ msgstr "Tạo {createdDate}"
 msgid "Created {createdDirs} folders in {where}"
 msgstr "Đã tạo {createdDirs} thư mục trong {where}"
 
-msgid "Created <0>· 7d</0>"
-msgstr "Đã tạo <0>· 7 ngày</0>"
-
 msgid "Created 1 folder in {where}"
 msgstr "Đã tạo 1 thư mục trong {where}"
 
@@ -6365,8 +6362,8 @@ msgctxt "agent status"
 msgid "Failed"
 msgstr "Thất bại"
 
-msgid "Failed <0>· 7d</0>"
-msgstr "Thất bại <0>· 7 ngày</0>"
+msgid "Failed runs <0>· 7d</0>"
+msgstr "Lần chạy thất bại <0>· 7 ngày</0>"
 
 msgid "Failed to accept invitation"
 msgstr "Không thể chấp nhận lời mời"
@@ -14980,6 +14977,9 @@ msgstr "Thành công"
 msgid "Success!"
 msgstr "Thành công!"
 
+msgid "Successful runs <0>· 7d</0>"
+msgstr "Lần chạy thành công <0>· 7 ngày</0>"
+
 msgid "Suggested"
 msgstr "Gợi ý"
 
@@ -16441,6 +16441,9 @@ msgstr "Tổng"
 
 msgid "Total agent sessions"
 msgstr "Tổng số phiên agent"
+
+msgid "Total automations"
+msgstr "Tổng số tự động hóa"
 
 msgid "total cash"
 msgstr "tổng tiền mặt"

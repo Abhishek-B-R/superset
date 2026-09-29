@@ -34,11 +34,13 @@ import {
 	asc,
 	desc,
 	eq,
+	gte,
 	ilike,
 	inArray,
 	lt,
 	notInArray,
 	or,
+	sql,
 } from "drizzle-orm";
 import { z } from "zod";
 import { env } from "../../env";
@@ -1091,6 +1093,46 @@ export const automationRouter = {
 			.from(automationRuns)
 			.where(eq(automationRuns.organizationId, organizationId))
 			.orderBy(automationRuns.automationId, desc(automationRuns.createdAt));
+	}),
+
+	/**
+	 * Run volume for the org's last 7 days: success/failure totals for the
+	 * stat cards and 6-hour activity buckets for the run-history sparkline.
+	 * Aggregated in SQL — an org can have tens of thousands of runs a week.
+	 */
+	orgRunStats: protectedProcedure.query(async ({ ctx }) => {
+		const organizationId = await requireActiveOrgMembership(ctx);
+		const bucketSeconds = 6 * 60 * 60;
+		const bucketCount = 28;
+		const since = new Date(Date.now() - bucketCount * bucketSeconds * 1000);
+		const baseBucket = Math.floor(since.getTime() / 1000 / bucketSeconds);
+
+		const rows = await db
+			.select({
+				bucket: sql<number>`floor(extract(epoch from ${automationRuns.createdAt}) / ${bucketSeconds})::int`,
+				status: automationRuns.status,
+				count: sql<number>`count(*)::int`,
+			})
+			.from(automationRuns)
+			.where(
+				and(
+					eq(automationRuns.organizationId, organizationId),
+					gte(automationRuns.createdAt, since),
+				),
+			)
+			.groupBy(sql`1`, automationRuns.status);
+
+		let succeeded = 0;
+		let failed = 0;
+		const buckets: number[] = Array(bucketCount).fill(0);
+		for (const row of rows) {
+			if (row.status === "dispatched") succeeded += row.count;
+			else if ((FAILED_RUN_STATUSES as readonly string[]).includes(row.status))
+				failed += row.count;
+			const index = row.bucket - baseBucket;
+			if (index >= 0 && index < bucketCount) buckets[index] += row.count;
+		}
+		return { succeeded, failed, buckets };
 	}),
 
 	/** Validate an RRule body + preview its next occurrences. */
