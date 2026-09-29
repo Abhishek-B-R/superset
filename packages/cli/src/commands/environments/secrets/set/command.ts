@@ -60,7 +60,9 @@ export default command({
 				throw new CLIError(
 					`No variables to set from ${options.envFile}`,
 					skipped.length
-						? `Skipped: ${skipped.map((entry) => entry.key).join(", ")}`
+						? skipped
+								.map((entry) => `Skipped ${entry.key}: ${entry.reason}`)
+								.join("\n")
 						: undefined,
 				);
 			}
