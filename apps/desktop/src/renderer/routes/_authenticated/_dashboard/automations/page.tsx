@@ -270,12 +270,14 @@ function AutomationsPage() {
 	}, [tabVisible, search]);
 
 	// Counts the latest run per automation, the only run history the cloud
-	// serves for a whole org in one read.
+	// serves for a whole org in one read. Org-wide on purpose: the cards
+	// describe the org's automation health and the Failed card links into the
+	// org-wide All runs filter, so the Mine/Team tabs only filter the table.
 	const runStats = useMemo(() => {
 		const cutoff = now.getTime() - 7 * 24 * 60 * 60 * 1000;
 		let created7d = 0;
 		let failed7d = 0;
-		for (const automation of tabVisible) {
+		for (const automation of automations) {
 			const run = lastRunById.get(automation.id);
 			if (!run || run.at < cutoff) continue;
 			if (run.status === "dispatched") created7d++;
@@ -288,9 +290,9 @@ function AutomationsPage() {
 		return {
 			created7d,
 			failed7d,
-			active: tabVisible.filter((a) => a.enabled).length,
+			active: automations.filter((a) => a.enabled).length,
 		};
-	}, [lastRunById, tabVisible, now]);
+	}, [lastRunById, automations, now]);
 
 	const [sortField, setSortField] = useState<AutomationSortField | null>(null);
 	const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
@@ -499,9 +501,9 @@ function AutomationsPage() {
 						}}
 					/>
 
-					{/* Zero-count stats and search are noise while a tab is empty;
-					    with nothing in the org at all the tabs go too. */}
-					{!tabEmpty && (
+					{/* Stats are org-wide, so they stay put while the tabs swap;
+					    only a truly empty org drops them. */}
+					{!orgEmpty && (
 						<div className="mt-5">
 							{showAutomationLoading ? (
 								<div className="grid grid-cols-3 gap-2">
