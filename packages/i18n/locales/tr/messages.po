@@ -3255,6 +3255,9 @@ msgstr "Vadesiz + birikim + Treasury zaman içinde; yatırım dilimleri basamakl
 msgid "Checking agents…"
 msgstr "Ajanlar denetleniyor…"
 
+msgid "Checking environments…"
+msgstr "Ortamlar kontrol ediliyor…"
+
 msgid "Checking host…"
 msgstr "Host denetleniyor…"
 
@@ -4898,6 +4901,9 @@ msgstr "AI ile oluştur"
 
 msgid "Create workspace"
 msgstr "Çalışma alanı oluştur"
+
+msgid "Create workspace with options"
+msgstr "Seçeneklerle çalışma alanı oluştur"
 
 msgid "Create workspaces, launch agents, and read their output from any terminal or script. macOS and Linux."
 msgstr "Herhangi bir terminal veya betikten çalışma alanları oluşturun, ajanlar başlatın ve çıktılarını okuyun. macOS ve Linux."

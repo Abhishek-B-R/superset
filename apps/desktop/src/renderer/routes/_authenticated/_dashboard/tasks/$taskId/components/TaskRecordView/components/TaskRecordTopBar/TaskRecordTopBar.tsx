@@ -1,12 +1,25 @@
 import { Trans, useLingui } from "@lingui/react/macro";
 import { Button } from "@superset/ui/button";
 import { ButtonGroup } from "@superset/ui/button-group";
-import { LuArrowRight, LuChevronRight, LuHash, LuLink } from "react-icons/lu";
+import {
+	LuArrowRight,
+	LuChevronDown,
+	LuChevronRight,
+	LuHash,
+	LuLink,
+} from "react-icons/lu";
 import { RecordIconButton } from "renderer/routes/_authenticated/_dashboard/components/RecordIconButton";
+import { RunInWorkspacePopoverV2 } from "../../../../../components/RunInWorkspacePopoverV2";
 import { TaskRecordMenu } from "./components/TaskRecordMenu";
 
 interface TaskRecordTopBarProps {
-	slug: string;
+	task: {
+		id: string;
+		slug: string;
+		title: string;
+		description: string | null;
+		branch: string | null;
+	};
 	onBack: () => void;
 	onStartWork: () => void;
 	onCopyLink: () => void;
@@ -16,7 +29,7 @@ interface TaskRecordTopBarProps {
 }
 
 export function TaskRecordTopBar({
-	slug,
+	task,
 	onBack,
 	onStartWork,
 	onCopyLink,
@@ -35,7 +48,7 @@ export function TaskRecordTopBar({
 				<Trans>Tasks</Trans>
 			</button>
 			<LuChevronRight className="size-3 text-muted-foreground" />
-			<span className="min-w-0 truncate tabular-nums">{slug}</span>
+			<span className="min-w-0 truncate tabular-nums">{task.slug}</span>
 			<div className="drag h-full min-w-0 flex-1" />
 			<div className="flex h-full shrink-0 items-center justify-end gap-3 pr-4 @min-[900px]:w-[372px] @min-[900px]:border-l @min-[900px]:border-border">
 				<ButtonGroup>
@@ -53,10 +66,27 @@ export function TaskRecordTopBar({
 					</RecordIconButton>
 					<TaskRecordMenu onOpenExternal={onOpenExternal} onDelete={onDelete} />
 				</ButtonGroup>
-				<Button variant="outline" size="sm" onClick={onStartWork}>
-					<Trans>Create workspace</Trans>
-					<LuArrowRight className="size-3.5" />
-				</Button>
+				<ButtonGroup>
+					<Button variant="outline" size="sm" onClick={onStartWork}>
+						<Trans>Create workspace</Trans>
+						<LuArrowRight className="size-3.5" />
+					</Button>
+					<RunInWorkspacePopoverV2
+						tasks={[task]}
+						onComplete={() => {}}
+						align="end"
+						trigger={
+							<Button
+								variant="outline"
+								size="sm"
+								className="px-2"
+								aria-label={t({ message: "Create workspace with options" })}
+							>
+								<LuChevronDown className="size-3.5" />
+							</Button>
+						}
+					/>
+				</ButtonGroup>
 			</div>
 		</div>
 	);

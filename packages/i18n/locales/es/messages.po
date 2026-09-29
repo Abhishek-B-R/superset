@@ -3255,6 +3255,9 @@ msgstr "Cuenta corriente + ahorros + Treasury a lo largo del tiempo; los tramos 
 msgid "Checking agents…"
 msgstr "Comprobando agentes…"
 
+msgid "Checking environments…"
+msgstr "Comprobando entornos…"
+
 msgid "Checking host…"
 msgstr "Comprobando el host…"
 
@@ -4898,6 +4901,9 @@ msgstr "Crear con IA"
 
 msgid "Create workspace"
 msgstr "Crear espacio de trabajo"
+
+msgid "Create workspace with options"
+msgstr "Crear espacio de trabajo con opciones"
 
 msgid "Create workspaces, launch agents, and read their output from any terminal or script. macOS and Linux."
 msgstr "Crea espacios de trabajo, lanza agentes y lee su salida desde cualquier terminal o script. macOS y Linux."

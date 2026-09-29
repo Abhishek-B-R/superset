@@ -3255,6 +3255,9 @@ msgstr "Rachunek bieżący + oszczędnościowy + Treasury w czasie; transze fina
 msgid "Checking agents…"
 msgstr "Sprawdzanie agentów…"
 
+msgid "Checking environments…"
+msgstr "Sprawdzanie środowisk…"
+
 msgid "Checking host…"
 msgstr "Sprawdzanie hosta…"
 
@@ -4898,6 +4901,9 @@ msgstr "Utwórz z AI"
 
 msgid "Create workspace"
 msgstr "Utwórz obszar roboczy"
+
+msgid "Create workspace with options"
+msgstr "Utwórz obszar roboczy z opcjami"
 
 msgid "Create workspaces, launch agents, and read their output from any terminal or script. macOS and Linux."
 msgstr "Twórz obszary robocze, uruchamiaj agentów i czytaj ich wyniki z dowolnego terminala lub skryptu. macOS i Linux."

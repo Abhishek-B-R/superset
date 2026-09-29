@@ -3255,6 +3255,9 @@ msgstr "活期+儲蓄+國庫帳戶隨時間變化；臺階處為融資到帳"
 msgid "Checking agents…"
 msgstr "正在檢查代理程式…"
 
+msgid "Checking environments…"
+msgstr "正在檢查環境…"
+
 msgid "Checking host…"
 msgstr "正在檢查主機…"
 
@@ -4898,6 +4901,9 @@ msgstr "用AI建立"
 
 msgid "Create workspace"
 msgstr "建立工作區"
+
+msgid "Create workspace with options"
+msgstr "使用選項建立工作區"
 
 msgid "Create workspaces, launch agents, and read their output from any terminal or script. macOS and Linux."
 msgstr "在任何終端機或指令碼中建立工作區、啟動 agent 並讀取其輸出。支援 macOS 與 Linux。"

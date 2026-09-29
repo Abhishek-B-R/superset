@@ -3255,6 +3255,9 @@ msgstr "活期+储蓄+国库账户随时间变化；台阶处为融资到账"
 msgid "Checking agents…"
 msgstr "正在检查智能体…"
 
+msgid "Checking environments…"
+msgstr "正在检查环境…"
+
 msgid "Checking host…"
 msgstr "正在检查主机…"
 
@@ -4898,6 +4901,9 @@ msgstr "用AI创建"
 
 msgid "Create workspace"
 msgstr "创建工作区"
+
+msgid "Create workspace with options"
+msgstr "使用选项创建工作区"
 
 msgid "Create workspaces, launch agents, and read their output from any terminal or script. macOS and Linux."
 msgstr "在任意终端或脚本中创建工作区、启动智能体并读取其输出。支持 macOS 和 Linux。"

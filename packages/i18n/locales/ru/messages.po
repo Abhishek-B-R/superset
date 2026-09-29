@@ -3255,6 +3255,9 @@ msgstr "Расчётный + сберегательный + Treasury во вре
 msgid "Checking agents…"
 msgstr "Проверка агентов…"
 
+msgid "Checking environments…"
+msgstr "Проверка окружений…"
+
 msgid "Checking host…"
 msgstr "Проверка хоста…"
 
@@ -4898,6 +4901,9 @@ msgstr "Создать с помощью AI"
 
 msgid "Create workspace"
 msgstr "Создать рабочую область"
+
+msgid "Create workspace with options"
+msgstr "Создать рабочее пространство с параметрами"
 
 msgid "Create workspaces, launch agents, and read their output from any terminal or script. macOS and Linux."
 msgstr "Создавайте рабочие области, запускайте агентов и читайте их вывод из любого терминала или скрипта. macOS и Linux."

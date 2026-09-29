@@ -210,7 +210,7 @@ export const PERSISTED_KEY_REGISTRY: ReadonlyArray<
 		["lastSelectedV2IssueBatchAgent"],
 	],
 	[
-		"src/renderer/routes/_authenticated/_dashboard/tasks/components/TasksView/components/TasksTopBar/components/RunInWorkspacePopoverV2/RunInWorkspacePopoverV2.tsx",
+		"src/renderer/routes/_authenticated/_dashboard/tasks/components/RunInWorkspacePopoverV2/RunInWorkspacePopoverV2.tsx",
 		["lastSelectedV2TaskBatchAgent"],
 	],
 	[

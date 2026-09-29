@@ -3255,6 +3255,9 @@ msgstr "Giro + tabungan + Treasury dari waktu ke waktu; tranche penggalangan dan
 msgid "Checking agents…"
 msgstr "Memeriksa agen…"
 
+msgid "Checking environments…"
+msgstr "Memeriksa environment…"
+
 msgid "Checking host…"
 msgstr "Memeriksa host…"
 
@@ -4898,6 +4901,9 @@ msgstr "Buat dengan AI"
 
 msgid "Create workspace"
 msgstr "Buat workspace"
+
+msgid "Create workspace with options"
+msgstr "Buat workspace dengan opsi"
 
 msgid "Create workspaces, launch agents, and read their output from any terminal or script. macOS and Linux."
 msgstr "Buat workspace, jalankan agen, dan baca outputnya dari terminal atau skrip mana pun. macOS dan Linux."

@@ -3255,6 +3255,9 @@ msgstr "当座+普通+Treasuryの推移。段差は資金調達のトランシ�
 msgid "Checking agents…"
 msgstr "エージェントを確認中…"
 
+msgid "Checking environments…"
+msgstr "環境を確認中…"
+
 msgid "Checking host…"
 msgstr "ホストを確認中…"
 
@@ -4898,6 +4901,9 @@ msgstr "AIで作成"
 
 msgid "Create workspace"
 msgstr "ワークスペースを作成"
+
+msgid "Create workspace with options"
+msgstr "オプションを指定してワークスペースを作成"
 
 msgid "Create workspaces, launch agents, and read their output from any terminal or script. macOS and Linux."
 msgstr "任意のターミナルやスクリプトから、ワークスペースを作成し、エージェントを起動し、その出力を読み取れます。macOS と Linux 対応。"

@@ -3255,6 +3255,9 @@ msgstr "Běžný účet + spoření + Treasury v čase; schodky jsou tranše z i
 msgid "Checking agents…"
 msgstr "Kontroluji agenty…"
 
+msgid "Checking environments…"
+msgstr "Kontrola prostředí…"
+
 msgid "Checking host…"
 msgstr "Kontroluji hosta…"
 
@@ -4898,6 +4901,9 @@ msgstr "Vytvořit s AI"
 
 msgid "Create workspace"
 msgstr "Vytvořit pracovní prostor"
+
+msgid "Create workspace with options"
+msgstr "Vytvořit pracovní prostor s možnostmi"
 
 msgid "Create workspaces, launch agents, and read their output from any terminal or script. macOS and Linux."
 msgstr "Vytvářejte pracovní prostory, spouštějte agenty a čtěte jejich výstup z libovolného terminálu nebo skriptu. macOS a Linux."

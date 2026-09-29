@@ -19,12 +19,12 @@ import { ProjectFilter } from "renderer/routes/_authenticated/_dashboard/compone
 import { WindowControlsInset } from "renderer/routes/_authenticated/_dashboard/components/WindowControlsInset";
 import { WorkItemsSearch } from "renderer/routes/_authenticated/_dashboard/components/WorkItemsSearch";
 import type { ViewMode } from "../../../../stores/tasks-filter-state";
+import { RunInWorkspacePopoverV2 } from "../../../RunInWorkspacePopoverV2";
 import type { TaskWithStatus } from "../../hooks/useTasksData";
 import type { SelectedIssue } from "../GitHubIssuesContent";
 import { AssigneeFilter } from "./components/AssigneeFilter";
 import { LinearProjectFilter } from "./components/LinearProjectFilter";
 import { RunInWorkspacePopover } from "./components/RunInWorkspacePopover";
-import { RunInWorkspacePopoverV2 } from "./components/RunInWorkspacePopoverV2";
 import { RunIssuesInWorkspacePopover } from "./components/RunIssuesInWorkspacePopover";
 import { StatusFilter } from "./components/StatusFilter";
 

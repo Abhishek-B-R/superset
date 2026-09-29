@@ -3255,6 +3255,9 @@ msgstr "입출금 + 예금 + Treasury 추이. 계단 구간은 투자 유치 트
 msgid "Checking agents…"
 msgstr "에이전트 확인하는 중…"
 
+msgid "Checking environments…"
+msgstr "환경 확인 중…"
+
 msgid "Checking host…"
 msgstr "호스트 확인하는 중…"
 
@@ -4898,6 +4901,9 @@ msgstr "AI로 만들기"
 
 msgid "Create workspace"
 msgstr "워크스페이스 만들기"
+
+msgid "Create workspace with options"
+msgstr "옵션으로 워크스페이스 만들기"
 
 msgid "Create workspaces, launch agents, and read their output from any terminal or script. macOS and Linux."
 msgstr "어떤 터미널이나 스크립트에서든 워크스페이스를 만들고, 에이전트를 실행하고, 출력을 확인하세요. macOS와 Linux를 지원합니다."

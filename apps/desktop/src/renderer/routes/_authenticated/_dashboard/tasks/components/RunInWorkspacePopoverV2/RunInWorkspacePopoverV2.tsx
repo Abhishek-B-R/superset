@@ -1,6 +1,8 @@
 import { plural } from "@lingui/core/macro";
 import { Plural, Trans, useLingui } from "@lingui/react/macro";
 import { errorMessage } from "@superset/i18n/errors";
+import { startableCloudEnvironments } from "@superset/shared/cloud-environments";
+import { CLOUD_HOST_ID } from "@superset/shared/host-routing";
 import { Button } from "@superset/ui/button";
 import {
 	Command,
@@ -13,13 +15,17 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "@superset/ui/popover";
 import { toast } from "@superset/ui/sonner";
 import { ChevronDownIcon } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { type ReactNode, useEffect, useMemo, useState } from "react";
 import { HiCheck, HiMiniPlay } from "react-icons/hi2";
+import { LuBox } from "react-icons/lu";
 import { AgentSelect } from "renderer/components/AgentSelect";
 import { useRecentProjects } from "renderer/hooks/host-projects/useRecentProjects";
 import { useHostUrl } from "renderer/hooks/host-service/useHostTargetUrl";
+import { useActiveOrganizationId } from "renderer/hooks/useActiveOrganizationId";
 import { useSelectedHostProjectIds } from "renderer/hooks/useSelectedHostProjectIds";
 import { useV2AgentChoices } from "renderer/hooks/useV2AgentChoices";
+import { CLOUD_AGENT_CHOICES } from "renderer/hooks/useV2AgentChoices/cloud-agent-choices";
+import { cloudTrpc } from "renderer/lib/cloud-trpc";
 import { showHostServiceUnavailableToast } from "renderer/lib/host-service-unavailable";
 import { DevicePicker } from "renderer/routes/_authenticated/components/DashboardNewWorkspaceModal/components/DashboardNewWorkspaceForm/components/DevicePicker";
 import { useWorkspaceHostOptions } from "renderer/routes/_authenticated/components/DashboardNewWorkspaceModal/components/DashboardNewWorkspaceForm/components/DevicePicker/hooks/useWorkspaceHostOptions";
@@ -28,18 +34,26 @@ import { useLocalHostService } from "renderer/routes/_authenticated/providers/Lo
 import { deriveBranchName } from "renderer/routes/_authenticated/utils/deriveBranchName";
 import { useV2WorkspaceCreateDefaultsStore } from "renderer/stores/v2-workspace-create-defaults";
 import { useWorkspaceCreates } from "renderer/stores/workspace-creates";
-import type { TaskWithStatus } from "../../../../hooks/useTasksTable";
+import type { TaskWithStatus } from "../TasksView/hooks/useTasksTable";
 
 const AGENT_STORAGE_KEY = "lastSelectedV2TaskBatchAgent";
 const NONE = "none" as const;
 type SelectedAgent = string | typeof NONE;
 
+type RunnableTask = Pick<
+	TaskWithStatus,
+	"id" | "slug" | "title" | "description" | "branch"
+>;
+
 interface RunInWorkspacePopoverV2Props {
-	tasks: TaskWithStatus[];
+	tasks: RunnableTask[];
 	onComplete: () => void;
+	/** Replaces the default "Run in Workspace" button. */
+	trigger?: ReactNode;
+	align?: "start" | "end";
 }
 
-function synthesizeTaskPrompt(task: TaskWithStatus): string {
+function synthesizeTaskPrompt(task: RunnableTask): string {
 	const header = `${task.slug}: ${task.title}`;
 	const body = task.description?.trim();
 	return body ? `${header}\n\n${body}` : header;
@@ -54,6 +68,8 @@ function readStoredAgent(): SelectedAgent {
 export function RunInWorkspacePopoverV2({
 	tasks,
 	onComplete,
+	trigger,
+	align = "start",
 }: RunInWorkspacePopoverV2Props) {
 	const { t } = useLingui();
 	const hostService = useLocalHostService();
@@ -78,7 +94,20 @@ export function RunInWorkspacePopoverV2({
 		lastHostId ?? machineId ?? null,
 	);
 
-	const launchHostUrl = useHostUrl(hostId);
+	const isCloud = hostId === CLOUD_HOST_ID;
+	const organizationId = useActiveOrganizationId();
+	const utils = cloudTrpc.useUtils();
+	const environmentsQuery = cloudTrpc.environment.list.useQuery(
+		{ organizationId: organizationId ?? "" },
+		{ enabled: isCloud && organizationId !== null },
+	);
+	const environments = startableCloudEnvironments(environmentsQuery.data ?? []);
+	const [environmentId, setEnvironmentId] = useState<string | null>(null);
+	const selectedEnvironment =
+		environments.find((environment) => environment.id === environmentId) ??
+		environments[0];
+	const createCloudWorkspace = cloudTrpc.cloudWorkspace.create.useMutation();
+	const launchHostUrl = useHostUrl(isCloud ? null : hostId);
 	const setUpProjectIds = useSelectedHostProjectIds(hostId);
 
 	// Projects are fully local — shared host-fan-out list, with this
@@ -115,8 +144,10 @@ export function RunInWorkspacePopoverV2({
 		(project) => project.id === selectedProjectId,
 	);
 
-	const { agents: v2Agents, isFetched: v2AgentsFetched } =
+	const { agents: hostAgents, isFetched: hostAgentsFetched } =
 		useV2AgentChoices(launchHostUrl);
+	const v2Agents = isCloud ? CLOUD_AGENT_CHOICES : hostAgents;
+	const v2AgentsFetched = isCloud || hostAgentsFetched;
 	const validAgentIds = useMemo(
 		() => new Set(v2Agents.map((agent) => agent.id)),
 		[v2Agents],
@@ -145,6 +176,16 @@ export function RunInWorkspacePopoverV2({
 	const [projectPickerOpen, setProjectPickerOpen] = useState(false);
 
 	const submitBlocker = useMemo<string | null>(() => {
+		if (isCloud) {
+			if (!selectedEnvironment)
+				return environmentsQuery.isFetched
+					? t({
+							message:
+								"Add an environment in Settings before creating a cloud workspace",
+						})
+					: t({ message: "Checking environments…" });
+			return null;
+		}
 		if (!selectedProjectId)
 			return t({
 				message: "Select a project",
@@ -190,6 +231,9 @@ export function RunInWorkspacePopoverV2({
 		}
 		return null;
 	}, [
+		isCloud,
+		selectedEnvironment,
+		environmentsQuery.isFetched,
 		selectedProjectId,
 		selectedProject?.needsSetup,
 		setUpProjectIds,
@@ -203,7 +247,68 @@ export function RunInWorkspacePopoverV2({
 		t,
 	]);
 
+	const runInCloud = (environment: { id: string }, organizationId: string) => {
+		const listInput = { organizationId };
+		const promise = Promise.allSettled(
+			tasks.map((task) =>
+				createCloudWorkspace.mutateAsync({
+					organizationId,
+					environmentId: environment.id,
+					name: task.title,
+					taskIds: [task.id],
+					...(selectedAgent === NONE
+						? {}
+						: {
+								agent: selectedAgent,
+								prompt: synthesizeTaskPrompt(task).slice(0, 20_000),
+							}),
+				}),
+			),
+		).then((results) => {
+			const created = results.flatMap((result) =>
+				result.status === "fulfilled" ? [result.value] : [],
+			);
+			utils.cloudWorkspace.list.setData(listInput, (rows) =>
+				rows ? [...created, ...rows] : created,
+			);
+			void utils.cloudWorkspace.list.invalidate(listInput);
+			const failure = results.find((result) => result.status === "rejected");
+			if (failure) {
+				throw new Error(
+					`${created.length} of ${results.length} succeeded: ${errorMessage(failure.reason)}`,
+				);
+			}
+			return created.length;
+		});
+		return promise;
+	};
+
 	const handleRun = () => {
+		if (isCloud) {
+			if (submitBlocker || !selectedEnvironment || !organizationId) {
+				if (submitBlocker) toast.error(submitBlocker);
+				return;
+			}
+			toast.promise(runInCloud(selectedEnvironment, organizationId), {
+				loading: t({
+					message: plural(tasks.length, {
+						one: "Creating # workspace...",
+						other: "Creating # workspaces...",
+					}),
+				}),
+				success: (count) =>
+					t({
+						message: plural(count, {
+							one: "Created # workspace",
+							other: "Created # workspaces",
+						}),
+					}),
+				error: (err) => errorMessage(err),
+			});
+			setOpen(false);
+			onComplete();
+			return;
+		}
 		if (!selectedProjectId || !hostId) return;
 		if (submitBlocker) {
 			if (hostId === machineId && !activeHostUrl) {
@@ -282,16 +387,18 @@ export function RunInWorkspacePopoverV2({
 	return (
 		<Popover open={open} onOpenChange={setOpen}>
 			<PopoverTrigger asChild>
-				<Button
-					variant="ghost"
-					size="sm"
-					className="h-7 text-xs gap-1.5 bg-muted/50"
-				>
-					<HiMiniPlay className="size-3" />
-					<Trans>Run in Workspace</Trans>
-				</Button>
+				{trigger ?? (
+					<Button
+						variant="ghost"
+						size="sm"
+						className="h-7 text-xs gap-1.5 bg-muted/50"
+					>
+						<HiMiniPlay className="size-3" />
+						<Trans>Run in Workspace</Trans>
+					</Button>
+				)}
 			</PopoverTrigger>
-			<PopoverContent align="start" className="w-72 p-0">
+			<PopoverContent align={align} className="w-72 p-0">
 				<div className="flex flex-col gap-2 p-2">
 					<DevicePicker
 						hostId={hostId}
@@ -302,75 +409,144 @@ export function RunInWorkspacePopoverV2({
 						className="w-full max-w-none"
 					/>
 
-					<Popover open={projectPickerOpen} onOpenChange={setProjectPickerOpen}>
-						<PopoverTrigger asChild>
-							<Button
-								variant="ghost"
-								size="sm"
-								className="w-full justify-between font-normal h-8 min-w-0 bg-muted/50 rounded-md"
-							>
-								<span className="flex items-center gap-2 truncate">
-									{selectedProject ? (
-										<>
-											<ProjectThumbnail
-												projectName={selectedProject.name}
-												iconUrl={selectedProject.iconUrl}
-												className="size-4"
-											/>
-											<span className="truncate">{selectedProject.name}</span>
-										</>
-									) : (
-										<span className="text-muted-foreground">
-											<Trans>Select project</Trans>
-										</span>
-									)}
-								</span>
-								<ChevronDownIcon className="size-4 opacity-50 shrink-0" />
-							</Button>
-						</PopoverTrigger>
-						<PopoverContent align="start" className="w-60 p-0">
-							<Command>
-								<CommandInput
-									placeholder={t({
-										message: "Search projects...",
-									})}
-								/>
-								<CommandList>
-									<CommandEmpty>
-										<Trans>No projects found.</Trans>
-									</CommandEmpty>
-									<CommandGroup>
-										{recentProjects.map((project) => (
-											<CommandItem
-												key={project.id}
-												value={project.name}
-												onSelect={() => {
-													setSelectedProjectId(project.id);
-													setLastProjectId(project.id);
-													setProjectPickerOpen(false);
-												}}
-											>
+					{isCloud ? (
+						<Popover
+							open={projectPickerOpen}
+							onOpenChange={setProjectPickerOpen}
+						>
+							<PopoverTrigger asChild>
+								<Button
+									variant="ghost"
+									size="sm"
+									className="w-full justify-between font-normal h-8 min-w-0 bg-muted/50 rounded-md"
+								>
+									<span className="flex items-center gap-2 truncate">
+										<LuBox className="size-4 shrink-0 text-muted-foreground" />
+										{selectedEnvironment ? (
+											<span className="truncate">
+												{selectedEnvironment.name}
+											</span>
+										) : (
+											<span className="text-muted-foreground">
+												<Trans>Select environment</Trans>
+											</span>
+										)}
+									</span>
+									<ChevronDownIcon className="size-4 opacity-50 shrink-0" />
+								</Button>
+							</PopoverTrigger>
+							<PopoverContent align="start" className="w-60 p-0">
+								<Command>
+									<CommandInput
+										placeholder={t({
+											message: "Search environments...",
+										})}
+									/>
+									<CommandList>
+										<CommandEmpty>
+											<Trans>No environments found.</Trans>
+										</CommandEmpty>
+										<CommandGroup>
+											{environments.map((environment) => (
+												<CommandItem
+													key={environment.id}
+													value={environment.id}
+													keywords={[environment.name]}
+													onSelect={() => {
+														setEnvironmentId(environment.id);
+														setProjectPickerOpen(false);
+													}}
+												>
+													<LuBox className="size-4 shrink-0 text-muted-foreground" />
+													<span className="flex-1 truncate">
+														{environment.name}
+													</span>
+													{environment.id === selectedEnvironment?.id && (
+														<HiCheck className="size-3.5 shrink-0" />
+													)}
+												</CommandItem>
+											))}
+										</CommandGroup>
+									</CommandList>
+								</Command>
+							</PopoverContent>
+						</Popover>
+					) : (
+						<Popover
+							open={projectPickerOpen}
+							onOpenChange={setProjectPickerOpen}
+						>
+							<PopoverTrigger asChild>
+								<Button
+									variant="ghost"
+									size="sm"
+									className="w-full justify-between font-normal h-8 min-w-0 bg-muted/50 rounded-md"
+								>
+									<span className="flex items-center gap-2 truncate">
+										{selectedProject ? (
+											<>
 												<ProjectThumbnail
-													projectName={project.name}
-													iconUrl={project.iconUrl}
+													projectName={selectedProject.name}
+													iconUrl={selectedProject.iconUrl}
 													className="size-4"
 												/>
-												<span className="flex-1 truncate">{project.name}</span>
-												{project.needsSetup === true && (
-													<span className="text-[10px] text-amber-500">
-														<Trans>not set up</Trans>
+												<span className="truncate">{selectedProject.name}</span>
+											</>
+										) : (
+											<span className="text-muted-foreground">
+												<Trans>Select project</Trans>
+											</span>
+										)}
+									</span>
+									<ChevronDownIcon className="size-4 opacity-50 shrink-0" />
+								</Button>
+							</PopoverTrigger>
+							<PopoverContent align="start" className="w-60 p-0">
+								<Command>
+									<CommandInput
+										placeholder={t({
+											message: "Search projects...",
+										})}
+									/>
+									<CommandList>
+										<CommandEmpty>
+											<Trans>No projects found.</Trans>
+										</CommandEmpty>
+										<CommandGroup>
+											{recentProjects.map((project) => (
+												<CommandItem
+													key={project.id}
+													value={project.name}
+													onSelect={() => {
+														setSelectedProjectId(project.id);
+														setLastProjectId(project.id);
+														setProjectPickerOpen(false);
+													}}
+												>
+													<ProjectThumbnail
+														projectName={project.name}
+														iconUrl={project.iconUrl}
+														className="size-4"
+													/>
+													<span className="flex-1 truncate">
+														{project.name}
 													</span>
-												)}
-												{project.id === selectedProjectId && (
-													<HiCheck className="size-3.5 shrink-0" />
-												)}
-											</CommandItem>
-										))}
-									</CommandGroup>
-								</CommandList>
-							</Command>
-						</PopoverContent>
-					</Popover>
+													{project.needsSetup === true && (
+														<span className="text-[10px] text-amber-500">
+															<Trans>not set up</Trans>
+														</span>
+													)}
+													{project.id === selectedProjectId && (
+														<HiCheck className="size-3.5 shrink-0" />
+													)}
+												</CommandItem>
+											))}
+										</CommandGroup>
+									</CommandList>
+								</Command>
+							</PopoverContent>
+						</Popover>
+					)}
 
 					<AgentSelect<SelectedAgent>
 						agents={v2Agents}
