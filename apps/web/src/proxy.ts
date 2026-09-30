@@ -77,7 +77,7 @@ export default async function proxy(req: NextRequest) {
 
 export const config = {
 	matcher: [
-		"/((?!_next|ingest|monitoring|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
+		"/((?!_next|ingest|monitoring|\\.well-known|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
 		"/(api|trpc)(.*)",
 	],
 };

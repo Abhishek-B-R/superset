@@ -25,7 +25,7 @@ mock.module("@superset/auth/server", () => ({
 	auth: { api: { getSession } },
 }));
 
-const { default: proxy } = await import("./proxy");
+const { default: proxy, config } = await import("./proxy");
 
 /** Drive proxy with the given auth header, threading it into the shared mock.
  * Empties the Authorization header for the unauthenticated cases. */
@@ -106,5 +106,20 @@ describe("proxy: unauthenticated API requests return JSON 401, never a sign-in r
 		});
 
 		expect(res.status).toBe(200);
+	});
+});
+
+describe("proxy: matcher", () => {
+	const pageMatcher = new RegExp(`^${config.matcher[0]}$`);
+
+	it("skips the middleware for .well-known, so Apple's fetch costs no session lookup", () => {
+		expect(pageMatcher.test("/.well-known/apple-app-site-association")).toBe(
+			false,
+		);
+	});
+
+	it("still matches ordinary page routes", () => {
+		expect(pageMatcher.test("/dashboard")).toBe(true);
+		expect(pageMatcher.test("/page/my-slug")).toBe(true);
 	});
 });
