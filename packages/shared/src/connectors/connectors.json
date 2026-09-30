@@ -312,6 +312,42 @@
 				}
 			]
 		},
+		"sentry_mcp": {
+			"displayName": "Sentry",
+			"icon": "sentry",
+			"category": "Developer tools",
+			"scope": "user",
+			"methods": [
+				{
+					"type": "oauth2",
+					"label": "OAuth 2.0",
+					"client": "dynamic",
+					"authorization_url": "https://mcp.sentry.dev/mcp",
+					"scopes": [],
+					"identity": {
+						"mcp": "https://mcp.sentry.dev/mcp",
+						"tool": "execute_sentry_tool",
+						"arguments": {
+							"name": "whoami",
+							"arguments": {}
+						},
+						"account": {
+							"id": "$.user.id",
+							"label": "$.user.email"
+						},
+						"user": {
+							"id": "$.user.id",
+							"label": "$.user.name"
+						}
+					},
+					"bind": {
+						"headers": {
+							"Authorization": "Bearer ${config.access_token}"
+						}
+					}
+				}
+			]
+		},
 		"microsoft_teams": {
 			"displayName": "Microsoft Teams",
 			"icon": "microsoft-teams",

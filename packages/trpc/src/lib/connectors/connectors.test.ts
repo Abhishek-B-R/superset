@@ -175,6 +175,82 @@ describe("probeIdentity", () => {
 		expect(identity.user).toEqual({ id: "u-9", label: null });
 	});
 
+	test("sentry_mcp asks the MCP server who the token belongs to", async () => {
+		const calls: {
+			method?: string;
+			httpMethod: string;
+			protocolHeader: string | null;
+			params?: { name?: string };
+		}[] = [];
+		globalThis.fetch = (async (_url: string, init: RequestInit) => {
+			const headers = new Headers(init.headers);
+			const body = init.body
+				? (JSON.parse(String(init.body)) as { id?: number; method?: string })
+				: {};
+			calls.push({
+				method: body.method,
+				httpMethod: init.method ?? "GET",
+				protocolHeader: headers.get("MCP-Protocol-Version"),
+				params: (body as { params?: { name?: string } }).params,
+			});
+			if (init.method === "DELETE") return new Response(null, { status: 204 });
+			if (body.id === undefined) return new Response(null, { status: 202 });
+			const result =
+				body.method === "tools/call"
+					? {
+							structuredContent: {
+								user: { id: "42", name: "Harshith", email: "h@tegon.ai" },
+							},
+						}
+					: {
+							protocolVersion: "2025-06-18",
+							serverInfo: { name: "Sentry MCP" },
+						};
+			const payload = JSON.stringify(
+				{ jsonrpc: "2.0", id: body.id, result },
+				null,
+				1,
+			);
+			const dataLines = payload
+				.split("\n")
+				.map((line) => `data: ${line}`)
+				.join("\n");
+			const serverRequest = `event: message\ndata: ${JSON.stringify({
+				jsonrpc: "2.0",
+				id: String(body.id),
+				method: "roots/list",
+			})}`;
+			return new Response(
+				`${serverRequest}\n\nevent: message\n${dataLines}\n\n: keep-alive\n\n`,
+				{
+					status: 200,
+					headers: {
+						"Content-Type": "text/event-stream",
+						"mcp-session-id": "sess-1",
+					},
+				},
+			);
+		}) as unknown as typeof fetch;
+
+		const identity = await probeIdentity(
+			"sentry_mcp",
+			connectorMethod(requireConnector("sentry_mcp")),
+			"mcp-test",
+		);
+
+		expect(calls.map((c) => c.method ?? `[${c.httpMethod}]`)).toEqual([
+			"initialize",
+			"notifications/initialized",
+			"tools/call",
+			"[DELETE]",
+		]);
+		expect(calls[2]?.params?.name).toBe("execute_sentry_tool");
+		expect(calls[1]?.protocolHeader).toBe("2025-06-18");
+		expect(calls[2]?.protocolHeader).toBe("2025-06-18");
+		expect(identity.account).toEqual({ id: "42", label: "h@tegon.ai" });
+		expect(identity.user).toEqual({ id: "42", label: "Harshith" });
+	});
+
 	test("a url-less probe without a token response fails loudly", async () => {
 		await expect(
 			probeIdentity(
