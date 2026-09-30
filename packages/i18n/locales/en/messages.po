@@ -663,6 +663,9 @@ msgstr "{actor} set the status to {to}"
 msgid "{actor} shared the workspace with the organization"
 msgstr "{actor} shared the workspace with the organization"
 
+msgid "{actor} unarchived the workspace"
+msgstr "{actor} unarchived the workspace"
+
 msgid "{actor} unassigned {from}"
 msgstr "{actor} unassigned {from}"
 
@@ -2289,12 +2292,19 @@ msgstr "Archive"
 msgid "Archive environment"
 msgstr "Archive environment"
 
+msgid "Archive workspace"
+msgstr "Archive workspace"
+
 msgid "Archived"
 msgstr "Archived"
 
 #. placeholder {0}: formatCompactRelativeTime(archivedAt, now)
 msgid "Archived · {0}"
 msgstr "Archived · {0}"
+
+#. placeholder {0}: formatCompactRelativeTime(workspace.deletedAt, now)
+msgid "Archived {0}"
+msgstr "Archived {0}"
 
 msgid "Are you sure you want to delete this file? This action cannot be undone."
 msgstr "Are you sure you want to delete this file? This action cannot be undone."
@@ -16586,6 +16596,12 @@ msgstr "Unable to start dictation"
 
 msgid "Unable to transcribe audio"
 msgstr "Unable to transcribe audio"
+
+msgid "Unarchive"
+msgstr "Unarchive"
+
+msgid "Unarchive workspace"
+msgstr "Unarchive workspace"
 
 msgid "Unassigned"
 msgstr "Unassigned"

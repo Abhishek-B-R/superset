@@ -663,6 +663,9 @@ msgstr "{actor} ha impostato lo stato su {to}"
 msgid "{actor} shared the workspace with the organization"
 msgstr "{actor} ha condiviso lo spazio di lavoro con l’organizzazione"
 
+msgid "{actor} unarchived the workspace"
+msgstr "{actor} ha ripristinato lo spazio di lavoro dall'archivio"
+
 msgid "{actor} unassigned {from}"
 msgstr "{actor} ha rimosso l’assegnazione di {from}"
 
@@ -2289,12 +2292,19 @@ msgstr "Archivia"
 msgid "Archive environment"
 msgstr "Archivia ambiente"
 
+msgid "Archive workspace"
+msgstr "Archivia il workspace"
+
 msgid "Archived"
 msgstr "Archiviati"
 
 #. placeholder {0}: formatCompactRelativeTime(archivedAt, now)
 msgid "Archived · {0}"
 msgstr "Archiviato · {0}"
+
+#. placeholder {0}: formatCompactRelativeTime(workspace.deletedAt, now)
+msgid "Archived {0}"
+msgstr "Archiviato {0}"
 
 msgid "Are you sure you want to delete this file? This action cannot be undone."
 msgstr "Vuoi davvero eliminare questo file? L'operazione non può essere annullata."
@@ -16586,6 +16596,12 @@ msgstr "Impossibile avviare la dettatura"
 
 msgid "Unable to transcribe audio"
 msgstr "Impossibile trascrivere l'audio"
+
+msgid "Unarchive"
+msgstr "Ripristina dall'archivio"
+
+msgid "Unarchive workspace"
+msgstr "Ripristina il workspace dall'archivio"
 
 msgid "Unassigned"
 msgstr "Non assegnati"

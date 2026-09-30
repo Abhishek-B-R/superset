@@ -6,7 +6,7 @@ import {
 	forwardRef,
 	type ReactNode,
 } from "react";
-import { HiMiniXMark } from "react-icons/hi2";
+import { LuArchive } from "react-icons/lu";
 import type { CloudWorkspaceRow } from "renderer/hooks/useCloudWorkspaces";
 import type { CloudPullRequest } from "renderer/routes/_authenticated/_dashboard/hooks/useCloudPullRequests";
 import { ProjectThumbnail } from "renderer/routes/_authenticated/components/ProjectThumbnail";
@@ -39,7 +39,7 @@ interface DashboardSidebarCloudRowProps
 	isActive?: boolean;
 	onOpen: () => void;
 	onOpenPullRequest: () => void;
-	onDelete: () => void;
+	onArchive: () => void;
 }
 
 export const DashboardSidebarCloudRow = forwardRef<
@@ -59,7 +59,7 @@ export const DashboardSidebarCloudRow = forwardRef<
 			isActive = false,
 			onOpen,
 			onOpenPullRequest,
-			onDelete,
+			onArchive,
 			className,
 			...props
 		},
@@ -143,12 +143,12 @@ export const DashboardSidebarCloudRow = forwardRef<
 							type="button"
 							onClick={(event) => {
 								event.stopPropagation();
-								onDelete();
+								onArchive();
 							}}
-							aria-label={t({ message: "Delete workspace" })}
+							aria-label={t({ message: "Archive workspace" })}
 							className="-mr-[6.25px] hidden size-5 items-center justify-center rounded text-muted-foreground group-hover:flex group-has-[:focus-visible]:flex hover:bg-foreground/10 hover:text-foreground"
 						>
-							<HiMiniXMark className="size-4" />
+							<LuArchive className="size-3.5" />
 						</button>
 					</span>
 				</span>

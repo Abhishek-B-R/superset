@@ -663,6 +663,9 @@ msgstr "{actor}がステータスを {to} に設定しました"
 msgid "{actor} shared the workspace with the organization"
 msgstr "{actor}がワークスペースを組織と共有しました"
 
+msgid "{actor} unarchived the workspace"
+msgstr "{actor}がワークスペースのアーカイブを解除しました"
+
 msgid "{actor} unassigned {from}"
 msgstr "{actor}が {from} の割り当てを外しました"
 
@@ -2289,12 +2292,19 @@ msgstr "アーカイブ"
 msgid "Archive environment"
 msgstr "環境をアーカイブ"
 
+msgid "Archive workspace"
+msgstr "ワークスペースをアーカイブ"
+
 msgid "Archived"
 msgstr "アーカイブ済み"
 
 #. placeholder {0}: formatCompactRelativeTime(archivedAt, now)
 msgid "Archived · {0}"
 msgstr "アーカイブ済み · {0}"
+
+#. placeholder {0}: formatCompactRelativeTime(workspace.deletedAt, now)
+msgid "Archived {0}"
+msgstr "アーカイブ済み {0}"
 
 msgid "Are you sure you want to delete this file? This action cannot be undone."
 msgstr "このファイルを削除してもよろしいですか?この操作は元に戻せません。"
@@ -16586,6 +16596,12 @@ msgstr "音声入力を開始できません"
 
 msgid "Unable to transcribe audio"
 msgstr "音声を文字起こしできません"
+
+msgid "Unarchive"
+msgstr "アーカイブ解除"
+
+msgid "Unarchive workspace"
+msgstr "ワークスペースのアーカイブを解除"
 
 msgid "Unassigned"
 msgstr "未割り当て"

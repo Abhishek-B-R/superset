@@ -663,6 +663,9 @@ msgstr "{actor} đã đặt trạng thái thành {to}"
 msgid "{actor} shared the workspace with the organization"
 msgstr "{actor} đã chia sẻ không gian làm việc với tổ chức"
 
+msgid "{actor} unarchived the workspace"
+msgstr "{actor} đã bỏ lưu trữ không gian làm việc"
+
 msgid "{actor} unassigned {from}"
 msgstr "{actor} đã bỏ giao cho {from}"
 
@@ -2289,12 +2292,19 @@ msgstr "Lưu trữ"
 msgid "Archive environment"
 msgstr "Lưu trữ environment"
 
+msgid "Archive workspace"
+msgstr "Lưu trữ workspace"
+
 msgid "Archived"
 msgstr "Đã lưu trữ"
 
 #. placeholder {0}: formatCompactRelativeTime(archivedAt, now)
 msgid "Archived · {0}"
 msgstr "Đã lưu trữ · {0}"
+
+#. placeholder {0}: formatCompactRelativeTime(workspace.deletedAt, now)
+msgid "Archived {0}"
+msgstr "Đã lưu trữ {0}"
 
 msgid "Are you sure you want to delete this file? This action cannot be undone."
 msgstr "Bạn chắc chắn muốn xóa tệp này? Không thể hoàn tác."
@@ -16586,6 +16596,12 @@ msgstr "Không thể bắt đầu đọc chính tả"
 
 msgid "Unable to transcribe audio"
 msgstr "Không thể chuyển âm thanh thành văn bản"
+
+msgid "Unarchive"
+msgstr "Bỏ lưu trữ"
+
+msgid "Unarchive workspace"
+msgstr "Bỏ lưu trữ workspace"
 
 msgid "Unassigned"
 msgstr "Chưa giao"

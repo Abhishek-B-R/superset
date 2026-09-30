@@ -1,7 +1,7 @@
 import { useLingui } from "@lingui/react/macro";
 import { useFormat } from "@superset/i18n/react";
 import { WaveSpinner } from "@superset/ui/atoms/WaveSpinner";
-import { LuInfo } from "react-icons/lu";
+import { LuArchive, LuInfo } from "react-icons/lu";
 import type { CloudWorkspaceRow } from "renderer/hooks/useCloudWorkspaces";
 
 interface CloudWorkspaceStatusProps {
@@ -33,11 +33,13 @@ export function CloudWorkspaceStatus({
 		);
 	}
 	if (workspace.status === "deleted") {
-		return workspace.agentStatusAt ? (
-			<span className="text-[11px] tabular-nums text-muted-foreground">
-				{formatAge(workspace.agentStatusAt, now)}
-			</span>
-		) : null;
+		return (
+			<LuArchive
+				role="img"
+				aria-label={t({ message: "Archived" })}
+				className="size-3.5 text-muted-foreground"
+			/>
+		);
 	}
 	if (workspace.status === "failed") {
 		return (
