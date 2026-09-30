@@ -11,6 +11,7 @@ const otherPublicRoutes = [
 	"/automations",
 	"/page",
 	"/robots.txt",
+	"/.well-known",
 ] as const;
 
 const publicRoutes = [...authPageRoutes, ...otherPublicRoutes] as const;

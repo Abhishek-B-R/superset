@@ -81,6 +81,14 @@ describe("proxy: unauthenticated API requests return JSON 401, never a sign-in r
 		expect(trpcfoo.headers.get("location")).toContain("/sign-in");
 	});
 
+	it("leaves the apple-app-site-association file reachable unauthenticated", async () => {
+		const res = await callProxy(
+			"https://app.superset.sh/.well-known/apple-app-site-association",
+		);
+
+		expect(res.status).toBe(200);
+	});
+
 	it("leaves public API routes (e.g. /api/auth/desktop) reachable unauthenticated", async () => {
 		// P1 (cubic) + coderabbit: /api/auth/desktop is the public desktop-OAuth
 		// start; require a successful pass-through (200), so a 5xx would fail.

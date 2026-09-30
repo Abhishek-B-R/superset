@@ -1,5 +1,6 @@
 import path from "node:path";
 import { SUPPORTED_LOCALES } from "@superset/i18n/locales";
+import { IOS_APP } from "@superset/shared/constants";
 import { config } from "dotenv";
 import type { ConfigContext } from "expo/config";
 import { withIosAccentColor } from "./config-plugins/withIosAccentColor";
@@ -10,6 +11,10 @@ config({
 	override: true,
 	quiet: true,
 });
+
+const webHost = new URL(
+	process.env.EXPO_PUBLIC_WEB_URL || "https://app.superset.sh",
+).hostname;
 
 const SIGNED_BUILD_PROFILES = ["preview", "production"];
 const signedUpdates = process.env.MOBILE_SIGNED_UPDATES === "1";
@@ -44,14 +49,15 @@ export default ({ config }: ConfigContext) => ({
 	},
 	ios: {
 		supportsTablet: false,
-		appleTeamId: "NV9657CS5A",
+		appleTeamId: IOS_APP.TEAM_ID,
 		// Shared with the AgentActivity widget extension: the Live Activity
 		// sandbox has no network, so project icons are cached here by the app
 		// and read back by the extension from disk.
 		entitlements: {
 			"com.apple.security.application-groups": ["group.sh.superset.mobile"],
 		},
-		bundleIdentifier: "sh.superset.mobile",
+		bundleIdentifier: IOS_APP.BUNDLE_ID,
+		associatedDomains: [`applinks:${webHost}`],
 		usesAppleSignIn: true,
 		infoPlist: {
 			ITSAppUsesNonExemptEncryption: false,
