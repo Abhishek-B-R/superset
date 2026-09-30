@@ -86,7 +86,6 @@ export function CloudWorkspacesList({
 											},
 										]}
 										size={20}
-										outlineClassName="outline-transparent"
 									/>
 								) : (
 									<span className="size-5 rounded-full border border-dashed border-muted-foreground" />

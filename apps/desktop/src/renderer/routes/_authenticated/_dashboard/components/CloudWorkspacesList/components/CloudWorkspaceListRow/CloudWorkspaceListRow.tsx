@@ -25,6 +25,8 @@ export interface CloudWorkspaceListItem {
 	pullRequests: CloudPullRequest[];
 	isInSidebar: boolean;
 	isMine: boolean;
+	/** False while the viewer is the only one present. */
+	showsPresence: boolean;
 	isRead: boolean;
 }
 
@@ -66,7 +68,6 @@ export function CloudWorkspaceListRow({
 									},
 								]}
 								size={20}
-								outlineClassName="outline-transparent"
 							/>
 						) : (
 							<span className="size-5 shrink-0 rounded-full border border-dashed border-muted-foreground" />
@@ -91,16 +92,18 @@ export function CloudWorkspaceListRow({
 				</span>
 			</td>
 			<td className="w-0 pr-3">
-				<AvatarStack
-					people={workspace.presence.map((person) => ({
-						id: person.userId,
-						name: person.name,
-						image: person.image,
-						isActive:
-							now.getTime() - person.lastSeenAt.getTime() < ACTIVE_WITHIN_MS,
-					}))}
-					size={20}
-				/>
+				{item.showsPresence && (
+					<AvatarStack
+						people={workspace.presence.map((person) => ({
+							id: person.userId,
+							name: person.name,
+							image: person.image,
+							isActive:
+								now.getTime() - person.lastSeenAt.getTime() < ACTIVE_WITHIN_MS,
+						}))}
+						size={20}
+					/>
+				)}
 			</td>
 			<td className="w-0 pr-3 text-right">
 				{workspace.status === "deleted" || item.isMine ? null : isInSidebar ? (

@@ -2,10 +2,16 @@ import { useLingui } from "@lingui/react/macro";
 import { Button } from "@superset/ui/button";
 import { CommentModeButton, PageHeader } from "@superset/ui/page-comments";
 import { Spinner } from "@superset/ui/spinner";
+import { cn } from "@superset/ui/utils";
 import { useNavigate } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 import { useState } from "react";
 import { PageViewer } from "renderer/routes/_authenticated/_dashboard/components/PageViewer";
+import {
+	useWindowChromeVisible,
+	WINDOW_CHROME_BAND_CLASS,
+	WindowChrome,
+} from "renderer/routes/_authenticated/_dashboard/components/WindowChrome";
 import { usePageHeaderData } from "renderer/routes/_authenticated/_dashboard/hooks/usePageHeaderData";
 
 interface PageDetailViewProps {
@@ -31,6 +37,7 @@ export function PageDetailView({ slug }: PageDetailViewProps) {
 
 	const goBack = () => navigate({ to: "/pages" });
 
+	const isChromeVisible = useWindowChromeVisible();
 	const backButton = (
 		<Button
 			type="button"
@@ -40,7 +47,7 @@ export function PageDetailView({ slug }: PageDetailViewProps) {
 				message: "Back to pages",
 			})}
 			onClick={goBack}
-			className="no-drag size-7 shrink-0 text-muted-foreground"
+			className="size-7 shrink-0 text-muted-foreground"
 		>
 			<ArrowLeft className="size-4" />
 		</Button>
@@ -50,11 +57,19 @@ export function PageDetailView({ slug }: PageDetailViewProps) {
 		<div className="flex h-full w-full flex-1 flex-col overflow-hidden">
 			{page ? (
 				<PageHeader
-					className="drag"
+					className={cn(
+						"h-12",
+						isChromeVisible && cn("border-b-0", WINDOW_CHROME_BAND_CLASS),
+					)}
 					page={page}
 					versions={versions}
 					currentUserId={currentUserId}
-					leading={backButton}
+					leading={
+						<>
+							<WindowChrome className="-ml-2" />
+							{backButton}
+						</>
+					}
 					trailing={
 						<CommentModeButton
 							enabled={commentsEnabled}
@@ -76,9 +91,16 @@ export function PageDetailView({ slug }: PageDetailViewProps) {
 					}}
 				/>
 			) : (
-				<div className="drag flex h-11 shrink-0 items-center gap-2 border-b px-2">
+				<div
+					className={cn(
+						"flex h-12 shrink-0 items-center gap-2 px-2 shadow-[inset_0_-1px_0_var(--border)]",
+						isChromeVisible && WINDOW_CHROME_BAND_CLASS,
+					)}
+				>
+					<WindowChrome className="-ml-2" />
 					{backButton}
 					<Spinner className="size-3.5" />
+					<div className="drag h-full min-w-0 flex-1" />
 				</div>
 			)}
 			<div className="min-h-0 min-w-0 flex-1">

@@ -54,7 +54,7 @@ export function PageHeader({
 				)}
 			>
 				{leading}
-				<div className="no-drag flex min-w-0 items-center">
+				<div className="flex min-w-0 items-center">
 					<PageTitleMenu
 						page={page}
 						versions={versions}
@@ -81,7 +81,8 @@ export function PageHeader({
 					) : null}
 				</div>
 
-				<div className="no-drag ml-auto flex shrink-0 items-center gap-1">
+				<div className="drag h-full min-w-0 flex-1" />
+				<div className="flex shrink-0 items-center gap-1">
 					{trailing}
 					<PageShareButton
 						page={page}

@@ -16,6 +16,11 @@ import { useIsV2CloudEnabled } from "renderer/hooks/useIsV2CloudEnabled";
 import { CreateTaskDialog } from "renderer/routes/_authenticated/_dashboard/components/CreateTaskDialog";
 import { OpenClosedFilter } from "renderer/routes/_authenticated/_dashboard/components/OpenClosedFilter";
 import { ProjectFilter } from "renderer/routes/_authenticated/_dashboard/components/ProjectFilter";
+import {
+	useWindowChromeVisible,
+	WINDOW_CHROME_BAND_CLASS,
+	WindowChrome,
+} from "renderer/routes/_authenticated/_dashboard/components/WindowChrome";
 import { WindowControlsInset } from "renderer/routes/_authenticated/_dashboard/components/WindowControlsInset";
 import { WorkItemsSearch } from "renderer/routes/_authenticated/_dashboard/components/WorkItemsSearch";
 import type { ViewMode } from "../../../../stores/tasks-filter-state";
@@ -112,6 +117,7 @@ export function TasksTopBar({
 			: null;
 	const [isCreateTaskOpen, setIsCreateTaskOpen] = useState(false);
 	const isV2CloudEnabled = useIsV2CloudEnabled();
+	const isChromeVisible = useWindowChromeVisible();
 
 	const hasSelection = selectedCount > 0;
 
@@ -119,10 +125,14 @@ export function TasksTopBar({
 		<>
 			<div
 				data-tasks-toolbar
-				className="@container min-w-0 shrink-0 border-b border-border px-4 py-2"
+				className={cn(
+					"@container min-w-0 shrink-0 px-4 py-2 shadow-[inset_0_-1px_0_var(--border)]",
+					isChromeVisible && WINDOW_CHROME_BAND_CLASS,
+				)}
 			>
 				<div className="flex flex-col items-stretch gap-2 @4xl:flex-row @4xl:items-center @4xl:justify-between">
 					<div className="flex min-w-0 items-center gap-3 overflow-x-auto hide-scrollbar">
+						<WindowChrome className="-mt-2 -ml-4" />
 						{hasSelection ? (
 							<>
 								<Button
@@ -223,7 +233,6 @@ export function TasksTopBar({
 						)}
 					</div>
 
-					{/* Window-drag leaf standing in for the hidden TopBar. */}
 					<div className="drag hidden min-w-0 flex-1 self-stretch @4xl:block" />
 
 					<div className="flex shrink-0 items-center gap-2">

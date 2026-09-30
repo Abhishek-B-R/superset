@@ -108,8 +108,7 @@ export const DashboardSidebarCloudRow = forwardRef<
 								{ id: owner.userId, name: owner.name, image: owner.image },
 							]}
 							size={20}
-							surfaceClassName="bg-sidebar"
-							outlineClassName="outline-muted-foreground/35"
+							surface="sidebar"
 							className="ml-1.5"
 						/>
 					)}

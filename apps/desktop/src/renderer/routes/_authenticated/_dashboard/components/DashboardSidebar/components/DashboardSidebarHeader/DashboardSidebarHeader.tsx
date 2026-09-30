@@ -46,9 +46,16 @@ import { electronTrpc } from "renderer/lib/electron-trpc";
 import { useFolderFirstImport } from "renderer/routes/_authenticated/_dashboard/components/AddRepositoryModals/hooks/useFolderFirstImport";
 import { AppMenuButton } from "renderer/routes/_authenticated/_dashboard/components/AppMenuButton";
 import { NavigationControls } from "renderer/routes/_authenticated/_dashboard/components/NavigationControls";
+import { OfflineBadge } from "renderer/routes/_authenticated/_dashboard/components/OfflineBadge";
+import { PortsDropdown } from "renderer/routes/_authenticated/_dashboard/components/PortsDropdown";
 import { SidebarToggle } from "renderer/routes/_authenticated/_dashboard/components/SidebarToggle";
 import { ProjectGlyph } from "renderer/routes/_authenticated/_dashboard/components/TaskProjectIcon";
-import { TopBarPortsDropdown } from "renderer/routes/_authenticated/_dashboard/components/TopBar/components/TopBarPortsDropdown";
+import {
+	WINDOW_CHROME_BAND_CLASS,
+	WINDOW_CONTROLS_ROW_HEIGHT,
+	WINDOW_CONTROLS_ROW_TOP,
+} from "renderer/routes/_authenticated/_dashboard/components/WindowChrome";
+import { useShowsAppTopBar } from "renderer/routes/_authenticated/_dashboard/hooks/useShowsAppTopBar";
 import {
 	pullRequestsSearchFromFilters,
 	usePullRequestsFilterStore,
@@ -156,6 +163,7 @@ export function DashboardSidebarHeader({
 		fuzzy: true,
 	});
 	const onV2WorkspaceRoute = v2WorkspaceMatch !== false;
+	const showsAppTopBar = useShowsAppTopBar();
 	// Pre-select the viewed workspace's project in the new-workspace modal.
 	const { workspaces: hostWorkspaces } = useHostWorkspaces();
 	const activeProjectId =
@@ -284,17 +292,21 @@ export function DashboardSidebarHeader({
 	if (isCollapsed) {
 		return (
 			<div className="flex flex-col">
-				{/* On the v2 workspace route the TopBar is hidden and the pane tab
-				    bar is the only top row, so the rail continues that bar across
-				    its own width: same height, background, and bottom border as the
-				    tab bar, doubling as traffic-light headroom and a drag region. */}
-				{onV2WorkspaceRoute && (
+				{/* The page's header row continues across the rail, and the macOS
+				    window buttons sit in it. On the v2 workspace route that row is
+				    the pane tab bar. */}
+				{!showsAppTopBar && (
 					<div
 						// w +1px: overlaps the container's border-r so the sidebar's
-						// vertical border starts below the bar, not inside it. The fill
-						// is the tab bar's bg-muted/45|35-over-background flattened to an
+						// vertical border starts below the row, not inside it. The tab
+						// bar fill is its bg-muted/45|35-over-background flattened to an
 						// opaque color so it can paint over that border pixel.
-						className="drag h-10 w-[calc(100%+1px)] shrink-0 bg-[color-mix(in_oklab,var(--muted)_45%,var(--background))] dark:bg-[color-mix(in_oklab,var(--muted)_35%,var(--background))]"
+						className={cn(
+							"drag w-[calc(100%+1px)] shrink-0",
+							onV2WorkspaceRoute
+								? "h-10 bg-[color-mix(in_oklab,var(--muted)_45%,var(--background))] dark:bg-[color-mix(in_oklab,var(--muted)_35%,var(--background))]"
+								: cn("h-12", WINDOW_CHROME_BAND_CLASS),
+						)}
 					/>
 				)}
 				{/* Mirrors the expanded header's nav container so the buttons keep
@@ -604,7 +616,11 @@ export function DashboardSidebarHeader({
 			className="flex flex-col gap-px px-2 pt-2 pb-2"
 			// Pin the top inset so the traffic-light row stays a constant physical
 			// distance from the window top under page zoom (see the row below).
-			style={isMac ? { paddingTop: `${8 / zoomFactor}px` } : undefined}
+			style={
+				isMac
+					? { paddingTop: `${WINDOW_CONTROLS_ROW_TOP / zoomFactor}px` }
+					: undefined
+			}
 		>
 			{/* -mx-2 cancels the parent's px-2 so this row owns the 80px traffic-light
 			    inset; inset and height are counter-scaled to a constant physical size
@@ -619,7 +635,11 @@ export function DashboardSidebarHeader({
 				// on this row: `no-drag` carve-outs under a `drag` ancestor are lost
 				// inside zoomed wrappers like ZoomStable, deadening the controls.
 				className="-mx-2 mb-3 flex h-8 items-center pr-3"
-				style={isMac ? { height: `${32 / zoomFactor}px` } : undefined}
+				style={
+					isMac
+						? { height: `${WINDOW_CONTROLS_ROW_HEIGHT / zoomFactor}px` }
+						: undefined
+				}
 			>
 				<div
 					className="drag h-full shrink-0"
@@ -631,7 +651,8 @@ export function DashboardSidebarHeader({
 					<NavigationControls />
 					{/* Lives here (persistent chrome) rather than the workspace tab
 					    bar, which remounts on every navigation. */}
-					<TopBarPortsDropdown align="start" />
+					<PortsDropdown align="start" />
+					<OfflineBadge />
 				</ZoomStable>
 				<div className="drag h-full min-w-0 flex-1" />
 			</div>
