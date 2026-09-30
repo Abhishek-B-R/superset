@@ -1,11 +1,11 @@
-import type { MessageDescriptor } from "@lingui/core";
 import { useLingui } from "@lingui/react/macro";
-import { i18n } from "@superset/i18n";
+import { usePageCommentThreads } from "@superset/cloud-client";
 import { getInitials } from "@superset/shared/names";
-import type {
-	CommentAnchor,
-	FrameMessage,
-	FrameRect,
+import {
+	type CommentAnchor,
+	type FrameMessage,
+	type FrameRect,
+	PENDING_ANCHOR_ID,
 } from "@superset/shared/page-comments-runtime";
 import * as Haptics from "expo-haptics";
 import {
@@ -14,8 +14,9 @@ import {
 	useLocalSearchParams,
 	useRouter,
 } from "expo-router";
+import { useHeaderHeight } from "expo-router/react-navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Alert, type LayoutChangeEvent, View } from "react-native";
+import { View } from "react-native";
 import { Spinner } from "@/components/ui/spinner";
 import { Text } from "@/components/ui/text";
 import { errorCopy } from "@/lib/errors";
@@ -23,12 +24,6 @@ import { PressableScale } from "@/screens/(authenticated)/components/PressableSc
 import { usePageQuery } from "../hooks/usePages";
 import { CommentPin } from "./components/CommentPin";
 import { PageFrame, type PageFrameHandle } from "./components/PageFrame";
-import { SelectionToolbar } from "./components/SelectionToolbar";
-import {
-	toAnchoredThreads,
-	usePageCommentActions,
-	usePageCommentsQuery,
-} from "./hooks/usePageComments";
 import { usePageCommentStore } from "./stores/pageCommentStore";
 import { pinPointOf, stackPins } from "./utils/pinLayout";
 
@@ -69,6 +64,7 @@ export function PageDetailScreen({
 		slug: string;
 		scrollY?: string;
 	}>();
+	const headerHeight = useHeaderHeight();
 	const frameRef = useRef<PageFrameHandle>(null);
 	const scrollYRef = useRef(0);
 	const restoredScroll = useRef(false);
@@ -77,10 +73,13 @@ export function PageDetailScreen({
 	const [failedSrc, setFailedSrc] = useState<string | null>(null);
 	const [frameEpoch, setFrameEpoch] = useState(0);
 	const [commentMode, setCommentMode] = useState(false);
-	const [focused, setFocused] = useState(true);
 	const [selection, setSelection] = useState<Selection | null>(null);
+	const startCommentRef = useRef<(anchor: CommentAnchor) => boolean>(
+		() => false,
+	);
+	const selectionRef = useRef(selection);
+	selectionRef.current = selection;
 	const [rects, setRects] = useState<Record<string, FrameRect>>({});
-	const [container, setContainer] = useState({ width: 0, height: 0 });
 
 	const page = usePageQuery(slug);
 	const pageId = page.data?.id;
@@ -90,14 +89,19 @@ export function PageDetailScreen({
 	const frameFailed = viewUrl !== undefined && failedSrc === viewUrl;
 	const offline = page.status === "pending" && page.fetchStatus === "paused";
 
-	const comments = usePageCommentsQuery(pageId);
-	const { createThread } = usePageCommentActions(pageId);
+	const { threads, refetch: refetchComments } = usePageCommentThreads({
+		pageId: pageId ?? "",
+		version: version ?? 0,
+	});
 	const setPick = usePageCommentStore((state) => state.setPick);
-	const setThreadId = usePageCommentStore((state) => state.setThreadId);
+	const clearPick = usePageCommentStore((state) => state.clear);
+	const setFocusThreadId = usePageCommentStore(
+		(state) => state.setFocusThreadId,
+	);
 
-	const threads = useMemo(
-		() => toAnchoredThreads(comments.data ?? []),
-		[comments.data],
+	const unresolvedThreads = useMemo(
+		() => threads.filter((thread) => !thread.resolved),
+		[threads],
 	);
 
 	const send = useCallback(
@@ -108,27 +112,39 @@ export function PageDetailScreen({
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: frameEpoch is a resend trigger, not a value read here
 	useEffect(() => {
-		send({ type: "set-mode", enabled: commentMode });
-	}, [commentMode, frameEpoch, send]);
+		send({
+			type: "set-mode",
+			enabled: commentMode,
+			locked: selection !== null,
+		});
+	}, [commentMode, selection, frameEpoch, send]);
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: frameEpoch resends the anchor set to a runtime that just restarted
 	useEffect(() => {
 		send({
 			type: "track",
-			anchors: threads.map((thread) => ({
-				id: thread.id,
-				anchor: thread.anchor,
-			})),
+			anchors: [
+				...unresolvedThreads.flatMap((thread) =>
+					thread.anchor ? [{ id: thread.id, anchor: thread.anchor }] : [],
+				),
+				...(selection
+					? [{ id: PENDING_ANCHOR_ID, anchor: selection.anchor }]
+					: []),
+			],
 		});
-	}, [threads, frameEpoch, send]);
+	}, [unresolvedThreads, selection, frameEpoch, send]);
+
+	const selectionRect = selection
+		? (rects[PENDING_ANCHOR_ID] ?? selection.rect)
+		: null;
 
 	useFocusEffect(
 		useCallback(() => {
-			setFocused(true);
 			setFrameEpoch((epoch) => epoch + 1);
-			void comments.refetch();
-			return () => setFocused(false);
-		}, [comments.refetch]),
+			setSelection(null);
+			clearPick();
+			refetchComments();
+		}, [clearPick, refetchComments]),
 	);
 
 	useEffect(() => {
@@ -149,22 +165,26 @@ export function PageDetailScreen({
 			}
 			setRects((previous) => (sameRects(previous, next) ? previous : next));
 		}
-		if (message.type === "pointer-down") setSelection(null);
 		if (message.type === "pick") {
-			void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-			setSelection({ anchor: message.anchor, rect: message.rect });
+			if (!selectionRef.current) {
+				if (!startCommentRef.current(message.anchor)) return;
+				const next = { anchor: message.anchor, rect: message.rect };
+				selectionRef.current = next;
+				void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+				setSelection(next);
+			}
 		}
 	}, []);
 
 	const pins = useMemo(() => {
 		const out: Array<{ id: string; point: { x: number; y: number } }> = [];
-		for (const thread of threads) {
+		for (const thread of unresolvedThreads) {
 			const rect = rects[thread.id];
-			if (rect)
+			if (rect && thread.anchor)
 				out.push({ id: thread.id, point: pinPointOf(rect, thread.anchor) });
 		}
 		return out;
-	}, [rects, threads]);
+	}, [rects, unresolvedThreads]);
 
 	const stackIndex = useMemo(() => stackPins(pins), [pins]);
 	const pinPoints = useMemo(
@@ -172,37 +192,29 @@ export function PageDetailScreen({
 		[pins],
 	);
 
-	const postQuick = useCallback(
-		async (body: MessageDescriptor) => {
-			if (!selection || !pageId || !version) return;
-			setSelection(null);
-			try {
-				await createThread.mutateAsync({
-					version,
-					anchor: selection.anchor,
-					body: i18n._(body),
-				});
-			} catch (error) {
-				setSelection(selection);
-				Alert.alert(t({ message: "Comment not posted" }), errorCopy(error));
-			}
+	startCommentRef.current = useCallback(
+		(anchor: CommentAnchor) => {
+			if (!pageId || version === undefined) return false;
+			setPick({ pageId, version, anchor });
+			router.push({
+				pathname: "/(authenticated)/pages/[slug]/comment",
+				params: { slug },
+			});
+			return true;
 		},
-		[createThread, pageId, selection, t, version],
+		[pageId, router, setPick, slug, version],
 	);
 
-	const openSheet = useCallback(
-		(route: "compose" | "quick") => {
-			if (!selection || !pageId || !version) return;
-			setPick({ pageId, version, anchor: selection.anchor });
+	const openThread = useCallback(
+		(threadId: string) => {
+			void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+			setFocusThreadId(threadId);
 			router.push({
-				pathname:
-					route === "compose"
-						? "/(authenticated)/pages/[slug]/compose"
-						: "/(authenticated)/pages/[slug]/quick",
+				pathname: "/(authenticated)/pages/[slug]/comments",
 				params: { slug },
 			});
 		},
-		[pageId, router, selection, setPick, slug, version],
+		[router, setFocusThreadId, slug],
 	);
 
 	const retryFrame = useCallback(async () => {
@@ -212,21 +224,8 @@ export function PageDetailScreen({
 		if (next.data?.viewUrl === viewUrl) frameRef.current?.reload();
 	}, [page, viewUrl]);
 
-	const onLayout = useCallback((event: LayoutChangeEvent) => {
-		const { width, height } = event.nativeEvent.layout;
-		setContainer((previous) =>
-			previous.width === width && previous.height === height
-				? previous
-				: { width, height },
-		);
-	}, []);
-
 	return (
-		<View className="bg-background flex-1" onLayout={onLayout}>
-			<Stack.Screen
-				options={{ title: page.data?.title ?? t({ message: "Page" }) }}
-			/>
-
+		<View className="bg-background flex-1">
 			{presentation === "sheet" ? (
 				<Stack.Toolbar placement="left">
 					<Stack.Toolbar.Button
@@ -269,6 +268,7 @@ export function PageDetailScreen({
 					accessibilityLabel={t({ message: "Show all comments" })}
 					onPress={() => {
 						void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+						setFocusThreadId(null);
 						router.push({
 							pathname: "/(authenticated)/pages/[slug]/comments",
 							params: { slug },
@@ -311,6 +311,7 @@ export function PageDetailScreen({
 					<PageFrame
 						ref={frameRef}
 						src={viewUrl}
+						insetTop={headerHeight}
 						onMessage={onFrameMessage}
 						onLoadEnd={() => {
 							setLoadedSrc(viewUrl);
@@ -320,10 +321,11 @@ export function PageDetailScreen({
 					/>
 
 					<View
-						className="absolute inset-0 overflow-hidden"
+						className="absolute inset-x-0 bottom-0 overflow-hidden"
+						style={{ top: headerHeight }}
 						pointerEvents="box-none"
 					>
-						{threads.map((thread) => {
+						{unresolvedThreads.map((thread) => {
 							const point = pinPoints.get(thread.id);
 							if (!point) return null;
 							return (
@@ -334,40 +336,22 @@ export function PageDetailScreen({
 									initials={getInitials(thread.comments[0]?.authorName) || "?"}
 									resolved={thread.resolved}
 									active={false}
-									onPress={() => {
-										setThreadId(thread.id);
-										router.push({
-											pathname: "/(authenticated)/pages/[slug]/thread",
-											params: { slug },
-										});
-									}}
+									onPress={() => openThread(thread.id)}
 								/>
 							);
 						})}
 
-						{selection ? (
-							<>
-								<View
-									pointerEvents="none"
-									style={{
-										left: selection.rect.left,
-										top: selection.rect.top,
-										width: selection.rect.width,
-										height: selection.rect.height,
-									}}
-									className="absolute rounded-sm border border-blue-500 bg-blue-500/10"
-								/>
-								{focused ? (
-									<SelectionToolbar
-										rect={selection.rect}
-										container={container}
-										onComment={() => openSheet("compose")}
-										onQuickMenu={() => openSheet("quick")}
-										onQuick={(body) => void postQuick(body)}
-										onDismiss={() => setSelection(null)}
-									/>
-								) : null}
-							</>
+						{selectionRect ? (
+							<View
+								pointerEvents="none"
+								style={{
+									left: selectionRect.left,
+									top: selectionRect.top,
+									width: selectionRect.width,
+									height: selectionRect.height,
+								}}
+								className="absolute rounded-sm border border-blue-500 bg-blue-500/10"
+							/>
 						) : null}
 					</View>
 

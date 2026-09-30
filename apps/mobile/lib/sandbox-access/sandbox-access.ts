@@ -1,10 +1,10 @@
 import { apiClient } from "@/lib/trpc/client";
 
 /**
- * A sandbox has no stable address: the cloud brokers a preview URL plus a
- * short-lived provider token per access, and the token — not anything
- * host-service checks — is the whole of the sandbox's access control. This
- * holds the latest grant per cloud workspace so the HTTP client can attach the
+ * A sandbox has no stable address: the cloud brokers its URL plus a
+ * short-lived token signed for that one workspace, which host-service inside
+ * the sandbox checks — the whole of the sandbox's access control. This holds
+ * the latest grant per cloud workspace so the HTTP client can attach the
  * token by URL and the terminal can sign each dial with a fresh one.
  */
 export interface SandboxAccess {
@@ -21,7 +21,7 @@ export interface SandboxAccess {
 const STALE_BEFORE_MS = 60_000;
 
 const accessByWorkspaceId = new Map<string, SandboxAccess>();
-const previewTokenByUrl = new Map<string, string>();
+const tokenByUrl = new Map<string, string>();
 const inflight = new Map<string, Promise<SandboxAccess>>();
 /**
  * Bumped whenever a workspace's grants are retired, so a mint that was
@@ -29,6 +29,7 @@ const inflight = new Map<string, Promise<SandboxAccess>>();
  * quietly resurrect credentials for a workspace this client gave up.
  */
 const epochByWorkspaceId = new Map<string, number>();
+const wakesByWorkspaceId = new Map<string, number>();
 
 export function getSandboxAccess(workspaceId: string): SandboxAccess | null {
 	return accessByWorkspaceId.get(workspaceId) ?? null;
@@ -39,8 +40,8 @@ export function isSandboxHost(machineId: string): boolean {
 	return accessByWorkspaceId.has(machineId);
 }
 
-export function sandboxPreviewToken(hostUrl: string): string | null {
-	return previewTokenByUrl.get(hostUrl) ?? null;
+export function sandboxToken(hostUrl: string): string | null {
+	return tokenByUrl.get(hostUrl) ?? null;
 }
 
 function isFresh(access: SandboxAccess): boolean {
@@ -56,12 +57,38 @@ export function ensureSandboxAccess(
 ): Promise<SandboxAccess> {
 	const cached = accessByWorkspaceId.get(workspaceId);
 	if (cached && isFresh(cached)) return Promise.resolve(cached);
-	const pending = inflight.get(workspaceId);
+	return wakeSandboxAccess(workspaceId);
+}
+
+/**
+ * A grant for the sandbox at its last known address, without waking it. Fast
+ * enough to open the workspace on: a running sandbox answers there right
+ * away, and a stopped one fails its requests until `wakeSandboxAccess` lands.
+ */
+export function addressSandboxAccess(
+	workspaceId: string,
+): Promise<SandboxAccess> {
+	return mint(workspaceId, false);
+}
+
+/**
+ * A new grant whether or not the current one is fresh. The ticket outlives
+ * the sandbox's session by hours, so this — not expiry — is what keeps the
+ * open workspace's session going and resumes it once it has stopped.
+ */
+export function wakeSandboxAccess(workspaceId: string): Promise<SandboxAccess> {
+	return mint(workspaceId, true);
+}
+
+function mint(workspaceId: string, wake: boolean): Promise<SandboxAccess> {
+	const key = `${workspaceId}:${wake}`;
+	const pending = inflight.get(key);
 	if (pending) return pending;
 
 	const epoch = epochByWorkspaceId.get(workspaceId) ?? 0;
-	const mint = apiClient.cloudWorkspace.access
-		.mutate({ id: workspaceId })
+	const wakes = wakesByWorkspaceId.get(workspaceId) ?? 0;
+	const request = apiClient.cloudWorkspace.access
+		.mutate({ id: workspaceId, wake })
 		.then((granted) => {
 			const access: SandboxAccess = {
 				url: granted.url,
@@ -73,21 +100,27 @@ export function ensureSandboxAccess(
 				// legitimate) but don't re-register credentials nothing owns.
 				return access;
 			}
-			// A renewed preview can move URLs; the old address must stop
+			// A resumed sandbox can answer on a new domain; an address read
+			// before that wake landed points at the old one.
+			if (!wake && (wakesByWorkspaceId.get(workspaceId) ?? 0) !== wakes) {
+				return accessByWorkspaceId.get(workspaceId) ?? access;
+			}
+			if (wake) wakesByWorkspaceId.set(workspaceId, wakes + 1);
+			// A recreated sandbox can move URLs; the old address must stop
 			// resolving a token or a cached client keeps authenticating with it.
 			const previous = accessByWorkspaceId.get(workspaceId);
 			if (previous && previous.url !== access.url) {
-				previewTokenByUrl.delete(previous.url);
+				tokenByUrl.delete(previous.url);
 			}
 			accessByWorkspaceId.set(workspaceId, access);
-			previewTokenByUrl.set(access.url, access.token);
+			tokenByUrl.set(access.url, access.token);
 			return access;
 		})
 		.finally(() => {
-			inflight.delete(workspaceId);
+			inflight.delete(key);
 		});
-	inflight.set(workspaceId, mint);
-	return mint;
+	inflight.set(key, request);
+	return request;
 }
 
 /** Forget a workspace that is gone; its URL stops carrying a token. */
@@ -97,7 +130,7 @@ export function clearSandboxAccess(workspaceId: string): void {
 		(epochByWorkspaceId.get(workspaceId) ?? 0) + 1,
 	);
 	const access = accessByWorkspaceId.get(workspaceId);
-	if (access) previewTokenByUrl.delete(access.url);
+	if (access) tokenByUrl.delete(access.url);
 	accessByWorkspaceId.delete(workspaceId);
 }
 

@@ -1,6 +1,4 @@
 import { useLingui } from "@lingui/react/macro";
-import { errorMessage } from "@superset/i18n/errors";
-import { toast } from "@superset/ui/sonner";
 import {
 	type KeyboardEvent,
 	type MouseEvent,
@@ -10,7 +8,6 @@ import {
 	useRef,
 	useState,
 } from "react";
-import { cloudTrpc } from "renderer/lib/cloud-trpc";
 import { useOptimisticActions } from "renderer/routes/_authenticated/hooks/useOptimisticActions";
 import { RenameBranchDialog } from "renderer/screens/main/components/WorkspaceSidebar/WorkspaceListItem/components";
 import {
@@ -61,29 +58,6 @@ export function DashboardSidebarWorkspaceItem({
 	pinnedContext,
 }: DashboardSidebarWorkspaceItemProps) {
 	const { t } = useLingui();
-	// TODO(SUPER-2116): belongs in the create-environment flow; this offers
-	// itself on workspaces that are not "ready" and cannot be promoted.
-	const promoteToEnvironment = cloudTrpc.environment.promote.useMutation();
-
-	const handlePromoteToEnvironment = useCallback(() => {
-		toast.promise(
-			promoteToEnvironment.mutateAsync({
-				cloudWorkspaceId: workspace.id,
-				name: workspace.name,
-			}),
-			{
-				loading: t({
-					message: "Saving as an environment...",
-				}),
-				success: (created) =>
-					t({
-						message: `Saved "${created?.name}" as an environment`,
-					}),
-				error: (error) => errorMessage(error),
-			},
-		);
-	}, [promoteToEnvironment, workspace.id, workspace.name, t]);
-
 	const {
 		id,
 		projectId,
@@ -95,7 +69,6 @@ export function DashboardSidebarWorkspaceItem({
 		pendingTransaction,
 		pullRequest,
 	} = workspace;
-	const isMainWorkspace = workspace.type === "main";
 	const isSessionWorkspace = workspace.type === "session";
 	const { status: workspaceStatus, diffStats } = useSidebarWorkspaceStatus(id);
 	const {
@@ -127,9 +100,6 @@ export function DashboardSidebarWorkspaceItem({
 		isSessionWorkspace,
 		workspaceName: name,
 		branch,
-		pullRequestUrl: pullRequest?.url ?? null,
-		isCloudWorkspace: hostType === "cloud",
-		isMainWorkspace,
 		isPinned: workspace.isPinned,
 	});
 
@@ -292,12 +262,6 @@ export function DashboardSidebarWorkspaceItem({
 							hasStatus={!!workspaceStatus}
 							hasPullRequest={!!pullRequest}
 							isLocalWorkspace={hostType === "local-device"}
-							isLocalMainWorkspace={
-								isMainWorkspace && hostType === "local-device"
-							}
-							onPromoteToEnvironment={
-								hostType === "cloud" ? handlePromoteToEnvironment : undefined
-							}
 							isPinned={workspace.isPinned}
 							onTogglePin={handleTogglePin}
 							onCreateSection={handleCreateSection}
@@ -309,8 +273,8 @@ export function DashboardSidebarWorkspaceItem({
 							onCopyWorkspaceId={handleCopyWorkspaceId}
 							onRemoveFromSidebar={handleRemoveFromSidebar}
 							onRemovePullRequest={handleRemovePullRequest}
-							onRename={isMainWorkspace ? undefined : startRename}
-							onDelete={isMainWorkspace ? undefined : requestDelete}
+							onRename={startRename}
+							onDelete={requestDelete}
 							onToggleUnread={handleToggleUnread}
 							onClearStatus={handleClearStatus}
 						>
@@ -359,7 +323,7 @@ export function DashboardSidebarWorkspaceItem({
 				onContextMenu={handleExpandedContextMenu}
 				onKeyboardActivate={handleExpandedKeyboardActivate}
 				onWorkspaceChipsClick={handleWorkspaceChipsClick}
-				onDoubleClick={isPending || isMainWorkspace ? undefined : startRename}
+				onDoubleClick={isPending ? undefined : startRename}
 				onRemoveFromSidebarClick={handleRemoveFromSidebar}
 				onCloseWorkspaceClick={requestDelete}
 				onRenameValueChange={setRenameValue}
@@ -390,9 +354,6 @@ export function DashboardSidebarWorkspaceItem({
 						onCreateSection={handleCreateSection}
 						onMoveToSection={handleMoveToSection}
 						isLocalWorkspace={hostType === "local-device"}
-						isLocalMainWorkspace={
-							isMainWorkspace && hostType === "local-device"
-						}
 						isPinned={workspace.isPinned}
 						onTogglePin={handleTogglePin}
 						onOpenInFinder={handleOpenInFinder}
@@ -402,8 +363,8 @@ export function DashboardSidebarWorkspaceItem({
 						onCopyWorkspaceId={handleCopyWorkspaceId}
 						onRemoveFromSidebar={handleRemoveFromSidebar}
 						onRemovePullRequest={handleRemovePullRequest}
-						onRename={isMainWorkspace ? undefined : startRename}
-						onDelete={isMainWorkspace ? undefined : requestDelete}
+						onRename={startRename}
+						onDelete={requestDelete}
 						onToggleUnread={handleToggleUnread}
 						onClearStatus={handleClearStatus}
 					>

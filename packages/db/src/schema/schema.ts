@@ -1,8 +1,11 @@
+import type { ActiveAgentStatus } from "@superset/shared/agent-status";
 import { desc, sql } from "drizzle-orm";
 import {
+	type AnyPgColumn,
 	bigint,
 	boolean,
 	check,
+	date,
 	foreignKey,
 	index,
 	integer,
@@ -17,25 +20,36 @@ import {
 	uniqueIndex,
 	uuid,
 } from "drizzle-orm/pg-core";
-import { organizations, users } from "./auth";
+import { organizations, teams, users } from "./auth";
+import type { PageReportReason } from "./enums";
 import {
+	actorKindValues,
+	agentCredentialKindValues,
 	automationPromptSourceValues,
 	automationRunErrorCodeValues,
 	automationRunStatusValues,
 	automationSessionKindValues,
 	automationTriggerKindValues,
+	cloudWorkspaceActivityEventValues,
 	cloudWorkspaceStatusValues,
+	cloudWorkspaceVisibilityValues,
 	commandStatusValues,
 	desktopNoticeCtaActionValues,
 	desktopNoticeSeverityValues,
 	desktopNoticeTriggerValues,
+	environmentScopeValues,
 	environmentSourceKindValues,
 	integrationProviderValues,
 	pageCommentAnchorKindValues,
 	pageCommentAuthorKindValues,
 	pageCommentIntentValues,
+	pageReportStatusValues,
 	pageVisibilityValues,
+	suggestionEntityValues,
+	suggestionKindValues,
+	suggestionStatusValues,
 	taskPriorityValues,
+	taskProjectStateValues,
 	taskStatusEnumValues,
 	v2ClientTypeValues,
 	v2UsersHostRoleValues,
@@ -58,13 +72,43 @@ export const integrationProvider = pgEnum(
 	integrationProviderValues,
 );
 export const commandStatus = pgEnum("command_status", commandStatusValues);
+export const agentCredentialKind = pgEnum(
+	"agent_credential_kind",
+	agentCredentialKindValues,
+);
 export const cloudWorkspaceStatus = pgEnum(
 	"cloud_workspace_status",
 	cloudWorkspaceStatusValues,
 );
+export const cloudWorkspaceVisibility = pgEnum(
+	"cloud_workspace_visibility",
+	cloudWorkspaceVisibilityValues,
+);
+export const actorKind = pgEnum("actor_kind", actorKindValues);
+export const cloudWorkspaceActivityEvent = pgEnum(
+	"cloud_workspace_activity_event",
+	cloudWorkspaceActivityEventValues,
+);
+export const taskProjectState = pgEnum(
+	"task_project_state",
+	taskProjectStateValues,
+);
+export const suggestionKind = pgEnum("suggestion_kind", suggestionKindValues);
+export const suggestionStatus = pgEnum(
+	"suggestion_status",
+	suggestionStatusValues,
+);
+export const suggestionEntity = pgEnum(
+	"suggestion_entity",
+	suggestionEntityValues,
+);
 export const environmentSourceKind = pgEnum(
 	"environment_source_kind",
 	environmentSourceKindValues,
+);
+export const environmentScope = pgEnum(
+	"environment_scope",
+	environmentScopeValues,
 );
 export const v2ClientType = pgEnum("v2_client_type", v2ClientTypeValues);
 export const v2UsersHostRole = pgEnum(
@@ -88,6 +132,11 @@ export const pageCommentAuthorKind = pgEnum(
 export const pageCommentIntent = pgEnum(
 	"page_comment_intent",
 	pageCommentIntentValues,
+);
+
+export const pageReportStatus = pgEnum(
+	"page_report_status",
+	pageReportStatusValues,
 );
 
 export const taskStatuses = pgTable(
@@ -156,7 +205,8 @@ export const tasks = pgTable(
 		// Planning
 		estimate: integer(),
 		dueDate: timestamp("due_date"),
-		labels: jsonb().$type<string[]>().default([]),
+		/** Unread since labels moved to task_label_assignments; dropped once no deployed API selects it. */
+		legacyLabels: jsonb("labels").$type<string[]>().default([]),
 
 		// Git/Work tracking
 		branch: text(),
@@ -218,7 +268,96 @@ export const tasks = pgTable(
 );
 
 export type InsertTask = typeof tasks.$inferInsert;
-export type SelectTask = typeof tasks.$inferSelect;
+/** A task as it is read: its own columns plus its label names. */
+export type SelectTask = Omit<typeof tasks.$inferSelect, "legacyLabels"> & {
+	labels: string[];
+};
+
+export const taskComments = pgTable(
+	"task_comments",
+	{
+		id: uuid().primaryKey().defaultRandom(),
+		taskId: uuid("task_id")
+			.notNull()
+			.references(() => tasks.id, { onDelete: "cascade" }),
+		authorUserId: uuid("author_user_id").references(() => users.id, {
+			onDelete: "set null",
+		}),
+		/** The comment this replies to; replies are one level deep. */
+		parentCommentId: uuid("parent_comment_id").references(
+			(): AnyPgColumn => taskComments.id,
+			{ onDelete: "cascade" },
+		),
+		/** Markdown, as the editor writes it. */
+		body: text().notNull(),
+		createdAt: timestamp("created_at", { withTimezone: true })
+			.notNull()
+			.defaultNow(),
+		editedAt: timestamp("edited_at", { withTimezone: true }),
+	},
+	(table) => [
+		index("task_comments_task_created_idx").on(table.taskId, table.createdAt),
+		index("task_comments_author_user_id_idx").on(table.authorUserId),
+		index("task_comments_parent_comment_id_idx").on(table.parentCommentId),
+	],
+);
+
+export type SelectTaskComment = typeof taskComments.$inferSelect;
+
+/** Changes people make to a task; Linear imports and syncs are not recorded here. */
+export const taskActivity = pgTable(
+	"task_activity",
+	{
+		id: uuid().primaryKey().defaultRandom(),
+		taskId: uuid("task_id")
+			.notNull()
+			.references(() => tasks.id, { onDelete: "cascade" }),
+		actorKind: actorKind("actor_kind").notNull(),
+		actorUserId: uuid("actor_user_id").references(() => users.id, {
+			onDelete: "set null",
+		}),
+		fromTitle: text("from_title"),
+		toTitle: text("to_title"),
+		fromStatusId: uuid("from_status_id").references(() => taskStatuses.id, {
+			onDelete: "set null",
+		}),
+		toStatusId: uuid("to_status_id").references(() => taskStatuses.id, {
+			onDelete: "set null",
+		}),
+		fromPriority: taskPriority("from_priority"),
+		toPriority: taskPriority("to_priority"),
+		fromAssigneeId: uuid("from_assignee_id").references(() => users.id, {
+			onDelete: "set null",
+		}),
+		toAssigneeId: uuid("to_assignee_id").references(() => users.id, {
+			onDelete: "set null",
+		}),
+		fromProjectId: uuid("from_project_id").references(() => taskProjects.id, {
+			onDelete: "set null",
+		}),
+		toProjectId: uuid("to_project_id").references(() => taskProjects.id, {
+			onDelete: "set null",
+		}),
+		descriptionEdited: boolean("description_edited").notNull().default(false),
+		addedLabelIds: uuid("added_label_ids").array(),
+		removedLabelIds: uuid("removed_label_ids").array(),
+		createdAt: timestamp("created_at", { withTimezone: true })
+			.notNull()
+			.defaultNow(),
+	},
+	(table) => [
+		index("task_activity_task_created_idx").on(table.taskId, table.createdAt),
+		index("task_activity_actor_user_id_idx").on(table.actorUserId),
+		index("task_activity_from_status_id_idx").on(table.fromStatusId),
+		index("task_activity_to_status_id_idx").on(table.toStatusId),
+		index("task_activity_from_assignee_id_idx").on(table.fromAssigneeId),
+		index("task_activity_to_assignee_id_idx").on(table.toAssigneeId),
+		index("task_activity_from_project_id_idx").on(table.fromProjectId),
+		index("task_activity_to_project_id_idx").on(table.toProjectId),
+	],
+);
+
+export type InsertTaskActivity = typeof taskActivity.$inferInsert;
 
 // Integration connections for external providers (Linear, GitHub, etc.)
 export const integrationConnections = pgTable(
@@ -286,6 +425,80 @@ export type InsertIntegrationConnection =
 	typeof integrationConnections.$inferInsert;
 export type SelectIntegrationConnection =
 	typeof integrationConnections.$inferSelect;
+
+export const connections = pgTable(
+	"connections",
+	{
+		id: uuid().primaryKey().defaultRandom(),
+		organizationId: uuid("organization_id")
+			.notNull()
+			.references(() => organizations.id, { onDelete: "cascade" }),
+		connectedByUserId: uuid("connected_by_user_id")
+			.notNull()
+			.references(() => users.id, { onDelete: "cascade" }),
+
+		connector: text().notNull(),
+		ownerKind: text("owner_kind").notNull(),
+		authMethod: text("auth_method").notNull(),
+
+		accessToken: text("access_token").notNull(),
+		refreshToken: text("refresh_token"),
+		tokenExpiresAt: timestamp("token_expires_at"),
+		scopes: text().array(),
+
+		issuer: text(),
+		resource: text(),
+
+		externalAccountId: text("external_account_id").notNull(),
+		externalAccountLabel: text("external_account_label"),
+		externalUserId: text("external_user_id"),
+		externalUserLabel: text("external_user_label"),
+
+		config: jsonb().$type<Record<string, string | null>>(),
+		state: jsonb().$type<IntegrationConfig>(),
+
+		disconnectedAt: timestamp("disconnected_at"),
+		disconnectReason: text("disconnect_reason"),
+
+		createdAt: timestamp("created_at").notNull().defaultNow(),
+		updatedAt: timestamp("updated_at")
+			.notNull()
+			.defaultNow()
+			.$onUpdate(() => new Date()),
+	},
+	(table) => [
+		uniqueIndex("connections_org_connector_unique")
+			.on(table.organizationId, table.connector)
+			.where(sql`${table.ownerKind} = 'org'`),
+		uniqueIndex("connections_user_connector_unique")
+			.on(
+				table.organizationId,
+				table.connector,
+				table.connectedByUserId,
+				table.externalAccountId,
+			)
+			.where(sql`${table.ownerKind} = 'user'`),
+		index("connections_org_idx").on(table.organizationId),
+		// Every plugin surface asks "what has this person connected" — the
+		// plugins list, the connections list, and the uninstall sweep — and the
+		// two unique indexes above lead with organization_id, so none of them
+		// can serve it. The table this replaced had plugin_connections_user_plugin_idx.
+		index("connections_user_connector_idx")
+			.on(table.connectedByUserId, table.connector)
+			.where(sql`${table.disconnectedAt} IS NULL`),
+		index("connections_external_account_idx").on(
+			table.connector,
+			table.externalAccountId,
+		),
+		check(
+			"connections_user_identity_present",
+			sql`owner_kind <> 'user' OR external_user_id IS NOT NULL`,
+		),
+	],
+);
+
+export type InsertConnection = typeof connections.$inferInsert;
+export type SelectConnection = typeof connections.$inferSelect;
 
 // Stripe subscriptions (org-based billing)
 export const subscriptions = pgTable(
@@ -558,9 +771,25 @@ export const environments = pgTable(
 			.notNull()
 			.references(() => organizations.id, { onDelete: "cascade" }),
 		name: text().notNull(),
-		provider: text().notNull().default("blaxel"),
+		provider: text().notNull().default("vercel"),
 		sourceKind: environmentSourceKind("source_kind").notNull(),
 		sourceRef: text("source_ref").notNull(),
+		/** Where its golden lives and every box forked from it runs; a snapshot only exists in its region. */
+		region: text().notNull().default("sfo1"),
+		/** The sandbox bundle every workspace of this environment boots on; null keeps the image's own. */
+		bundleSha: text("bundle_sha"),
+		/**
+		 * Which of the environment's repositories carries the `.superset/config.json`
+		 * the box acts on; null means none does and only `hooks` applies.
+		 */
+		hooksRepositoryId: uuid("hooks_repository_id").references(
+			() => githubRepositories.id,
+			{ onDelete: "set null" },
+		),
+		scope: environmentScope().notNull().default("organization"),
+		createdByUserId: uuid("created_by_user_id").references(() => users.id, {
+			onDelete: "set null",
+		}),
 		archivedAt: timestamp("archived_at", { withTimezone: true }),
 		createdAt: timestamp("created_at", { withTimezone: true })
 			.notNull()
@@ -572,9 +801,32 @@ export const environments = pgTable(
 	},
 	(table) => [
 		index("environments_organization_id_idx").on(table.organizationId),
-		unique("environments_organization_id_name_unique").on(
-			table.organizationId,
-			table.name,
+	],
+);
+
+/**
+ * The repositories an environment checks out, in order; the first is the
+ * primary. An environment with none (the shared image environment) takes
+ * its repositories at workspace create.
+ */
+export const environmentRepositories = pgTable(
+	"environment_repositories",
+	{
+		id: uuid().primaryKey().defaultRandom(),
+		environmentId: uuid("environment_id")
+			.notNull()
+			.references(() => environments.id, { onDelete: "cascade" }),
+		repositoryId: uuid("repository_id")
+			.notNull()
+			.references(() => githubRepositories.id, { onDelete: "cascade" }),
+	},
+	(table) => [
+		unique("environment_repositories_environment_id_repository_id_unique").on(
+			table.environmentId,
+			table.repositoryId,
+		),
+		index("environment_repositories_environment_id_idx").on(
+			table.environmentId,
 		),
 	],
 );
@@ -627,15 +879,28 @@ export const cloudWorkspaces = pgTable(
 		// never to display one — a rename lands on the sandbox and leaves these
 		// behind.
 		name: text().notNull(),
+		/** The branch the sandbox works on, cut from `baseBranch` at create. */
 		branch: text().notNull(),
-		provider: text().notNull().default("blaxel"),
+		baseBranch: text("base_branch").notNull(),
+		provider: text().notNull().default("vercel"),
 		providerSandboxId: text("provider_sandbox_id").notNull(),
 		sandboxUrl: text("sandbox_url"),
 		status: cloudWorkspaceStatus().notNull().default("provisioning"),
+		visibility: cloudWorkspaceVisibility().notNull().default("org"),
 		environmentId: uuid("environment_id")
 			.notNull()
 			.references(() => environments.id),
 		hostVersion: text("host_version"),
+		agentStatus: text("agent_status").$type<ActiveAgentStatus>(),
+		agentStatusAt: timestamp("agent_status_at", { withTimezone: true }),
+		/** What the creator typed, as markdown; null when the box started idle. */
+		prompt: text(),
+		/** Markdown anyone can edit; the box's agent can write it on request. */
+		description: text(),
+		/** What the box's spend counts toward. Set by a person, never moved by a task changing project. */
+		projectId: uuid("project_id").references(() => taskProjects.id, {
+			onDelete: "set null",
+		}),
 		deletedAt: timestamp("deleted_at", { withTimezone: true }),
 		createdByUserId: uuid("created_by_user_id").references(() => users.id, {
 			onDelete: "set null",
@@ -656,6 +921,316 @@ export const cloudWorkspaces = pgTable(
 		),
 	],
 );
+
+/**
+ * What a cloud workspace checked out, fixed at create: each repository on a
+ * branch at a path under the workspace root. The first is the primary, the
+ * one the workspace opens on.
+ */
+export const cloudWorkspaceRepositories = pgTable(
+	"cloud_workspace_repositories",
+	{
+		id: uuid().primaryKey().defaultRandom(),
+		cloudWorkspaceId: uuid("cloud_workspace_id")
+			.notNull()
+			.references(() => cloudWorkspaces.id, { onDelete: "cascade" }),
+		repositoryId: uuid("repository_id")
+			.notNull()
+			.references(() => githubRepositories.id, { onDelete: "cascade" }),
+		path: text().notNull(),
+	},
+	(table) => [
+		unique("cloud_workspace_repositories_workspace_repository_unique").on(
+			table.cloudWorkspaceId,
+			table.repositoryId,
+		),
+		index("cloud_workspace_repositories_cloud_workspace_id_idx").on(
+			table.cloudWorkspaceId,
+		),
+	],
+);
+
+/** Who has opened a cloud workspace, and when they were last in it. */
+export const cloudWorkspacePresence = pgTable(
+	"cloud_workspace_presence",
+	{
+		cloudWorkspaceId: uuid("cloud_workspace_id")
+			.notNull()
+			.references(() => cloudWorkspaces.id, { onDelete: "cascade" }),
+		userId: uuid("user_id")
+			.notNull()
+			.references(() => users.id, { onDelete: "cascade" }),
+		firstSeenAt: timestamp("first_seen_at", { withTimezone: true })
+			.notNull()
+			.defaultNow(),
+		lastSeenAt: timestamp("last_seen_at", { withTimezone: true })
+			.notNull()
+			.defaultNow(),
+	},
+	(table) => [
+		primaryKey({ columns: [table.cloudWorkspaceId, table.userId] }),
+		index("cloud_workspace_presence_user_id_idx").on(table.userId),
+	],
+);
+
+export const cloudWorkspaceTasks = pgTable(
+	"cloud_workspace_tasks",
+	{
+		cloudWorkspaceId: uuid("cloud_workspace_id")
+			.notNull()
+			.references(() => cloudWorkspaces.id, { onDelete: "cascade" }),
+		taskId: uuid("task_id")
+			.notNull()
+			.references(() => tasks.id, { onDelete: "cascade" }),
+		linkedByKind: actorKind("linked_by_kind").notNull(),
+		linkedByUserId: uuid("linked_by_user_id").references(() => users.id, {
+			onDelete: "set null",
+		}),
+		createdAt: timestamp("created_at", { withTimezone: true })
+			.notNull()
+			.defaultNow(),
+	},
+	(table) => [
+		primaryKey({ columns: [table.cloudWorkspaceId, table.taskId] }),
+		index("cloud_workspace_tasks_task_id_idx").on(table.taskId),
+	],
+);
+
+export const cloudWorkspaceLabels = pgTable(
+	"cloud_workspace_labels",
+	{
+		cloudWorkspaceId: uuid("cloud_workspace_id")
+			.notNull()
+			.references(() => cloudWorkspaces.id, { onDelete: "cascade" }),
+		labelId: uuid("label_id")
+			.notNull()
+			.references(() => taskLabels.id, { onDelete: "cascade" }),
+		createdAt: timestamp("created_at", { withTimezone: true })
+			.notNull()
+			.defaultNow(),
+	},
+	(table) => [
+		primaryKey({ columns: [table.cloudWorkspaceId, table.labelId] }),
+		index("cloud_workspace_labels_label_id_idx").on(table.labelId),
+	],
+);
+
+/**
+ * One row per change to a cloud workspace, shaped like task_activity: a
+ * from/to pair for each field it touched, or an `event` for what isn't a field.
+ */
+export const cloudWorkspaceActivity = pgTable(
+	"cloud_workspace_activity",
+	{
+		id: uuid().primaryKey().defaultRandom(),
+		cloudWorkspaceId: uuid("cloud_workspace_id")
+			.notNull()
+			.references(() => cloudWorkspaces.id, { onDelete: "cascade" }),
+		actorKind: actorKind("actor_kind").notNull(),
+		actorUserId: uuid("actor_user_id").references(() => users.id, {
+			onDelete: "set null",
+		}),
+		event: cloudWorkspaceActivityEvent(),
+		fromName: text("from_name"),
+		toName: text("to_name"),
+		fromVisibility: cloudWorkspaceVisibility("from_visibility"),
+		toVisibility: cloudWorkspaceVisibility("to_visibility"),
+		fromProjectId: uuid("from_project_id").references(() => taskProjects.id, {
+			onDelete: "set null",
+		}),
+		toProjectId: uuid("to_project_id").references(() => taskProjects.id, {
+			onDelete: "set null",
+		}),
+		addedLabelIds: uuid("added_label_ids").array(),
+		removedLabelIds: uuid("removed_label_ids").array(),
+		linkedTaskId: uuid("linked_task_id").references(() => tasks.id, {
+			onDelete: "set null",
+		}),
+		unlinkedTaskId: uuid("unlinked_task_id").references(() => tasks.id, {
+			onDelete: "set null",
+		}),
+		prUrl: text("pr_url"),
+		pageId: uuid("page_id").references(() => pages.id, {
+			onDelete: "set null",
+		}),
+		suggestionId: uuid("suggestion_id").references(() => suggestions.id, {
+			onDelete: "set null",
+		}),
+		createdAt: timestamp("created_at", { withTimezone: true })
+			.notNull()
+			.defaultNow(),
+	},
+	(table) => [
+		index("cloud_workspace_activity_workspace_created_idx").on(
+			table.cloudWorkspaceId,
+			table.createdAt,
+		),
+		index("cloud_workspace_activity_linked_task_id_idx").on(table.linkedTaskId),
+		index("cloud_workspace_activity_unlinked_task_id_idx").on(
+			table.unlinkedTaskId,
+		),
+	],
+);
+
+export type InsertCloudWorkspaceActivity =
+	typeof cloudWorkspaceActivity.$inferInsert;
+
+/** Named task_projects because `projects` is already Superset's code projects. */
+export const taskProjects = pgTable(
+	"task_projects",
+	{
+		id: uuid().primaryKey().defaultRandom(),
+		organizationId: uuid("organization_id")
+			.notNull()
+			.references(() => organizations.id, { onDelete: "cascade" }),
+		name: text().notNull(),
+		description: text(),
+		icon: text(),
+		color: text(),
+		state: taskProjectState().notNull().default("planned"),
+		leadUserId: uuid("lead_user_id").references(() => users.id, {
+			onDelete: "set null",
+		}),
+		startDate: date("start_date"),
+		targetDate: date("target_date"),
+		createdAt: timestamp("created_at", { withTimezone: true })
+			.notNull()
+			.defaultNow(),
+		updatedAt: timestamp("updated_at", { withTimezone: true })
+			.notNull()
+			.defaultNow()
+			.$onUpdate(() => new Date()),
+	},
+	(table) => [
+		index("task_projects_organization_id_idx").on(table.organizationId),
+	],
+);
+
+export const taskProjectTasks = pgTable(
+	"task_project_tasks",
+	{
+		projectId: uuid("project_id")
+			.notNull()
+			.references(() => taskProjects.id, { onDelete: "cascade" }),
+		taskId: uuid("task_id")
+			.notNull()
+			.unique()
+			.references(() => tasks.id, { onDelete: "cascade" }),
+		createdAt: timestamp("created_at", { withTimezone: true })
+			.notNull()
+			.defaultNow(),
+	},
+	(table) => [index("task_project_tasks_project_id_idx").on(table.projectId)],
+);
+
+export type SelectTaskProject = typeof taskProjects.$inferSelect;
+
+/** Labels for tasks and cloud workspaces; a null team is org-wide. Names are stored normalized. */
+export const taskLabels = pgTable(
+	"task_labels",
+	{
+		id: uuid().primaryKey().defaultRandom(),
+		organizationId: uuid("organization_id")
+			.notNull()
+			.references(() => organizations.id, { onDelete: "cascade" }),
+		teamId: uuid("team_id").references(() => teams.id, {
+			onDelete: "cascade",
+		}),
+		name: text().notNull(),
+		color: text(),
+		parentId: uuid("parent_id").references((): AnyPgColumn => taskLabels.id, {
+			onDelete: "set null",
+		}),
+		createdAt: timestamp("created_at", { withTimezone: true })
+			.notNull()
+			.defaultNow(),
+	},
+	(table) => [
+		uniqueIndex("task_labels_organization_id_name_unique").on(
+			table.organizationId,
+			table.name,
+		),
+	],
+);
+
+export type SelectTaskLabel = typeof taskLabels.$inferSelect;
+
+export const taskLabelAssignments = pgTable(
+	"task_label_assignments",
+	{
+		taskId: uuid("task_id")
+			.notNull()
+			.references(() => tasks.id, { onDelete: "cascade" }),
+		labelId: uuid("label_id")
+			.notNull()
+			.references(() => taskLabels.id, { onDelete: "cascade" }),
+		createdAt: timestamp("created_at", { withTimezone: true })
+			.notNull()
+			.defaultNow(),
+	},
+	(table) => [
+		primaryKey({ columns: [table.taskId, table.labelId] }),
+		index("task_label_assignments_label_id_idx").on(table.labelId),
+	],
+);
+
+/**
+ * A proposed change a person accepts or dismisses. Anyone can propose one
+ * (a person, an API key, an automation); `source` is the label on the chip.
+ * A dismissed row stays so the same proposal is never made again.
+ */
+export const suggestions = pgTable(
+	"suggestions",
+	{
+		id: uuid().primaryKey().defaultRandom(),
+		organizationId: uuid("organization_id")
+			.notNull()
+			.references(() => organizations.id, { onDelete: "cascade" }),
+		kind: suggestionKind().notNull(),
+		subjectType: suggestionEntity("subject_type").notNull(),
+		subjectId: uuid("subject_id").notNull(),
+		objectType: suggestionEntity("object_type"),
+		objectId: uuid("object_id"),
+		payload: jsonb().$type<Record<string, unknown>>(),
+		reason: text(),
+		source: text().notNull(),
+		status: suggestionStatus().notNull().default("pending"),
+		proposedByKind: actorKind("proposed_by_kind").notNull(),
+		proposedByUserId: uuid("proposed_by_user_id").references(() => users.id, {
+			onDelete: "set null",
+		}),
+		automationId: uuid("automation_id").references(() => automations.id, {
+			onDelete: "set null",
+		}),
+		decidedByUserId: uuid("decided_by_user_id").references(() => users.id, {
+			onDelete: "set null",
+		}),
+		decidedAt: timestamp("decided_at", { withTimezone: true }),
+		createdAt: timestamp("created_at", { withTimezone: true })
+			.notNull()
+			.defaultNow(),
+	},
+	(table) => [
+		uniqueIndex("suggestions_kind_subject_object_unique").on(
+			table.kind,
+			table.subjectType,
+			table.subjectId,
+			table.objectType,
+			table.objectId,
+		),
+		index("suggestions_subject_status_idx").on(
+			table.subjectType,
+			table.subjectId,
+			table.status,
+		),
+		index("suggestions_organization_id_status_idx").on(
+			table.organizationId,
+			table.status,
+		),
+	],
+);
+
+export type SelectSuggestion = typeof suggestions.$inferSelect;
 
 export type InsertCloudWorkspace = typeof cloudWorkspaces.$inferInsert;
 export type SelectCloudWorkspace = typeof cloudWorkspaces.$inferSelect;
@@ -923,6 +1498,15 @@ export const automations = pgTable(
 		v2ProjectId: uuid("v2_project_id"),
 		v2WorkspaceId: uuid("v2_workspace_id"),
 
+		// With targetHostId "cloud"; v2WorkspaceId is only ever a host's workspace.
+		cloudWorkspaceId: uuid("cloud_workspace_id").references(
+			() => cloudWorkspaces.id,
+			{ onDelete: "set null" },
+		),
+		environmentId: uuid("environment_id").references(() => environments.id, {
+			onDelete: "set null",
+		}),
+
 		// Workspace tags applied to each run's created workspace, so scheduled
 		// runs file themselves into the matching sidebar folders. Stored
 		// normalized (see @superset/shared/workspace-tags). Defaults to
@@ -932,10 +1516,10 @@ export const automations = pgTable(
 
 		// Deliver each run's prompt into the agent session the previous run
 		// left behind, rather than starting another beside it. Needs a pinned
-		// v2WorkspaceId — that is where the session lives. Off by default: a
-		// run that lands in a conversation already holding context behaves
-		// differently from one starting clean, and that is a choice to make
-		// per automation rather than a default to inherit.
+		// v2WorkspaceId or cloudWorkspaceId — that is where the session lives.
+		// Off by default: a run that lands in a conversation already holding
+		// context behaves differently from one starting clean, and that is a
+		// choice to make per automation rather than a default to inherit.
 		continueAgentSession: boolean("continue_agent_session")
 			.notNull()
 			.default(false),
@@ -1034,12 +1618,7 @@ export const automationEvents = pgTable(
 
 		// Text, not integration_provider: this must hold "webhook" and
 		// "superset", which have no connection behind them.
-		// Which connection produced this. Null for webhook and superset events.
-		// Not backfillable later: provider payloads do not always name it.
-		integrationConnectionId: uuid("integration_connection_id").references(
-			() => integrationConnections.id,
-			{ onDelete: "set null" },
-		),
+		integrationConnectionId: uuid("integration_connection_id"),
 
 		provider: text().notNull(),
 		eventType: text("event_type").notNull(),
@@ -1094,12 +1673,9 @@ export const automationEvents = pgTable(
 			t.receivedAt,
 		),
 		index("automation_events_resource_idx").on(t.resourceKey),
-		// The pruner scans oldest-first for rows that still have a body. Without
-		// this the planner walks automation_events_org_received_idx end to end and
-		// sorts, per batch. Partial, so it shrinks as the backlog drains.
-		index("automation_events_prunable_idx")
-			.on(t.receivedAt)
-			.where(sql`${t.payload} IS NOT NULL`),
+		// Retention deletes oldest-first. Without this the planner walks
+		// automation_events_org_received_idx end to end and sorts, per batch.
+		index("automation_events_received_at_idx").on(t.receivedAt),
 	],
 );
 
@@ -1132,6 +1708,10 @@ export const automationRuns = pgTable(
 
 		hostId: text("host_id"),
 		v2WorkspaceId: uuid("v2_workspace_id"),
+		cloudWorkspaceId: uuid("cloud_workspace_id").references(
+			() => cloudWorkspaces.id,
+			{ onDelete: "set null" },
+		),
 
 		sessionKind: automationSessionKind("session_kind"),
 		chatSessionId: uuid("chat_session_id").references(() => chatSessions.id, {
@@ -1169,6 +1749,10 @@ export const automationRuns = pgTable(
 		index("automation_runs_history_idx").on(t.automationId, t.createdAt),
 		index("automation_runs_status_idx").on(t.status),
 		index("automation_runs_workspace_idx").on(t.v2WorkspaceId),
+		index("automation_runs_cloud_workspace_idx").on(t.cloudWorkspaceId),
+		// ON DELETE SET NULL on event_id resolves through this; without it every
+		// automation_events row deleted by retention scans this table.
+		index("automation_runs_event_idx").on(t.eventId),
 	],
 );
 
@@ -1290,6 +1874,19 @@ export const desktopNotices = pgTable(
 export type InsertDesktopNotice = typeof desktopNotices.$inferInsert;
 export type SelectDesktopNotice = typeof desktopNotices.$inferSelect;
 
+export interface PageWatchOwnership {
+	token: string;
+	seenCommentIds: string[];
+	pings: Record<string, number>;
+	reservation: {
+		id: string;
+		expiresAt: number;
+		commentIds: string[];
+		pings: Record<string, number>;
+	} | null;
+	lastFinishedReservationId: string | null;
+}
+
 export const pages = pgTable(
 	"pages",
 	{
@@ -1305,7 +1902,14 @@ export const pages = pgTable(
 		description: text(),
 		visibility: pageVisibility().notNull().default("just_me"),
 		sharedVersion: integer("shared_version"),
+		takenDownAt: timestamp("taken_down_at", { withTimezone: true }),
+		takenDownByUserId: uuid("taken_down_by_user_id").references(
+			() => users.id,
+			{ onDelete: "set null" },
+		),
+		takenDownNote: text("taken_down_note"),
 		watchedByAgent: text("watched_by_agent"),
+		watchState: jsonb("watch_state").$type<PageWatchOwnership>(),
 		watchHeartbeatAt: timestamp("watch_heartbeat_at", { withTimezone: true }),
 		createdAt: timestamp("created_at", { withTimezone: true })
 			.notNull()
@@ -1317,9 +1921,10 @@ export const pages = pgTable(
 	},
 	(table) => [
 		uniqueIndex("pages_slug_unique").on(table.slug),
-		index("pages_organization_id_updated_at_idx").on(
+		index("pages_organization_id_created_at_id_idx").on(
 			table.organizationId,
-			desc(table.updatedAt),
+			desc(table.createdAt),
+			desc(table.id),
 		),
 		index("pages_created_by_user_id_idx").on(table.createdByUserId),
 	],
@@ -1360,6 +1965,46 @@ export const pageVersions = pgTable(
 export type InsertPageVersion = typeof pageVersions.$inferInsert;
 export type SelectPageVersion = typeof pageVersions.$inferSelect;
 
+export const pageReports = pgTable(
+	"page_reports",
+	{
+		id: uuid().primaryKey().defaultRandom(),
+		pageId: uuid("page_id")
+			.notNull()
+			.references(() => pages.id, { onDelete: "cascade" }),
+		reportedVersion: integer("reported_version"),
+		reason: text().notNull().$type<PageReportReason>(),
+		details: text(),
+		status: pageReportStatus().notNull().default("open"),
+		reportedByUserId: uuid("reported_by_user_id").references(() => users.id, {
+			onDelete: "set null",
+		}),
+		reporterEmail: text("reporter_email"),
+		// A reporter who is not signed in still has to be rate limitable and
+		// groupable across reports without us holding their address.
+		reporterIpHash: text("reporter_ip_hash"),
+		reviewedByUserId: uuid("reviewed_by_user_id").references(() => users.id, {
+			onDelete: "set null",
+		}),
+		reviewedAt: timestamp("reviewed_at", { withTimezone: true }),
+		reviewNote: text("review_note"),
+		createdAt: timestamp("created_at", { withTimezone: true })
+			.notNull()
+			.defaultNow(),
+	},
+	(table) => [
+		index("page_reports_status_created_at_idx").on(
+			table.status,
+			desc(table.createdAt),
+		),
+		index("page_reports_page_id_idx").on(table.pageId),
+		index("page_reports_reporter_ip_hash_idx").on(table.reporterIpHash),
+	],
+);
+
+export type InsertPageReport = typeof pageReports.$inferInsert;
+export type SelectPageReport = typeof pageReports.$inferSelect;
+
 export const workspacePages = pgTable(
 	"workspace_pages",
 	{
@@ -1397,6 +2042,12 @@ export const attachmentParentKind = pgEnum("attachment_parent_kind", [
 	// belong to exists; publish snapshots them onto that version and clears
 	// the staged rows, so a version is never served missing its own assets.
 	"page",
+	// A cloud workspace's prompt; the parent id is the workspace's.
+	"cloud_workspace_prompt",
+	// A comment on a task; the parent id is the task_comments row's.
+	"task_comment",
+	// A file in a project's description; the parent id is the project's.
+	"project_description",
 ]);
 
 /**
@@ -1565,3 +2216,85 @@ export const pageComments = pgTable(
 
 export type InsertPageComment = typeof pageComments.$inferInsert;
 export type SelectPageComment = typeof pageComments.$inferSelect;
+
+/**
+ * A person's own agent sign-in, used when they start a cloud workspace. The
+ * credential belongs to the person rather than an organization, so one row
+ * serves every organization they work in and it leaves with the account.
+ */
+export const agentCredentials = pgTable(
+	"agent_credentials",
+	{
+		id: uuid().primaryKey().defaultRandom(),
+		userId: uuid("user_id")
+			.notNull()
+			.references(() => users.id, { onDelete: "cascade" }),
+		/** Agent preset id, e.g. "claude" or "codex". Text so a custom agent fits. */
+		agent: text().notNull(),
+		kind: agentCredentialKind().notNull(),
+		encryptedValue: text("encrypted_value").notNull(),
+		/** Set when the key is for a gateway or a compatible endpoint. */
+		baseUrl: text("base_url"),
+		/**
+		 * Which custom provider the value came from, e.g. "gateway". Null for a
+		 * plain provider key, including one pointed at a compatible endpoint —
+		 * a base URL alone does not make a credential a custom provider.
+		 */
+		provider: text(),
+		/** What to show in settings, e.g. the account email. Never the credential. */
+		accountLabel: text("account_label"),
+		lastValidatedAt: timestamp("last_validated_at", { withTimezone: true }),
+		createdAt: timestamp("created_at", { withTimezone: true })
+			.notNull()
+			.defaultNow(),
+		updatedAt: timestamp("updated_at", { withTimezone: true })
+			.notNull()
+			.defaultNow()
+			.$onUpdate(() => new Date()),
+	},
+	(table) => [
+		unique("agent_credentials_user_id_agent_unique").on(
+			table.userId,
+			table.agent,
+		),
+		index("agent_credentials_user_id_idx").on(table.userId),
+	],
+);
+
+export type InsertAgentCredential = typeof agentCredentials.$inferInsert;
+export type SelectAgentCredential = typeof agentCredentials.$inferSelect;
+
+/**
+ * A person's own GitHub account, authorized through the GitHub App, so their
+ * cloud workspaces commit, push and open pull requests as them. One per user:
+ * a GitHub account belongs to a person, not an organization.
+ */
+export const githubUserConnections = pgTable("github_user_connections", {
+	id: uuid().primaryKey().defaultRandom(),
+	userId: uuid("user_id")
+		.notNull()
+		.unique()
+		.references(() => users.id, { onDelete: "cascade" }),
+	githubUserId: text("github_user_id").notNull(),
+	login: text().notNull(),
+	name: text(),
+	encryptedAccessToken: text("encrypted_access_token").notNull(),
+	/** Null when the App issues tokens that do not expire. */
+	accessTokenExpiresAt: timestamp("access_token_expires_at", {
+		withTimezone: true,
+	}),
+	encryptedRefreshToken: text("encrypted_refresh_token"),
+	refreshTokenExpiresAt: timestamp("refresh_token_expires_at", {
+		withTimezone: true,
+	}),
+	createdAt: timestamp("created_at", { withTimezone: true })
+		.notNull()
+		.defaultNow(),
+	updatedAt: timestamp("updated_at", { withTimezone: true })
+		.notNull()
+		.defaultNow()
+		.$onUpdate(() => new Date()),
+});
+
+export type SelectGithubUserConnection =
+	typeof githubUserConnections.$inferSelect;

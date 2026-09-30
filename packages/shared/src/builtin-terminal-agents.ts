@@ -66,7 +66,7 @@ export const BUILTIN_TERMINAL_AGENTS = [
 		resumeCommand: "claude --dangerously-skip-permissions --resume",
 		forkCommand:
 			"claude --dangerously-skip-permissions --resume {sessionId} --fork-session",
-		nonInteractiveCommand: "claude -p",
+		nonInteractiveCommand: "claude --strict-mcp-config -p",
 		includeInDefaultTerminalPresets: true,
 	}),
 	createBuiltinTerminalAgent({
@@ -257,6 +257,35 @@ export const BUILTIN_TERMINAL_AGENTS = [
 		promptCommandSuffix: "; hermes chat --yolo -c",
 		resumeCommand: "hermes chat --yolo -r",
 		nonInteractiveCommand: "hermes chat -q",
+	}),
+	createBuiltinTerminalAgent({
+		id: "muse",
+		label: "Muse Code",
+		description:
+			"Meta's terminal coding agent with persistent subagents and worktree fan-out.",
+		command: "muse",
+		resumeCommand: "muse resume",
+		nonInteractiveCommand: "muse exec",
+	}),
+	createBuiltinTerminalAgent({
+		id: "devin",
+		label: "Devin",
+		description:
+			"Cognition's Devin agent in the terminal, with handoff to Devin Cloud.",
+		command: "devin --permission-mode dangerous",
+		promptCommand: "devin --permission-mode dangerous --",
+		resumeCommand: "devin --permission-mode dangerous --resume",
+		// Print mode cannot show the workspace trust prompt and fails in an
+		// untrusted directory without this.
+		nonInteractiveCommand: "devin --respect-workspace-trust false -p",
+	}),
+	createBuiltinTerminalAgent({
+		id: "ufo",
+		label: "UFO",
+		description:
+			"UFO's workspace assistant for local and remote terminal workflows.",
+		command: "ufo",
+		resumeCommand: "ufo --resume",
 	}),
 ] as const;
 

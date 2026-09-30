@@ -70,7 +70,7 @@ export function LeaderboardBoard({
 		const term = search.trim();
 		if (term) url.searchParams.set("q", term);
 		else url.searchParams.delete("q");
-		window.history.replaceState(null, "", url);
+		window.history.replaceState(window.history.state, "", url);
 	}, [search]);
 	const [results, setResults] = useState<StandingRow[] | null>(null);
 	const [searching, setSearching] = useState(false);
@@ -242,9 +242,10 @@ export function LeaderboardBoard({
 								message: "Cache read",
 							}),
 							value: `${
-								totals.tokens > 0
+								Number(totals.tokens) > 0
 									? Math.round(
-											((stats?.tokenSplit.cachedInput ?? 0) / totals.tokens) *
+											(Number(stats?.tokenSplit.cachedInput ?? 0) /
+												Number(totals.tokens)) *
 												100,
 										)
 									: 0

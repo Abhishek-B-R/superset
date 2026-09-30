@@ -1,9 +1,11 @@
 export {
+	addressSandboxAccess,
 	clearSandboxAccess,
 	ensureSandboxAccess,
 	getSandboxAccess,
 	isSandboxHost,
 	pruneSandboxAccess,
 	type SandboxAccess,
-	sandboxPreviewToken,
+	sandboxToken,
+	wakeSandboxAccess,
 } from "./sandbox-access";

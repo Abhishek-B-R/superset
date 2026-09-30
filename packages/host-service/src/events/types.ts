@@ -32,6 +32,7 @@ export interface AgentLifecycleMessage {
 	// Absent when the hook ran without `SUPERSET_AGENT_ID` set (legacy shells
 	// or third-party hook configs that bypass our wrappers).
 	agent?: AgentIdentity;
+	preview?: string;
 	occurredAt: number;
 }
 
@@ -96,7 +97,7 @@ export interface WorkspaceSnapshot {
 	projectId: string | null;
 	name: string;
 	branch: string;
-	type: "main" | "worktree" | "session";
+	type: "local" | "worktree" | "session";
 	worktreePath: string;
 	taskId: string | null;
 	createdByUserId: string | null;
@@ -247,10 +248,23 @@ export type ServerMessage =
 	| PortChangedMessage
 	| WorkspaceChangedMessage
 	| WorkspaceCreateSettledMessage
+	| WorkspaceNamingFailedMessage
 	| ProjectChangedMessage
 	| TagFoldersChangedMessage
 	| PageWatchChangedMessage
 	| EventBusErrorMessage;
+
+/**
+ * Automatic naming gave up on a workspace after its last attempt; the
+ * prompt-derived title stays. Not sent when no agent was ever going to name
+ * it — a prompt-derived title is the whole plan there.
+ */
+export interface WorkspaceNamingFailedMessage {
+	type: "workspace:naming-failed";
+	workspaceId: string;
+	name: string;
+	occurredAt: number;
+}
 
 // ── Client → Server ────────────────────────────────────────────────
 

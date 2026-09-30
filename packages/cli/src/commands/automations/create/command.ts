@@ -1,8 +1,13 @@
 import { readFileSync } from "node:fs";
 import { boolean, CLIError, string } from "@superset/cli-framework";
 import { command } from "../../../lib/command";
+import { resolveHostFilter } from "../../../lib/host-target";
 import { formatAutomationDate } from "../format";
 import { resolveAutomationTarget } from "../resolveAutomationTarget";
+import {
+	refuseHostFlagsForCloud,
+	resolveCloudAutomationTarget,
+} from "../resolveCloudAutomationTarget";
 
 const DEFAULT_TIMEZONE =
 	Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
@@ -23,13 +28,22 @@ export default command({
 		project: string().desc(
 			"v2 project id for new-workspace-per-run mode. Omit (with no --workspace) to create a project-less session per run",
 		),
-		workspace: string().desc("existing v2 workspace id — reuses it every run"),
+		workspace: string().desc(
+			"existing v2 workspace id — reuses it every run. With --cloud, a cloud workspace id",
+		),
+		cloud: boolean().desc(
+			"Run in the cloud: each run starts a cloud workspace from --environment, or reuses the one --workspace names",
+		),
+		environment: string().desc(
+			"Id of the environment each run's cloud workspace starts from. Implies --cloud; required when several environments have repositories",
+		),
 		continueSession: boolean().desc(
 			"Deliver each run's prompt into the agent session the previous run left, instead of starting another. Requires --workspace",
 		),
 		host: string().desc(
 			"Host the target project/workspace lives on (default: this machine)",
 		),
+		local: boolean().desc("Run the automation on this machine (the default)"),
 		agent: string()
 			.default("claude")
 			.desc("Host agent instance id or presetId (claude, codex, ...)."),
@@ -53,22 +67,46 @@ export default command({
 		if (!organizationId) {
 			throw new CLIError("No active organization", "Run: superset auth login");
 		}
-		const target = await resolveAutomationTarget({
-			organizationId,
-			userJwt: ctx.bearer,
-			api: ctx.api,
-			hostId: options.host ?? undefined,
-			workspaceId: options.workspace ?? undefined,
-			projectId: options.project ?? undefined,
-		});
+		const cloud = Boolean(options.cloud || options.environment);
+		if (cloud) {
+			refuseHostFlagsForCloud({
+				"--host": options.host,
+				"--local": options.local,
+				"--project": options.project,
+				"--tag": options.tag?.length ? options.tag : undefined,
+			});
+		}
+		const cloudTarget = cloud
+			? await resolveCloudAutomationTarget({
+					api: ctx.api,
+					organizationId,
+					environment: options.environment ?? undefined,
+					workspaceId: options.workspace ?? undefined,
+					requirePlacement: true,
+				})
+			: null;
+		const target = cloudTarget
+			? cloudTarget.target
+			: {
+					...(await resolveAutomationTarget({
+						organizationId,
+						userJwt: ctx.bearer,
+						api: ctx.api,
+						hostId: resolveHostFilter({
+							host: options.host ?? undefined,
+							local: options.local ?? undefined,
+						}),
+						workspaceId: options.workspace ?? undefined,
+						projectId: options.project ?? undefined,
+					})),
+					v2WorkspaceId: options.workspace ?? undefined,
+				};
 
 		const result = await ctx.api.automation.create.mutate({
 			name: options.name,
 			prompt,
 			agent: options.agent,
-			targetHostId: target.targetHostId,
-			v2ProjectId: target.v2ProjectId,
-			v2WorkspaceId: options.workspace ?? undefined,
+			...target,
 			continueAgentSession: options.continueSession ?? undefined,
 			rrule: options.rrule,
 			dtstart: options.dtstart ? new Date(options.dtstart) : undefined,
@@ -78,7 +116,11 @@ export default command({
 
 		return {
 			data: result,
-			message: `Created automation "${result.name}" (${result.id})\nNext run: ${formatAutomationDate(result.nextRunAt, result.timezone)}`,
+			message: [
+				`Created automation "${result.name}" (${result.id})`,
+				...(cloudTarget ? [`Runs ${cloudTarget.placement}`] : []),
+				`Next run: ${formatAutomationDate(result.nextRunAt, result.timezone)}`,
+			].join("\n"),
 		};
 	},
 });

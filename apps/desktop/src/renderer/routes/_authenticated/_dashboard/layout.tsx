@@ -1,14 +1,13 @@
 import {
-	CatchBoundary,
 	createFileRoute,
 	Outlet,
-	useLocation,
 	useMatchRoute,
 	useNavigate,
 } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { CommandPaletteHost } from "renderer/commandPalette";
 import { Redirect } from "renderer/components/Redirect";
+import { useWorkspaceNamingFailedToast } from "renderer/hooks/host-service/useWorkspaceNamingFailedToast";
 import { useIsV2CloudEnabled } from "renderer/hooks/useIsV2CloudEnabled";
 import { useOpenNewWorkspace } from "renderer/hooks/useOpenNewWorkspace";
 import { useQuickCreateWorkspace } from "renderer/hooks/useQuickCreateWorkspace";
@@ -17,6 +16,7 @@ import { electronTrpc } from "renderer/lib/electron-trpc";
 import { DashboardSidebar } from "renderer/routes/_authenticated/_dashboard/components/DashboardSidebar";
 import { DashboardSidebarPortsProvider } from "renderer/routes/_authenticated/_dashboard/components/DashboardSidebar/providers/DashboardSidebarPortsProvider";
 import { PortForwardsProvider } from "renderer/routes/_authenticated/_dashboard/components/DashboardSidebar/providers/PortForwardsProvider";
+import { useCloudSidebarStore } from "renderer/routes/_authenticated/_dashboard/stores/cloudSidebarStore";
 import { useDevSeedV2Sidebar } from "renderer/routes/_authenticated/hooks/useDevSeedV2Sidebar";
 import { useHostWorkspaces } from "renderer/routes/_authenticated/providers/HostWorkspacesProvider";
 import { useLocalHostService } from "renderer/routes/_authenticated/providers/LocalHostServiceProvider";
@@ -34,10 +34,11 @@ import {
 	MAX_WORKSPACE_SIDEBAR_WIDTH,
 	useWorkspaceSidebarStore,
 } from "renderer/stores/workspace-sidebar-state";
+import { ContentBoundary } from "../components/ContentBoundary";
 import { AddRepositoryModals } from "./components/AddRepositoryModals";
 import { CrossVersionMismatchState } from "./components/CrossVersionMismatchState";
-import { DashboardContentError } from "./components/DashboardContentError";
 import { RemotePortForwarder } from "./components/RemotePortForwarder";
+import { SaveAsEnvironmentMount } from "./components/SaveAsEnvironmentMount";
 import { TopBar } from "./components/TopBar";
 
 export const Route = createFileRoute("/_authenticated/_dashboard")({
@@ -54,7 +55,7 @@ type DeleteTarget = {
 
 function DashboardLayout() {
 	const navigate = useNavigate();
-	const location = useLocation();
+
 	const openNewWorkspace = useOpenNewWorkspace();
 	const isV2CloudEnabled = useIsV2CloudEnabled();
 	const portsDisplayMode = usePortsDisplayMode();
@@ -71,11 +72,14 @@ function DashboardLayout() {
 		const stopAgentStateSync = syncPersistedStoreAcrossWindows(
 			useV2NotificationStore,
 		);
+		const stopCloudSidebarSync =
+			syncPersistedStoreAcrossWindows(useCloudSidebarStore);
 
 		return () => {
 			stopWorkspaceSidebarSync();
 			stopSectionCollapseSync();
 			stopAgentStateSync();
+			stopCloudSidebarSync();
 		};
 	}, []);
 	// Get current workspace from route to pre-select project in new workspace modal
@@ -101,6 +105,8 @@ function DashboardLayout() {
 		matchRoute({ to: "/pull-requests", fuzzy: true }) !== false ||
 		matchRoute({ to: "/plugins", fuzzy: true }) !== false ||
 		matchRoute({ to: "/pages", fuzzy: true }) !== false ||
+		matchRoute({ to: "/cloud-workspaces", fuzzy: true }) !== false ||
+		matchRoute({ to: "/projects", fuzzy: true }) !== false ||
 		matchRoute({ to: "/v2-workspaces", fuzzy: true }) !== false;
 	const versionMismatch =
 		(isV2CloudEnabled && onV1WorkspaceRoute) ||
@@ -121,6 +127,7 @@ function DashboardLayout() {
 		[hostWorkspaces, currentV2WorkspaceId],
 	);
 	const { machineId: localMachineId } = useLocalHostService();
+	useWorkspaceNamingFailedToast();
 	// Forwarding needs port data only for a workspace on another machine;
 	// a local selection must not switch on cross-host port polling.
 	// machineId is "" until the device query answers; treat unknown as local
@@ -177,11 +184,7 @@ function DashboardLayout() {
 				return;
 			}
 
-			if (
-				currentV2WorkspaceId &&
-				currentV2Workspace &&
-				currentV2Workspace.type !== "main"
-			) {
+			if (currentV2WorkspaceId && currentV2Workspace) {
 				useDeleteWorkspaceIntent.getState().request({
 					workspaceId: currentV2WorkspaceId,
 					workspaceName: currentV2Workspace.name || currentV2Workspace.branch,
@@ -191,9 +194,7 @@ function DashboardLayout() {
 		{
 			enabled:
 				(!!currentWorkspaceId && !!currentWorkspace) ||
-				(!!currentV2WorkspaceId &&
-					!!currentV2Workspace &&
-					currentV2Workspace.type !== "main"),
+				(!!currentV2WorkspaceId && !!currentV2Workspace),
 		},
 	);
 
@@ -249,7 +250,7 @@ function DashboardLayout() {
 	// tab bar's leading inset. Only a fully closed sidebar keeps the TopBar,
 	// whose inset then keeps content clear of the macOS traffic lights. The
 	// new-workspace page brings its own drag strip, and the dashboard views
-	// (automations/tasks/workspaces) carry drag fillers in their own headers,
+	// (automations/tasks/workspaces/cloud workspaces/projects) carry drag fillers in their own headers,
 	// so they hide the TopBar whenever the expanded sidebar sits outside the
 	// column — otherwise it renders as an empty strip above their headers.
 	const hideTopBar =
@@ -298,18 +299,9 @@ function DashboardLayout() {
 										<CrossVersionMismatchState />
 									)
 								) : (
-									// Contain content-route crashes to this pane: without a
-									// boundary they bubble to the root and unmount the whole
-									// app, which reads as Superset restarting itself
-									// (SUPER-1814). Resets on navigation.
-									<CatchBoundary
-										// Full href, not just pathname: a same-path search/hash
-										// change (filter, tab) must also clear a stuck error pane.
-										getResetKey={() => location.href}
-										errorComponent={DashboardContentError}
-									>
+									<ContentBoundary>
 										<Outlet />
-									</CatchBoundary>
+									</ContentBoundary>
 								)}
 							</div>
 						</div>
@@ -319,6 +311,7 @@ function DashboardLayout() {
 						className="flex h-full shrink-0"
 					/>
 					<AddRepositoryModals />
+					<SaveAsEnvironmentMount />
 					{deleteTarget && (
 						<DeleteWorkspaceDialog
 							workspaceId={deleteTarget.workspaceId}

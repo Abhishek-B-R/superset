@@ -14,7 +14,6 @@ import {
 	LuArrowRightLeft,
 	LuArrowUp,
 	LuBellOff,
-	LuBox,
 	LuCopy,
 	LuEye,
 	LuEyeOff,
@@ -33,6 +32,7 @@ import {
 import { useHotkeyDisplay } from "renderer/hotkeys";
 import { useDashboardSidebarPortKill } from "../../../../hooks/useDashboardSidebarPortKill";
 import { useProjectTagFolderSections } from "../../../../hooks/useProjectTagFolderSections";
+import { useRunAfterMenuClose } from "../../../../hooks/useRunAfterMenuClose";
 import { useDashboardSidebarHoverActions } from "../../../../providers/DashboardSidebarHoverProvider";
 import { useDashboardSidebarWorkspacePorts } from "../../../../providers/DashboardSidebarPortsProvider";
 
@@ -40,14 +40,10 @@ interface DashboardSidebarWorkspaceContextMenuProps {
 	workspaceId: string;
 	/** Null for project-less session workspaces. */
 	projectId: string | null;
-	/**
-	 * Cloud rows are project-less too, so a null `projectId` alone does not mean
-	 * "session". Only sessions and project workspaces can join a group.
-	 */
+	/** Only sessions and project workspaces can join a group. */
 	isSessionWorkspace?: boolean;
 	isInSection?: boolean;
 	isLocalWorkspace: boolean;
-	isLocalMainWorkspace?: boolean;
 	isPinned: boolean;
 	isUnread: boolean;
 	hasStatus: boolean;
@@ -62,8 +58,6 @@ interface DashboardSidebarWorkspaceContextMenuProps {
 	onCopyWorkspaceId: () => void;
 	onRemoveFromSidebar: () => void;
 	onRename?: () => void;
-	/** Cloud workspaces only: turn this sandbox into a reusable environment. */
-	onPromoteToEnvironment?: () => void;
 	onDelete?: () => void;
 	onToggleUnread: () => void;
 	onClearStatus: () => void;
@@ -77,7 +71,6 @@ export function DashboardSidebarWorkspaceContextMenu({
 	isSessionWorkspace = false,
 	isInSection,
 	isLocalWorkspace,
-	isLocalMainWorkspace = false,
 	isPinned,
 	isUnread,
 	hasStatus,
@@ -92,13 +85,13 @@ export function DashboardSidebarWorkspaceContextMenu({
 	onCopyWorkspaceId,
 	onRemoveFromSidebar,
 	onRename,
-	onPromoteToEnvironment,
 	onDelete,
 	onToggleUnread,
 	onClearStatus,
 	onRemovePullRequest,
 	children,
 }: DashboardSidebarWorkspaceContextMenuProps) {
+	const { runAfterClose, onCloseAutoFocus } = useRunAfterMenuClose();
 	const { setContextMenuOpen } = useDashboardSidebarHoverActions();
 	const portGroup = useDashboardSidebarWorkspacePorts(workspaceId);
 	const { isPending: isKillingPorts, killPorts } =
@@ -119,7 +112,7 @@ export function DashboardSidebarWorkspaceContextMenu({
 	return (
 		<ContextMenu onOpenChange={setContextMenuOpen}>
 			<ContextMenuTrigger asChild>{children}</ContextMenuTrigger>
-			<ContextMenuContent onCloseAutoFocus={(event) => event.preventDefault()}>
+			<ContextMenuContent onCloseAutoFocus={onCloseAutoFocus}>
 				<ContextMenuItem onSelect={onTogglePin}>
 					{isPinned ? (
 						<>
@@ -134,7 +127,7 @@ export function DashboardSidebarWorkspaceContextMenu({
 					)}
 				</ContextMenuItem>
 				{onRename && (
-					<ContextMenuItem onSelect={onRename}>
+					<ContextMenuItem onSelect={() => runAfterClose(onRename)}>
 						<LuPencil className="size-4 mr-2" />
 						<Trans>Rename</Trans>
 					</ContextMenuItem>
@@ -153,15 +146,6 @@ export function DashboardSidebarWorkspaceContextMenu({
 					</>
 				)}
 				{!isLocalWorkspace && onRename && <ContextMenuSeparator />}
-				{onPromoteToEnvironment && (
-					<>
-						<ContextMenuItem onSelect={onPromoteToEnvironment}>
-							<LuBox className="h-4 w-4" />
-							<Trans>Save as environment</Trans>
-						</ContextMenuItem>
-						<ContextMenuSeparator />
-					</>
-				)}
 				<ContextMenuItem onSelect={onCopyBranchName}>
 					<LuGitBranch className="size-4 mr-2" />
 					<Trans>Copy Branch Name</Trans>
@@ -197,10 +181,8 @@ export function DashboardSidebarWorkspaceContextMenu({
 					</ContextMenuItem>
 				)}
 				{/* Group actions mutate placement (sectionId/tabOrder), which a pinned
-				    row doesn't display — the change would only surface on unpin.
-				    Cloud rows are project-less but ungroupable: they stay in the Cloud
-				    section, so grouping them would write tags with nothing to show. */}
-				{!isPinned && !isLocalMainWorkspace && canJoinGroup && (
+				    row doesn't display — the change would only surface on unpin. */}
+				{!isPinned && canJoinGroup && (
 					<>
 						<ContextMenuSeparator />
 						<ContextMenuItem onSelect={onCreateSection}>

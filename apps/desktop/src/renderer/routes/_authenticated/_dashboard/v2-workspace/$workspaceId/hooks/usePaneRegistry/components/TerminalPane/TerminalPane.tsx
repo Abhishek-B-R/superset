@@ -1,11 +1,11 @@
 import { useLingui } from "@lingui/react/macro";
 import type { RendererContext } from "@superset/panes";
-import { FEATURE_FLAGS } from "@superset/shared/constants";
 import { toast } from "@superset/ui/sonner";
 import { cn } from "@superset/ui/utils";
 import { workspaceTrpc } from "@superset/workspace-client";
+import { terminalQueryColors } from "renderer/lib/terminal/terminal-query-colors";
+import type { OpenFile } from "renderer/routes/_authenticated/_dashboard/v2-workspace/$workspaceId/types";
 import "@xterm/xterm/css/xterm.css";
-import { useFeatureFlagEnabled } from "posthog-js/react";
 import {
 	useCallback,
 	useEffect,
@@ -14,6 +14,7 @@ import {
 	useState,
 	useSyncExternalStore,
 } from "react";
+import { useTerminalAppearance } from "renderer/hooks/useTerminalAppearance";
 import { useHotkey } from "renderer/hotkeys";
 import {
 	actionLabel,
@@ -42,14 +43,19 @@ import { TerminalSearch } from "renderer/screens/main/components/WorkspaceView/C
 import { useTheme } from "renderer/stores/theme";
 import { resolveTerminalThemeType } from "renderer/stores/theme/utils";
 import { isWithinWorkspacePath } from "shared/absolute-paths";
+import { useLinkClickHint } from "../../hooks/useLinkClickHint";
+import {
+	runFileLinkAction,
+	runFolderLinkAction,
+	runUrlLinkAction,
+	type TerminalLinkActionDeps,
+} from "../../utils/runTerminalLinkAction";
 import { TerminalAgentAutoResume } from "./components/TerminalAgentAutoResume";
 import { TerminalCopiedIndicator } from "./components/TerminalCopiedIndicator";
 import { TerminalRichInput } from "./components/TerminalRichInput";
 import { terminalContextMenuLinkStore } from "./contextMenuLinkStore";
 import { useCopyOnSelect } from "./hooks/useCopyOnSelect";
-import { useLinkClickHint } from "./hooks/useLinkClickHint";
 import { type HoveredLink, useLinkHoverState } from "./hooks/useLinkHoverState";
-import { useTerminalAppearance } from "./hooks/useTerminalAppearance";
 import { useTerminalInterruptClear } from "./hooks/useTerminalInterruptClear";
 import {
 	terminalRichInputOpenStore,
@@ -57,17 +63,11 @@ import {
 } from "./richInputOpenStore";
 import { PasteUploadLimitError, uploadPastedFiles } from "./uploadPastedFiles";
 import { shellEscapePaths } from "./utils";
-import {
-	runFileLinkAction,
-	runFolderLinkAction,
-	runUrlLinkAction,
-	type TerminalLinkActionDeps,
-} from "./utils/runTerminalLinkAction";
 
 interface TerminalPaneProps {
 	ctx: RendererContext<PaneViewerData>;
 	workspaceId: string;
-	onOpenFile: (path: string, openInNewTab?: boolean) => void;
+	onOpenFile: OpenFile;
 	onRevealPath: (path: string, options?: { isDirectory?: boolean }) => void;
 }
 
@@ -81,7 +81,6 @@ export function TerminalPane({
 	const filePolicy = useTerminalFilePolicy();
 	const urlPolicy = useTerminalUrlPolicy();
 	const folderPolicy = useTerminalFolderPolicy();
-	const isPagesEnabled = useFeatureFlagEnabled(FEATURE_FLAGS.PAGES) ?? false;
 	const {
 		hoveredLink,
 		liveHoveredLinkRef,
@@ -107,7 +106,6 @@ export function TerminalPane({
 	// are read through a ref.
 	const linkActionDepsRef = useRef<TerminalLinkActionDeps>({
 		store: ctx.store,
-		isPagesEnabled,
 		onOpenFile,
 		onRevealPath,
 		openInExternalEditor,
@@ -116,7 +114,6 @@ export function TerminalPane({
 	});
 	linkActionDepsRef.current = {
 		store: ctx.store,
-		isPagesEnabled,
 		onOpenFile,
 		onRevealPath,
 		openInExternalEditor,
@@ -144,6 +141,10 @@ export function TerminalPane({
 	const themedUrl = new URL(baseWebsocketUrl);
 	themedUrl.searchParams.set("workspaceId", workspaceId);
 	themedUrl.searchParams.set("themeType", themeType);
+	themedUrl.searchParams.set(
+		"colors",
+		JSON.stringify(terminalQueryColors(appearance.theme)),
+	);
 	if (paneData.createOnAttach) {
 		themedUrl.searchParams.set("create", "1");
 	}

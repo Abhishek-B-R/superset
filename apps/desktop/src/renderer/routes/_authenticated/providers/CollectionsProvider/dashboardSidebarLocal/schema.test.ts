@@ -34,6 +34,13 @@ describe("healV2UserPreferences", () => {
 		expect(healed.fileLinks).toEqual(DEFAULT_V2_USER_PREFERENCES.fileLinks);
 	});
 
+	it("keeps the user's changes view mode and defaults rows written before it existed", () => {
+		expect(
+			healV2UserPreferences({ changesViewMode: "tree" }).changesViewMode,
+		).toBe("tree");
+		expect(healV2UserPreferences({}).changesViewMode).toBe("folders");
+	});
+
 	it("preserves the terminal presets initialization sentinel", () => {
 		const healed = healV2UserPreferences({
 			terminalPresetsInitialized: true,
@@ -369,6 +376,78 @@ describe("sanitizePaneLayout", () => {
 		expect(result.tabs[0]?.id).toBe("tab-1");
 		// activeTabId pointed at the dropped tab → repaired to a survivor.
 		expect(result.activeTabId).toBe("tab-1");
+	});
+
+	it("keeps pull-request panes keyed by repository and panes of other kinds", () => {
+		const layout: PaneLayout = {
+			version: 1,
+			tabs: [
+				{
+					...validTab,
+					layout: {
+						type: "split",
+						direction: "horizontal",
+						first: { type: "pane", paneId: "pane-1" },
+						second: { type: "pane", paneId: "pane-2" },
+					},
+					panes: {
+						"pane-1": { id: "pane-1", kind: "terminal", data: { prNumber: 1 } },
+						"pane-2": {
+							id: "pane-2",
+							kind: "pull-request",
+							data: { repoFullName: "acme/app", number: 7 },
+						},
+					},
+				},
+			],
+			activeTabId: "tab-1",
+		};
+		expect(sanitizePaneLayout(layout)).toEqual(layout);
+	});
+
+	it("drops a pull-request pane saved by number alone and keeps its siblings", () => {
+		const result = sanitizePaneLayout({
+			version: 1,
+			tabs: [
+				{
+					...validTab,
+					activePaneId: "pane-pr",
+					layout: {
+						type: "split",
+						direction: "horizontal",
+						first: { type: "pane", paneId: "pane-1" },
+						second: { type: "pane", paneId: "pane-pr" },
+					},
+					panes: {
+						"pane-1": validTab.panes["pane-1"],
+						"pane-pr": {
+							id: "pane-pr",
+							kind: "pull-request",
+							data: { prNumber: 7, projectId: "project-1" },
+						},
+					},
+				},
+				{
+					id: "tab-pr",
+					createdAt: 0,
+					activePaneId: "pane-pr-only",
+					layout: { type: "pane", paneId: "pane-pr-only" },
+					panes: {
+						"pane-pr-only": {
+							id: "pane-pr-only",
+							kind: "pull-request",
+							data: { prNumber: 8 },
+						},
+					},
+				},
+			],
+			activeTabId: "tab-pr",
+		});
+		expect(result).toEqual({
+			version: 1,
+			tabs: [validTab],
+			activeTabId: "tab-1",
+		});
 	});
 
 	it("repairs activeTabId when it points at a dropped/absent tab", () => {

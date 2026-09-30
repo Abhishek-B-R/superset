@@ -20,8 +20,6 @@ export function DefaultHeaderContent({
 }: DefaultHeaderContentProps) {
 	return (
 		<div className="flex h-full w-full min-w-0 items-center gap-2 px-3">
-			{/* font-semibold on the wrapper so custom titleContent inherits the
-			    active bolding too, not just the default title span. */}
 			{/* overflow-hidden: with flex-1's zero basis this area is the first
 			    to be squeezed, and a custom titleContent (e.g. the terminal
 			    session dropdown) has its own min-content width — without the
@@ -29,12 +27,14 @@ export function DefaultHeaderContent({
 			<div
 				className={cn(
 					"flex min-w-0 flex-1 items-center gap-2 overflow-hidden",
-					isActive && "font-semibold",
+					isActive && "font-medium",
 				)}
 			>
 				{titleContent ?? (
 					<>
-						{icon && <span className="shrink-0">{icon}</span>}
+						{icon && (
+							<span className="shrink-0 text-muted-foreground">{icon}</span>
+						)}
 						<span
 							className={cn(
 								"truncate text-xs transition-colors duration-150",
@@ -54,11 +54,7 @@ export function DefaultHeaderContent({
 			    the split/close actions on the right are the last thing to go.
 			    Holds for any icon size; components lower their own priority via
 			    the @container/pane-header queries. */}
-			{/* biome-ignore lint/a11y/noStaticElementInteractions: stop drag from starting on action buttons */}
-			<div
-				className="flex min-w-0 items-center justify-end gap-0.5 overflow-hidden"
-				onMouseDown={(e) => e.stopPropagation()}
-			>
+			<div className="flex min-w-0 items-center justify-end gap-0.5 overflow-hidden">
 				{headerExtras}
 				{actionsContent}
 			</div>

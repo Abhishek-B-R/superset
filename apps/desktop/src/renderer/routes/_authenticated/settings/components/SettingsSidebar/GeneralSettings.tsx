@@ -1,10 +1,13 @@
 import type { MessageDescriptor } from "@lingui/core";
 import { msg } from "@lingui/core/macro";
 import { i18n } from "@superset/i18n";
+import { FEATURE_FLAGS } from "@superset/shared/constants";
 import { cn } from "@superset/ui/utils";
 import { Link, useMatchRoute } from "@tanstack/react-router";
+import { useFeatureFlagEnabled } from "posthog-js/react";
 import { useMemo } from "react";
 import {
+	HiOutlineAdjustmentsHorizontal,
 	HiOutlineBeaker,
 	HiOutlineBell,
 	HiOutlineBuildingOffice2,
@@ -14,19 +17,19 @@ import {
 	HiOutlineCpuChip,
 	HiOutlineCreditCard,
 	HiOutlineCube,
+	HiOutlineDevicePhoneMobile,
+	HiOutlineDocumentText,
 	HiOutlineFolder,
 	HiOutlineGlobeAlt,
 	HiOutlineKey,
-	HiOutlineLink,
 	HiOutlineLockClosed,
 	HiOutlinePaintBrush,
 	HiOutlinePuzzlePiece,
 	HiOutlineShieldCheck,
-	HiOutlineSparkles,
 	HiOutlineUser,
 	HiOutlineUserGroup,
 } from "react-icons/hi2";
-import { LuGitBranch, LuKeyboard } from "react-icons/lu";
+import { LuGitBranch, LuKeyboard, LuKeyRound, LuLink } from "react-icons/lu";
 import { useHostsNeedingUpdateCount } from "renderer/hooks/host-version/useHostsNeedingUpdate";
 import { useIsV2CloudEnabled } from "renderer/hooks/useIsV2CloudEnabled";
 import { electronTrpc } from "renderer/lib/electron-trpc";
@@ -39,7 +42,9 @@ interface GeneralSettingsProps {
 }
 
 type SettingsRoute =
+	| "/settings/mobile"
 	| "/settings/account"
+	| "/settings/connections"
 	| "/settings/organization"
 	| "/settings/teams"
 	| "/settings/appearance"
@@ -51,7 +56,8 @@ type SettingsRoute =
 	| "/settings/git"
 	| "/settings/agents"
 	| "/settings/terminal"
-	| "/settings/links"
+	| "/settings/files"
+	| "/settings/agent-accounts"
 	| "/settings/experimental"
 	| "/settings/integrations"
 	| "/settings/billing"
@@ -92,6 +98,14 @@ const SECTION_GROUPS: SectionGroup[] = [
 				icon: <HiOutlineUser className="h-4 w-4" />,
 			},
 			{
+				id: "/settings/connections",
+				section: "connections",
+				label: msg({
+					message: "Connections",
+				}),
+				icon: <LuLink className="h-4 w-4" />,
+			},
+			{
 				id: "/settings/appearance",
 				section: "appearance",
 				label: msg({
@@ -116,6 +130,12 @@ const SECTION_GROUPS: SectionGroup[] = [
 				icon: <HiOutlineChartBar className="h-4 w-4" />,
 				fullWidth: true,
 			},
+			{
+				id: "/settings/mobile",
+				section: "mobile",
+				label: msg({ message: "Mobile" }),
+				icon: <HiOutlineDevicePhoneMobile className="h-4 w-4" />,
+			},
 		],
 	},
 	{
@@ -129,7 +149,7 @@ const SECTION_GROUPS: SectionGroup[] = [
 				label: msg({
 					message: "General",
 				}),
-				icon: <HiOutlineSparkles className="h-4 w-4" />,
+				icon: <HiOutlineAdjustmentsHorizontal className="h-4 w-4" />,
 			},
 			{
 				id: "/settings/keyboard",
@@ -151,7 +171,7 @@ const SECTION_GROUPS: SectionGroup[] = [
 				id: "/settings/agents",
 				section: "agents",
 				label: msg({
-					message: "Agents",
+					message: "Agent commands",
 				}),
 				icon: <HiOutlineCpuChip className="h-4 w-4" />,
 				fullWidth: true,
@@ -165,12 +185,12 @@ const SECTION_GROUPS: SectionGroup[] = [
 				icon: <HiOutlineCommandLine className="h-4 w-4" />,
 			},
 			{
-				id: "/settings/links",
-				section: "links",
+				id: "/settings/files",
+				section: "files",
 				label: msg({
-					message: "Links",
+					message: "Files & Editor",
 				}),
-				icon: <HiOutlineLink className="h-4 w-4" />,
+				icon: <HiOutlineDocumentText className="h-4 w-4" />,
 			},
 			{
 				id: "/settings/browser",
@@ -179,6 +199,29 @@ const SECTION_GROUPS: SectionGroup[] = [
 					message: "Browser",
 				}),
 				icon: <HiOutlineGlobeAlt className="h-4 w-4" />,
+			},
+		],
+	},
+	{
+		label: msg({
+			message: "Cloud",
+		}),
+		items: [
+			{
+				id: "/settings/environments",
+				section: "environments",
+				label: msg({
+					message: "Environments",
+				}),
+				icon: <HiOutlineCube className="h-4 w-4" />,
+			},
+			{
+				id: "/settings/agent-accounts",
+				section: "agentAccounts",
+				label: msg({
+					message: "Agents",
+				}),
+				icon: <LuKeyRound className="h-4 w-4" />,
 			},
 		],
 	},
@@ -220,14 +263,6 @@ const SECTION_GROUPS: SectionGroup[] = [
 				}),
 				icon: <HiOutlineComputerDesktop className="h-4 w-4" />,
 				fullWidth: true,
-			},
-			{
-				id: "/settings/environments",
-				section: "environments",
-				label: msg({
-					message: "Environments",
-				}),
-				icon: <HiOutlineCube className="h-4 w-4" />,
 			},
 			{
 				id: "/settings/integrations",
@@ -301,14 +336,18 @@ export const FULL_WIDTH_SECTION_PATHS: readonly string[] =
 	);
 
 export function GeneralSettings({ matchCounts }: GeneralSettingsProps) {
+	const mobileEnabled = useFeatureFlagEnabled(FEATURE_FLAGS.MOBILE_LAUNCH);
 	const matchRoute = useMatchRoute();
 	const hostsNeedingUpdate = useHostsNeedingUpdateCount();
 	const { data: platform } = electronTrpc.window.getPlatform.useQuery();
 	const isMac = platform === "darwin";
 	const isV2CloudEnabled = useIsV2CloudEnabled();
+	const cloudWorkspacesEnabled =
+		useFeatureFlagEnabled(FEATURE_FLAGS.CLOUD_WORKSPACES) === true;
 	const allowedSections = useMemo(
-		() => getAllowedSectionsForVariant(isV2CloudEnabled),
-		[isV2CloudEnabled],
+		() =>
+			getAllowedSectionsForVariant(isV2CloudEnabled, cloudWorkspacesEnabled),
+		[isV2CloudEnabled, cloudWorkspacesEnabled],
 	);
 
 	return (
@@ -316,7 +355,9 @@ export function GeneralSettings({ matchCounts }: GeneralSettingsProps) {
 			{SECTION_GROUPS.map((group, groupIndex) => {
 				const platformItems = group.items.filter(
 					(item) =>
-						(!item.macOnly || isMac) && allowedSections.has(item.section),
+						(!item.macOnly || isMac) &&
+						(item.section !== "mobile" || mobileEnabled === true) &&
+						allowedSections.has(item.section),
 				);
 				const filteredItems = matchCounts
 					? platformItems.filter((item) => (matchCounts[item.section] ?? 0) > 0)

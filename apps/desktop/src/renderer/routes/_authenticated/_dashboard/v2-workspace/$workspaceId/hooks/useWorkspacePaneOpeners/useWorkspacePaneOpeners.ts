@@ -1,6 +1,7 @@
 import type { WorkspaceStore } from "@superset/panes";
 import { useCallback } from "react";
 import type { V2UserPreferencesApi } from "renderer/hooks/useV2UserPreferences";
+import type { PullRequestRef } from "renderer/lib/github/pullRequestRef";
 import { useWorkspace } from "renderer/routes/_authenticated/_dashboard/v2-workspace/providers/WorkspaceProvider";
 import { useCollections } from "renderer/routes/_authenticated/providers/CollectionsProvider";
 import type { V2TerminalPresetRow } from "renderer/routes/_authenticated/providers/CollectionsProvider/dashboardSidebarLocal";
@@ -35,6 +36,7 @@ export function useWorkspacePaneOpeners({
 	newTabPresets,
 	executePreset,
 	setRightSidebarOpen,
+	pageOpenAction,
 }: {
 	store: StoreApi<WorkspaceStore<PaneViewerData>>;
 	launcher: TerminalLauncher;
@@ -44,6 +46,7 @@ export function useWorkspacePaneOpeners({
 		options?: { target?: "new-tab" | "active-tab" },
 	) => void | Promise<void>;
 	setRightSidebarOpen: V2UserPreferencesApi["setRightSidebarOpen"];
+	pageOpenAction: V2UserPreferencesApi["preferences"]["pageOpenAction"];
 }): {
 	openDiffPane: (
 		filePath: string,
@@ -61,7 +64,7 @@ export function useWorkspacePaneOpeners({
 	openCommentPane: (comment: CommentPaneData) => void;
 	openPagePane: (page: PagePaneData) => void;
 	/** Focus or open the pane showing the workspace's linked PR summary. */
-	openPullRequestPane: (prNumber: number) => void;
+	openPullRequestPane: (ref: PullRequestRef) => void;
 } {
 	const openDiffPane = useCallback(
 		(
@@ -238,14 +241,18 @@ export function useWorkspacePaneOpeners({
 
 	const openPagePane = useCallback(
 		(page: PagePaneData) => {
-			openPagePaneInStore(store, page);
+			openPagePaneInStore(
+				store,
+				page,
+				pageOpenAction === "newTab" ? "tab" : "split",
+			);
 		},
-		[store],
+		[store, pageOpenAction],
 	);
 
 	const openPullRequestPane = useCallback(
-		(prNumber: number) => {
-			openPullRequestPaneInStore(store, prNumber);
+		(ref: PullRequestRef) => {
+			openPullRequestPaneInStore(store, ref);
 		},
 		[store],
 	);

@@ -1,3 +1,4 @@
+export * from "./like";
 export * from "./member-removal";
 export * from "./member-removal-orphans";
 export * from "./membership";

@@ -2,12 +2,15 @@ import {
 	createFsHostService,
 	type FsHostService,
 	FsWatcherManager,
-	getSearchIndex,
 } from "@superset/workspace-fs/host";
 import { eq } from "drizzle-orm";
 import type { HostDb } from "../../db/index.ts";
 import { projects, workspaces } from "../../db/schema.ts";
-import { listGitIgnoredDirs } from "../git/index.ts";
+import { WatchAttachGuard } from "./watch-attach-guard.ts";
+import {
+	scanGitIgnoredDirectories,
+	scanNestedRepositories,
+} from "./watcher-scans.ts";
 
 export interface WorkspaceFilesystemManagerOptions {
 	db: HostDb;
@@ -30,8 +33,11 @@ export class ProjectNotFoundError extends Error {
 export class WorkspaceFilesystemManager {
 	private readonly db: HostDb;
 	private readonly watcherManager = new FsWatcherManager({
-		listGitIgnoredDirs,
+		useDefaultIgnores: false,
+		listGitIgnoredDirs: scanGitIgnoredDirectories,
+		findNestedRepoRoots: scanNestedRepositories,
 	});
+	private readonly watchAttachGuard = new WatchAttachGuard(this.watcherManager);
 	private readonly serviceCache = new Map<string, FsHostService>();
 
 	constructor(options: WorkspaceFilesystemManagerOptions) {
@@ -82,6 +88,10 @@ export class WorkspaceFilesystemManager {
 		);
 	}
 
+	isWatchAttachBackingOff(rootPath: string): boolean {
+		return this.watchAttachGuard.isBackingOff(rootPath);
+	}
+
 	/**
 	 * Swap the workspace's native subscription onto a freshly derived ignore
 	 * set. Required after a directory is UN-ignored — the attach-time prune
@@ -99,17 +109,15 @@ export class WorkspaceFilesystemManager {
 		if (!service) {
 			service = createFsHostService({
 				rootPath,
-				watcherManager: this.watcherManager,
+				watcherManager: this.watchAttachGuard,
 			});
 			this.serviceCache.set(rootPath, service);
-			// Pre-warm search index so first search is instant
-			getSearchIndex({ rootPath, includeHidden: false }).catch(() => {});
 		}
 		return service;
 	}
 
 	async close(): Promise<void> {
 		this.serviceCache.clear();
-		await this.watcherManager.close();
+		await this.watchAttachGuard.close();
 	}
 }

@@ -16,6 +16,7 @@ import { GoGitPullRequest } from "react-icons/go";
 import { HiOutlineClipboardDocumentList } from "react-icons/hi2";
 import {
 	LuClock,
+	LuCloud,
 	LuFileText,
 	LuGauge,
 	LuLayers,
@@ -34,15 +35,20 @@ import { GATED_FEATURES, usePaywall } from "renderer/components/Paywall";
 import { SidebarKbdHint } from "renderer/components/SidebarKbdHint";
 import { ZoomStable } from "renderer/components/ZoomStable";
 import { env } from "renderer/env.renderer";
-import { useOpenNewWorkspace } from "renderer/hooks/useOpenNewWorkspace";
+import {
+	useOpenNewWorkspace,
+	useOpenNewWorkspaceForLocalProject,
+} from "renderer/hooks/useOpenNewWorkspace";
 import { useZoomFactor } from "renderer/hooks/useZoomFactor";
 import { useHotkeyDisplay } from "renderer/hotkeys";
+import { cloudTrpc } from "renderer/lib/cloud-trpc";
 import { electronTrpc } from "renderer/lib/electron-trpc";
 import { useFolderFirstImport } from "renderer/routes/_authenticated/_dashboard/components/AddRepositoryModals/hooks/useFolderFirstImport";
+import { AppMenuButton } from "renderer/routes/_authenticated/_dashboard/components/AppMenuButton";
 import { NavigationControls } from "renderer/routes/_authenticated/_dashboard/components/NavigationControls";
 import { SidebarToggle } from "renderer/routes/_authenticated/_dashboard/components/SidebarToggle";
+import { ProjectGlyph } from "renderer/routes/_authenticated/_dashboard/components/TaskProjectIcon";
 import { TopBarPortsDropdown } from "renderer/routes/_authenticated/_dashboard/components/TopBar/components/TopBarPortsDropdown";
-import { useFailedAutomations } from "renderer/routes/_authenticated/_dashboard/hooks/useFailedAutomations";
 import {
 	pullRequestsSearchFromFilters,
 	usePullRequestsFilterStore,
@@ -72,6 +78,7 @@ export function DashboardSidebarHeader({
 }: DashboardSidebarHeaderProps) {
 	const { t } = useLingui();
 	const openNewWorkspace = useOpenNewWorkspace();
+	const openProjectWorkspace = useOpenNewWorkspaceForLocalProject();
 	const openEmptyProject = useOpenEmptyProjectModal();
 	const openNewProject = useOpenNewProjectModal();
 	const openTemplateGallery = useOpenTemplateGalleryModal();
@@ -107,9 +114,10 @@ export function DashboardSidebarHeader({
 	const handleImportFolder = async () => {
 		const result = await folderImport.start();
 		if (result) {
+			openProjectWorkspace(result.projectId);
 			toast.success(
 				t({
-					message: "Project ready — open it from the sidebar.",
+					message: "Project imported and selected.",
 				}),
 			);
 		}
@@ -134,8 +142,15 @@ export function DashboardSidebarHeader({
 	const isMac = platform === undefined || platform === "darwin";
 	const zoomFactor = useZoomFactor();
 	const matchRoute = useMatchRoute();
-	const { gateFeature } = usePaywall();
+	const { gateFeature, hasAccess } = usePaywall();
 	const isWorkspacesListOpen = !!matchRoute({ to: "/v2-workspaces" });
+	const isCloudWorkspacesOpen = !!matchRoute({
+		to: "/cloud-workspaces",
+		fuzzy: true,
+	});
+	const isProjectsOpen = !!matchRoute({ to: "/projects", fuzzy: true });
+	const isCloudEnabled =
+		useFeatureFlagEnabled(FEATURE_FLAGS.CLOUD_WORKSPACES) === true;
 	const v2WorkspaceMatch = matchRoute({
 		to: "/v2-workspace/$workspaceId",
 		fuzzy: true,
@@ -163,8 +178,7 @@ export function DashboardSidebarHeader({
 	const isPluginsEnabled =
 		(useFeatureFlagEnabled(FEATURE_FLAGS.PLUGINS) ?? false) ||
 		env.NODE_ENV === "development";
-	const { myFailedCount, hasAutomations, automationsPending } =
-		useFailedAutomations();
+	const cloudUtils = cloudTrpc.useUtils();
 
 	const {
 		tab: lastTab,
@@ -188,14 +202,29 @@ export function DashboardSidebarHeader({
 		navigate({ to: "/v2-workspaces" });
 	};
 
+	const handleCloudWorkspacesClick = () => {
+		navigate({ to: "/cloud-workspaces" });
+	};
+
+	const handleProjectsClick = () => {
+		navigate({ to: "/projects" });
+	};
+
 	// Automations are Pro, but an org that already has some (a downgrade) can
 	// still reach the list to pause, edit, or delete them; the page gates the
 	// actions that need the plan. A Free org with none meets the paywall here.
-	// While the list is still loading the answer is unknown, so let the click
+	// If the list can't be read the answer is unknown, so let the click
 	// through: an empty list page gates every action itself, and a wrong
 	// paywall on a downgraded org would be the worse mistake.
-	const handleAutomationsClick = () => {
-		if (hasAutomations || automationsPending) {
+	const handleAutomationsClick = async () => {
+		if (hasAccess(GATED_FEATURES.AUTOMATIONS)) {
+			navigate({ to: "/automations" });
+			return;
+		}
+		const automations = await cloudUtils.automation.list
+			.fetch()
+			.catch(() => null);
+		if (automations === null || automations.length > 0) {
 			navigate({ to: "/automations" });
 			return;
 		}
@@ -221,7 +250,6 @@ export function DashboardSidebarHeader({
 		});
 	};
 
-	const isPagesEnabled = useFeatureFlagEnabled(FEATURE_FLAGS.PAGES) ?? false;
 	const { data: isUsageInSidebarEnabled } =
 		electronTrpc.settings.getShowUsageInSidebar.useQuery();
 
@@ -331,42 +359,78 @@ export function DashboardSidebarHeader({
 						</TooltipContent>
 					</Tooltip>
 
+					{isCloudEnabled && (
+						<Tooltip delayDuration={300}>
+							<TooltipTrigger asChild>
+								<button
+									type="button"
+									onClick={handleCloudWorkspacesClick}
+									aria-label={t({
+										message: "Cloud workspaces",
+									})}
+									aria-current={isCloudWorkspacesOpen ? "page" : undefined}
+									className={cn(
+										"flex size-7 items-center justify-center rounded-md transition-colors",
+										isCloudWorkspacesOpen
+											? "bg-fill-selected text-muted-foreground"
+											: "text-muted-foreground hover:bg-fill-hover",
+									)}
+								>
+									<LuCloud className="size-3.5" strokeWidth={1.5} />
+								</button>
+							</TooltipTrigger>
+							<TooltipContent side="right">
+								<Trans>Cloud workspaces</Trans>
+							</TooltipContent>
+						</Tooltip>
+					)}
+
+					{isCloudEnabled && (
+						<Tooltip delayDuration={300}>
+							<TooltipTrigger asChild>
+								<button
+									type="button"
+									onClick={handleProjectsClick}
+									aria-label={t({
+										message: "Projects",
+									})}
+									aria-current={isProjectsOpen ? "page" : undefined}
+									className={cn(
+										"flex size-7 items-center justify-center rounded-md transition-colors",
+										isProjectsOpen
+											? "bg-fill-selected text-muted-foreground"
+											: "text-muted-foreground hover:bg-fill-hover",
+									)}
+								>
+									<ProjectGlyph className="size-3.5" />
+								</button>
+							</TooltipTrigger>
+							<TooltipContent side="right">
+								<Trans>Projects</Trans>
+							</TooltipContent>
+						</Tooltip>
+					)}
+
 					<Tooltip delayDuration={300}>
 						<TooltipTrigger asChild>
 							<button
 								type="button"
 								onClick={handleAutomationsClick}
-								aria-label={
-									myFailedCount > 0
-										? t({
-												message: `Automations, ${myFailedCount} failing`,
-											})
-										: t({
-												message: "Automations",
-											})
-								}
+								aria-label={t({
+									message: "Automations",
+								})}
 								className={cn(
-									"relative flex size-7 items-center justify-center rounded-md transition-colors",
+									"flex size-7 items-center justify-center rounded-md transition-colors",
 									isAutomationsOpen
 										? "bg-fill-selected text-muted-foreground"
 										: "text-muted-foreground hover:bg-fill-hover",
 								)}
 							>
 								<LuClock className="size-3.5" strokeWidth={1.5} />
-								{myFailedCount > 0 && (
-									<span
-										aria-hidden="true"
-										className="absolute right-1 top-1 size-1.5 rounded-full bg-red-500"
-									/>
-								)}
 							</button>
 						</TooltipTrigger>
 						<TooltipContent side="right">
-							{myFailedCount > 0 ? (
-								<Trans>Automations ({myFailedCount} failing)</Trans>
-							) : (
-								<Trans>Automations</Trans>
-							)}
+							<Trans>Automations</Trans>
 						</TooltipContent>
 					</Tooltip>
 
@@ -438,31 +502,29 @@ export function DashboardSidebarHeader({
 						</Tooltip>
 					)}
 
-					{isPagesEnabled && (
-						<Tooltip delayDuration={300}>
-							<TooltipTrigger asChild>
-								<button
-									type="button"
-									onClick={handlePagesClick}
-									aria-label={t({
-										message: "Pages",
-									})}
-									aria-current={isPagesOpen ? "page" : undefined}
-									className={cn(
-										"flex size-7 items-center justify-center rounded-md transition-colors",
-										isPagesOpen
-											? "bg-fill-selected text-muted-foreground"
-											: "text-muted-foreground hover:bg-fill-hover",
-									)}
-								>
-									<LuFileText className="size-3.5" strokeWidth={1.5} />
-								</button>
-							</TooltipTrigger>
-							<TooltipContent side="right">
-								<Trans>Pages</Trans>
-							</TooltipContent>
-						</Tooltip>
-					)}
+					<Tooltip delayDuration={300}>
+						<TooltipTrigger asChild>
+							<button
+								type="button"
+								onClick={handlePagesClick}
+								aria-label={t({
+									message: "Pages",
+								})}
+								aria-current={isPagesOpen ? "page" : undefined}
+								className={cn(
+									"flex size-7 items-center justify-center rounded-md transition-colors",
+									isPagesOpen
+										? "bg-fill-selected text-muted-foreground"
+										: "text-muted-foreground hover:bg-fill-hover",
+								)}
+							>
+								<LuFileText className="size-3.5" strokeWidth={1.5} />
+							</button>
+						</TooltipTrigger>
+						<TooltipContent side="right">
+							<Trans>Pages</Trans>
+						</TooltipContent>
+					</Tooltip>
 
 					{isPluginsEnabled && (
 						<Tooltip delayDuration={300}>
@@ -564,6 +626,7 @@ export function DashboardSidebarHeader({
 					style={{ width: isMac ? `${80 / zoomFactor}px` : "8px" }}
 				/>
 				<ZoomStable enabled={isMac} className="flex items-center gap-1">
+					{!isMac && <AppMenuButton />}
 					<SidebarToggle />
 					<NavigationControls />
 					{/* Lives here (persistent chrome) rather than the workspace tab
@@ -624,6 +687,47 @@ export function DashboardSidebarHeader({
 				</span>
 			</button>
 
+			{isCloudEnabled && (
+				<button
+					type="button"
+					onClick={handleCloudWorkspacesClick}
+					aria-current={isCloudWorkspacesOpen ? "page" : undefined}
+					className={cn(
+						"flex h-7 w-full items-center gap-2 rounded-md px-2 text-[13px] font-medium transition-colors",
+						isCloudWorkspacesOpen
+							? "bg-fill-selected text-foreground"
+							: "text-muted-foreground hover:bg-fill-hover hover:text-foreground",
+					)}
+				>
+					<LuCloud
+						className="size-4 shrink-0 text-muted-foreground"
+						strokeWidth={1.5}
+					/>
+					<span className="flex-1 text-left">
+						<Trans>Cloud workspaces</Trans>
+					</span>
+				</button>
+			)}
+
+			{isCloudEnabled && (
+				<button
+					type="button"
+					onClick={handleProjectsClick}
+					aria-current={isProjectsOpen ? "page" : undefined}
+					className={cn(
+						"flex h-7 w-full items-center gap-2 rounded-md px-2 text-[13px] font-medium transition-colors",
+						isProjectsOpen
+							? "bg-fill-selected text-foreground"
+							: "text-muted-foreground hover:bg-fill-hover hover:text-foreground",
+					)}
+				>
+					<ProjectGlyph className="size-4 shrink-0 text-muted-foreground" />
+					<span className="flex-1 text-left">
+						<Trans>Projects</Trans>
+					</span>
+				</button>
+			)}
+
 			<button
 				type="button"
 				onClick={handleAutomationsClick}
@@ -641,16 +745,6 @@ export function DashboardSidebarHeader({
 				<span className="flex-1 text-left">
 					<Trans>Automations</Trans>
 				</span>
-				{myFailedCount > 0 && (
-					<span
-						title={t({
-							message: `${myFailedCount} of your automations failed their last run`,
-						})}
-						className="flex h-4 min-w-4 shrink-0 items-center justify-center rounded-full bg-red-500/15 px-1 text-[10px] font-medium tabular-nums text-red-600 dark:text-red-400"
-					>
-						{myFailedCount > 9 ? "9+" : myFailedCount}
-					</span>
-				)}
 			</button>
 
 			<button
@@ -712,30 +806,28 @@ export function DashboardSidebarHeader({
 				</button>
 			)}
 
-			{isPagesEnabled && (
-				<button
-					type="button"
-					onClick={handlePagesClick}
-					aria-label={t({
-						message: "Pages",
-					})}
-					aria-current={isPagesOpen ? "page" : undefined}
-					className={cn(
-						"flex h-7 w-full items-center gap-2 rounded-md px-2 text-[13px] font-medium transition-colors",
-						isPagesOpen
-							? "bg-fill-selected text-foreground"
-							: "text-muted-foreground hover:bg-fill-hover hover:text-foreground",
-					)}
-				>
-					<LuFileText
-						className="size-4 shrink-0 text-muted-foreground"
-						strokeWidth={1.5}
-					/>
-					<span className="flex-1 text-left">
-						<Trans>Pages</Trans>
-					</span>
-				</button>
-			)}
+			<button
+				type="button"
+				onClick={handlePagesClick}
+				aria-label={t({
+					message: "Pages",
+				})}
+				aria-current={isPagesOpen ? "page" : undefined}
+				className={cn(
+					"flex h-7 w-full items-center gap-2 rounded-md px-2 text-[13px] font-medium transition-colors",
+					isPagesOpen
+						? "bg-fill-selected text-foreground"
+						: "text-muted-foreground hover:bg-fill-hover hover:text-foreground",
+				)}
+			>
+				<LuFileText
+					className="size-4 shrink-0 text-muted-foreground"
+					strokeWidth={1.5}
+				/>
+				<span className="flex-1 text-left">
+					<Trans>Pages</Trans>
+				</span>
+			</button>
 
 			{isPluginsEnabled && (
 				<button

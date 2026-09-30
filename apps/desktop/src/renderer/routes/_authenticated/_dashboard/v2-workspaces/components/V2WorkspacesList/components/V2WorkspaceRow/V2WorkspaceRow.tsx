@@ -9,6 +9,7 @@ import { CgLaptop } from "react-icons/cg";
 import { LuLaptop, LuMonitor } from "react-icons/lu";
 import { WorkspaceNameMarquee } from "renderer/components/WorkspaceNameMarquee";
 import { useFocusVisible } from "renderer/hooks/useFocusVisible";
+import { pullRequestRefFromUrl } from "renderer/lib/github/pullRequestRef";
 import { navigateToV2Workspace } from "renderer/routes/_authenticated/_dashboard/utils/workspace-navigation";
 import { V2WorkspaceContextMenu } from "renderer/routes/_authenticated/_dashboard/v2-workspaces/components/V2WorkspaceContextMenu";
 import { WorkspaceStateGlyph } from "renderer/routes/_authenticated/_dashboard/v2-workspaces/components/WorkspaceStateGlyph";
@@ -41,7 +42,7 @@ export const V2WorkspaceRow = memo(function V2WorkspaceRow({
 
 	const { t } = useLingui();
 	const navigate = useNavigate();
-	const isMainWorkspace = workspace.type === "main";
+	const isLocalWorkspace = workspace.type === "local";
 	const DeviceIcon =
 		workspace.hostType === "local-device" ? LuLaptop : LuMonitor;
 	// The local device is the one running this app — it can't be offline from
@@ -142,7 +143,7 @@ export const V2WorkspaceRow = memo(function V2WorkspaceRow({
 				>
 					<WorkspaceStateGlyph workspace={workspace} />
 
-					{isMainWorkspace ? (
+					{isLocalWorkspace ? (
 						<Tooltip delayDuration={300}>
 							<TooltipTrigger asChild>
 								{/* The wrapping span (not the icon itself — react-icons
@@ -156,13 +157,13 @@ export const V2WorkspaceRow = memo(function V2WorkspaceRow({
 									<CgLaptop
 										className="size-3.5 shrink-0 text-muted-foreground"
 										aria-label={t({
-											message: "Main workspace",
+											message: "Local workspace",
 										})}
 									/>
 								</span>
 							</TooltipTrigger>
 							<TooltipContent side="top">
-								<Trans>Main workspace</Trans>
+								<Trans>Local workspace</Trans>
 							</TooltipContent>
 						</Tooltip>
 					) : null}
@@ -186,9 +187,14 @@ export const V2WorkspaceRow = memo(function V2WorkspaceRow({
 								event.stopPropagation();
 								if (!workspace.pr) return;
 								// Opens the PR pane inside the workspace instead of GitHub.
+								const ref = pullRequestRefFromUrl(workspace.pr.url);
+								if (!ref) {
+									window.open(workspace.pr.url, "_blank");
+									return;
+								}
 								usePullRequestPaneIntent.getState().request({
 									workspaceId: workspace.id,
-									prNumber: workspace.pr.prNumber,
+									...ref,
 								});
 								void navigateToV2Workspace(workspace.id, navigate);
 							}}

@@ -28,6 +28,7 @@ interface MarkdownPage {
 	title: string;
 	url: string;
 	date?: string;
+	lastUpdated?: string;
 	author?: string;
 	description?: string;
 	content: string;
@@ -165,7 +166,7 @@ function teamPage(): MarkdownPage {
 			]),
 			"## Contact",
 			"",
-			`- Founders: ${COMPANY.FOUNDERS_EMAIL}`,
+			`- Team: ${COMPANY.TEAM_EMAIL}`,
 			`- [Join us](${COMPANY.JOIN_US_URL})`,
 		].join("\n"),
 	};
@@ -193,7 +194,7 @@ function enterprisePage(i18n: I18n): MarkdownPage {
 			"",
 			`- Contact sales: ${baseUrl}/enterprise`,
 			`- Security and compliance: ${COMPANY.TRUST_URL}`,
-			`- Email: ${COMPANY.FOUNDERS_EMAIL}`,
+			`- Email: sales${COMPANY.EMAIL_DOMAIN}`,
 		].join("\n"),
 	};
 }
@@ -221,6 +222,7 @@ async function loadPage(
 			title: post.title,
 			url: `${baseUrl}/blog/${post.slug}`,
 			date: post.date,
+			lastUpdated: post.lastUpdated,
 			author: post.author.name,
 			description: post.description,
 			content: stripMdxSyntax(post.content),
@@ -323,13 +325,14 @@ export async function GET(
 			title: page.title,
 			description: page.description ?? page.title,
 			canonical,
-			lastUpdated: page.date,
+			lastUpdated: page.lastUpdated ?? page.date,
 		}),
 		`# ${page.title}`,
 		"",
 		...(page.description ? [page.description, ""] : []),
 		`URL: ${canonical}`,
 		...(page.date ? [`Date: ${page.date}`] : []),
+		...(page.lastUpdated ? [`Last updated: ${page.lastUpdated}`] : []),
 		...(page.author ? [`Author: ${page.author}`] : []),
 		"",
 		page.content,

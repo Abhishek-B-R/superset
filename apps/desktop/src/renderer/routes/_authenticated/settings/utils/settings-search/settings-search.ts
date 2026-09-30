@@ -5,6 +5,7 @@ import {
 import type { SettingsSection } from "renderer/stores/settings-state";
 
 export const SETTING_ITEM_ID = {
+	MOBILE_APP: "mobile-app",
 	ACCOUNT_PROFILE: "account-profile",
 	ACCOUNT_SIGNOUT: "account-signout",
 	ACCOUNT_DELETE: "account-delete",
@@ -37,6 +38,8 @@ export const SETTING_ITEM_ID = {
 	KEYBOARD_SHORTCUTS: "keyboard-shortcuts",
 	BEHAVIOR_CONFIRM_QUIT: "behavior-confirm-quit",
 	BEHAVIOR_FILE_OPEN_MODE: "behavior-file-open-mode",
+	BEHAVIOR_FILE_AUTO_SAVE: "behavior-file-auto-save",
+	BEHAVIOR_AGENT_SESSION_PLACEMENT: "behavior-agent-session-placement",
 	BEHAVIOR_CHANGES_OPEN_TARGET: "behavior-changes-open-target",
 	BEHAVIOR_RESOURCE_MONITOR: "behavior-resource-monitor",
 	USAGE_IN_SIDEBAR: "usage-in-sidebar",
@@ -66,6 +69,7 @@ export const SETTING_ITEM_ID = {
 	LINKS_URL: "links-url",
 	LINKS_SIDEBAR_FILE: "links-sidebar-file",
 	LINKS_PORT: "links-port",
+	LINKS_PAGE: "links-page",
 
 	EXPERIMENTAL_SUPERSET_V2: "experimental-superset-v2",
 	EXPERIMENTAL_V1_MIGRATION: "experimental-v1-migration",
@@ -100,6 +104,8 @@ export const SETTING_ITEM_ID = {
 
 	HOST_MEMBERS: "host-members",
 	ENVIRONMENTS_LIST: "environments-list",
+	AGENT_ACCOUNTS: "agent-accounts",
+	CONNECTIONS: "connections",
 	ENVIRONMENTS_SECRETS: "environments-secrets",
 	HOST_INVITE_MEMBER: "host-invite-member",
 	HOST_MEMBER_ROLE: "host-member-role",
@@ -182,6 +188,8 @@ export const SETTING_ITEM_VARIANT: Record<SettingItemId, SettingVariant> = {
 
 	[SETTING_ITEM_ID.BEHAVIOR_CONFIRM_QUIT]: "shared",
 	[SETTING_ITEM_ID.BEHAVIOR_FILE_OPEN_MODE]: "v1",
+	[SETTING_ITEM_ID.BEHAVIOR_FILE_AUTO_SAVE]: "v2",
+	[SETTING_ITEM_ID.BEHAVIOR_AGENT_SESSION_PLACEMENT]: "v2",
 	// The top-bar Changes control is a v2-only surface.
 	[SETTING_ITEM_ID.BEHAVIOR_CHANGES_OPEN_TARGET]: "v2",
 	[SETTING_ITEM_ID.BEHAVIOR_RESOURCE_MONITOR]: "shared",
@@ -215,6 +223,7 @@ export const SETTING_ITEM_VARIANT: Record<SettingItemId, SettingVariant> = {
 	[SETTING_ITEM_ID.LINKS_URL]: "v2",
 	[SETTING_ITEM_ID.LINKS_SIDEBAR_FILE]: "v2",
 	[SETTING_ITEM_ID.LINKS_PORT]: "v2",
+	[SETTING_ITEM_ID.LINKS_PAGE]: "v2",
 
 	[SETTING_ITEM_ID.EXPERIMENTAL_SUPERSET_V2]: "shared",
 	[SETTING_ITEM_ID.EXPERIMENTAL_V1_MIGRATION]: "v2",
@@ -245,9 +254,12 @@ export const SETTING_ITEM_VARIANT: Record<SettingItemId, SettingVariant> = {
 	[SETTING_ITEM_ID.PERMISSIONS_LOCAL_NETWORK]: "shared",
 
 	[SETTING_ITEM_ID.SECURITY_EXPOSE_HOST_SERVICE_VIA_RELAY]: "shared",
+	[SETTING_ITEM_ID.MOBILE_APP]: "shared",
 
 	[SETTING_ITEM_ID.HOST_MEMBERS]: "shared",
 	[SETTING_ITEM_ID.ENVIRONMENTS_LIST]: "v2",
+	[SETTING_ITEM_ID.AGENT_ACCOUNTS]: "v2",
+	[SETTING_ITEM_ID.CONNECTIONS]: "v2",
 	[SETTING_ITEM_ID.ENVIRONMENTS_SECRETS]: "v2",
 	[SETTING_ITEM_ID.HOST_INVITE_MEMBER]: "shared",
 	[SETTING_ITEM_ID.HOST_MEMBER_ROLE]: "shared",
@@ -306,15 +318,7 @@ const INTEGRATION_KEYWORDS: Record<IntegrationProvider, string[]> = {
 		"communication",
 	],
 	sentry: ["errors", "issues", "monitoring", "alerts", "triage"],
-	google: [
-		"calendar",
-		"gmail",
-		"email",
-		"mail",
-		"events",
-		"triggers",
-		"automations",
-	],
+	google: ["gmail", "email", "mail", "triggers", "automations"],
 };
 
 const INTEGRATION_SEARCH_ITEMS: SettingsItem[] = INTEGRATIONS.map(
@@ -334,6 +338,13 @@ const INTEGRATION_SEARCH_ITEMS: SettingsItem[] = INTEGRATIONS.map(
 );
 
 export const SETTINGS_ITEMS: SettingsItem[] = [
+	{
+		id: SETTING_ITEM_ID.MOBILE_APP,
+		section: "mobile",
+		title: "Mobile",
+		description: "Use Superset on your iPhone",
+		keywords: ["phone", "mobile", "qr", "scan", "ios", "app store"],
+	},
 	{
 		id: SETTING_ITEM_ID.ACCOUNT_PROFILE,
 		section: "account",
@@ -795,7 +806,7 @@ export const SETTINGS_ITEMS: SettingsItem[] = [
 	},
 	{
 		id: SETTING_ITEM_ID.BEHAVIOR_FILE_OPEN_MODE,
-		section: "behavior",
+		section: "files",
 		title: "File open mode",
 		description:
 			"Choose how files open when clicked in the file tree or changes view",
@@ -810,6 +821,41 @@ export const SETTINGS_ITEMS: SettingsItem[] = [
 			"split pane",
 			"viewer",
 			"behavior",
+		],
+	},
+	{
+		id: SETTING_ITEM_ID.BEHAVIOR_FILE_AUTO_SAVE,
+		section: "files",
+		title: "Auto Save",
+		description: "Controls when manually edited files are saved",
+		keywords: [
+			"file",
+			"save",
+			"autosave",
+			"auto save",
+			"afterdelay",
+			"after delay",
+			"onfocuschange",
+			"on focus change",
+			"onwindowchange",
+			"on window change",
+		],
+	},
+	{
+		id: SETTING_ITEM_ID.BEHAVIOR_AGENT_SESSION_PLACEMENT,
+		section: "behavior",
+		title: "New agent sessions",
+		description:
+			"Choose where agents started from comments, design mode, and Pages open.",
+		keywords: [
+			"agent",
+			"placement",
+			"split",
+			"pane",
+			"tab",
+			"design",
+			"comments",
+			"pages",
 		],
 	},
 	{
@@ -885,7 +931,7 @@ export const SETTINGS_ITEMS: SettingsItem[] = [
 	},
 	{
 		id: SETTING_ITEM_ID.BEHAVIOR_OPEN_LINKS_IN_APP,
-		section: "behavior",
+		section: "browser",
 		title: "Open links in the in-app browser",
 		description:
 			"Open links from chat and terminal in the in-app browser instead of your default browser",
@@ -966,6 +1012,7 @@ export const SETTINGS_ITEMS: SettingsItem[] = [
 			"claude",
 			"codex",
 			"pi",
+			"ufo",
 		],
 	},
 	{
@@ -993,6 +1040,11 @@ export const SETTINGS_ITEMS: SettingsItem[] = [
 			"xai",
 			"hermes",
 			"nous",
+			"muse",
+			"meta",
+			"devin",
+			"ufo",
+			"cognition",
 			"fx",
 			"vercel",
 			"antigravity",
@@ -1065,6 +1117,11 @@ export const SETTINGS_ITEMS: SettingsItem[] = [
 			"xai",
 			"hermes",
 			"nous",
+			"muse",
+			"meta",
+			"devin",
+			"ufo",
+			"cognition",
 			"fx",
 			"vercel",
 			"antigravity",
@@ -1153,7 +1210,7 @@ export const SETTINGS_ITEMS: SettingsItem[] = [
 	},
 	{
 		id: SETTING_ITEM_ID.LINKS_FILE,
-		section: "links",
+		section: "files",
 		title: "File links",
 		description:
 			"How file paths open when clicked in terminals, chat, and tasks",
@@ -1177,7 +1234,7 @@ export const SETTINGS_ITEMS: SettingsItem[] = [
 	},
 	{
 		id: SETTING_ITEM_ID.LINKS_FOLDER,
-		section: "links",
+		section: "files",
 		title: "Folder links",
 		description:
 			"How folder paths open when clicked in terminals: reveal in sidebar, editor, or Finder",
@@ -1202,7 +1259,7 @@ export const SETTINGS_ITEMS: SettingsItem[] = [
 	},
 	{
 		id: SETTING_ITEM_ID.LINKS_URL,
-		section: "links",
+		section: "browser",
 		title: "URL links",
 		description: "How URLs open when clicked in terminals, chat, and tasks",
 		keywords: [
@@ -1227,7 +1284,7 @@ export const SETTINGS_ITEMS: SettingsItem[] = [
 	},
 	{
 		id: SETTING_ITEM_ID.LINKS_SIDEBAR_FILE,
-		section: "links",
+		section: "files",
 		title: "Sidebar file rows",
 		description:
 			"How file rows in the file tree, changes list, and diff header open when clicked",
@@ -1253,7 +1310,7 @@ export const SETTINGS_ITEMS: SettingsItem[] = [
 	},
 	{
 		id: SETTING_ITEM_ID.LINKS_PORT,
-		section: "links",
+		section: "browser",
 		title: "Ports",
 		description:
 			"How detected-port badges in the sidebar open when clicked (in-app or system browser)",
@@ -1270,6 +1327,25 @@ export const SETTINGS_ITEMS: SettingsItem[] = [
 			"ctrl",
 			"shift",
 			"meta",
+			"browser",
+			"in-app",
+			"system",
+			"external",
+			"open",
+			"behavior",
+		],
+	},
+	{
+		id: SETTING_ITEM_ID.LINKS_PAGE,
+		section: "browser",
+		title: "Pages",
+		description:
+			"Whether pages from a workspace's Pages menu open inside Superset or the system browser",
+		keywords: [
+			"links",
+			"page",
+			"pages",
+			"click",
 			"browser",
 			"in-app",
 			"system",
@@ -1694,6 +1770,38 @@ export const SETTINGS_ITEMS: SettingsItem[] = [
 		],
 	},
 	{
+		id: SETTING_ITEM_ID.AGENT_ACCOUNTS,
+		section: "agentAccounts",
+		title: "Agents",
+		description: "Sign-ins cloud agents run with",
+		keywords: [
+			"claude",
+			"codex",
+			"subscription",
+			"api key",
+			"oauth",
+			"sign in",
+			"token",
+			"account",
+		],
+	},
+	{
+		id: SETTING_ITEM_ID.CONNECTIONS,
+		section: "connections",
+		title: "Connections",
+		description: "Your own GitHub account for cloud workspaces",
+		keywords: [
+			"github",
+			"connect",
+			"account",
+			"commit",
+			"author",
+			"push",
+			"pull request",
+			"personal",
+		],
+	},
+	{
 		id: SETTING_ITEM_ID.ENVIRONMENTS_LIST,
 		section: "environments",
 		title: "Environments",
@@ -1901,12 +2009,34 @@ export function getVisibleItemsForSection(params: {
  * active v1/v2 variant. Used by the sidebar so search counts and section
  * visibility agree.
  */
+/** Sections offered only with the cloud workspaces flag. */
+const CLOUD_WORKSPACE_SECTIONS: ReadonlySet<SettingsSection> = new Set([
+	"environments",
+	"agentAccounts",
+	"connections",
+]);
+
+function isItemOffered(
+	item: { id: SettingItemId; section: SettingsSection },
+	isV2: boolean,
+	cloudWorkspaces: boolean,
+): boolean {
+	return (
+		isItemAllowedForVariant(item.id, isV2) &&
+		(cloudWorkspaces || !CLOUD_WORKSPACE_SECTIONS.has(item.section))
+	);
+}
+
 export function getVisibleMatchCountBySection(
 	query: string,
 	isV2: boolean,
+	cloudWorkspaces: boolean,
+	mobileEnabled = false,
 ): Partial<Record<SettingsSection, number>> {
-	const matches = searchSettings(query).filter((item) =>
-		isItemAllowedForVariant(item.id, isV2),
+	const matches = searchSettings(query).filter(
+		(item) =>
+			isItemOffered(item, isV2, cloudWorkspaces) &&
+			(item.section !== "mobile" || mobileEnabled),
 	);
 	const counts: Partial<Record<SettingsSection, number>> = {};
 	for (const item of matches) {
@@ -1922,10 +2052,11 @@ export function getVisibleMatchCountBySection(
  */
 export function getAllowedSectionsForVariant(
 	isV2: boolean,
+	cloudWorkspaces: boolean,
 ): Set<SettingsSection> {
 	const sections = new Set<SettingsSection>();
 	for (const item of SETTINGS_ITEMS) {
-		if (isItemAllowedForVariant(item.id, isV2)) sections.add(item.section);
+		if (isItemOffered(item, isV2, cloudWorkspaces)) sections.add(item.section);
 	}
 	return sections;
 }

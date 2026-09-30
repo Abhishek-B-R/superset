@@ -3,22 +3,26 @@ import type {
 	LinearWebhookPayload,
 } from "@linear/sdk/webhooks";
 import { db } from "@superset/db/client";
-import type { SelectIntegrationConnection } from "@superset/db/schema";
+import type { SelectConnection } from "@superset/db/schema";
 import {
-	integrationConnections,
+	connections,
 	members,
 	taskStatuses,
 	tasks,
 	users,
 	webhookEvents,
 } from "@superset/db/schema";
+import { accountConnections } from "@superset/trpc/connectors";
 import {
-	getLinearClient,
 	isLinearAuthError,
+	linearClientFor,
 	mapPriorityFromLinear,
 } from "@superset/trpc/integrations/linear";
-import { and, asc, eq, isNull, sql } from "drizzle-orm";
-
+import {
+	organizationSyncs,
+	syncingOrganizationIds,
+} from "@superset/trpc/sync-policy";
+import { and, eq, isNull, sql } from "drizzle-orm";
 import { ingestAutomationEvent } from "@/lib/automations/ingestAutomationEvent";
 import { recordWebhookDelivery } from "@/lib/ingest/recordWebhookDelivery";
 import { stripNullChars } from "@/lib/strip-null-chars";
@@ -41,30 +45,32 @@ export interface DeliveryResult {
 }
 
 /**
- * Whether any Superset organization is still connected to this Linear
+ * Whether any syncing Superset organization is still connected to this Linear
  * organization.
  *
  * The accept path keeps this one indexed lookup so a delivery nobody
- * subscribes to costs what it always did — a query and nothing else. 317 of
- * the 1,661 Linear organizations on record have disconnected every one of
- * their connections, and recording their deliveries instead would start
- * writing rows and queueing work for traffic no measurement here can see.
+ * subscribes to costs what it always did — a query and nothing else. Both
+ * halves of the condition drop a large share of the traffic: a third of the
+ * Linear organizations on record have disconnected every one of their
+ * connections, and 1,320 of the 1,658 that remain belong to organizations on
+ * the free plan, where Tasks — the only consumer of this sync — is behind the
+ * paywall.
  */
 export async function hasActiveSubscriber(
 	externalOrgId: string,
 ): Promise<boolean> {
 	const [subscriber] = await db
-		.select({ id: integrationConnections.id })
-		.from(integrationConnections)
+		.select({ id: connections.id })
+		.from(connections)
 		.where(
 			and(
-				eq(integrationConnections.externalOrgId, externalOrgId),
-				eq(integrationConnections.provider, "linear"),
-				isNull(integrationConnections.disconnectedAt),
+				eq(connections.connector, "linear"),
+				eq(connections.externalAccountId, externalOrgId),
+				isNull(connections.disconnectedAt),
+				organizationSyncs(connections.organizationId),
 			),
 		)
 		.limit(1);
-
 	return subscriber !== undefined;
 }
 
@@ -88,16 +94,19 @@ export async function processDelivery({
 	payload: LinearWebhookPayload;
 	deliveryId: string | null;
 }): Promise<DeliveryResult> {
-	const connections = await db.query.integrationConnections.findMany({
-		where: and(
-			eq(integrationConnections.externalOrgId, payload.organizationId),
-			eq(integrationConnections.provider, "linear"),
-			isNull(integrationConnections.disconnectedAt),
-		),
-		orderBy: [asc(integrationConnections.id)],
-	});
+	const connected = await accountConnections("linear", payload.organizationId);
+	// One Linear organization fans out to every Superset organization connected
+	// to it, and they need not share a plan: the iced ones are dropped here
+	// rather than at the route, which only knows that somebody syncing is
+	// subscribed.
+	const syncing = await syncingOrganizationIds(
+		connected.map((connection) => connection.organizationId),
+	);
+	const subscribers = connected.filter((connection) =>
+		syncing.has(connection.organizationId),
+	);
 
-	if (connections.length === 0) {
+	if (subscribers.length === 0) {
 		console.log(
 			"[linear/process-delivery] No active connections for Linear org:",
 			payload.organizationId,
@@ -105,11 +114,15 @@ export async function processDelivery({
 		return { status: "no_subscribers", results: [] };
 	}
 
+	console.log(
+		`[linear/process-delivery] ${payload.type}.${payload.action} fans out to ${subscribers.length} connection(s) across ${new Set(subscribers.map((c) => c.organizationId)).size} organization(s)`,
+	);
+
 	// Caught per connection, and the loop runs to the end regardless: one
 	// organization's broken token or missing workflow state must not cost the
 	// other sixteen their delivery.
 	const results: ConnectionResult[] = [];
-	for (const connection of connections) {
+	for (const connection of subscribers) {
 		results.push(
 			await processForConnection(payload, deliveryId, connection).catch(
 				(error) => ({
@@ -132,7 +145,7 @@ export async function processDelivery({
 async function processForConnection(
 	payload: LinearWebhookPayload,
 	deliveryId: string | null,
-	connection: SelectIntegrationConnection,
+	connection: SelectConnection,
 ): Promise<ConnectionResult> {
 	// One webhookEvents row per (Linear event × Superset connection) so each
 	// tenant's processing status is independently retryable, and so a retried
@@ -229,7 +242,7 @@ function isEntityDelivery(payload: unknown): payload is LinearDelivery {
 async function ingest(
 	delivery: LinearDelivery,
 	deliveryHeader: string | null,
-	connection: SelectIntegrationConnection,
+	connection: SelectConnection,
 	webhookEventId: string,
 ): Promise<void> {
 	const event = matchableFrom(delivery);
@@ -261,10 +274,10 @@ async function ingest(
 // rethrown so the webhook-event retry path re-runs the sync instead of
 // recording a processed event with a stale branch.
 async function fetchIssueBranchName(
-	organizationId: string,
+	connection: SelectConnection,
 	issueId: string,
 ): Promise<string | null> {
-	const client = await getLinearClient(organizationId);
+	const client = await linearClientFor(connection);
 	if (!client) return null;
 	try {
 		const response = await client.client.request<
@@ -290,7 +303,7 @@ async function fetchIssueBranchName(
 
 async function processIssueEvent(
 	payload: EntityWebhookPayloadWithIssueData,
-	connection: SelectIntegrationConnection,
+	connection: SelectConnection,
 ): Promise<"processed" | "skipped"> {
 	const issue = payload.data;
 
@@ -364,10 +377,7 @@ async function processIssueEvent(
 			assigneeAvatarUrl = issue.assignee.avatarUrl ?? null;
 		}
 
-		const branchName = await fetchIssueBranchName(
-			connection.organizationId,
-			issue.id,
-		);
+		const branchName = await fetchIssueBranchName(connection, issue.id);
 
 		const taskData = {
 			slug: issue.identifier,
@@ -381,7 +391,6 @@ async function processIssueEvent(
 			assigneeAvatarUrl,
 			estimate: issue.estimate ?? null,
 			dueDate: issue.dueDate ? new Date(issue.dueDate) : null,
-			labels: issue.labels.map((l) => l.name),
 			...(branchName ? { branch: branchName } : {}),
 			startedAt: issue.startedAt ? new Date(issue.startedAt) : null,
 			completedAt: issue.completedAt ? new Date(issue.completedAt) : null,

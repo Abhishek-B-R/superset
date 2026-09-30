@@ -21,78 +21,144 @@ already running. Create now tears the sandbox down on failure and keeps the
 provisions running indefinitely, and nothing in the product would ever have
 shown them.
 
-**Nothing stops an idle sandbox.** No TTL, no idle-stop, no per-org quota, no
-cost visibility in the product. A workspace someone opened once keeps costing
-money until a human notices in the provider console. Decide the policy (sleep
-after N hours idle? hard TTL? quota per org?) before there are enough of them to
-matter.
+**An idle sandbox stops after its session timeout. Done, with a caveat.** A
+session ends four hours after its last extension; only the workspace someone
+has open extends it (every token refresh with `wake`), so a closed workspace
+stops within four hours and costs snapshot storage only. Still owed: a per-org
+quota and cost visibility in the product — and a decision on unattended agent
+runs, which die with the session (Blaxel froze processes; Vercel snapshots the
+filesystem and boots fresh).
 
-**Delete doesn't delete.** The generic delete routes to the owning host, so it
-removes the row *inside* the sandbox and leaves the sandbox and the
-`cloud_workspaces` row alive; the workspace reappears on the next refetch. Until
-this points at `cloudWorkspace.delete`, the only real teardown is manual.
-**Open.**
+**A golden lives exactly as long as its environment. Fixed (2026-09-25).** A
+golden is a stopped persistent sandbox whose snapshot never expires, about
+4 GB at $0.08/GB-month, and the only per-team storage nothing bounded: the
+release has deleted the golden it replaces since 2026-09-14, but archiving an
+environment left its golden behind forever. Archive now deletes it. Measured
+before the fix: 10 goldens (9 dead) and 6 orphan snapshots from before the
+orphan-cleanup flag, 54 GB, swept by hand. Still owed (SUPER-2461): a storage
+line per environment in Settings, and if goldens ever get an expiry it must
+come with an automatic rebuild, because a golden's last use only resets when a
+new box is created from it.
+
+**Delete deletes.** `useDestroyWorkspace` decides by the cloud row, not by the
+host it happens to reach: a cloud workspace goes to `cloudWorkspace.delete`,
+which removes the sandbox (and its snapshots) at the provider and marks the row
+deleted; only a machine someone owns gets the host-side destroy. Verified
+2026-09-11: four deletes from the sidebar, four sandboxes gone at Vercel. Left
+over: a pane still open on the deleted workspace keeps asking
+`cloudWorkspace.access` and logs "Cloud workspace is deleted" until it is
+closed.
+
+**Cloud automations start boxes on a schedule. Open.** An automation set to a
+new cloud workspace each run leaves one box per run. Each box stops after four
+idle hours but keeps its snapshot, and nothing deletes it. A pinned automation
+reuses one box. There is no spend limit; per-org rate limits are the planned
+answer.
 
 ## Credentials and blast radius
 
-**Model credentials are ours. gated** Every sandbox runs on the org's Anthropic
-and OpenAI keys, so agent usage lands on our bill with no per-org attribution or
-cap. Fine while only we can create sandboxes; unshippable after. Note the
-routing secrets are fixed when a sandbox is created, so rotating a key does not
-reach sandboxes that already exist — plan rotation as "re-create", or move to
-per-org credentials first.
+**Model credentials are the person's sign-in, never ours and never the
+environment's. Fixed (2026-09-25).** A sandbox's Anthropic or OpenAI credential
+comes from the creator's sign-in (Settings › Agents, per user,
+`agent_credentials`), brokered at the firewall by a rule that fires only on the
+placeholder the agent presents. An environment variable by one of those names
+(`ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, `CLAUDE_CODE_OAUTH_TOKEN`) is ignored:
+it never reaches the box, so nothing that runs there, a launched agent, a
+hand-typed `claude`, a headless `claude -p`, `codex`, the app itself, can bill
+it; the environment sheet and `secrets set` say so. Measured on Claude Code
+2.1.282: with a key beside an OAuth token it takes the key, so leaving the key
+out is the only way a terminal stays on the person's subscription. What this
+costs: an app that needs a provider key cannot get it from the environment in
+a cloud workspace; with an API-key sign-in the app's requests carry the
+placeholder and run on the person's key, with a subscription they fail. Our
+own API reads `SERVER_ANTHROPIC_API_KEY` instead, which passes into a box
+like any other variable. **Open:** nothing at workspace creation checks that the chosen
+agent has a sign-in, so a person without one gets a box whose agent sits on a
+login prompt, and an automation-created box does the same silently. Rotation
+of a person's credential reaches a running box within one keepalive: the
+firewall policy is live-updatable and every wake and `access` keepalive
+re-derives and re-applies it.
 
-**The GitHub token outlives the clone.** `git clone` with the token in the URL
-writes it into `.git/config`, so a repo-scoped installation token sits in the
-working tree for anything in the sandbox to read — including an agent that
-followed a prompt injection. This is the same exposure we removed for model
-keys by using the egress proxy, left open for a credential that can write to the
-repo. Either strip the remote after cloning and supply credentials per
-operation, or route git through the proxy the same way.
+**The GitHub token outlives the clone. Fixed (v2 layout, 2026-09-13).**
+`git clone` with the token in the URL wrote it into `.git/config`, so a
+repo-scoped installation token sat in the working tree for anything in the
+sandbox to read — including an agent that followed a prompt injection. The
+token is now a firewall header rule like the model keys (`Basic` for
+`github.com`, `Bearer` for `api.github.com` and `uploads.github.com`), the
+clone URL carries nothing, and the box holds only a `GH_TOKEN` placeholder so
+`gh` is willing to call. The rule is re-minted on every wake and every
+`access` keepalive, so a rule's token is never older than one keepalive.
 
-**A sandbox has exactly one gate. gated** The shared host-service secret this
-entry used to describe is gone: host-service in a sandbox trusts the provider's
-edge and checks nothing itself (`EdgeGuardedHostAuthProvider`). That removed a
-cross-tenant credential every tenant could read, and it left the preview token
-as the whole of a sandbox's access control. Anything that defeats the edge —
-a preview drifted to `public: true`, a provider bug, a leaked token — yields
-terminals, git and the filesystem, with nothing second to get past.
+**A visitor acts on GitHub as the workspace's creator. Accepted (multiplayer).**
+Any member of the organization can open any cloud workspace; that is the
+default on purpose. The GitHub rule carries the creator's own connection
+(Settings › Connections) when they have one, so a member who opens someone
+else's workspace commits, pushes and opens pull requests as that person, and
+reaches every repository the creator can reach through the App, including ones
+the visitor cannot. Before cloud workspaces leave the team this needs an
+answer: per-member identity inside a shared box, or a workspace falling back
+to the installation token while someone other than its creator holds a ticket.
+
+**A sandbox has exactly one gate, and it is ours.** A sandbox's own port is
+a public URL that clients never see; they reach a workspace through the
+sandbox gate (`apps/gate`), which verifies a ticket the API signed
+for that person's session and forwards with a bearer only it and the API can
+derive. host-service behind it accepts that bearer and nothing else. Nothing
+in the box holds the shared secret, a ticket for one workspace fails every
+other, and a sandbox booted without its secret answers nobody. What remains
+is a leaked unexpired ticket — hours of terminals, git and the filesystem for
+one workspace, through the gate only.
 
 What makes that worth more than the sandbox itself: code execution inside gets
 the customer's repo, the write-scoped GitHub token in `.git/config` above, and
 the ability to *spend* our model keys through the egress proxy. The proxy stops
 an attacker reading those keys; it does not stop them using them.
 
-Four things to settle before the gate comes off, none of them needed while it
+Three things to settle before the gate comes off, none of them needed while it
 is only us:
 
-- **Watch for `public: true`.** Preview configuration is now security-critical
-  and nothing alerts on drift. An automated check over live previews is cheap.
-- **Get the token out of the query string.** A browser can't set headers on a
-  WebSocket upgrade, so the preview token rides as `bl_preview_token` in the
-  URL, where it reaches logs and proxies far more readily than a header would.
-  Single-use or shorter-lived tokens for the socket path bound it.
-- **Narrow CORS.** `Access-Control-Allow-Origin: *` grants no ambient authority
-  (the token is not a cookie), but it does make a leaked token usable from any
-  origin. Pin it to the app's origins.
-- **Reconsider a second layer.** Per-sandbox secrets were rejected deliberately
-  — see the mismatches doc — on the grounds that a shared one obfuscated the
-  posture. A *per-sandbox* one would not have. Worth revisiting when the
-  population stops being us.
+- **Get the ticket out of the query string.** A browser can't set headers on a
+  WebSocket upgrade, so the ticket rides as `token` in the socket URL, where it
+  reaches logs and proxies far more readily than a header would. The gate owns
+  the upgrade now, so `Sec-WebSocket-Protocol` (a header a browser can set) or
+  single-use socket tickets are both available.
+- **Narrow CORS.** The gate answers `Access-Control-Allow-Origin: *`. It grants
+  no ambient authority (the ticket is not a cookie), but it does make a leaked
+  ticket usable from any origin. Pin it to the app's origins once they are
+  enumerable.
+- **Secret rotation.** `SANDBOX_GATE_SECRET` signs every ticket and derives
+  every sandbox's host secret; rotating it invalidates every running sandbox's
+  bearer at once, so a rotation is a re-provision. Accepting two secrets at
+  the gate during a window is the usual shape.
+
+## A saturated sandbox looks like a dead one
+
+An image workspace ran 4 vCPU / 8 GB (now 8 / 16 GB, the plan's cap). An agent that brings up the dev stack
+(Postgres, the API, Vite, an Electron instance) exhausts that, and the VM stops
+answering anything: `vercel sandbox exec` hangs, the public URL answers without
+CORS headers, and the app shows "Connecting… / Unknown host" with a hint about a
+tray menu Linux does not have. Seen 2026-09-11 from a throwaway prompt that
+invited the agent to "try the new image". Recovery is a platform-side
+`vercel sandbox stop` (snapshots the disk, kills everything) followed by the
+app's Retry, which wakes a clean session. Still owed: memory pressure shown in
+the product, and a kill switch for the runaway process short of stopping the
+box. **Open.**
 
 ## Untested behaviour
 
 These are unknowns, not known failures — but each could change the design, and
 none is expensive to answer.
 
-**Sleep and wake.** Providers stop idle sandboxes. Does host-service come back
-when one wakes? It is started with `nohup`, not a supervisor, so nothing
-restarts it if it dies. Token minting talks to the control plane and keeps
-working either way, which means the app may believe a dead sandbox is reachable.
+**Sleep and wake. Answered.** A stopped session resumes on the open
+workspace's next token mint (`wake`), and host-service is started again as
+part of it — a resumed session has no processes. Nothing restarts host-service
+if it dies mid-session; the token keeps minting either way, so the app can
+still believe a dead sandbox is reachable until the health poll says otherwise.
 
-**Disk durability.** Whether uncommitted work survives a stop/restart or a
-recycle is unverified. "Your work vanished" is the failure that ends the
-feature, so verify it before inviting anyone in.
+**Disk durability. Answered.** The filesystem is snapshotted on every stop and
+restored on resume (measured: a file written before `stop()` is there after,
+resume plus first command in about two seconds). Snapshots expire 30 days
+after last use; a workspace untouched for longer than that is gone.
 
 **Token refresh across a backgrounded app.** Access is re-minted at 80% of a
 10-minute life. An app asleep past expiry should recover on the next tick;
@@ -174,13 +240,31 @@ call `agents.run`.
 
 ## Provider
 
-**Proxy secret injection depends on a workspace entitlement.** Routing rules send
-egress through the workspace's egress gateway; without it every outbound request
-fails its upstream CONNECT with a 407. Enabled for `superset` on 2026-08-16 —
-a second provider workspace (staging, another region) needs it enabled too or
-sandboxes there lose all model access.
+**Everything is scoped to one Vercel project.** Sandboxes, their snapshots and
+the image repository live in the team's `sandboxes` project, reached with a
+token that is not the deploy token. A second region is a per-sandbox
+`region` choice, not a second project.
 
-**Preview URLs are the only ingress.** No relay hop, which is why WebSockets
-work and a sandbox can sleep — but it also means the desktop talks straight to
-the provider's domain, and that domain is in the renderer's CSP. Moving this
-behind the relay later removes that CSP entry and the CORS dependency.
+**An environment has a region, and every box of it runs there. Done
+(2026-09-25).** Snapshots are region-bound and cannot move, so a golden built
+in sfo1 only forks in sfo1, and a promoted environment cannot be reproduced
+elsewhere at all (its golden is a snapshot of a hand-shaped box, not a recipe).
+`environments.region` records it: chosen in the New environment dialog, which
+defaults to the region nearest the person from the coordinates Vercel stamps
+on the request (`x-vercel-ip-latitude/longitude`), `sfo1` when they are
+missing; the internal release builds in `DEFAULT_SANDBOX_REGION`; promote
+records the source box's region. Image creates use it, forks inherit the
+golden's. `VERCEL_SANDBOX_REGION` is gone. **Open:** the internal golden in
+more than one region so a first box anywhere starts fast (an
+`environment_goldens` table keyed by region, the release building the fixed
+list in parallel), and a region change on an image-backed environment. Worth
+it: a request to a sandbox in sfo1 answers in ~23 ms from San Francisco
+against ~190 ms to iad1, and the desktop pane pays that on every frame;
+terminals through the edge gate are fine from a far region.
+
+**The sandbox domain is the only ingress.** No relay hop, which is why
+WebSockets work and there is no relay on the critical path — but it also means
+the desktop talks straight to `*.vercel.run`, and that domain is in the
+renderer's CSP. Moving this behind the relay later removes that CSP entry, the
+CORS wildcard, and the public URL altogether; it is the stronger posture, at
+the cost of a hop on every keystroke.

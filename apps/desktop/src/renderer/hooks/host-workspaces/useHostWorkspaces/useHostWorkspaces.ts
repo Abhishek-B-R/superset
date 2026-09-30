@@ -17,6 +17,7 @@ import {
 	isEventBusReopen,
 	loadHostWorkspacesSnapshot,
 	mergeHostWorkspaces,
+	normalizeServedWorkspaceRow,
 	saveHostWorkspacesSnapshot,
 	toHostWorkspaceItem,
 } from "./useHostWorkspaces.utils";
@@ -111,11 +112,9 @@ export function useHostWorkspacesSource(
 	} = useKnownHosts();
 	const { targets: sandboxes, isReady: sandboxesReady } = useSandboxAccess();
 
-	// Only the open workspace's sandbox is a host here. The provider suspends a
-	// sandbox after ~15s without an inbound request and this poll counts as
-	// one, so every sandbox in the fan-out is one kept awake (and billed) for
-	// as long as the app is open. The sidebar renders cloud rows from the cloud
-	// row, so nothing else needs a sandbox's served rows.
+	// Only the open workspace's sandbox is a host here: the sidebar renders
+	// cloud rows from the cloud row, so nothing else needs a sandbox's served
+	// rows, and asking would keep every sidebar sandbox awake.
 	const { workspaceId: openWorkspaceId } = useParams({ strict: false });
 	const openSandbox = useMemo(
 		() =>
@@ -192,8 +191,9 @@ export function useHostWorkspacesSource(
 			queryFn: async (): Promise<HostWorkspaceRow[]> => {
 				if (!target.hostUrl) return [];
 				const client = getHostServiceClientByUrl(target.hostUrl);
-				const served =
-					(await client.workspace.list.query()) as HostWorkspaceRow[];
+				const served = (
+					(await client.workspace.list.query()) as HostWorkspaceRow[]
+				).map(normalizeServedWorkspaceRow);
 				// A sandbox reports the machine id of the container it happens to
 				// be running in, which addresses nothing from here. Restate it as
 				// the cloud workspace's id so every host-keyed lookup downstream
@@ -231,7 +231,9 @@ export function useHostWorkspacesSource(
 				const rows = (await client.workspace.list.query({
 					includeArchived: true,
 				})) as HostWorkspaceRow[];
-				return rows.filter((row) => row.archivedAt != null);
+				return rows
+					.filter((row) => row.archivedAt != null)
+					.map(normalizeServedWorkspaceRow);
 			},
 		})),
 	});

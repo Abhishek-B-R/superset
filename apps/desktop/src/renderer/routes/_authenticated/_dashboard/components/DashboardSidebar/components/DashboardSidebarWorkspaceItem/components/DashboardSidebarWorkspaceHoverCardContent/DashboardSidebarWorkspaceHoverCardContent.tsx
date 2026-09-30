@@ -65,7 +65,14 @@ export function DashboardSidebarWorkspaceHoverCardContent({
 	return (
 		<div className="space-y-3">
 			<div className="space-y-1.5">
-				{hasCustomAlias && <div className="text-sm font-medium">{name}</div>}
+				{hasCustomAlias && (
+					<div
+						className="text-sm font-medium break-words line-clamp-2"
+						title={name}
+					>
+						{name}
+					</div>
+				)}
 				<div className="space-y-0.5">
 					<span className="text-[10px] uppercase tracking-wide text-muted-foreground">
 						<Trans>Branch</Trans>
@@ -147,12 +154,21 @@ export function DashboardSidebarWorkspaceHoverCardContent({
 									/>
 								)}
 						</div>
-						{diffStats && (
-							<div className="flex items-center gap-1.5 text-xs font-mono shrink-0">
-								<span className="text-emerald-500">+{diffStats.additions}</span>
-								<span className="text-destructive">-{diffStats.deletions}</span>
-							</div>
-						)}
+						{diffStats &&
+							(diffStats.additions > 0 || diffStats.deletions > 0) && (
+								<div className="flex items-center gap-1.5 text-xs font-mono shrink-0">
+									{diffStats.additions > 0 && (
+										<span className="text-emerald-500">
+											+{diffStats.additions}
+										</span>
+									)}
+									{diffStats.deletions > 0 && (
+										<span className="text-destructive">
+											-{diffStats.deletions}
+										</span>
+									)}
+								</div>
+							)}
 					</div>
 
 					<p className="text-xs leading-relaxed line-clamp-2">

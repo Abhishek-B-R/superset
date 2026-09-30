@@ -57,9 +57,11 @@ jobs:
         env:
           DATABASE_URL: ${{ steps.create-branch.outputs.db_url_pooled }}
           DATABASE_URL_UNPOOLED: ${{ steps.create-branch.outputs.db_url }}
+          PGOPTIONS: -c lock_timeout=5s -c statement_timeout=60s
         run: |
           bun drizzle-kit check
           bun drizzle-kit migrate
+          bun run src/verify-migrations-applied.ts
 
       - name: Save database success status
         run: |
@@ -151,6 +153,9 @@ jobs:
           NEXT_PUBLIC_POSTHOG_HOST: ${{ secrets.NEXT_PUBLIC_POSTHOG_HOST }}
           POSTHOG_API_KEY: ${{ secrets.POSTHOG_API_KEY }}
           GOOGLE_SEARCH_CONSOLE_SERVICE_ACCOUNT: ${{ secrets.GOOGLE_SEARCH_CONSOLE_SERVICE_ACCOUNT }}
+          PLUGIN_CLIENT_METADATA_BASE_URL: ${{ secrets.PLUGIN_CLIENT_METADATA_BASE_URL }}
+          PLUGIN_GITHUB_CLIENT_ID: ${{ secrets.PLUGIN_GITHUB_CLIENT_ID }}
+          PLUGIN_GITHUB_CLIENT_SECRET: ${{ secrets.PLUGIN_GITHUB_CLIENT_SECRET }}
           POSTHOG_PROJECT_ID: ${{ secrets.POSTHOG_PROJECT_ID }}
           KV_REST_API_URL: ${{ secrets.KV_REST_API_URL }}
           KV_REST_API_TOKEN: ${{ secrets.KV_REST_API_TOKEN }}
@@ -163,11 +168,12 @@ jobs:
           SLACK_CLIENT_ID: ${{ secrets.SLACK_CLIENT_ID }}
           SLACK_CLIENT_SECRET: ${{ secrets.SLACK_CLIENT_SECRET }}
           SLACK_SIGNING_SECRET: ${{ secrets.SLACK_SIGNING_SECRET }}
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          SERVER_ANTHROPIC_API_KEY: ${{ secrets.SERVER_ANTHROPIC_API_KEY }}
           GH_APP_ID: ${{ secrets.GH_APP_ID }}
           GH_APP_PRIVATE_KEY: ${{ secrets.GH_APP_PRIVATE_KEY }}
           GH_WEBHOOK_SECRET: ${{ secrets.GH_WEBHOOK_SECRET }}
-          HOOKDECK_SIGNING_SECRET: ${{ secrets.HOOKDECK_SIGNING_SECRET }}
+          GH_APP_CLIENT_ID: ${{ secrets.GH_APP_CLIENT_ID }}
+          GH_APP_CLIENT_SECRET: ${{ secrets.GH_APP_CLIENT_SECRET }}
           QSTASH_TOKEN: ${{ secrets.QSTASH_TOKEN }}
           QSTASH_URL: ${{ secrets.QSTASH_URL }}
           QSTASH_CURRENT_SIGNING_KEY: ${{ secrets.QSTASH_CURRENT_SIGNING_KEY }}
@@ -180,9 +186,13 @@ jobs:
           SLACK_BILLING_WEBHOOK_URL: ${{ secrets.SLACK_BILLING_WEBHOOK_URL }}
           SECRETS_ENCRYPTION_KEY: ${{ secrets.SECRETS_ENCRYPTION_KEY }}
           RELAY_URL: ${{ secrets.RELAY_URL }}
-          BLAXEL_API_KEY: ${{ secrets.BLAXEL_API_KEY }}
-          BLAXEL_WORKSPACE: ${{ secrets.BLAXEL_WORKSPACE }}
-          BLAXEL_REGION: ${{ secrets.BLAXEL_REGION }}
+          REALTIME_URL: ${{ secrets.REALTIME_URL }}
+          REALTIME_NUDGE_SECRET: ${{ secrets.REALTIME_NUDGE_SECRET }}
+          VERCEL_SANDBOX_TOKEN: ${{ secrets.VERCEL_SANDBOX_TOKEN }}
+          VERCEL_SANDBOX_TEAM_ID: ${{ secrets.VERCEL_SANDBOX_TEAM_ID }}
+          VERCEL_SANDBOX_PROJECT_ID: ${{ secrets.VERCEL_SANDBOX_PROJECT_ID }}
+          SANDBOX_GATE_SECRET: ${{ secrets.SANDBOX_GATE_SECRET }}
+          SANDBOX_GATE_ORIGIN: ${{ secrets.SANDBOX_GATE_ORIGIN }}
           SENTRY_DSN_SANDBOX: ${{ secrets.SENTRY_DSN_SANDBOX }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           GH_APP_SLUG: ${{ secrets.GH_APP_SLUG }}
@@ -218,6 +228,9 @@ jobs:
             --env NEXT_PUBLIC_POSTHOG_HOST=$NEXT_PUBLIC_POSTHOG_HOST \
             --env POSTHOG_API_KEY=$POSTHOG_API_KEY \
             --env GOOGLE_SEARCH_CONSOLE_SERVICE_ACCOUNT="$GOOGLE_SEARCH_CONSOLE_SERVICE_ACCOUNT" \
+            --env PLUGIN_CLIENT_METADATA_BASE_URL="$PLUGIN_CLIENT_METADATA_BASE_URL" \
+            --env PLUGIN_GITHUB_CLIENT_ID="$PLUGIN_GITHUB_CLIENT_ID" \
+            --env PLUGIN_GITHUB_CLIENT_SECRET="$PLUGIN_GITHUB_CLIENT_SECRET" \
             --env POSTHOG_PROJECT_ID=$POSTHOG_PROJECT_ID \
             --env KV_REST_API_URL=$KV_REST_API_URL \
             --env KV_REST_API_TOKEN=$KV_REST_API_TOKEN \
@@ -230,11 +243,12 @@ jobs:
             --env SLACK_CLIENT_ID=$SLACK_CLIENT_ID \
             --env SLACK_CLIENT_SECRET=$SLACK_CLIENT_SECRET \
             --env SLACK_SIGNING_SECRET=$SLACK_SIGNING_SECRET \
-            --env ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY \
+            --env SERVER_ANTHROPIC_API_KEY=$SERVER_ANTHROPIC_API_KEY \
             --env GH_APP_ID="$GH_APP_ID" \
             --env GH_APP_PRIVATE_KEY="$GH_APP_PRIVATE_KEY" \
             --env GH_WEBHOOK_SECRET="$GH_WEBHOOK_SECRET" \
-            --env HOOKDECK_SIGNING_SECRET="$HOOKDECK_SIGNING_SECRET" \
+            --env GH_APP_CLIENT_ID="$GH_APP_CLIENT_ID" \
+            --env GH_APP_CLIENT_SECRET="$GH_APP_CLIENT_SECRET" \
             --env QSTASH_TOKEN=$QSTASH_TOKEN \
             --env QSTASH_URL=$QSTASH_URL \
             --env QSTASH_CURRENT_SIGNING_KEY=$QSTASH_CURRENT_SIGNING_KEY \
@@ -247,9 +261,13 @@ jobs:
             --env SLACK_BILLING_WEBHOOK_URL=$SLACK_BILLING_WEBHOOK_URL \
             --env SECRETS_ENCRYPTION_KEY=$SECRETS_ENCRYPTION_KEY \
             --env RELAY_URL=$RELAY_URL \
-            --env BLAXEL_API_KEY=$BLAXEL_API_KEY \
-            --env BLAXEL_WORKSPACE=$BLAXEL_WORKSPACE \
-            --env BLAXEL_REGION=$BLAXEL_REGION \
+            --env REALTIME_URL=$REALTIME_URL \
+            --env REALTIME_NUDGE_SECRET=$REALTIME_NUDGE_SECRET \
+            --env VERCEL_SANDBOX_TOKEN=$VERCEL_SANDBOX_TOKEN \
+            --env VERCEL_SANDBOX_TEAM_ID=$VERCEL_SANDBOX_TEAM_ID \
+            --env VERCEL_SANDBOX_PROJECT_ID=$VERCEL_SANDBOX_PROJECT_ID \
+            --env SANDBOX_GATE_SECRET=$SANDBOX_GATE_SECRET \
+            --env SANDBOX_GATE_ORIGIN=$SANDBOX_GATE_ORIGIN \
             --env SENTRY_DSN_SANDBOX=$SENTRY_DSN_SANDBOX \
             --env OPENAI_API_KEY=$OPENAI_API_KEY \
             --env GH_APP_SLUG=$GH_APP_SLUG)
@@ -345,7 +363,7 @@ jobs:
           STRIPE_ENTERPRISE_YEARLY_PRICE_ID: ${{ secrets.STRIPE_ENTERPRISE_YEARLY_PRICE_ID }}
           SLACK_BILLING_WEBHOOK_URL: ${{ secrets.SLACK_BILLING_WEBHOOK_URL }}
           SECRETS_ENCRYPTION_KEY: ${{ secrets.SECRETS_ENCRYPTION_KEY }}
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          SERVER_ANTHROPIC_API_KEY: ${{ secrets.SERVER_ANTHROPIC_API_KEY }}
           RELAY_URL: ${{ secrets.RELAY_URL }}
         run: |
           vercel pull --yes --environment=preview --token=$VERCEL_TOKEN
@@ -378,7 +396,7 @@ jobs:
             --env STRIPE_ENTERPRISE_YEARLY_PRICE_ID=$STRIPE_ENTERPRISE_YEARLY_PRICE_ID \
             --env SLACK_BILLING_WEBHOOK_URL=$SLACK_BILLING_WEBHOOK_URL \
             --env SECRETS_ENCRYPTION_KEY=$SECRETS_ENCRYPTION_KEY \
-            --env ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY)
+            --env SERVER_ANTHROPIC_API_KEY=$SERVER_ANTHROPIC_API_KEY)
           vercel alias $VERCEL_URL ${{ env.WEB_ALIAS }} --scope=$VERCEL_ORG_ID --token=$VERCEL_TOKEN
           echo "vercel_url=$VERCEL_URL" >> $GITHUB_OUTPUT
 
@@ -469,7 +487,7 @@ jobs:
           STRIPE_ENTERPRISE_YEARLY_PRICE_ID: ${{ secrets.STRIPE_ENTERPRISE_YEARLY_PRICE_ID }}
           SLACK_BILLING_WEBHOOK_URL: ${{ secrets.SLACK_BILLING_WEBHOOK_URL }}
           SECRETS_ENCRYPTION_KEY: ${{ secrets.SECRETS_ENCRYPTION_KEY }}
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          SERVER_ANTHROPIC_API_KEY: ${{ secrets.SERVER_ANTHROPIC_API_KEY }}
         run: |
           vercel pull --yes --environment=preview --token=$VERCEL_TOKEN
           vercel build --token=$VERCEL_TOKEN
@@ -498,7 +516,7 @@ jobs:
             --env STRIPE_ENTERPRISE_YEARLY_PRICE_ID=$STRIPE_ENTERPRISE_YEARLY_PRICE_ID \
             --env SLACK_BILLING_WEBHOOK_URL=$SLACK_BILLING_WEBHOOK_URL \
             --env SECRETS_ENCRYPTION_KEY=$SECRETS_ENCRYPTION_KEY \
-            --env ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY)
+            --env SERVER_ANTHROPIC_API_KEY=$SERVER_ANTHROPIC_API_KEY)
           vercel alias $VERCEL_URL ${{ env.MARKETING_ALIAS }} --scope=$VERCEL_ORG_ID --token=$VERCEL_TOKEN
           echo "vercel_url=$VERCEL_URL" >> $GITHUB_OUTPUT
 
@@ -609,7 +627,7 @@ jobs:
           STRIPE_ENTERPRISE_YEARLY_PRICE_ID: ${{ secrets.STRIPE_ENTERPRISE_YEARLY_PRICE_ID }}
           SLACK_BILLING_WEBHOOK_URL: ${{ secrets.SLACK_BILLING_WEBHOOK_URL }}
           SECRETS_ENCRYPTION_KEY: ${{ secrets.SECRETS_ENCRYPTION_KEY }}
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          SERVER_ANTHROPIC_API_KEY: ${{ secrets.SERVER_ANTHROPIC_API_KEY }}
         run: |
           vercel pull --yes --environment=preview --token=$VERCEL_TOKEN
           vercel build --token=$VERCEL_TOKEN
@@ -640,7 +658,7 @@ jobs:
             --env STRIPE_ENTERPRISE_YEARLY_PRICE_ID=$STRIPE_ENTERPRISE_YEARLY_PRICE_ID \
             --env SLACK_BILLING_WEBHOOK_URL=$SLACK_BILLING_WEBHOOK_URL \
             --env SECRETS_ENCRYPTION_KEY=$SECRETS_ENCRYPTION_KEY \
-            --env ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY)
+            --env SERVER_ANTHROPIC_API_KEY=$SERVER_ANTHROPIC_API_KEY)
           vercel alias $VERCEL_URL ${{ env.ADMIN_ALIAS }} --scope=$VERCEL_ORG_ID --token=$VERCEL_TOKEN
           echo "vercel_url=$VERCEL_URL" >> $GITHUB_OUTPUT
 

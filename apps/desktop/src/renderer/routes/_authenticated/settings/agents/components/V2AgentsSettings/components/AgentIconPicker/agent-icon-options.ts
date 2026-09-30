@@ -23,7 +23,10 @@ export const AGENT_ICON_OPTIONS: readonly AgentIconOption[] = [
 	{ id: "kimi", label: "Kimi Code" },
 	{ id: "grok", label: "Grok" },
 	{ id: "hermes", label: "Hermes" },
+	{ id: "muse", label: "Muse Code" },
+	{ id: "devin", label: "Devin" },
 	{ id: "fx", label: "fx" },
 	{ id: "agy", label: "Antigravity" },
 	{ id: "kiro", label: "Kiro" },
+	{ id: "ufo", label: "UFO" },
 ];

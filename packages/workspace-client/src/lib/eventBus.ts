@@ -22,6 +22,7 @@ type EventType =
 	| "port:changed"
 	| "workspace:changed"
 	| "workspace:create-settled"
+	| "workspace:naming-failed"
 	| "project:changed"
 	| "tag-folders:changed"
 	| "page-watch:changed";
@@ -43,6 +44,7 @@ export interface AgentLifecyclePayload {
 	terminalId: string;
 	// Absent when the hook ran without `SUPERSET_AGENT_ID` set.
 	agent?: AgentIdentity;
+	preview?: string;
 	occurredAt: number;
 }
 
@@ -87,6 +89,11 @@ type WorkspaceCreateSettledMessage = Extract<
 
 export type WorkspaceCreateSettledPayload = Omit<
 	WorkspaceCreateSettledMessage,
+	"type" | "workspaceId"
+>;
+
+export type WorkspaceNamingFailedPayload = Omit<
+	Extract<ServerMessage, { type: "workspace:naming-failed" }>,
 	"type" | "workspaceId"
 >;
 
@@ -140,16 +147,27 @@ type EventListener<T extends EventType> = T extends "fs:events"
 										workspaceId: string,
 										payload: WorkspaceCreateSettledPayload,
 									) => void
-								: T extends "project:changed"
-									? (projectId: string, payload: ProjectChangedPayload) => void
-									: T extends "tag-folders:changed"
-										? (scope: string, payload: TagFoldersChangedPayload) => void
-										: T extends "page-watch:changed"
+								: T extends "workspace:naming-failed"
+									? (
+											workspaceId: string,
+											payload: WorkspaceNamingFailedPayload,
+										) => void
+									: T extends "project:changed"
+										? (
+												projectId: string,
+												payload: ProjectChangedPayload,
+											) => void
+										: T extends "tag-folders:changed"
 											? (
-													workspaceId: string,
-													payload: PageWatchChangedPayload,
+													scope: string,
+													payload: TagFoldersChangedPayload,
 												) => void
-											: never;
+											: T extends "page-watch:changed"
+												? (
+														workspaceId: string,
+														payload: PageWatchChangedPayload,
+													) => void
+												: never;
 
 interface ListenerEntry {
 	type: EventType;
@@ -166,6 +184,10 @@ const RECONNECT_MAX_MS = 5_000;
 // exponential 1-30s retries just hammer it. Poll slowly instead of stopping
 // outright so access granted later (host sharing) is picked up eventually.
 const ACCESS_DENIED_RETRY_MS = 5 * 60_000;
+// Host not connected to the relay (preflight 503). The roster holds a socket
+// open for every host so its state is presence, which makes this the cadence
+// at which an offline host is re-probed: one cheap relay request per window.
+const HOST_OFFLINE_RETRY_MS = 30_000;
 
 export type HostConnectionState =
 	| "connecting"
@@ -284,6 +306,7 @@ function handleMessage(state: ConnectionState, data: unknown): void {
 			message.type === "port:changed" ||
 			message.type === "workspace:changed" ||
 			message.type === "workspace:create-settled" ||
+			message.type === "workspace:naming-failed" ||
 			message.type === "page-watch:changed"
 				? message.workspaceId
 				: message.type === "project:changed"
@@ -315,6 +338,7 @@ function handleMessage(state: ConnectionState, data: unknown): void {
 					eventType: message.eventType,
 					terminalId: message.terminalId,
 					...(message.agent ? { agent: message.agent } : {}),
+					...(message.preview ? { preview: message.preview } : {}),
 					occurredAt: message.occurredAt,
 				},
 			);
@@ -396,6 +420,7 @@ function getOrCreateConnection(
 		},
 		getToken: getWsToken,
 		accessDeniedRetryMs: ACCESS_DENIED_RETRY_MS,
+		hostOfflineRetryMs: HOST_OFFLINE_RETRY_MS,
 		minReconnectionDelay: RECONNECT_BASE_MS,
 		maxReconnectionDelay: RECONNECT_MAX_MS,
 		// Relay upgrades wait for the host's dial-back (DIAL_TIMEOUT_MS);

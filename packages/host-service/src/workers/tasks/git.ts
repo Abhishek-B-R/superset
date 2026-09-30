@@ -31,6 +31,8 @@ import {
 } from "../../trpc/router/git/utils/git-helpers.ts";
 import type { GitStatusSnapshotComputation } from "../../trpc/router/git/utils/git-status.ts";
 import { getGitStatusSnapshot } from "../../trpc/router/git/utils/git-status.ts";
+import type { GitStatusPartial } from "../../trpc/router/git/utils/git-status-partial/index.ts";
+import { getGitStatusPartial } from "../../trpc/router/git/utils/git-status-partial/index.ts";
 import {
 	normalizeWorktreePath,
 	parseWorktreeList,
@@ -54,6 +56,17 @@ export const gitStatusSnapshotTask = defineWorkerTask<
 	handler: async ({ worktreePath, baseBranch, gitEnv }) => {
 		const git = createUserSimpleGit(worktreePath).env(gitEnv);
 		return getGitStatusSnapshot({ git, worktreePath, baseBranch });
+	},
+});
+
+export const gitStatusPartialTask = defineWorkerTask<
+	{ worktreePath: string; paths: string[]; gitEnv: GitTaskEnv },
+	GitStatusPartial
+>({
+	type: "git/getStatusPartial",
+	handler: async ({ worktreePath, paths, gitEnv }) => {
+		const git = createUserSimpleGit(worktreePath).env(gitEnv);
+		return getGitStatusPartial({ git, worktreePath, paths });
 	},
 });
 
@@ -322,7 +335,13 @@ export const gitWorktreeStateTask = defineWorkerTask<
 });
 
 export const gitWorktreeRemoveTask = defineWorkerTask<
-	{ repoPath: string; worktreePath: string; gitEnv: GitTaskEnv },
+	{
+		repoPath: string;
+		worktreePath: string;
+		gitEnv: GitTaskEnv;
+		/** false lets git refuse a worktree with uncommitted changes. */
+		force?: boolean;
+	},
 	{ stillRegistered: boolean; removeError?: string }
 >({
 	type: "git/removeWorktree",
@@ -330,7 +349,10 @@ export const gitWorktreeRemoveTask = defineWorkerTask<
 	// HOST-SERVICE-47) and the timeout named only the budget. Its steps stall
 	// for unrelated reasons, so each announces itself before starting and the
 	// pool names the last one in the timeout error.
-	handler: async ({ repoPath, worktreePath, gitEnv }, reportPhase) => {
+	handler: async (
+		{ repoPath, worktreePath, gitEnv, force = true },
+		reportPhase,
+	) => {
 		// Labelled from the first statement so every moment of the handler
 		// falls under some phase — an unlabelled timeout would be
 		// indistinguishable from one reported by a build without this.
@@ -351,7 +373,11 @@ export const gitWorktreeRemoveTask = defineWorkerTask<
 		reportPhase?.("worktree-remove");
 		let removeError: string | undefined;
 		await git
-			.raw(["worktree", "remove", "--force", "--force", target])
+			.raw(
+				force
+					? ["worktree", "remove", "--force", "--force", target]
+					: ["worktree", "remove", target],
+			)
 			.catch((err: unknown) => {
 				removeError = (err instanceof Error ? err.message : String(err)).trim();
 				console.warn("[git/removeWorktree] git worktree remove failed", {
@@ -387,6 +413,65 @@ export const gitDeleteBranchTask = defineWorkerTask<
 		if (listed.trim().length === 0) return { deleted: false };
 		await git.raw(["branch", "-D", branch]);
 		return { deleted: true };
+	},
+});
+
+/**
+ * Whether an automatically named branch can still be renamed: checked out
+ * in the worktree, no upstream, and no remote branch of the same name.
+ */
+export const gitAutomaticBranchRenamableTask = defineWorkerTask<
+	{ worktreePath: string; branch: string; gitEnv: GitTaskEnv },
+	{ renamable: boolean }
+>({
+	type: "git/automaticBranchRenamable",
+	handler: async ({ worktreePath, branch, gitEnv }) => {
+		const git = createUserSimpleGit(worktreePath).env(gitEnv);
+		const [head, upstream, remoteBranches] = await Promise.all([
+			git.raw(["branch", "--show-current"]),
+			git.raw(["for-each-ref", "--format=%(upstream)", `refs/heads/${branch}`]),
+			git.raw(["for-each-ref", "--format=%(refname)", "refs/remotes"]),
+		]);
+		return {
+			renamable:
+				head.trim() === branch &&
+				!upstream.trim() &&
+				!remoteBranches
+					.split("\n")
+					.some((ref) => ref.replace(/^refs\/remotes\/[^/]+\//, "") === branch),
+		};
+	},
+});
+
+export const gitRenameBranchTask = defineWorkerTask<
+	{ worktreePath: string; from: string; to: string; gitEnv: GitTaskEnv },
+	void
+>({
+	type: "git/renameBranch",
+	handler: async ({ worktreePath, from, to, gitEnv }) => {
+		await createUserSimpleGit(worktreePath)
+			.env(gitEnv)
+			.raw(["branch", "-m", from, to]);
+	},
+});
+
+export const gitStagePathsTask = defineWorkerTask<
+	{
+		worktreePath: string;
+		paths: string[];
+		action: "stage" | "unstage";
+		gitEnv: GitTaskEnv;
+	},
+	{ success: true }
+>({
+	type: "git/stagePaths",
+	handler: async ({ worktreePath, paths, action, gitEnv }) => {
+		const git = createUserSimpleGit(worktreePath).env(gitEnv);
+		// Paths come from status output, not from a pathspec the user typed;
+		// without this, a name like `:(glob)**` would match the whole tree.
+		const command = action === "stage" ? ["add", "-A"] : ["reset", "HEAD"];
+		await git.raw(["--literal-pathspecs", ...command, "--", ...paths]);
+		return { success: true };
 	},
 });
 
@@ -524,6 +609,7 @@ export const gitPrHeadBaseTask = defineWorkerTask<
 
 export const gitTasks = [
 	gitStatusSnapshotTask,
+	gitStatusPartialTask,
 	gitFetchBaseRefTask,
 	gitCommitFilesTask,
 	gitDiffBulkTask,
@@ -535,6 +621,9 @@ export const gitTasks = [
 	gitWorktreeStateTask,
 	gitWorktreeRemoveTask,
 	gitDeleteBranchTask,
+	gitAutomaticBranchRenamableTask,
+	gitRenameBranchTask,
+	gitStagePathsTask,
 	gitCommitTask,
 	gitPushTask,
 	gitPrHeadBaseTask,

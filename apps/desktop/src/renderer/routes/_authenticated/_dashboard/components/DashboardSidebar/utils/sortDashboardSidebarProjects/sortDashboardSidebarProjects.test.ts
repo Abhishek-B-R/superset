@@ -6,7 +6,6 @@ import {
 	makeWorkspace,
 } from "../testProjectFixtures";
 import {
-	getWorkspaceActivityTime,
 	sortDashboardSidebarProjectChildren,
 	sortDashboardSidebarProjects,
 } from "./sortDashboardSidebarProjects";
@@ -15,40 +14,6 @@ const at = (iso: string) => new Date(iso).getTime();
 
 const childIds = (children: DashboardSidebarProjectChild[]) =>
 	children.map((c) => (c.type === "workspace" ? c.workspace.id : c.section.id));
-
-describe("getWorkspaceActivityTime", () => {
-	it("ranks by lastActivityAt alone once the host has stamped it", () => {
-		// A rename bumped updatedAt well past the last agent event; the agent
-		// event still wins because housekeeping is not activity.
-		const workspace = makeWorkspace({
-			id: "w",
-			name: "w",
-			updatedAt: new Date("2026-08-01"),
-			lastActivityAt: at("2026-03-01"),
-		});
-		expect(getWorkspaceActivityTime(workspace)).toBe(at("2026-03-01"));
-	});
-
-	it("falls back to updatedAt for rows from a host that predates the column", () => {
-		const workspace = makeWorkspace({
-			id: "w",
-			name: "w",
-			updatedAt: new Date("2026-05-01"),
-			lastActivityAt: null,
-		});
-		expect(getWorkspaceActivityTime(workspace)).toBe(at("2026-05-01"));
-	});
-
-	it("treats a NaN lastActivityAt like a missing one", () => {
-		const workspace = makeWorkspace({
-			id: "w",
-			name: "w",
-			updatedAt: new Date("2026-05-01"),
-			lastActivityAt: Number.NaN,
-		});
-		expect(getWorkspaceActivityTime(workspace)).toBe(at("2026-05-01"));
-	});
-});
 
 describe("sortDashboardSidebarProjects", () => {
 	const older = makeProject({
@@ -168,12 +133,12 @@ describe("sortDashboardSidebarProjects", () => {
 });
 
 describe("sortDashboardSidebarProjectChildren", () => {
-	const mainChild: DashboardSidebarProjectChild = {
+	const localChild: DashboardSidebarProjectChild = {
 		type: "workspace",
 		workspace: makeWorkspace({
-			id: "w-main",
+			id: "w-local",
 			name: "local",
-			type: "main",
+			type: "local",
 			lastActivityAt: at("2026-01-01"),
 		}),
 	};
@@ -223,30 +188,12 @@ describe("sortDashboardSidebarProjectChildren", () => {
 		);
 	});
 
-	it("keeps the local main pinned first despite older activity", () => {
+	it("sorts a local workspace by activity like any other row", () => {
 		const sorted = sortDashboardSidebarProjectChildren(
-			[oldWorktree, newWorktree, mainChild],
+			[oldWorktree, newWorktree, localChild],
 			"active",
 		);
-		expect(childIds(sorted)).toEqual(["w-main", "w-new", "w-old"]);
-	});
-
-	it("does not pin a remote host's main workspace", () => {
-		const remoteMain: DashboardSidebarProjectChild = {
-			type: "workspace",
-			workspace: makeWorkspace({
-				id: "w-remote-main",
-				name: "remote",
-				type: "main",
-				hostType: "remote-device",
-				lastActivityAt: at("2026-01-01"),
-			}),
-		};
-		const sorted = sortDashboardSidebarProjectChildren(
-			[remoteMain, newWorktree],
-			"active",
-		);
-		expect(childIds(sorted)).toEqual(["w-new", "w-remote-main"]);
+		expect(childIds(sorted)).toEqual(["w-new", "w-old", "w-local"]);
 	});
 
 	it("sorts workspaces inside sections and ranks sections by newest member", () => {
@@ -406,10 +353,10 @@ describe("sortDashboardSidebarProjectChildren", () => {
 				],
 			}),
 		};
-		const children = [mainChild, newWorktree, orderedSection, oldWorktree];
+		const children = [newWorktree, orderedSection, oldWorktree, localChild];
 		const sorted = sortDashboardSidebarProjectChildren(children, "active");
 		expect(sorted).toBe(children);
-		expect(sorted[2]).toBe(orderedSection);
+		expect(sorted[1]).toBe(orderedSection);
 	});
 });
 

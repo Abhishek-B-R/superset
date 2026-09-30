@@ -4,12 +4,11 @@ import {
 	type CloudWorkspaceRow,
 	useCloudWorkspaces,
 } from "@/hooks/useCloudWorkspaces";
-import { useHostsPresence } from "@/hooks/useHostsPresence";
 import {
 	getHostWorkspacesQueryKey,
 	type HostWorkspaceRow,
 } from "@/hooks/useHostWorkspaces";
-import { NO_HOSTS, type OrgHost, useOrgHostsQuery } from "@/hooks/useOrgHosts";
+import { type OrgHost, useOrgHosts } from "@/hooks/useOrgHosts";
 import { type SandboxTarget, useSandboxAccess } from "@/hooks/useSandboxAccess";
 import {
 	getHostServiceClientByUrl,
@@ -46,6 +45,11 @@ export interface WorkspaceHostResult {
 	 * moment it is created, long before a sandbox serves it. Null otherwise.
 	 */
 	cloud: CloudWorkspaceRow | null;
+	/** Cloud only: the API could not address or wake the sandbox. Attempts continue. */
+	sandboxUnreachable: boolean;
+	/** Cloud only: addressed, but not yet woken since it was opened. */
+	sandboxWaking: boolean;
+	retrySandbox: () => void;
 	/** True while no host has answered yet. */
 	isResolving: boolean;
 }
@@ -62,35 +66,31 @@ export interface WorkspaceHostResult {
 export function useWorkspaceHost(
 	workspaceId: string | null,
 ): WorkspaceHostResult {
-	const hostsQuery = useOrgHostsQuery();
-	const hosts = hostsQuery.data ?? NO_HOSTS;
-	const presence = useHostsPresence(hosts);
+	const { hosts, query: hostsQuery } = useOrgHosts();
 
 	const { workspaces: cloudRows, isReady: cloudReady } = useCloudWorkspaces();
 	const cloud = useMemo(
 		() => cloudRows.find((row) => row.id === workspaceId) ?? null,
 		[cloudRows, workspaceId],
 	);
-	const cloudTargets = useMemo(() => (cloud ? [cloud] : []), [cloud]);
-	const { targets: sandboxes, isReady: sandboxReady } =
-		useSandboxAccess(cloudTargets);
-	const sandbox = sandboxes[0] ?? null;
+	const {
+		target: sandbox,
+		isError: sandboxUnreachable,
+		isWaking: sandboxWaking,
+		retry: retrySandbox,
+	} = useSandboxAccess(cloud);
 
 	const targets = useMemo(
 		() =>
 			cloud
 				? []
 				: hosts
-						.map((host) => ({
-							...host,
-							isOnline: presence?.get(host.machineId) ?? host.isOnline,
-						}))
 						.filter((host) => host.isOnline)
 						.map((host) => ({
 							host,
 							hostUrl: hostServiceUrl(host.organizationId, host.machineId),
 						})),
-		[cloud, hosts, presence],
+		[cloud, hosts],
 	);
 
 	const queries = useQueries({
@@ -117,26 +117,30 @@ export function useWorkspaceHost(
 			// the workspace; the sandbox's own row is scratch that a rename
 			// never reaches. Live git state still comes from the sandbox.
 			const workspace = servedRow ? { ...servedRow, name: cloud.name } : null;
+			const host: OrgHost | null = sandbox
+				? {
+						organizationId: cloud.organizationId,
+						machineId: cloud.id,
+						name: "Cloud",
+						version: null,
+						platform: null,
+						installSource: null,
+						// A sandbox is reachable or it isn't; there is no offline
+						// device behind it to report on.
+						isOnline: true,
+					}
+				: null;
 			return {
 				workspace,
-				host: workspace
-					? {
-							organizationId: cloud.organizationId,
-							machineId: cloud.id,
-							name: "Cloud",
-							version: null,
-							platform: null,
-							installSource: null,
-							// A sandbox is reachable or it isn't; there is no offline
-							// device behind it to report on.
-							isOnline: true,
-						}
-					: null,
+				host,
 				cloud,
-				isResolving:
-					!workspace &&
-					cloud.status === "ready" &&
-					(!sandboxReady || served?.isLoading === true),
+				sandboxUnreachable: !host && sandboxUnreachable,
+				sandboxWaking,
+				retrySandbox: () => {
+					retrySandbox();
+					void served?.refetch();
+				},
+				isResolving: !host && cloud.status === "ready",
 			};
 		}
 		let workspace: HostWorkspaceRow | null = null;
@@ -154,11 +158,21 @@ export function useWorkspaceHost(
 			(hostsQuery.isLoading ||
 				!cloudReady ||
 				queries.some((query) => query.isLoading));
-		return { workspace, host, cloud: null, isResolving };
+		return {
+			workspace,
+			host,
+			cloud: null,
+			sandboxUnreachable: false,
+			sandboxWaking: false,
+			retrySandbox,
+			isResolving,
+		};
 	}, [
 		cloud,
 		sandbox,
-		sandboxReady,
+		sandboxUnreachable,
+		sandboxWaking,
+		retrySandbox,
 		targets,
 		queries,
 		workspaceId,

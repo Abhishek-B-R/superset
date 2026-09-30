@@ -6,6 +6,8 @@ import codexWhiteIcon from "./codex-white.svg";
 import copilotIcon from "./copilot.svg";
 import copilotWhiteIcon from "./copilot-white.svg";
 import cursorAgentIcon from "./cursor.svg";
+import devinIcon from "./devin.svg";
+import devinWhiteIcon from "./devin-white.svg";
 import droidIcon from "./droid.svg";
 import droidWhiteIcon from "./droid-white.svg";
 import fxIcon from "./fx.svg";
@@ -20,6 +22,8 @@ import kimiWhiteIcon from "./kimi-white.svg";
 import kiroIcon from "./kiro.svg";
 import mastracodeIcon from "./mastracode.svg";
 import mastracodeWhiteIcon from "./mastracode-white.svg";
+import museIcon from "./muse.svg";
+import museWhiteIcon from "./muse-white.svg";
 import opencodeIcon from "./opencode.svg";
 import opencodeWhiteIcon from "./opencode-white.svg";
 import piIcon from "./pi.svg";
@@ -27,6 +31,8 @@ import piWhiteIcon from "./pi-white.svg";
 import polygraphIcon from "./polygraph.svg";
 import polygraphWhiteIcon from "./polygraph-white.svg";
 import supersetIcon from "./superset.svg";
+import ufoIcon from "./ufo.svg";
+import ufoWhiteIcon from "./ufo-white.svg";
 import vibeIcon from "./vibe.svg";
 
 export interface PresetIconSet {
@@ -41,6 +47,7 @@ export const PRESET_ICONS: Record<string, PresetIconSet> = {
 	claude: { light: claudeIcon, dark: claudeIcon },
 	codex: { light: codexIcon, dark: codexWhiteIcon },
 	copilot: { light: copilotIcon, dark: copilotWhiteIcon },
+	devin: { light: devinIcon, dark: devinWhiteIcon },
 	fx: { light: fxIcon, dark: fxWhiteIcon },
 	gemini: { light: geminiIcon, dark: geminiIcon },
 	grok: { light: grokIcon, dark: grokWhiteIcon },
@@ -51,10 +58,12 @@ export const PRESET_ICONS: Record<string, PresetIconSet> = {
 	pi: { light: piIcon, dark: piWhiteIcon },
 	polygraph: { light: polygraphIcon, dark: polygraphWhiteIcon },
 	superset: { light: supersetIcon, dark: supersetIcon },
+	ufo: { light: ufoIcon, dark: ufoWhiteIcon },
 	"cursor-agent": { light: cursorAgentIcon, dark: cursorAgentIcon },
 	"cursor-composer": { light: cursorAgentIcon, dark: cursorAgentIcon },
 	droid: { light: droidIcon, dark: droidWhiteIcon },
 	mastracode: { light: mastracodeIcon, dark: mastracodeWhiteIcon },
+	muse: { light: museIcon, dark: museWhiteIcon },
 	opencode: { light: opencodeIcon, dark: opencodeWhiteIcon },
 	vibe: { light: vibeIcon, dark: vibeIcon },
 };
@@ -87,6 +96,8 @@ export {
 	copilotIcon,
 	copilotWhiteIcon,
 	cursorAgentIcon,
+	devinIcon,
+	devinWhiteIcon,
 	droidIcon,
 	droidWhiteIcon,
 	fxIcon,
@@ -101,6 +112,8 @@ export {
 	kiroIcon,
 	mastracodeIcon,
 	mastracodeWhiteIcon,
+	museIcon,
+	museWhiteIcon,
 	opencodeIcon,
 	opencodeWhiteIcon,
 	piIcon,
@@ -108,5 +121,7 @@ export {
 	polygraphIcon,
 	polygraphWhiteIcon,
 	supersetIcon,
+	ufoIcon,
+	ufoWhiteIcon,
 	vibeIcon,
 };

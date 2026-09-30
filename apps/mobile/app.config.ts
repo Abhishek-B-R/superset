@@ -29,7 +29,7 @@ export default ({ config }: ConfigContext) => ({
 	locales: Object.fromEntries(
 		SUPPORTED_LOCALES.map((locale) => [locale, `./locales/${locale}.json`]),
 	),
-	version: "1.1.0",
+	version: "1.1.2",
 	orientation: "portrait",
 	icon: "./assets/icon.png",
 	userInterfaceStyle: "dark",
@@ -44,10 +44,18 @@ export default ({ config }: ConfigContext) => ({
 	},
 	ios: {
 		supportsTablet: false,
+		appleTeamId: "NV9657CS5A",
+		// Shared with the AgentActivity widget extension: the Live Activity
+		// sandbox has no network, so project icons are cached here by the app
+		// and read back by the extension from disk.
+		entitlements: {
+			"com.apple.security.application-groups": ["group.sh.superset.mobile"],
+		},
 		bundleIdentifier: "sh.superset.mobile",
 		usesAppleSignIn: true,
 		infoPlist: {
 			ITSAppUsesNonExemptEncryption: false,
+			NSSupportsLiveActivities: true,
 			// Dictation is native now (`modules/composer`), so no config plugin
 			// contributes this any more — `expo-speech-recognition` used to, and
 			// went with `GlassComposer`. Without it `SFSpeechRecognizer`'s
@@ -74,6 +82,7 @@ export default ({ config }: ConfigContext) => ({
 		// where the rest of that chrome is dark. The composer states its own
 		// tint (`ComposerRootView`) rather than inheriting this.
 		[withIosAccentColor, { color: "#262626" }],
+		"@bacons/apple-targets",
 		"expo-router",
 		[
 			// The mark on the app background, held until Home has content — see
@@ -93,6 +102,12 @@ export default ({ config }: ConfigContext) => ({
 			{
 				organization: "superset-sh",
 				project: "mobile",
+				useNativeInit: true,
+				options: {
+					dsn: process.env.EXPO_PUBLIC_SENTRY_DSN_MOBILE,
+					environment: process.env.EXPO_PUBLIC_SENTRY_ENVIRONMENT,
+					enableMetricKit: true,
+				},
 			},
 		],
 		[

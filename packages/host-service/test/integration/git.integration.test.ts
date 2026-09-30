@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, test } from "bun:test";
-import { writeFileSync } from "node:fs";
+import { rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { TRPCClientError } from "@trpc/client";
 import { eq } from "drizzle-orm";
@@ -94,6 +94,161 @@ describe("git router integration", () => {
 		expect(result.baseBranch).toBeNull();
 	});
 
+	test("stageFile stages one modified file and leaves the rest unstaged", async () => {
+		await scenario.repo.commit("seed", {
+			"a.txt": "original-a",
+			"b.txt": "original-b",
+		});
+		writeFileSync(join(scenario.repo.repoPath, "a.txt"), "modified-a");
+		writeFileSync(join(scenario.repo.repoPath, "b.txt"), "modified-b");
+
+		await scenario.host.trpc.git.stageFile.mutate({
+			workspaceId: scenario.workspaceId,
+			filePath: "a.txt",
+		});
+
+		const status = await scenario.host.trpc.git.getStatus.query({
+			workspaceId: scenario.workspaceId,
+		});
+		expect(status.staged.map((f) => f.path)).toEqual(["a.txt"]);
+		expect(status.unstaged.map((f) => f.path)).toEqual(["b.txt"]);
+	});
+
+	test("stageFile stages an untracked file", async () => {
+		writeFileSync(join(scenario.repo.repoPath, "new.txt"), "new file");
+
+		await scenario.host.trpc.git.stageFile.mutate({
+			workspaceId: scenario.workspaceId,
+			filePath: "new.txt",
+		});
+
+		const status = await scenario.host.trpc.git.getStatus.query({
+			workspaceId: scenario.workspaceId,
+		});
+		expect(status.staged.find((f) => f.path === "new.txt")?.status).toBe(
+			"added",
+		);
+		expect(status.unstaged.map((f) => f.path)).not.toContain("new.txt");
+	});
+
+	test("stageFile stages a working-tree deletion as a deletion", async () => {
+		await scenario.repo.commit("seed", { "gone.txt": "bye" });
+		rmSync(join(scenario.repo.repoPath, "gone.txt"));
+
+		await scenario.host.trpc.git.stageFile.mutate({
+			workspaceId: scenario.workspaceId,
+			filePath: "gone.txt",
+		});
+
+		const status = await scenario.host.trpc.git.getStatus.query({
+			workspaceId: scenario.workspaceId,
+		});
+		expect(status.staged.find((f) => f.path === "gone.txt")?.status).toBe(
+			"deleted",
+		);
+		expect(status.unstaged).toEqual([]);
+	});
+
+	test("unstageFile unstages one staged file and leaves the rest staged", async () => {
+		await scenario.repo.commit("seed", {
+			"a.txt": "original-a",
+			"b.txt": "original-b",
+		});
+		writeFileSync(join(scenario.repo.repoPath, "a.txt"), "modified-a");
+		writeFileSync(join(scenario.repo.repoPath, "b.txt"), "modified-b");
+		await scenario.repo.git.add(["a.txt", "b.txt"]);
+
+		await scenario.host.trpc.git.unstageFile.mutate({
+			workspaceId: scenario.workspaceId,
+			filePath: "a.txt",
+		});
+
+		const status = await scenario.host.trpc.git.getStatus.query({
+			workspaceId: scenario.workspaceId,
+		});
+		expect(status.staged.map((f) => f.path)).toEqual(["b.txt"]);
+		expect(status.unstaged.map((f) => f.path)).toEqual(["a.txt"]);
+	});
+
+	test("unstageFile on a staged rename unstages both ends", async () => {
+		await scenario.repo.commit("seed", { "old.txt": "same content" });
+		await scenario.repo.git.mv("old.txt", "new.txt");
+
+		await scenario.host.trpc.git.unstageFile.mutate({
+			workspaceId: scenario.workspaceId,
+			filePath: "new.txt",
+			oldPath: "old.txt",
+		});
+
+		const status = await scenario.host.trpc.git.getStatus.query({
+			workspaceId: scenario.workspaceId,
+		});
+		expect(status.staged).toEqual([]);
+		expect(status.unstaged).toMatchObject([
+			{ path: "new.txt", oldPath: "old.txt", status: "renamed" },
+		]);
+	});
+
+	test("stageFile on an unstaged rename stages both ends", async () => {
+		await scenario.repo.commit("seed", { "old.txt": "same content" });
+		await scenario.repo.git.mv("old.txt", "new.txt");
+		await scenario.repo.git.raw(["reset", "HEAD", "--", "old.txt", "new.txt"]);
+
+		await scenario.host.trpc.git.stageFile.mutate({
+			workspaceId: scenario.workspaceId,
+			filePath: "new.txt",
+			oldPath: "old.txt",
+		});
+
+		const status = await scenario.host.trpc.git.getStatus.query({
+			workspaceId: scenario.workspaceId,
+		});
+		expect(status.unstaged).toEqual([]);
+		expect(status.staged).toMatchObject([
+			{ path: "new.txt", oldPath: "old.txt", status: "renamed" },
+		]);
+	});
+
+	test("stageFile treats pathspec magic as a literal file name", async () => {
+		await scenario.repo.commit("seed", { "ordinary.txt": "base" });
+		writeFileSync(join(scenario.repo.repoPath, "ordinary.txt"), "changed");
+
+		await expect(
+			scenario.host.trpc.git.stageFile.mutate({
+				workspaceId: scenario.workspaceId,
+				filePath: ":(glob)**",
+			}),
+		).rejects.toBeInstanceOf(TRPCClientError);
+
+		const status = await scenario.host.trpc.git.getStatus.query({
+			workspaceId: scenario.workspaceId,
+		});
+		expect(status.staged).toEqual([]);
+		expect(status.unstaged.map((f) => f.path)).toEqual(["ordinary.txt"]);
+	});
+
+	test("stageFile and unstageFile reject paths outside the worktree", async () => {
+		const unsafe = ["/etc/passwd", "../escape.txt"];
+		const inputs = [
+			...unsafe.map((filePath) => ({ filePath })),
+			...unsafe.map((oldPath) => ({ filePath: "ok.txt", oldPath })),
+		];
+		for (const input of inputs) {
+			await expect(
+				scenario.host.trpc.git.stageFile.mutate({
+					workspaceId: scenario.workspaceId,
+					...input,
+				}),
+			).rejects.toBeInstanceOf(TRPCClientError);
+			await expect(
+				scenario.host.trpc.git.unstageFile.mutate({
+					workspaceId: scenario.workspaceId,
+					...input,
+				}),
+			).rejects.toBeInstanceOf(TRPCClientError);
+		}
+	});
+
 	test("renameBranch renames an unpushed branch", async () => {
 		await scenario.repo.git.checkoutLocalBranch("feature/old");
 		await scenario.repo.commit("work", { "f.txt": "f" });
@@ -114,5 +269,48 @@ describe("git router integration", () => {
 		const branches = await scenario.repo.git.branchLocal();
 		expect(branches.all).toContain("feature/new");
 		expect(branches.all).not.toContain("feature/old");
+	});
+
+	test("renameBranch renames the caller's branch when it exists, even if the row still holds an older one", async () => {
+		await scenario.repo.git.checkoutLocalBranch("feature/older");
+		await scenario.repo.git.checkoutLocalBranch("feature/checked-out");
+		await scenario.repo.commit("work", { "h.txt": "h" });
+		scenario.host.db
+			.update(workspaces)
+			.set({ branch: "feature/older" })
+			.where(eq(workspaces.id, scenario.workspaceId))
+			.run();
+
+		await scenario.host.trpc.git.renameBranch.mutate({
+			workspaceId: scenario.workspaceId,
+			oldName: "feature/checked-out",
+			newName: "feature/renamed",
+		});
+
+		const branches = await scenario.repo.git.branchLocal();
+		expect(branches.all).toContain("feature/renamed");
+		expect(branches.all).toContain("feature/older");
+		expect(branches.all).not.toContain("feature/checked-out");
+	});
+
+	test("renameBranch renames the branch the workspace holds now, not the name the caller last saw", async () => {
+		await scenario.repo.git.checkoutLocalBranch("feature/renamed-by-ai");
+		await scenario.repo.commit("work", { "g.txt": "g" });
+		scenario.host.db
+			.update(workspaces)
+			.set({ branch: "feature/renamed-by-ai" })
+			.where(eq(workspaces.id, scenario.workspaceId))
+			.run();
+
+		const result = await scenario.host.trpc.git.renameBranch.mutate({
+			workspaceId: scenario.workspaceId,
+			oldName: "feature/stale",
+			newName: "feature/mine",
+		});
+
+		expect(result.name).toBe("feature/mine");
+		const branches = await scenario.repo.git.branchLocal();
+		expect(branches.all).toContain("feature/mine");
+		expect(branches.all).not.toContain("feature/renamed-by-ai");
 	});
 });

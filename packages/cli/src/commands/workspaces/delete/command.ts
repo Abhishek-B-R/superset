@@ -1,18 +1,15 @@
 import { boolean, CLIError, positional, string } from "@superset/cli-framework";
-import { getHostId } from "@superset/shared/host-info";
+import { resolveWorkspaceHost } from "../../../lib/cloud-workspaces";
 import { command } from "../../../lib/command";
-import { resolveHostFilter, resolveHostTarget } from "../../../lib/host-target";
+import { resolveHostTarget } from "../../../lib/host-target";
 
 export default command({
 	description:
-		"Delete workspaces by ID on a host (default: this machine), or cloud sandboxes with --cloud",
+		"Delete workspaces by ID: cloud workspaces by default if your account has them (tearing down the sandbox stops its billing), else on this machine; --local or --host picks a host",
 	args: [positional("ids").required().variadic().desc("Workspace IDs")],
 	options: {
 		host: string().desc("Host the workspaces live on"),
-		local: boolean().desc("Target this machine (the default)"),
-		cloud: boolean().desc(
-			"Delete cloud sandboxes — tears down the sandbox, which is what stops it billing",
-		),
+		local: boolean().desc("The workspaces are on this machine"),
 	},
 	run: async ({ ctx, args, options }) => {
 		const ids = args.ids as string[];
@@ -21,37 +18,35 @@ export default command({
 			throw new CLIError("No active organization", "Run: superset auth login");
 		}
 
-		if (options.cloud) {
-			if (options.host !== undefined || options.local) {
-				throw new CLIError(
-					"--cloud cannot be combined with --host or --local",
-					"Cloud sandboxes are not hosted on one of your machines",
-				);
-			}
+		const hostId = await resolveWorkspaceHost(
+			{ host: options.host, local: options.local },
+			ctx.api,
+			organizationId,
+		);
+		if (!hostId) {
 			const deleted: string[] = [];
 			const missing: string[] = [];
 			for (const id of ids) {
 				const result = await ctx.api.cloudWorkspace.delete.mutate({ id });
 				(result.deleted ? deleted : missing).push(id);
 			}
-			const summary =
-				deleted.length === 1
-					? `Deleted cloud workspace ${deleted[0]}`
-					: `Deleted ${deleted.length} cloud workspaces`;
+			if (missing.length > 0) {
+				const alsoDeleted =
+					deleted.length > 0 ? ` (deleted: ${deleted.join(", ")})` : "";
+				throw new CLIError(
+					`No cloud workspace in this organization: ${missing.join(", ")}${alsoDeleted}`,
+					"Pass --local or --host <id> if it lives on a machine",
+				);
+			}
 			return {
-				data: { deleted, missing },
+				data: { deleted },
 				message:
-					missing.length > 0
-						? `${summary}\nNot found: ${missing.join(", ")}`
-						: summary,
+					deleted.length === 1
+						? `Deleted cloud workspace ${deleted[0]}`
+						: `Deleted ${deleted.length} cloud workspaces`,
 			};
 		}
 
-		const hostId =
-			resolveHostFilter({
-				host: options.host ?? undefined,
-				local: options.local ?? undefined,
-			}) ?? getHostId();
 		const target = await resolveHostTarget({
 			requestedHostId: hostId,
 			organizationId,

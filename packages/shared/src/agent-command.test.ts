@@ -1,4 +1,6 @@
 import { describe, expect, it } from "bun:test";
+import { spawnSync } from "node:child_process";
+import { getBuiltinAgentDefinition } from "./agent-catalog";
 import {
 	AGENT_LABELS,
 	AGENT_TYPES,
@@ -6,6 +8,39 @@ import {
 	buildAgentPromptCommand,
 } from "./agent-command";
 import { getPresetById } from "./host-agent-presets";
+
+describe("UFO launches", () => {
+	it("passes a multiline prompt literally as one positional argument", () => {
+		const prompt =
+			"Review `echo unsafe` and $(echo unsafe)\nKeep 'quotes' and $variables";
+		const command = buildAgentPromptCommand({
+			prompt,
+			randomId: "ufo-test",
+			agent: "ufo",
+		});
+		const result = spawnSync(
+			"bash",
+			["-c", `ufo() { printf '%s\\0' "$@"; }\n${command}`],
+			{ encoding: "utf8" },
+		);
+		expect(result.status).toBe(0);
+		expect(result.stdout).toBe(`${prompt}\0`);
+	});
+
+	it("provides local launch and ID-based resume without unverified modes", () => {
+		expect(getPresetById("ufo")).toMatchObject({
+			command: "ufo",
+			args: [],
+			promptArgs: [],
+			promptTransport: "argv",
+			resumeArgs: ["--resume"],
+			forkArgs: [],
+		});
+		expect(
+			getBuiltinAgentDefinition("ufo").nonInteractiveCommand,
+		).toBeUndefined();
+	});
+});
 
 describe("buildAgentPromptCommand", () => {
 	it("adds `--` before codex prompt payload", () => {
@@ -216,6 +251,59 @@ describe("hermes agent registration", () => {
 		expect(preset?.args).toEqual(["chat", "--yolo"]);
 		expect(preset?.promptArgs).toEqual(["-q"]);
 		expect(preset?.resumeArgs).toEqual(["-r"]);
+	});
+});
+
+describe("muse agent registration", () => {
+	it("is a registered terminal agent with the right label", () => {
+		expect(AGENT_TYPES).toContain("muse");
+		expect(AGENT_LABELS.muse).toBe("Muse Code");
+	});
+
+	it("seeds prompt launches as the positional prompt of an interactive session", () => {
+		const command = buildAgentPromptCommand({
+			prompt: "hello",
+			randomId: "muse-1234",
+			agent: "muse",
+		});
+
+		expect(command).toStartWith("muse \"$(cat <<'SUPERSET_PROMPT_muse1234'");
+		expect(command).toEndWith('\n)"');
+	});
+
+	it("derives host preset resume args from the base command", () => {
+		const preset = getPresetById("muse");
+		expect(preset?.command).toBe("muse");
+		expect(preset?.args).toEqual([]);
+		expect(preset?.resumeArgs).toEqual(["resume"]);
+	});
+});
+
+describe("devin agent registration", () => {
+	it("is a registered terminal agent with the right label", () => {
+		expect(AGENT_TYPES).toContain("devin");
+		expect(AGENT_LABELS.devin).toBe("Devin");
+	});
+
+	it("passes prompt launches after the -- separator of an interactive session", () => {
+		const command = buildAgentPromptCommand({
+			prompt: "hello",
+			randomId: "devin-1234",
+			agent: "devin",
+		});
+
+		expect(command).toStartWith(
+			"devin --permission-mode dangerous -- \"$(cat <<'SUPERSET_PROMPT_devin1234'",
+		);
+		expect(command).toEndWith('\n)"');
+	});
+
+	it("derives host preset prompt and resume args from the base command", () => {
+		const preset = getPresetById("devin");
+		expect(preset?.command).toBe("devin");
+		expect(preset?.args).toEqual(["--permission-mode", "dangerous"]);
+		expect(preset?.promptArgs).toEqual(["--"]);
+		expect(preset?.resumeArgs).toEqual(["--resume"]);
 	});
 });
 

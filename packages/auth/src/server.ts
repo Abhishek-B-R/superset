@@ -3,11 +3,15 @@ import { expo } from "@better-auth/expo";
 import { oauthProvider } from "@better-auth/oauth-provider";
 import { stripe } from "@better-auth/stripe";
 import { db } from "@superset/db/client";
-import { members, subscriptions } from "@superset/db/schema";
+import {
+	connections,
+	githubInstallations,
+	members,
+	subscriptions,
+} from "@superset/db/schema";
 import type { sessions } from "@superset/db/schema/auth";
 import * as authSchema from "@superset/db/schema/auth";
 import { seedDefaultStatuses } from "@superset/db/seed-default-statuses";
-import { WelcomeEmail } from "@superset/email/emails/activation/00-welcome";
 import { MemberAddedBillingEmail } from "@superset/email/emails/billing/member-added";
 import { MemberRemovedBillingEmail } from "@superset/email/emails/billing/member-removed";
 import { PaymentFailedEmail } from "@superset/email/emails/billing/payment-failed";
@@ -30,7 +34,17 @@ import {
 } from "better-auth/api";
 import { bearer, customSession, organization } from "better-auth/plugins";
 import { jwt } from "better-auth/plugins/jwt";
-import { and, asc, count, desc, eq, inArray, ne, sql } from "drizzle-orm";
+import {
+	and,
+	asc,
+	count,
+	desc,
+	eq,
+	inArray,
+	isNull,
+	ne,
+	sql,
+} from "drizzle-orm";
 import type Stripe from "stripe";
 import { env } from "./env";
 import { acceptInvitationEndpoint } from "./lib/accept-invitation-endpoint";
@@ -84,6 +98,60 @@ const PENDING_DELETION_ALLOWED_PATH_PREFIXES = [
 ];
 
 const NOTIFY_SLACK_URL = `${env.NEXT_PUBLIC_API_URL}/api/integrations/stripe/jobs/notify-slack`;
+
+/**
+ * Backfills the integrations that only sync for a paying organization.
+ * GitHub and Linear deliveries are dropped at the webhook while an org is on
+ * the free plan, so whatever changed in the gap is missing until these jobs
+ * replay it.
+ */
+async function resumeGatedSyncs(organizationId: string): Promise<void> {
+	const [installation, linearConnections] = await Promise.all([
+		db.query.githubInstallations.findFirst({
+			where: eq(githubInstallations.organizationId, organizationId),
+			columns: { id: true },
+		}),
+		db
+			.select({ connectedByUserId: connections.connectedByUserId })
+			.from(connections)
+			.where(
+				and(
+					eq(connections.organizationId, organizationId),
+					eq(connections.connector, "linear"),
+					isNull(connections.disconnectedAt),
+				),
+			),
+	]);
+
+	const jobs = [
+		...(installation
+			? [
+					{
+						url: `${env.NEXT_PUBLIC_API_URL}/api/github/jobs/initial-sync`,
+						body: { installationDbId: installation.id, organizationId },
+						retries: 3,
+					},
+				]
+			: []),
+		...linearConnections.map((connection) => ({
+			url: `${env.NEXT_PUBLIC_API_URL}/api/integrations/linear/jobs/initial-sync`,
+			body: { organizationId, creatorUserId: connection.connectedByUserId },
+			retries: 3,
+		})),
+	];
+
+	if (jobs.length === 0) return;
+
+	try {
+		await qstash.batchJSON(jobs);
+	} catch (error) {
+		console.error(
+			"[stripe/subscription-complete] Failed to queue integration backfill:",
+			error,
+		);
+	}
+}
+
 const desktopDevPort = process.env.DESKTOP_VITE_PORT || "5173";
 const desktopDevOrigins =
 	process.env.NODE_ENV === "development"
@@ -136,6 +204,10 @@ function serializeCancellationDetails(
 export const auth = betterAuth({
 	baseURL: env.NEXT_PUBLIC_API_URL,
 	secret: env.BETTER_AUTH_SECRET,
+	onAPIError: {
+		// Without this, production better-auth sends OAuth failures to the API root, a 404.
+		errorURL: `${env.NEXT_PUBLIC_WEB_URL}/sign-in`,
+	},
 	disabledPaths: [],
 	database: drizzleAdapter(db, {
 		provider: "pg",
@@ -247,10 +319,12 @@ export const auth = betterAuth({
 		github: {
 			clientId: env.GH_CLIENT_ID,
 			clientSecret: env.GH_CLIENT_SECRET,
+			prompt: "select_account",
 		},
 		google: {
 			clientId: env.GOOGLE_CLIENT_ID,
 			clientSecret: env.GOOGLE_CLIENT_SECRET,
+			prompt: "select_account",
 		},
 		apple: {
 			clientId: env.APPLE_CLIENT_ID,
@@ -321,17 +395,13 @@ export const auth = betterAuth({
 
 					// The welcome email is unconditional in BOTH arms. Gating it is
 					// what invalidated experiment 387868: a6beb048b changed the control
-					// condition mid-flight and the run became unreadable.
+					// condition mid-flight and the run became unreadable. The `welcome`
+					// automation sends it, because only automation sends get Resend's
+					// unsubscribe link and List-Unsubscribe headers.
 					try {
-						const { error } = await resend.emails.send({
-							from: "Superset <noreply@superset.sh>",
-							replyTo: "founders@superset.sh",
-							to: user.email,
-							subject: "Welcome to Superset",
-							react: WelcomeEmail({
-								userName: user.name,
-								userEmail: user.email,
-							}),
+						const { error } = await resend.events.send({
+							event: "user.welcome",
+							email: user.email,
 						});
 						// Resend reports API failures in `error` rather than throwing.
 						if (error) throw new Error(error.message);
@@ -1164,6 +1234,8 @@ export const auth = betterAuth({
 					stripeSubscription,
 					plan,
 				}) => {
+					await resumeGatedSyncs(subscription.referenceId);
+
 					const org = await db.query.organizations.findFirst({
 						where: eq(authSchema.organizations.id, subscription.referenceId),
 					});
@@ -1266,6 +1338,30 @@ export const auth = betterAuth({
 					const dueToPaymentFailure =
 						(cancellationDetails ?? stripeSubscription.cancellation_details)
 							?.reason === "payment_failed";
+
+					if (
+						subscription.plan === "pro" &&
+						!dueToPaymentFailure &&
+						stripeSubscription.canceled_at
+					) {
+						try {
+							await qstash.publishJSON({
+								url: `${env.NEXT_PUBLIC_API_URL}/api/integrations/stripe/jobs/cancellation-feedback`,
+								body: {
+									stripeSubscriptionId: stripeSubscription.id,
+									canceledAt: stripeSubscription.canceled_at,
+								},
+								delay: 2700,
+								retries: 3,
+								deduplicationId: `pro-cancellation-feedback-${stripeSubscription.id}-${stripeSubscription.canceled_at}`,
+							});
+						} catch (error) {
+							console.error(
+								"[stripe/cancellation-feedback] Failed to queue feedback:",
+								error,
+							);
+						}
+					}
 
 					await resend.batch.send(
 						recipients.map((recipient) => ({

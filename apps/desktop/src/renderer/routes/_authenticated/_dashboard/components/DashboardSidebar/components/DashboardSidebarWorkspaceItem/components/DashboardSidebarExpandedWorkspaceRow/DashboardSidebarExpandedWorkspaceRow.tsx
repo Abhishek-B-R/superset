@@ -13,11 +13,12 @@ import {
 	useEffect,
 	useRef,
 } from "react";
-import { HiCheck, HiMiniMinus, HiMiniXMark } from "react-icons/hi2";
+import { HiCheck, HiMiniXMark } from "react-icons/hi2";
 import { WorkspaceNameMarquee } from "renderer/components/WorkspaceNameMarquee";
 import type { DiffStats } from "renderer/hooks/host-service/useDiffStats";
 import { useFocusVisible } from "renderer/hooks/useFocusVisible";
 import { HotkeyLabel } from "renderer/hotkeys";
+import { pullRequestRefFromUrl } from "renderer/lib/github/pullRequestRef";
 import { navigateToV2Workspace } from "renderer/routes/_authenticated/_dashboard/utils/workspace-navigation";
 import { ProjectThumbnail } from "renderer/routes/_authenticated/components/ProjectThumbnail";
 import { RenameInput } from "renderer/screens/main/components/WorkspaceSidebar/RenameInput";
@@ -145,17 +146,7 @@ export const DashboardSidebarExpandedWorkspaceRow = forwardRef<
 		}, [isActive]);
 
 		const creationStatusText = isPending ? "Creating…" : null;
-		const isMainWorkspace = workspace.type === "main";
-		// No hover action button on the local main workspace: a stray click on the
-		// minus would remove the project's anchor row. Removal stays available via
-		// the context menu.
-		const isLocalMainWorkspace = isMainWorkspace && hostType === "local-device";
-		const workspaceKindTitle = isMainWorkspace
-			? "Main workspace"
-			: "Worktree workspace";
-		const workspaceKindDescription = isMainWorkspace
-			? "Uses the repository checkout on this host"
-			: "Isolated copy for parallel development";
+		const isLocalWorkspace = workspace.type === "local";
 
 		return (
 			<div
@@ -220,9 +211,14 @@ export const DashboardSidebarExpandedWorkspaceRow = forwardRef<
 											event.stopPropagation();
 											// Lands in the workspace with its PR pane open, rather
 											// than on GitHub; the pane keeps the GitHub link.
+											const ref = pullRequestRefFromUrl(pullRequest.url);
+											if (!ref) {
+												window.open(pullRequest.url, "_blank");
+												return;
+											}
 											usePullRequestPaneIntent.getState().request({
 												workspaceId: workspace.id,
-												prNumber: pullRequest.number,
+												...ref,
 											});
 											void navigateToV2Workspace(workspace.id, navigate);
 										}}
@@ -278,10 +274,10 @@ export const DashboardSidebarExpandedWorkspaceRow = forwardRef<
 								) : (
 									<>
 										<p className="text-xs font-medium">
-											{isMainWorkspace ? (
-												workspaceKindTitle
-											) : hostType === "local-device" ? (
+											{isLocalWorkspace ? (
 												<Trans>Local workspace</Trans>
+											) : hostType === "local-device" ? (
+												<Trans>Worktree on this device</Trans>
 											) : hostType === "remote-device" ? (
 												hostIsOnline === false ? (
 													<Trans>Remote workspace — device offline</Trans>
@@ -293,8 +289,11 @@ export const DashboardSidebarExpandedWorkspaceRow = forwardRef<
 											)}
 										</p>
 										<p className="text-xs text-muted-foreground">
-											{isMainWorkspace ? (
-												workspaceKindDescription
+											{isLocalWorkspace ? (
+												<Trans>
+													Shares the project's checkout — files, git index and
+													branch — with its other local workspaces
+												</Trans>
 											) : hostType === "local-device" ? (
 												<Trans>Running on this device</Trans>
 											) : hostType === "remote-device" ? (
@@ -355,6 +354,14 @@ export const DashboardSidebarExpandedWorkspaceRow = forwardRef<
 							<>
 								<WorkspaceNameMarquee
 									name={name || branch}
+									prefix={
+										pinnedContext
+											? (pinnedContext.projectName ??
+												t({
+													message: "Session",
+												}))
+											: undefined
+									}
 									forceActive={isFocused}
 									className={cn(
 										"text-[13px] leading-tight transition-colors",
@@ -394,41 +401,7 @@ export const DashboardSidebarExpandedWorkspaceRow = forwardRef<
 											{shortcutLabel}
 										</span>
 									)}
-									{isLocalMainWorkspace ? null : isMainWorkspace ? (
-										<Tooltip delayDuration={300}>
-											<TooltipTrigger asChild>
-												<button
-													type="button"
-													onClick={(event) => {
-														event.stopPropagation();
-														onRemoveFromSidebarClick();
-													}}
-													onKeyDown={(event) => {
-														if (
-															event.key === "Enter" ||
-															event.key === " " ||
-															event.key === "Spacebar"
-														) {
-															event.stopPropagation();
-														}
-													}}
-													className="flex items-center justify-center text-muted-foreground hover:text-foreground"
-													aria-label={t({
-														message: "Remove from sidebar",
-													})}
-												>
-													<HiMiniMinus className="size-3.5" />
-												</button>
-											</TooltipTrigger>
-											<TooltipContent side="top">
-												<HotkeyLabel
-													label={t({
-														message: "Remove from sidebar",
-													})}
-												/>
-											</TooltipContent>
-										</Tooltip>
-									) : (
+									{
 										<Tooltip delayDuration={300}>
 											<TooltipTrigger asChild>
 												<button
@@ -448,7 +421,7 @@ export const DashboardSidebarExpandedWorkspaceRow = forwardRef<
 													}}
 													className="flex items-center justify-center text-muted-foreground hover:text-foreground"
 													aria-label={t({
-														message: "Close workspace",
+														message: "Delete workspace",
 													})}
 												>
 													<HiMiniXMark className="size-3.5" />
@@ -457,13 +430,13 @@ export const DashboardSidebarExpandedWorkspaceRow = forwardRef<
 											<TooltipContent side="top">
 												<HotkeyLabel
 													label={t({
-														message: "Close workspace",
+														message: "Delete workspace",
 													})}
 													id={isActive ? "CLOSE_WORKSPACE" : undefined}
 												/>
 											</TooltipContent>
 										</Tooltip>
-									)}
+									}
 								</div>
 							)}
 						</div>

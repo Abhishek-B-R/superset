@@ -1,3 +1,11 @@
+export {
+	AGENT_DISPLAY_NAME,
+	type CommentAuthor,
+	commentAuthor,
+	isOptimisticId,
+	OPTIMISTIC_ID_PREFIX,
+	optimisticId,
+} from "@superset/shared/page-comments";
 export type {
 	CommentAnchor,
 	FrameRect,
@@ -9,6 +17,7 @@ export {
 } from "./components/CommentModeToggle";
 export { CommentsPanel } from "./components/CommentsPanel";
 export { PageCommentsView } from "./components/PageCommentsView";
+export { PageFrame } from "./components/PageFrame";
 export {
 	DeletePageDialog,
 	PageHeader,
@@ -16,9 +25,11 @@ export {
 	type PageHeaderOwner,
 	type PageHeaderPage,
 	type PageHeaderVersion,
-	PageSharePopover,
+	PageShareButton,
 	PageTitleMenu,
+	PageVersionBanner,
 	type PageVisibility,
+	RenamePageDialog,
 } from "./components/PageHeader";
 export { useFramePointerDown } from "./hooks/useFramePointerDown";
 export {
@@ -31,13 +42,3 @@ export {
 	type PageCommentUser,
 	useComments,
 } from "./providers/CommentProvider";
-export {
-	AGENT_DISPLAY_NAME,
-	type CommentAuthor,
-	commentAuthor,
-} from "./utils/commentAuthor";
-export {
-	isOptimisticId,
-	OPTIMISTIC_ID_PREFIX,
-	optimisticId,
-} from "./utils/optimisticId";

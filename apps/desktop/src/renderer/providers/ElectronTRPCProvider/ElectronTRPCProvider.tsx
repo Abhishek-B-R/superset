@@ -1,3 +1,7 @@
+import {
+	CLOUD_QUERY_KEY_ROOT,
+	CloudClientProvider,
+} from "@superset/cloud-client";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import {
 	defaultShouldDehydrateQuery,
@@ -16,6 +20,7 @@ import {
 	hostServiceQueryRetry,
 	hostServiceQueryRetryDelay,
 } from "renderer/lib/host-service-client";
+import superjson from "superjson";
 import { electronReactClient } from "../../lib/trpc-client";
 
 // In Electron, blurring the BrowserWindow keeps document.visibilityState
@@ -35,7 +40,7 @@ focusManager.setEventListener((handleFocus) => {
 });
 
 // Bump when query response shapes change — invalidates the persisted cache.
-const PERSIST_BUSTER = "v1";
+const PERSIST_BUSTER = "v2";
 
 // Shared QueryClient for tRPC hooks and router loaders
 const queryClient = new QueryClient({
@@ -59,6 +64,9 @@ const queryClient = new QueryClient({
 // Scoped per router root so electron IPC queries keep staleTime 0.
 for (const root of CLOUD_TRPC_ROUTER_ROOTS) {
 	queryClient.setQueryDefaults([[root]], { staleTime: 30_000 });
+	queryClient.setQueryDefaults([CLOUD_QUERY_KEY_ROOT, root], {
+		staleTime: 30_000,
+	});
 }
 
 // IndexedDB-backed persister. localStorage is too small (~5MB) for the
@@ -75,6 +83,10 @@ const persister = createAsyncStoragePersister({
 		},
 	},
 	key: "superset-rq-cache",
+	// Query data carries Dates (tRPC's superjson transformer); plain JSON would
+	// restore them as strings.
+	serialize: superjson.stringify,
+	deserialize: (cached) => superjson.parse(cached),
 });
 
 // Whitelist of queryKey prefixes worth persisting — anything else (auth
@@ -85,6 +97,10 @@ const PERSIST_KEY_PREFIXES = new Set([
 	"issue-detail",
 	"dashboard-sidebar", // sidebar per-workspace PR state (badges/checks)
 ]);
+// tRPC queries persisted by procedure path: the host roster, so the sidebar
+// fans out to remote hosts on a cold or offline boot before the cloud answers,
+// and the cloud workspace list, so the Cloud section draws before it does.
+const PERSIST_TRPC_PATHS = new Set(["host.roster", "cloudWorkspace.list"]);
 
 export function ElectronTRPCProvider({
 	children,
@@ -107,14 +123,19 @@ export function ElectronTRPCProvider({
 							shouldDehydrateQuery: (query) => {
 								if (!defaultShouldDehydrateQuery(query)) return false;
 								const head = query.queryKey[0];
+								if (typeof head === "string") {
+									return PERSIST_KEY_PREFIXES.has(head);
+								}
 								return (
-									typeof head === "string" && PERSIST_KEY_PREFIXES.has(head)
+									Array.isArray(head) && PERSIST_TRPC_PATHS.has(head.join("."))
 								);
 							},
 						},
 					}}
 				>
-					{children}
+					<CloudClientProvider client={cloudTrpcClient}>
+						{children}
+					</CloudClientProvider>
 				</PersistQueryClientProvider>
 			</cloudTrpc.Provider>
 		</electronTrpc.Provider>
