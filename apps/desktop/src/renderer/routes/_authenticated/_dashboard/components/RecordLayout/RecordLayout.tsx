@@ -38,10 +38,14 @@ export function RecordLayout({
 				{hasSideHeader && (
 					<WindowChromeScope enabled={false}>
 						<PageHeader
-							end={sideHeader}
 							className="sticky top-0 z-10 min-w-0 bg-background [grid-area:side-header] @min-[900px]:border-l @min-[900px]:border-border"
-							contentClassName="gap-3 pl-0"
-						/>
+							contentClassName="pl-0"
+						>
+							<div className="@container/record-actions flex h-full min-w-0 flex-1 items-center justify-end gap-3">
+								<div className="drag h-full min-w-0 flex-1" />
+								{sideHeader}
+							</div>
+						</PageHeader>
 					</WindowChromeScope>
 				)}
 				<main className="min-w-0 pt-5 pr-10 pb-10 pl-8 [grid-area:main] @min-[900px]:overflow-auto">

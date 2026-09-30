@@ -75,6 +75,7 @@ import {
 	useOpenNewProjectModal,
 	useOpenTemplateGalleryModal,
 } from "renderer/stores/add-repository-modal";
+import { COLLAPSED_WORKSPACE_SIDEBAR_WIDTH } from "renderer/stores/workspace-sidebar-state";
 
 interface DashboardSidebarHeaderProps {
 	isCollapsed?: boolean;
@@ -307,7 +308,20 @@ export function DashboardSidebarHeader({
 								? "h-10 bg-[color-mix(in_oklab,var(--muted)_45%,var(--background))] dark:bg-[color-mix(in_oklab,var(--muted)_35%,var(--background))]"
 								: cn("h-12", WINDOW_CHROME_BAND_CLASS),
 						)}
-					/>
+					>
+						{!isMac && (
+							<div
+								className="flex items-center justify-center"
+								style={{
+									width: COLLAPSED_WORKSPACE_SIDEBAR_WIDTH,
+									marginTop: WINDOW_CONTROLS_ROW_TOP,
+									height: WINDOW_CONTROLS_ROW_HEIGHT,
+								}}
+							>
+								<AppMenuButton />
+							</div>
+						)}
+					</div>
 				)}
 				{/* Mirrors the expanded header's nav container so the buttons keep
 				    the same padding, order, and vertical rhythm when collapsed. */}
@@ -616,11 +630,9 @@ export function DashboardSidebarHeader({
 			className="flex flex-col gap-px px-2 pt-2 pb-2"
 			// Pin the top inset so the traffic-light row stays a constant physical
 			// distance from the window top under page zoom (see the row below).
-			style={
-				isMac
-					? { paddingTop: `${WINDOW_CONTROLS_ROW_TOP / zoomFactor}px` }
-					: undefined
-			}
+			style={{
+				paddingTop: `${WINDOW_CONTROLS_ROW_TOP / (isMac ? zoomFactor : 1)}px`,
+			}}
 		>
 			{/* -mx-2 cancels the parent's px-2 so this row owns the 80px traffic-light
 			    inset; inset and height are counter-scaled to a constant physical size
@@ -641,12 +653,20 @@ export function DashboardSidebarHeader({
 						: undefined
 				}
 			>
-				<div
-					className="drag h-full shrink-0"
-					style={{ width: isMac ? `${80 / zoomFactor}px` : "8px" }}
-				/>
+				{isMac ? (
+					<div
+						className="drag h-full shrink-0"
+						style={{ width: `${80 / zoomFactor}px` }}
+					/>
+				) : (
+					<div
+						className="flex h-full shrink-0 items-center justify-center"
+						style={{ width: COLLAPSED_WORKSPACE_SIDEBAR_WIDTH }}
+					>
+						<AppMenuButton />
+					</div>
+				)}
 				<ZoomStable enabled={isMac} className="flex items-center gap-1">
-					{!isMac && <AppMenuButton />}
 					<SidebarToggle />
 					<NavigationControls />
 					{/* Lives here (persistent chrome) rather than the workspace tab
