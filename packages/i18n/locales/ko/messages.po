@@ -11447,6 +11447,9 @@ msgstr "부분"
 msgid "Partner, Transpose Platform"
 msgstr "파트너, Transpose Platform"
 
+msgid "Pass the schedule inside triggers as a schedule trigger, not as rrule beside them"
+msgstr "일정은 triggers 안의 schedule 트리거로 전달하세요. triggers와 함께 rrule을 전달할 수 없습니다"
+
 msgid "Passed"
 msgstr "통과"
 
@@ -13122,7 +13125,7 @@ msgid "Review the result."
 msgstr "결과를 리뷰하세요."
 
 msgid "Review these runs in All runs"
-msgstr "'모든 실행'에서 이 실행 검토"
+msgstr "'모든 실행'에서 이 실행들을 검토"
 
 msgid "Review thread…"
 msgstr "리뷰 스레드…"

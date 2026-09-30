@@ -9563,7 +9563,7 @@ msgid "Need live chat/tool-call state (ToolUIPart, streams) or an app shell"
 msgstr "Vereist live chat/tool-call-state (ToolUIPart, streams) of een app-shell"
 
 msgid "Needs a retry"
-msgstr "Moet opnieuw"
+msgstr "Moet opnieuw worden geprobeerd"
 
 msgid "Needs Action"
 msgstr "Actie nodig"
@@ -10485,7 +10485,7 @@ msgid "Nothing lives at {pathname}."
 msgstr "Er staat niets op {pathname}."
 
 msgid "Nothing needs a retry"
-msgstr "Niets hoeft opnieuw"
+msgstr "Niets hoeft opnieuw te worden geprobeerd"
 
 msgid "Nothing published in the last 30 days yet. Your rank appears once usage from this machine syncs, publishing as <0>{handle}</0>."
 msgstr "Nog niets gepubliceerd in de laatste 30 dagen. Je positie verschijnt zodra het gebruik van deze machine is gesynchroniseerd, gepubliceerd als <0>{handle}</0>."
@@ -11446,6 +11446,9 @@ msgstr "Gedeeltelijk"
 
 msgid "Partner, Transpose Platform"
 msgstr "Partner, Transpose Platform"
+
+msgid "Pass the schedule inside triggers as a schedule trigger, not as rrule beside them"
+msgstr "Geef het schema binnen triggers door als schedule-trigger, niet als rrule ernaast"
 
 msgid "Passed"
 msgstr "Geslaagd"

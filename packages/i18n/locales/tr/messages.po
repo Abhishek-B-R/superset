@@ -11447,6 +11447,9 @@ msgstr "Kısmi"
 msgid "Partner, Transpose Platform"
 msgstr "Ortak, Transpose Platform"
 
+msgid "Pass the schedule inside triggers as a schedule trigger, not as rrule beside them"
+msgstr "Zamanlamayı triggers içinde schedule tetikleyicisi olarak gönderin, yanlarında rrule olarak değil"
+
 msgid "Passed"
 msgstr "Geçti"
 

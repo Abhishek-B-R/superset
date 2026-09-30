@@ -11447,6 +11447,9 @@ msgstr "Parcial"
 msgid "Partner, Transpose Platform"
 msgstr "Sócio, Transpose Platform"
 
+msgid "Pass the schedule inside triggers as a schedule trigger, not as rrule beside them"
+msgstr "Passe o agendamento dentro de triggers como um trigger schedule, não como rrule ao lado deles"
+
 msgid "Passed"
 msgstr "Passou"
 

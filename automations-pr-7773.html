@@ -1,0 +1,654 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Automations: three issues, and what to test</title>
+    <style>
+      :root {
+        --sp-measure: 74ch;
+        --ok: #2f7d4f;
+        --todo: #a8621b;
+        --blocked: #8d3535;
+      }
+      body.dark {
+        --ok: #64c98c;
+        --todo: #e0a35c;
+        --blocked: #e08080;
+      }
+      main {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 3.5rem 1.75rem 6rem;
+      }
+      h1 {
+        font-size: clamp(1.9rem, 1.2rem + 2vw, 2.7rem);
+        line-height: 1.1;
+        letter-spacing: -0.02em;
+        margin: 0 0 0.6rem;
+      }
+      .standfirst {
+        max-width: var(--sp-measure);
+        color: var(--sp-muted);
+        font-size: 1.05rem;
+        margin: 0 0 1rem;
+      }
+      .meta {
+        font-family: var(--sp-font-mono);
+        font-size: 0.8rem;
+        color: var(--sp-muted);
+        border-top: 1px solid var(--sp-border);
+        border-bottom: 1px solid var(--sp-border);
+        padding: 0.7rem 0;
+        margin: 2rem 0 3rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.45rem 1.6rem;
+      }
+      .issue {
+        border-top: 2px solid var(--sp-text);
+        padding-top: 1.1rem;
+        margin: 0 0 3.25rem;
+      }
+      .issue > h2 {
+        margin: 0 0 0.15rem;
+        font-size: 1.45rem;
+        letter-spacing: -0.01em;
+      }
+      .ticket {
+        font-family: var(--sp-font-mono);
+        font-size: 0.78rem;
+        color: var(--sp-muted);
+        margin: 0 0 1.25rem;
+      }
+      .cols {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(255px, 1fr));
+        gap: 1.6rem 2.4rem;
+      }
+      .cols h3 {
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.09em;
+        color: var(--sp-muted);
+        margin: 0 0 0.5rem;
+        font-weight: 600;
+      }
+      .cols p,
+      .cols ul {
+        margin: 0 0 0.7rem;
+        font-size: 0.94rem;
+      }
+      .cols ul {
+        padding-left: 1.1rem;
+      }
+      .cols li {
+        margin-bottom: 0.3rem;
+      }
+      .scroll {
+        overflow-x: auto;
+        margin: 0 0 1rem;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.9rem;
+      }
+      th {
+        text-align: left;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--sp-muted);
+        border-bottom: 1px solid var(--sp-border);
+        padding: 0.5rem 0.9rem 0.5rem 0;
+        white-space: nowrap;
+      }
+      td {
+        border-bottom: 1px solid var(--sp-border);
+        padding: 0.65rem 0.9rem 0.65rem 0;
+        vertical-align: top;
+      }
+      td:first-child {
+        font-family: var(--sp-font-mono);
+        font-size: 0.78rem;
+        color: var(--sp-muted);
+        white-space: nowrap;
+        width: 1%;
+      }
+      .flow {
+        font-weight: 600;
+      }
+      .expect {
+        color: var(--sp-muted);
+      }
+      .status {
+        white-space: nowrap;
+        font-size: 0.78rem;
+        font-weight: 600;
+        width: 1%;
+      }
+      .status::before {
+        content: "";
+        display: inline-block;
+        width: 0.5rem;
+        height: 0.5rem;
+        border-radius: 50%;
+        margin-right: 0.45rem;
+        vertical-align: 0.05em;
+        background: currentColor;
+      }
+      .s-done { color: var(--ok); }
+      .s-todo { color: var(--todo); }
+      .s-blocked { color: var(--blocked); }
+      h2.area {
+        font-size: 1.15rem;
+        margin: 2.6rem 0 0.3rem;
+        letter-spacing: -0.01em;
+      }
+      h2.area + p {
+        color: var(--sp-muted);
+        font-size: 0.92rem;
+        max-width: var(--sp-measure);
+        margin: 0 0 1rem;
+      }
+      .callout {
+        border-left: 3px solid var(--sp-border);
+        padding: 0.1rem 0 0.1rem 1.1rem;
+        margin: 1.5rem 0;
+        max-width: var(--sp-measure);
+      }
+      .callout p {
+        margin: 0.4rem 0;
+        font-size: 0.94rem;
+      }
+      code {
+        font-size: 0.86em;
+      }
+      .legend {
+        display: flex;
+        gap: 1.4rem;
+        flex-wrap: wrap;
+        font-size: 0.82rem;
+        color: var(--sp-muted);
+        margin: 0 0 1.5rem;
+      }
+      footer {
+        margin-top: 4rem;
+        border-top: 1px solid var(--sp-border);
+        padding-top: 1rem;
+        color: var(--sp-muted);
+        font-size: 0.85rem;
+        max-width: var(--sp-measure);
+      }
+    </style>
+  </head>
+  <body class="auto">
+    <main>
+      <h1>Automations: three issues, and what to test</h1>
+      <p class="standfirst">
+        Three tickets that only make sense together. The list can stop being a
+        triage queue once failures have somewhere to go, and agents can stop
+        claiming they set up a trigger once there is a tool that sets one.
+      </p>
+
+      <div class="meta">
+        <span>PR #7773</span>
+        <span>SUPER-2226 &middot; SUPER-2227 &middot; SUPER-2231</span>
+        <span>3 commits &middot; 32 files</span>
+        <span>branch: automations-list-runs-and-agent-triggers</span>
+      </div>
+
+      <section class="issue">
+        <h2>An agent could never create an event trigger</h2>
+        <p class="ticket">SUPER-2231 &middot; packages/mcp, packages/cli, plugins/superset</p>
+        <div class="cols">
+          <div>
+            <h3>What was wrong</h3>
+            <p>
+              <code>grep trigger</code> across the MCP and CLI automation
+              commands returned nothing at all. The server schema has accepted a
+              full <code>triggers[]</code> array the whole time; both agent
+              surfaces exposed only <code>rrule</code>, and marked it
+              <strong>required</strong>.
+            </p>
+            <p>
+              So an agent asked for &ldquo;run this when someone opens a
+              PR&rdquo; had no tool for it and, having no way to fail, reported
+              success. That is the bug behind &ldquo;the agent said it set up a
+              trigger and it didn&rsquo;t show up&rdquo;.
+            </p>
+          </div>
+          <div>
+            <h3>What changed</h3>
+            <ul>
+              <li>
+                <code>triggers</code> on <code>automations_create</code> and
+                <code>automations_update</code>, carrying the per-kind shape in
+                its description &mdash; an MCP client sees the discriminated
+                union only as &ldquo;object&rdquo;.
+              </li>
+              <li>
+                <code>rrule</code> and <code>timezone</code> become optional. An
+                automation needs a schedule <em>or</em> a trigger set.
+              </li>
+              <li>
+                <code>automations_trigger_options</code> and
+                <code>superset automations trigger-options</code> resolve
+                provider ids, because a scope stores ids and never names.
+              </li>
+              <li>
+                <code>--triggers</code> / <code>--triggers-file</code> on the
+                CLI, validated locally so a typo names the offending path.
+              </li>
+              <li>
+                The <code>automate</code> skill covers events, and says a
+                trigger write replaces the whole set.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="issue">
+        <h2>Failures could only be found one automation at a time</h2>
+        <p class="ticket">SUPER-2227 &middot; packages/trpc, packages/db, apps/desktop</p>
+        <div class="cols">
+          <div>
+            <h3>What was wrong</h3>
+            <p>
+              Run history was per-automation only. <code>automation.listRuns</code>
+              takes an <code>automationId</code>, and the run list lives on the
+              detail page, so finding a failure meant already knowing which
+              automation it belonged to.
+            </p>
+            <p>
+              That is also what blocked SUPER-2226: you cannot take failure
+              triage off the list until it has somewhere else to live.
+            </p>
+          </div>
+          <div>
+            <h3>What changed</h3>
+            <ul>
+              <li>
+                <code>automation.listOrgRuns</code> &mdash; one org&rsquo;s
+                history, newest first, keyset-paginated on
+                <code>(createdAt, id)</code> so rows don&rsquo;t repeat or skip
+                as runs arrive under an open screen.
+              </li>
+              <li>
+                <code>automation.runPayload</code> &mdash; the provider body,
+                fetched only when a row is expanded, scoped on the run so a
+                foreign run id reads as absent.
+              </li>
+              <li>
+                Multi-select &rarr; &ldquo;Run again&rdquo;, deduplicated by
+                automation and owner-gated to match what
+                <code>runNow</code> accepts.
+              </li>
+              <li>
+                Migration 0121: an
+                <code>(organization_id, created_at)</code> index on
+                <code>automation_runs</code>.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="issue">
+        <h2>The list reordered itself around failures</h2>
+        <p class="ticket">SUPER-2226 &middot; apps/desktop</p>
+        <div class="cols">
+          <div>
+            <h3>What was wrong</h3>
+            <p>
+              Three sections &mdash; needs attention, up next, paused &mdash;
+              with failed automations pinned to the top and the rest sorted by
+              <code>nextRunAt</code>. Rows moved as time passed, so an
+              automation was wherever its last run had put it rather than where
+              you left it.
+            </p>
+          </div>
+          <div>
+            <h3>What changed</h3>
+            <ul>
+              <li>One section, in <code>createdAt desc</code> order. A row stays put between visits.</li>
+              <li>Red row text, per-row failure tooltips and &ldquo;Retry all&rdquo; are gone. The status dot and label stay.</li>
+              <li>The Failed stat card keeps its count and links into All runs, filtered.</li>
+              <li>&ldquo;New automation&rdquo; is a split button: main click creates directly, &ldquo;Create with AI&rdquo; moves into the chevron.</li>
+              <li>The sidebar failure badge is acknowledged on All runs instead of here.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <div class="callout">
+        <p>
+          <strong>One behaviour change beyond the tickets.</strong> The sidebar
+          failure badge used to clear when you opened the automations list. After
+          2226 that list no longer shows failures, so clearing it there would
+          spend the signal before anyone saw what it pointed at. It now clears on
+          All runs.
+        </p>
+      </div>
+
+      <h1 style="font-size: 1.75rem; margin-top: 4rem">Flows to test</h1>
+      <p class="standfirst">
+        Everything below is a flow a person can walk. Verified rows were driven
+        against a local stack with seeded runs using real dispatched input, not
+        unit tests.
+      </p>
+
+      <div class="legend">
+        <span class="status s-done">verified end-to-end</span>
+        <span class="status s-todo">still to test</span>
+        <span class="status s-blocked">needs something we don&rsquo;t have locally</span>
+      </div>
+
+      <h2 class="area">Automations list &mdash; SUPER-2226</h2>
+      <p>The regression risk here is highest: this screen lost code, and one shared component changed shape.</p>
+      <div class="scroll">
+        <table>
+          <thead>
+            <tr><th>#</th><th>Flow</th><th>Expected</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td class="flow">Open the list with a mix of healthy and failed automations</td>
+              <td class="expect">One table. No &ldquo;Needs attention&rdquo; / &ldquo;Up next&rdquo; / &ldquo;Paused&rdquo; headers, failures not pinned to the top.</td>
+              <td class="status s-done">verified</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td class="flow">Leave the page open past a scheduled run, then revisit</td>
+              <td class="expect">Row order unchanged. Nothing reorders as <code>nextRunAt</code> passes.</td>
+              <td class="status s-todo">to test</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td class="flow">Click the main half of &ldquo;New automation&rdquo;</td>
+              <td class="expect">Goes straight to manual creation. One click, no menu.</td>
+              <td class="status s-todo">to test</td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td class="flow">Click the chevron half</td>
+              <td class="expect">Menu with &ldquo;Create with AI&rdquo;, which starts the agent session with the automate prompt.</td>
+              <td class="status s-todo">to test</td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td class="flow">Click the Failed stat card</td>
+              <td class="expect">Lands on All runs with &ldquo;Needs a retry&rdquo; already applied.</td>
+              <td class="status s-todo">to test</td>
+            </tr>
+            <tr>
+              <td>6</td>
+              <td class="flow">Inspect a row whose last run failed</td>
+              <td class="expect">Red dot and a plain label. No red text, no failure tooltip, no &ldquo;Retry all&rdquo; button anywhere.</td>
+              <td class="status s-done">verified</td>
+            </tr>
+            <tr>
+              <td>7</td>
+              <td class="flow">Mine / Team tabs and the search box</td>
+              <td class="expect">Filter within the single list; order still stable.</td>
+              <td class="status s-todo">to test</td>
+            </tr>
+            <tr>
+              <td>8</td>
+              <td class="flow">Open <strong>Pages</strong> and look at its header</td>
+              <td class="expect">Unchanged single &ldquo;Create with AI&rdquo; button. <code>FeatureHeader</code> is shared and its props were renamed, so this is the regression check.</td>
+              <td class="status s-todo">to test</td>
+            </tr>
+            <tr>
+              <td>9</td>
+              <td class="flow">An org with no automations at all</td>
+              <td class="expect">Empty state renders; nothing assumes a section exists.</td>
+              <td class="status s-todo">to test</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 class="area">All runs &mdash; SUPER-2227</h2>
+      <p>New screen, new procedures. The pagination and owner-gating rows are the ones most likely to hide a defect.</p>
+      <div class="scroll">
+        <table>
+          <thead>
+            <tr><th>#</th><th>Flow</th><th>Expected</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>10</td>
+              <td class="flow">List &rarr; All runs, then the back arrow</td>
+              <td class="expect">Runs from every automation, newest first; back returns to the list.</td>
+              <td class="status s-done">verified</td>
+            </tr>
+            <tr>
+              <td>11</td>
+              <td class="flow">Read the Trigger column across providers</td>
+              <td class="expect">Provider label and icon &mdash; Slack, GitHub, Scheduled, Linear, Sentry, Teams, Gmail, Calendar. Never a raw enum like <code>microsoft_teams</code>.</td>
+              <td class="status s-done">verified (Slack, GitHub, Scheduled)</td>
+            </tr>
+            <tr>
+              <td>12</td>
+              <td class="flow">A run whose trigger was deleted afterwards</td>
+              <td class="expect">Row still listed, Trigger reads &mdash;. The join is a left join for exactly this.</td>
+              <td class="status s-todo">to test</td>
+            </tr>
+            <tr>
+              <td>13</td>
+              <td class="flow">Toggle &ldquo;Needs a retry&rdquo;</td>
+              <td class="expect">Narrows to <code>dispatch_failed</code> and <code>skipped_offline</code> only, and toggles back off.</td>
+              <td class="status s-done">verified</td>
+            </tr>
+            <tr>
+              <td>14</td>
+              <td class="flow">All / Mine scope tabs</td>
+              <td class="expect">Mine narrows to automations you own; counts agree with the rows.</td>
+              <td class="status s-todo">to test</td>
+            </tr>
+            <tr>
+              <td>15</td>
+              <td class="flow">Expand an event run&rsquo;s payload</td>
+              <td class="expect">Fetches on expand only, pretty-prints the provider body.</td>
+              <td class="status s-done">verified</td>
+            </tr>
+            <tr>
+              <td>16</td>
+              <td class="flow">A scheduled run, and an event run whose payload was pruned</td>
+              <td class="expect">No accordion on the scheduled run; the pruned one must not open an empty panel.</td>
+              <td class="status s-todo">to test</td>
+            </tr>
+            <tr>
+              <td>17</td>
+              <td class="flow">Select two failed runs <em>of the same automation</em> and press Run again</td>
+              <td class="expect">Counter reads 1, and one run starts. Five failures of one automation must not queue five runs.</td>
+              <td class="status s-done">verified (counter reads 1)</td>
+            </tr>
+            <tr>
+              <td>18</td>
+              <td class="flow">Press Run again and watch the result</td>
+              <td class="expect">Toast names how many started; selection clears; list refreshes.</td>
+              <td class="status s-todo">to test</td>
+            </tr>
+            <tr>
+              <td>19</td>
+              <td class="flow">A run belonging to a teammate&rsquo;s automation</td>
+              <td class="expect">Checkbox disabled. The server refuses <code>runNow</code> for non-owners, so the row must not offer it.</td>
+              <td class="status s-blocked">needs a second user</td>
+            </tr>
+            <tr>
+              <td>20</td>
+              <td class="flow">More than 50 runs, then &ldquo;Load more&rdquo;</td>
+              <td class="expect">Next page appends with no repeats and no gaps, including while new runs arrive.</td>
+              <td class="status s-todo">to test</td>
+            </tr>
+            <tr>
+              <td>21</td>
+              <td class="flow">Empty states: no runs at all, and no failed runs</td>
+              <td class="expect">&ldquo;No runs yet&rdquo; and &ldquo;Nothing needs a retry&rdquo; respectively.</td>
+              <td class="status s-todo">to test</td>
+            </tr>
+            <tr>
+              <td>22</td>
+              <td class="flow">Kill the API, then open the screen</td>
+              <td class="expect">&ldquo;Couldn&rsquo;t load runs&rdquo; with a working Try again.</td>
+              <td class="status s-todo">to test</td>
+            </tr>
+            <tr>
+              <td>23</td>
+              <td class="flow">Run again on a free plan</td>
+              <td class="expect">Paywall gate fires instead of the mutation.</td>
+              <td class="status s-todo">to test</td>
+            </tr>
+            <tr>
+              <td>24</td>
+              <td class="flow">Open a run&rsquo;s workspace from the row</td>
+              <td class="expect">Navigates to the workspace and records it as last viewed.</td>
+              <td class="status s-todo">to test</td>
+            </tr>
+            <tr>
+              <td>25</td>
+              <td class="flow">Request <code>runPayload</code> with a run id from another org</td>
+              <td class="expect">Reads as absent. No payload crosses an org boundary.</td>
+              <td class="status s-blocked">needs a second org</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 class="area">The failure badge</h2>
+      <div class="scroll">
+        <table>
+          <thead>
+            <tr><th>#</th><th>Flow</th><th>Expected</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>26</td>
+              <td class="flow">With failures pending: open the list, then open All runs</td>
+              <td class="expect">Badge survives the list and clears on All runs.</td>
+              <td class="status s-done">verified</td>
+            </tr>
+            <tr>
+              <td>27</td>
+              <td class="flow">A new failure arrives while All runs is open</td>
+              <td class="expect">Badge does not reappear behind you for failures you are looking at.</td>
+              <td class="status s-todo">to test</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 class="area">Agents creating automations &mdash; SUPER-2231</h2>
+      <p>None of this is covered by the UI walk. Flow 33 is the one that reproduces the original bug report.</p>
+      <div class="scroll">
+        <table>
+          <thead>
+            <tr><th>#</th><th>Flow</th><th>Expected</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>28</td>
+              <td class="flow"><code>automations_create</code> with <code>triggers</code> and no <code>rrule</code></td>
+              <td class="expect">Creates an event automation. It appears in the list reading &ldquo;Event triggered&rdquo;.</td>
+              <td class="status s-todo">to test</td>
+            </tr>
+            <tr>
+              <td>29</td>
+              <td class="flow"><code>automations_create</code> with <code>rrule</code> and no triggers</td>
+              <td class="expect">Still works exactly as before. This is the regression check on making rrule optional.</td>
+              <td class="status s-todo">to test</td>
+            </tr>
+            <tr>
+              <td>30</td>
+              <td class="flow"><code>automations_create</code> with neither</td>
+              <td class="expect">Refused with a message naming both ways to fire an automation.</td>
+              <td class="status s-todo">to test</td>
+            </tr>
+            <tr>
+              <td>31</td>
+              <td class="flow"><code>automations_update</code> resending one trigger of two, each with its <code>id</code></td>
+              <td class="expect">The omitted trigger is deleted; the resent one is updated in place, so a webhook keeps its signing key and a schedule keeps its next run.</td>
+              <td class="status s-todo">to test</td>
+            </tr>
+            <tr>
+              <td>32</td>
+              <td class="flow"><code>automations_trigger_options</code> for a connected and an unconnected provider</td>
+              <td class="expect">Real provider ids for the connected one; empty for the other, not an error.</td>
+              <td class="status s-blocked">local stack has no real connections</td>
+            </tr>
+            <tr>
+              <td>33</td>
+              <td class="flow"><strong>The original bug:</strong> ask an agent for an event-triggered automation, then read it back with <code>automations_get</code></td>
+              <td class="expect">The <code>triggers</code> array holds what was asked for. The agent must not be able to report success without one.</td>
+              <td class="status s-todo">to test</td>
+            </tr>
+            <tr>
+              <td>34</td>
+              <td class="flow">CLI: <code>--triggers-file</code> with valid JSON</td>
+              <td class="expect">Creates the automation; output omits &ldquo;Next run&rdquo; for an event-only automation.</td>
+              <td class="status s-todo">to test</td>
+            </tr>
+            <tr>
+              <td>35</td>
+              <td class="flow">CLI: malformed JSON, an unknown trigger kind, and more than 25 triggers</td>
+              <td class="expect">Each fails in the CLI naming the offending path, not as one flattened union error from the server.</td>
+              <td class="status s-todo">to test</td>
+            </tr>
+            <tr>
+              <td>36</td>
+              <td class="flow">CLI: neither <code>--rrule</code> nor <code>--triggers-file</code></td>
+              <td class="expect">&ldquo;An automation needs something to fire it&rdquo;, with both options named.</td>
+              <td class="status s-todo">to test</td>
+            </tr>
+            <tr>
+              <td>37</td>
+              <td class="flow">Walk the <code>automate</code> skill end to end as a user would</td>
+              <td class="expect">Resolves ids first, confirms before creating, and verifies with a read afterwards rather than trusting exit 0.</td>
+              <td class="status s-todo">to test</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 class="area">Database</h2>
+      <p>The one item that can affect production rather than just this feature.</p>
+      <div class="scroll">
+        <table>
+          <thead>
+            <tr><th>#</th><th>Flow</th><th>Expected</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>38</td>
+              <td class="flow">Measure <code>automation_runs</code> at production size and time the index build</td>
+              <td class="expect">Finishes well inside 60 seconds. <code>CREATE INDEX</code> holds a SHARE lock that blocks dispatch inserts, <code>CONCURRENTLY</code> is unavailable because every pending migration runs in one transaction, and the deploy enforces a 60s statement timeout.</td>
+              <td class="status s-blocked">needs production access</td>
+            </tr>
+            <tr>
+              <td>39</td>
+              <td class="flow"><code>EXPLAIN</code> the <code>listOrgRuns</code> query</td>
+              <td class="expect">Uses <code>automation_runs_org_created_idx</code> rather than scanning.</td>
+              <td class="status s-todo">to test</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <footer>
+        <p>
+          Verified rows were exercised against a local stack with seeded
+          automations and runs across every status, driven with dispatched mouse
+          input. Static checks across the branch &mdash; typecheck, lint,
+          <code>check:i18n</code> at 17 locales with nothing missing,
+          <code>check:plugins</code>, and the desktop, trpc, cli and mcp suites
+          &mdash; all pass.
+        </p>
+      </footer>
+    </main>
+  </body>
+</html>

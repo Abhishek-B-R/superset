@@ -11447,6 +11447,9 @@ msgstr "Částečně"
 msgid "Partner, Transpose Platform"
 msgstr "Partner, Transpose Platform"
 
+msgid "Pass the schedule inside triggers as a schedule trigger, not as rrule beside them"
+msgstr "Předejte rozvrh uvnitř triggers jako trigger typu schedule, ne jako rrule vedle nich"
+
 msgid "Passed"
 msgstr "Prošlo"
 

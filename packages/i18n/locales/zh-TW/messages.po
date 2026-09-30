@@ -11447,6 +11447,9 @@ msgstr "部分開啟"
 msgid "Partner, Transpose Platform"
 msgstr "合夥人，Transpose Platform"
 
+msgid "Pass the schedule inside triggers as a schedule trigger, not as rrule beside them"
+msgstr "請將排程作為 triggers 中的 schedule 觸發器傳入，而不是與 triggers 並列的 rrule"
+
 msgid "Passed"
 msgstr "通過"
 

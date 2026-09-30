@@ -37,7 +37,7 @@ For an event trigger, resolve the ids first. A scope stores provider ids, never 
 superset automations trigger-options --group slack
 ```
 
-Groups: `slack`, `github`, `linear`, `sentry`, `notion`, `microsoftTeams`, `google` (Gmail and Calendar). A group the org has not connected comes back empty, which means the user has to connect it in Settings before the trigger can work.
+Groups: `slack`, `github`, `linear`, `sentry`, `notion`, `microsoftTeams`, `google` (Gmail and Calendar). An empty result is ambiguous: the org has not connected that group, or its token was revoked, or the provider failed the lookup. Ask the user to check the connection in Settings rather than telling them it is not connected.
 
 Then write the set to a file. Every filter is a scope: `{"mode":"any"}` matches everything, `{"mode":"list","ids":[...]}` matches those ids, `{"mode":"me"}` resolves to the automation owner's account at that provider.
 

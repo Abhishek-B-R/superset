@@ -11447,6 +11447,9 @@ msgstr "Một phần"
 msgid "Partner, Transpose Platform"
 msgstr "Đối tác, Transpose Platform"
 
+msgid "Pass the schedule inside triggers as a schedule trigger, not as rrule beside them"
+msgstr "Hãy truyền lịch bên trong triggers dưới dạng trigger schedule, không phải rrule đặt cạnh chúng"
+
 msgid "Passed"
 msgstr "Đã qua"
 

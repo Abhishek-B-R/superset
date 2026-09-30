@@ -37,9 +37,7 @@ import {
 	gte,
 	ilike,
 	inArray,
-	lt,
 	notInArray,
-	or,
 	sql,
 } from "drizzle-orm";
 import { z } from "zod";
@@ -150,6 +148,24 @@ async function verifyHostAccess(
 			i18nKey: "serverError.automation.youDonTHaveAccess",
 		});
 	}
+}
+
+/**
+ * A trigger set replaces the whole set, so a top-level `rrule` passed beside
+ * one is dropped and its schedule never fires. Refusing beats accepting a
+ * write we only half-apply — the caller asked for a schedule.
+ */
+function assertScheduleNotShadowed(
+	rrule: string | null | undefined,
+	triggers: DraftTrigger[] | null | undefined,
+): void {
+	if (!rrule || !triggers) return;
+	throw userError({
+		code: "BAD_REQUEST",
+		message:
+			"Pass the schedule inside triggers as a schedule trigger, not as rrule beside them",
+		i18nKey: "serverError.automation.rruleBesideTriggers",
+	});
 }
 
 /** Room for the trigger block the dispatcher puts ahead of the instructions. */
@@ -462,6 +478,8 @@ export const automationRouter = {
 			);
 			assertPromptFitsTarget(target.targetHostId, input.prompt);
 
+			assertScheduleNotShadowed(input.rrule, input.triggers);
+
 			// Only the legacy shape carries a top-level schedule; a trigger set
 			// describes its own, or has none at all.
 			const legacySchedule = input.rrule
@@ -577,6 +595,8 @@ export const automationRouter = {
 				target.targetHostId,
 				input.prompt ?? existing.prompt,
 			);
+
+			assertScheduleNotShadowed(input.rrule, input.triggers);
 
 			const nextRrule = input.rrule ?? existing.rrule;
 			const nextDtstart = input.dtstart ?? existing.dtstart;
@@ -997,6 +1017,7 @@ export const automationRouter = {
 					error: automationRuns.error,
 					errorCode: automationRuns.errorCode,
 					createdAt: automationRuns.createdAt,
+					cursorAt: sql<string>`${automationRuns.createdAt}::text`,
 					scheduledFor: automationRuns.scheduledFor,
 					triggerKind: automationTriggers.kind,
 					v2WorkspaceId: automationRuns.v2WorkspaceId,
@@ -1020,13 +1041,7 @@ export const automationRouter = {
 							? eq(automations.ownerUserId, userId)
 							: undefined,
 						input.cursor
-							? or(
-									lt(automationRuns.createdAt, input.cursor.createdAt),
-									and(
-										eq(automationRuns.createdAt, input.cursor.createdAt),
-										lt(automationRuns.id, input.cursor.id),
-									),
-								)
+							? sql`(${automationRuns.createdAt}, ${automationRuns.id}) < (${input.cursor.createdAt}::timestamptz, ${input.cursor.id}::uuid)`
 							: undefined,
 					),
 				)
@@ -1038,13 +1053,13 @@ export const automationRouter = {
 			const last = page.at(-1);
 
 			return {
-				runs: page.map(({ eventId, ...run }) => ({
+				runs: page.map(({ eventId, cursorAt: _cursorAt, ...run }) => ({
 					...run,
 					hasPayload: eventId !== null,
 					canRetry: run.ownerUserId === userId,
 				})),
 				nextCursor:
-					hasMore && last ? { createdAt: last.createdAt, id: last.id } : null,
+					hasMore && last ? { createdAt: last.cursorAt, id: last.id } : null,
 			};
 		}),
 
@@ -1104,8 +1119,12 @@ export const automationRouter = {
 		const organizationId = await requireActiveOrgMembership(ctx);
 		const bucketSeconds = 6 * 60 * 60;
 		const bucketCount = 28;
-		const since = new Date(Date.now() - bucketCount * bucketSeconds * 1000);
-		const baseBucket = Math.floor(since.getTime() / 1000 / bucketSeconds);
+		// The window ends on the interval in progress, so the newest bar is the
+		// one drawing now. Anchoring it 28 intervals back instead would push
+		// that interval to index 28 and drop it off the end.
+		const baseBucket =
+			Math.floor(Date.now() / 1000 / bucketSeconds) - (bucketCount - 1);
+		const since = new Date(baseBucket * bucketSeconds * 1000);
 
 		const rows = await db
 			.select({

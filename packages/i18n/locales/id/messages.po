@@ -11447,6 +11447,9 @@ msgstr "Sebagian"
 msgid "Partner, Transpose Platform"
 msgstr "Mitra, Transpose Platform"
 
+msgid "Pass the schedule inside triggers as a schedule trigger, not as rrule beside them"
+msgstr "Kirim jadwal di dalam triggers sebagai trigger schedule, bukan sebagai rrule di sampingnya"
+
 msgid "Passed"
 msgstr "Lulus"
 

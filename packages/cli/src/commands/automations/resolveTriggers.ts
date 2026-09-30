@@ -12,11 +12,28 @@ export function resolveTriggers(options: {
 	triggers?: string | null;
 	triggersFile?: string | null;
 }): DraftTrigger[] | undefined {
-	const raw = options.triggers
-		? options.triggers
-		: options.triggersFile
-			? readFileSync(options.triggersFile, "utf-8")
-			: null;
+	if (options.triggers && options.triggersFile) {
+		throw new CLIError(
+			"Pass either --triggers or --triggers-file, not both",
+			"A trigger write replaces the whole set, so the one that lost would have silently deleted its triggers.",
+		);
+	}
+
+	let raw: string | null = null;
+	if (options.triggers) {
+		raw = options.triggers;
+	} else if (options.triggersFile) {
+		try {
+			raw = readFileSync(options.triggersFile, "utf-8");
+		} catch (error) {
+			throw new CLIError(
+				`Could not read the trigger file ${options.triggersFile}: ${
+					error instanceof Error ? error.message : String(error)
+				}`,
+				HINT,
+			);
+		}
+	}
 	if (raw === null) return undefined;
 
 	let parsed: unknown;
