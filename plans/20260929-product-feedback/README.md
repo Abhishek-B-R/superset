@@ -4,6 +4,19 @@ Avi's product review, September 29, 2026. This handoff preserves the feedback fr
 
 ## Review the design
 
+Open the [Superset page](https://app.superset.sh/page/pr-pane-design-and-product-feedback-2k3bxd) to interact with the design and pin comments. It is published to the Superset organization. The publish source is [page/index.html](page/index.html), with local scripts beside it so the page works under Superset Pages' content policy.
+
+To republish this same page, use a current Superset CLI (1.29 or later):
+
+```sh
+superset pages publish plans/20260929-product-feedback/page \
+  --page ae412ce5-b5a9-408f-be8e-babaa729e193 \
+  --workspace 9dbc22cb-8f1a-480f-bac9-66bdcb9d0beb \
+  --label "Describe the design changes" --no-watch
+```
+
+The page bundles Lucide 1.17.0 locally with its ISC license and uses a bounded local state adapter. It has no remote scripts or script network requests. [Hosted preview](references/superset-page.jpg).
+
 Open [pr-pane-prototype.html](pr-pane-prototype.html) in a browser. It is a standalone export with its own preview shell and state storage. [pr-pane-source.html](pr-pane-source.html) preserves the editable UI fragment from the design session. Icons use the bundled preview runtime's CDN dependency, so the preview needs internet access for icons.
 
 For a local HTTP preview, run this from the repository root:
@@ -56,6 +69,7 @@ No real checks, OAuth, plugin installation, agents, comments, or GitHub mutation
 - UI checked at a 1024px browser width (about a 410px PR pane) and a 320px browser width (about a 273px stacked pane): no horizontal overflow in the findings, counts and badges remain visible.
 - Both high-risk findings open the expected release/dependency file. Other Changes expands and its regression-test item opens the test diff.
 - Code controls, file navigation, viewed state, wrapping, and split/unified behavior were exercised during the design iteration. The committed standalone export was also checked: Review-to-Code navigation, file picker, and narrow-width findings layout work; no browser console errors were recorded.
+- Published Superset page checked under its hosted content policy: all 56 icons rendered, the findings opened the correct Code file, and no browser console errors were recorded.
 - This is a design/documentation PR. Desktop production behavior and the reported bugs have not been verified or changed by it.
 
 ## References
