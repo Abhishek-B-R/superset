@@ -60,6 +60,7 @@ const GROUPS: CloudWorkspaceGroup[] = [
 				],
 				isInSidebar: true,
 				isMine: true,
+				showsPresence: true,
 				isRead: true,
 			},
 			{
@@ -91,6 +92,7 @@ const GROUPS: CloudWorkspaceGroup[] = [
 				],
 				isInSidebar: true,
 				isMine: true,
+				showsPresence: true,
 				isRead: false,
 			},
 		],
@@ -128,6 +130,7 @@ const GROUPS: CloudWorkspaceGroup[] = [
 				pullRequests: [],
 				isInSidebar: false,
 				isMine: false,
+				showsPresence: true,
 				isRead: true,
 			},
 			{
@@ -155,6 +158,7 @@ const GROUPS: CloudWorkspaceGroup[] = [
 				],
 				isInSidebar: false,
 				isMine: false,
+				showsPresence: true,
 				isRead: true,
 			},
 		],

@@ -58,6 +58,7 @@ import { authClient } from "renderer/lib/auth-client";
 import { cloudTrpc } from "renderer/lib/cloud-trpc";
 import { DATA_TABLE_HEAD_CELL } from "renderer/routes/_authenticated/_dashboard/components/DataTableHeader";
 import { FeatureHeader } from "renderer/routes/_authenticated/_dashboard/components/FeatureHeader";
+import { PageHeader } from "renderer/routes/_authenticated/_dashboard/components/PageHeader";
 import {
 	SortableHeader,
 	type SortDirection,
@@ -608,11 +609,10 @@ function AutomationsPage() {
 
 	return (
 		<div className="flex h-full w-full flex-1 flex-col overflow-hidden">
-			{/* Window-drag leaf standing in for the hidden TopBar. */}
-			<div className="drag h-10 shrink-0" />
+			<PageHeader />
 
 			<div className="min-h-0 flex-1 overflow-y-auto">
-				<div className="mx-auto flex min-h-full w-full max-w-5xl flex-col px-8 pb-12">
+				<div className="mx-auto flex min-h-full w-full max-w-5xl flex-col px-8 pt-4 pb-12">
 					<FeatureHeader
 						title={<Trans>Automations</Trans>}
 						docsUrl={`${COMPANY.DOCS_URL}/automations`}

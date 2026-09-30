@@ -297,6 +297,7 @@ const meta = {
 		now,
 		isGeneratingDescription: false,
 		canEditSharing: true,
+		viewerId: "satya",
 		onBack: fn(),
 		onOpenWorkspace: fn(),
 		onOpenPerson: fn(),

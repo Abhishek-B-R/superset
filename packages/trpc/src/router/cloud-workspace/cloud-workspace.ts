@@ -111,28 +111,50 @@ async function addressSandbox(
 	}
 }
 
-/** Current members who have opened the workspaces, most recently seen first. */
+/**
+ * Current members who have opened the workspaces, most recently seen first.
+ * The creator counts as present from the moment they created it.
+ */
 async function loadPresence(organizationId: string, workspaceIds: string[]) {
 	if (workspaceIds.length === 0) return [];
-	return db
-		.select({
-			cloudWorkspaceId: cloudWorkspacePresence.cloudWorkspaceId,
-			userId: cloudWorkspacePresence.userId,
-			name: users.name,
-			image: users.image,
-			lastSeenAt: cloudWorkspacePresence.lastSeenAt,
-		})
-		.from(cloudWorkspacePresence)
-		.innerJoin(users, eq(cloudWorkspacePresence.userId, users.id))
-		.innerJoin(
-			members,
-			and(
-				eq(members.userId, cloudWorkspacePresence.userId),
-				eq(members.organizationId, organizationId),
-			),
-		)
-		.where(inArray(cloudWorkspacePresence.cloudWorkspaceId, workspaceIds))
-		.orderBy(desc(cloudWorkspacePresence.lastSeenAt));
+	const isMember = (userId: typeof users.id) =>
+		and(eq(members.userId, userId), eq(members.organizationId, organizationId));
+	const [visits, creators] = await Promise.all([
+		db
+			.select({
+				cloudWorkspaceId: cloudWorkspacePresence.cloudWorkspaceId,
+				userId: cloudWorkspacePresence.userId,
+				name: users.name,
+				image: users.image,
+				lastSeenAt: cloudWorkspacePresence.lastSeenAt,
+			})
+			.from(cloudWorkspacePresence)
+			.innerJoin(users, eq(cloudWorkspacePresence.userId, users.id))
+			.innerJoin(members, isMember(users.id))
+			.where(inArray(cloudWorkspacePresence.cloudWorkspaceId, workspaceIds)),
+		db
+			.select({
+				cloudWorkspaceId: cloudWorkspaces.id,
+				userId: users.id,
+				name: users.name,
+				image: users.image,
+				lastSeenAt: cloudWorkspaces.createdAt,
+			})
+			.from(cloudWorkspaces)
+			.innerJoin(users, eq(cloudWorkspaces.createdByUserId, users.id))
+			.innerJoin(members, isMember(users.id))
+			.where(inArray(cloudWorkspaces.id, workspaceIds)),
+	]);
+	const visited = new Set(
+		visits.map((visit) => `${visit.cloudWorkspaceId}:${visit.userId}`),
+	);
+	return [
+		...visits,
+		...creators.filter(
+			(creator) =>
+				!visited.has(`${creator.cloudWorkspaceId}:${creator.userId}`),
+		),
+	].sort((a, b) => b.lastSeenAt.getTime() - a.lastSeenAt.getTime());
 }
 
 export const cloudWorkspaceRouter = {

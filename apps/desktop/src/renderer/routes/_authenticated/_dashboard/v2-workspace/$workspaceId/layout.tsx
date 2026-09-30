@@ -9,6 +9,7 @@ import {
 } from "renderer/hooks/useCloudWorkspaces";
 import { useV2UserPreferences } from "renderer/hooks/useV2UserPreferences";
 import { electronTrpc } from "renderer/lib/electron-trpc";
+import { StateScreenShell } from "renderer/routes/_authenticated/_dashboard/components/StateScreenShell";
 import { WorkspaceNotFoundState } from "renderer/routes/_authenticated/_dashboard/components/WorkspaceNotFoundState";
 import { useDashboardSidebarState } from "renderer/routes/_authenticated/hooks/useDashboardSidebarState";
 import { useCollections } from "renderer/routes/_authenticated/providers/CollectionsProvider";
@@ -16,7 +17,6 @@ import { useHostWorkspaces } from "renderer/routes/_authenticated/providers/Host
 import { useSandboxAccess } from "renderer/routes/_authenticated/providers/SandboxAccessProvider";
 import { useWorkspaceTransactionsStore } from "renderer/stores/workspace-creates";
 import { CloudWorkspaceProvisioningState } from "../components/CloudWorkspaceProvisioningState";
-import { StateScreenShell } from "../components/StateScreenShell";
 import { WorkspaceCreateErrorState } from "../components/WorkspaceCreateErrorState";
 import { WorkspaceCreatingState } from "../components/WorkspaceCreatingState";
 import { WorkspaceHostIncompatibleState } from "../components/WorkspaceHostIncompatibleState";

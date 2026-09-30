@@ -12,6 +12,7 @@ import { authClient } from "renderer/lib/auth-client";
 import { cloudTrpc } from "renderer/lib/cloud-trpc";
 import { electronTrpc } from "renderer/lib/electron-trpc";
 import { NewProjectDialog } from "renderer/routes/_authenticated/_dashboard/components/NewProjectDialog";
+import { StateScreenShell } from "renderer/routes/_authenticated/_dashboard/components/StateScreenShell";
 import { WorkspaceNotFoundState } from "renderer/routes/_authenticated/_dashboard/components/WorkspaceNotFoundState";
 import type { CloudPullRequest } from "renderer/routes/_authenticated/_dashboard/hooks/useCloudPullRequests";
 import {
@@ -129,13 +130,15 @@ export function CloudWorkspaceRecordScreen({
 		record.error.data?.code === "NOT_FOUND";
 	if (isGone || (!data && record.error)) {
 		return (
-			<WorkspaceNotFoundState
-				workspaceId={workspaceId}
-				browseTo="/cloud-workspaces"
-			/>
+			<StateScreenShell>
+				<WorkspaceNotFoundState
+					workspaceId={workspaceId}
+					browseTo="/cloud-workspaces"
+				/>
+			</StateScreenShell>
 		);
 	}
-	if (!data) return null;
+	if (!data) return <StateScreenShell />;
 
 	const workspace: CloudWorkspaceRecord = {
 		id: data.id,
@@ -190,6 +193,7 @@ export function CloudWorkspaceRecordScreen({
 				timeline={toTimelineEntries(activity.data ?? [])}
 				now={now}
 				isGeneratingDescription={isGeneratingDescription}
+				viewerId={session?.user?.id}
 				canEditSharing={
 					session?.user?.id !== undefined &&
 					data.createdBy?.userId === session.user.id
