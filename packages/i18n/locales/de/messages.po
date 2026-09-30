@@ -663,6 +663,9 @@ msgstr "{actor} hat den Status auf {to} gesetzt"
 msgid "{actor} shared the workspace with the organization"
 msgstr "{actor} hat den Workspace mit der Organisation geteilt"
 
+msgid "{actor} unarchived the workspace"
+msgstr "{actor} hat den Workspace wiederhergestellt"
+
 msgid "{actor} unassigned {from}"
 msgstr "{actor} hat die Zuweisung von {from} entfernt"
 
@@ -2289,12 +2292,19 @@ msgstr "Archivieren"
 msgid "Archive environment"
 msgstr "Umgebung archivieren"
 
+msgid "Archive workspace"
+msgstr "Arbeitsbereich archivieren"
+
 msgid "Archived"
 msgstr "Archiviert"
 
 #. placeholder {0}: formatCompactRelativeTime(archivedAt, now)
 msgid "Archived · {0}"
 msgstr "Archiviert · {0}"
+
+#. placeholder {0}: formatCompactRelativeTime(workspace.deletedAt, now)
+msgid "Archived {0}"
+msgstr "Archiviert {0}"
 
 msgid "Are you sure you want to delete this file? This action cannot be undone."
 msgstr "Willst du diese Datei wirklich löschen? Das lässt sich nicht rückgängig machen."
@@ -16586,6 +16596,12 @@ msgstr "Diktat kann nicht gestartet werden"
 
 msgid "Unable to transcribe audio"
 msgstr "Audio kann nicht transkribiert werden"
+
+msgid "Unarchive"
+msgstr "Wiederherstellen"
+
+msgid "Unarchive workspace"
+msgstr "Arbeitsbereich wiederherstellen"
 
 msgid "Unassigned"
 msgstr "Nicht zugewiesen"
