@@ -1,18 +1,18 @@
 import { describe, expect, test } from "bun:test";
 import { appPathFromSystemUrl } from "./deepLinks";
 
-const targets = { webUrl: "https://app.superset.sh", scheme: "superset" };
+const webUrl = "https://app.superset.sh";
 
 describe("appPathFromSystemUrl", () => {
 	test("maps a shared page URL to the pages route", () => {
 		expect(
-			appPathFromSystemUrl("https://app.superset.sh/page/my-slug", targets),
+			appPathFromSystemUrl("https://app.superset.sh/page/my-slug", webUrl),
 		).toBe("/pages/my-slug");
 	});
 
 	test("leaves other web URLs alone", () => {
 		expect(
-			appPathFromSystemUrl("https://app.superset.sh/tasks/t-1", targets),
+			appPathFromSystemUrl("https://app.superset.sh/tasks/t-1", webUrl),
 		).toBeNull();
 	});
 
@@ -20,31 +20,28 @@ describe("appPathFromSystemUrl", () => {
 		expect(
 			appPathFromSystemUrl(
 				"https://app.superset.sh.evil.example/page/my-slug",
-				targets,
+				webUrl,
 			),
 		).toBeNull();
 	});
 
-	test("folds a scheme URL host back into the path", () => {
-		expect(appPathFromSystemUrl("superset://pages/my-slug", targets)).toBe(
-			"/pages/my-slug",
-		);
-	});
-
-	test("keeps query params when folding the host", () => {
+	test("leaves custom-scheme URLs to expo-router", () => {
+		expect(appPathFromSystemUrl("superset://pages/my-slug", webUrl)).toBeNull();
 		expect(
-			appPathFromSystemUrl("superset://workspace/ws-1?tab=t-1", targets),
-		).toBe("/workspace/ws-1?tab=t-1");
-	});
-
-	test("leaves empty-host scheme URLs alone", () => {
-		expect(
-			appPathFromSystemUrl("superset:///workspace/ws-1", targets),
+			appPathFromSystemUrl("superset:///workspace/ws-1?tab=t-1", webUrl),
 		).toBeNull();
 	});
 
-	test("ignores other schemes and invalid URLs", () => {
-		expect(appPathFromSystemUrl("mailto:team@superset.sh", targets)).toBeNull();
-		expect(appPathFromSystemUrl("not a url", targets)).toBeNull();
+	test("leaves the dev-client launch URL untouched", () => {
+		expect(
+			appPathFromSystemUrl(
+				"superset://expo-development-client/?url=http%3A%2F%2Flocalhost%3A8081",
+				webUrl,
+			),
+		).toBeNull();
+	});
+
+	test("ignores invalid URLs", () => {
+		expect(appPathFromSystemUrl("not a url", webUrl)).toBeNull();
 	});
 });

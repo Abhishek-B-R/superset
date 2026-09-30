@@ -7,10 +7,5 @@ export function redirectSystemPath({
 	path: string;
 	initial: boolean;
 }): string {
-	return (
-		appPathFromSystemUrl(path, {
-			webUrl: env.EXPO_PUBLIC_WEB_URL,
-			scheme: env.EXPO_PUBLIC_DEEP_LINK_SCHEME,
-		}) ?? path
-	);
+	return appPathFromSystemUrl(path, env.EXPO_PUBLIC_WEB_URL) ?? path;
 }
