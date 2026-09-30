@@ -34,9 +34,10 @@ archive="$(staged 'codex-*.tar.gz')"
 sha="$(tr -d '\n\r' < "${archive}.hash")"
 target="/opt/codex/${sha}"
 if [ ! -x "${target}/bin/codex" ]; then
-	rm -rf "$target"
-	mkdir -p "$target"
-	tar -xzf "$archive" -C "$target"
+	rm -rf "$target" "${target}.partial"
+	mkdir -p "${target}.partial"
+	tar -xzf "$archive" -C "${target}.partial"
+	mv -T "${target}.partial" "$target"
 fi
 link /usr/local/bin/codex "${target}/bin/codex"
 for dir in /opt/codex/*/; do
