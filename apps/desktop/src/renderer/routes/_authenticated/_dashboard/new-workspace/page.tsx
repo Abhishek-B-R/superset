@@ -1,6 +1,5 @@
 import { PromptInputProvider } from "@superset/ui/ai-elements/prompt-input";
 import { createFileRoute } from "@tanstack/react-router";
-import { WindowChrome } from "renderer/routes/_authenticated/_dashboard/components/WindowChrome";
 import { NewWorkspaceScreen } from "renderer/routes/_authenticated/components/DashboardNewWorkspaceModal/components/NewWorkspaceScreen";
 import { DashboardNewWorkspaceDraftProvider } from "renderer/routes/_authenticated/components/DashboardNewWorkspaceModal/DashboardNewWorkspaceDraftContext";
 import { newWorkspaceAttachmentsStore } from "renderer/stores/new-workspace-attachments";
@@ -34,13 +33,6 @@ function NewWorkspacePage() {
 					preSelectedSession={session === true}
 					preSelectedHostId={host ?? null}
 				/>
-				{/* Stops short of the top-right corner so the screen's naming
-				    instructions + prompt history buttons underneath stay
-				    clickable. */}
-				<div className="drag absolute left-0 right-20 top-0 z-50 h-12" />
-				<div className="absolute top-0 left-0 z-50 flex h-12 items-center">
-					<WindowChrome />
-				</div>
 			</PromptInputProvider>
 		</DashboardNewWorkspaceDraftProvider>
 	);

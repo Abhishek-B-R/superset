@@ -14,6 +14,8 @@ interface PageHeaderProps {
 	className?: string;
 	/** The padded area after the window controls: padding and gaps. */
 	contentClassName?: string;
+	/** A row that lays out its own drag area, in place of `start` and `end`. */
+	children?: ReactNode;
 }
 
 /** Every screen's header row. The space between `start` and `end` drags the window. */
@@ -22,6 +24,7 @@ export function PageHeader({
 	end,
 	className,
 	contentClassName,
+	children,
 }: PageHeaderProps) {
 	const isBanded = useCollapsedSidebarBand();
 	return (
@@ -39,9 +42,13 @@ export function PageHeader({
 					contentClassName,
 				)}
 			>
-				{start}
-				<div className="drag h-full min-w-0 flex-1" />
-				{end}
+				{children ?? (
+					<>
+						{start}
+						<div className="drag h-full min-w-0 flex-1" />
+						{end}
+					</>
+				)}
 				<WindowControlsInset />
 			</div>
 		</header>

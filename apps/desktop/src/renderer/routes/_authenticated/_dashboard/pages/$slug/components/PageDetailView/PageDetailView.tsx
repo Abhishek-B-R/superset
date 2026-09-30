@@ -1,17 +1,15 @@
 import { useLingui } from "@lingui/react/macro";
 import { Button } from "@superset/ui/button";
-import { CommentModeButton, PageHeader } from "@superset/ui/page-comments";
+import {
+	CommentModeButton,
+	PageHeader as PageTitleBar,
+} from "@superset/ui/page-comments";
 import { Spinner } from "@superset/ui/spinner";
-import { cn } from "@superset/ui/utils";
 import { useNavigate } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 import { useState } from "react";
+import { PageHeader } from "renderer/routes/_authenticated/_dashboard/components/PageHeader";
 import { PageViewer } from "renderer/routes/_authenticated/_dashboard/components/PageViewer";
-import {
-	useWindowChromeVisible,
-	WINDOW_CHROME_BAND_CLASS,
-	WindowChrome,
-} from "renderer/routes/_authenticated/_dashboard/components/WindowChrome";
 import { usePageHeaderData } from "renderer/routes/_authenticated/_dashboard/hooks/usePageHeaderData";
 
 interface PageDetailViewProps {
@@ -37,7 +35,6 @@ export function PageDetailView({ slug }: PageDetailViewProps) {
 
 	const goBack = () => navigate({ to: "/pages" });
 
-	const isChromeVisible = useWindowChromeVisible();
 	const backButton = (
 		<Button
 			type="button"
@@ -57,51 +54,47 @@ export function PageDetailView({ slug }: PageDetailViewProps) {
 		<div className="flex h-full w-full flex-1 flex-col overflow-hidden">
 			{page ? (
 				<PageHeader
-					className={cn(
-						"h-12",
-						isChromeVisible && cn("border-b-0", WINDOW_CHROME_BAND_CLASS),
-					)}
-					page={page}
-					versions={versions}
-					currentUserId={currentUserId}
-					leading={
+					className="shadow-[inset_0_-1px_0_var(--border)]"
+					contentClassName="px-2"
+				>
+					<PageTitleBar
+						className="h-full min-w-0 flex-1 border-b-0 px-0"
+						page={page}
+						versions={versions}
+						currentUserId={currentUserId}
+						leading={backButton}
+						trailing={
+							<CommentModeButton
+								enabled={commentsEnabled}
+								openCount={threads.filter((thread) => !thread.resolved).length}
+								onToggle={() => setCommentsEnabled(!commentsEnabled)}
+							/>
+						}
+						onSetVisibility={onSetVisibility}
+						onSetSharedVersion={onSetSharedVersion}
+						onRename={onRename}
+						onRefresh={onRefresh}
+						onPreviewVersion={setPreviewVersion}
+						previewVersion={
+							previewVersion === page.servedVersion ? null : previewVersion
+						}
+						onDelete={async () => {
+							await onDelete();
+							goBack();
+						}}
+					/>
+				</PageHeader>
+			) : (
+				<PageHeader
+					className="shadow-[inset_0_-1px_0_var(--border)]"
+					contentClassName="px-2"
+					start={
 						<>
-							<WindowChrome className="-ml-2" />
 							{backButton}
+							<Spinner className="size-3.5" />
 						</>
 					}
-					trailing={
-						<CommentModeButton
-							enabled={commentsEnabled}
-							openCount={threads.filter((thread) => !thread.resolved).length}
-							onToggle={() => setCommentsEnabled(!commentsEnabled)}
-						/>
-					}
-					onSetVisibility={onSetVisibility}
-					onSetSharedVersion={onSetSharedVersion}
-					onRename={onRename}
-					onRefresh={onRefresh}
-					onPreviewVersion={setPreviewVersion}
-					previewVersion={
-						previewVersion === page.servedVersion ? null : previewVersion
-					}
-					onDelete={async () => {
-						await onDelete();
-						goBack();
-					}}
 				/>
-			) : (
-				<div
-					className={cn(
-						"flex h-12 shrink-0 items-center gap-2 px-2 shadow-[inset_0_-1px_0_var(--border)]",
-						isChromeVisible && WINDOW_CHROME_BAND_CLASS,
-					)}
-				>
-					<WindowChrome className="-ml-2" />
-					{backButton}
-					<Spinner className="size-3.5" />
-					<div className="drag h-full min-w-0 flex-1" />
-				</div>
 			)}
 			<div className="min-h-0 min-w-0 flex-1">
 				<PageViewer
