@@ -1130,7 +1130,8 @@ export const automationRouter = {
 			else if ((FAILED_RUN_STATUSES as readonly string[]).includes(row.status))
 				failed += row.count;
 			const index = row.bucket - baseBucket;
-			if (index >= 0 && index < bucketCount) buckets[index] += row.count;
+			if (index >= 0 && index < bucketCount)
+				buckets[index] = (buckets[index] ?? 0) + row.count;
 		}
 		return { succeeded, failed, buckets };
 	}),
