@@ -1,4 +1,4 @@
-import { useLingui } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { usePageCommentThreads } from "@superset/cloud-client";
 import { getInitials } from "@superset/shared/names";
 import {
@@ -16,10 +16,13 @@ import {
 } from "expo-router";
 import { useHeaderHeight } from "expo-router/react-navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { View } from "react-native";
+import { Pressable, View } from "react-native";
 import { Spinner } from "@/components/ui/spinner";
 import { Text } from "@/components/ui/text";
+import { env } from "@/lib/env";
 import { errorCopy } from "@/lib/errors";
+import { openUrl } from "@/lib/open-url";
+import { pageUrlForSlug } from "@/lib/page-links";
 import { PressableScale } from "@/screens/(authenticated)/components/PressableScale";
 import { usePageQuery } from "../hooks/usePages";
 import { CommentPin } from "./components/CommentPin";
@@ -300,6 +303,19 @@ export function PageDetailScreen({
 							? t({ message: "It will open once the connection is back." })
 							: errorCopy(page.error)}
 					</Text>
+					{page.error && !offline ? (
+						<Pressable
+							accessibilityRole="button"
+							className="bg-secondary mt-6 h-[42px] items-center justify-center rounded-md px-6 active:opacity-80"
+							onPress={() =>
+								openUrl(pageUrlForSlug(slug, env.EXPO_PUBLIC_WEB_URL))
+							}
+						>
+							<Text className="font-medium text-[15px]">
+								<Trans>Open in browser</Trans>
+							</Text>
+						</Pressable>
+					) : null}
 				</View>
 			) : null}
 

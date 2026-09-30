@@ -1,3 +1,7 @@
+export function pageUrlForSlug(slug: string, webUrl: string): string {
+	return `${webUrl.replace(/\/$/, "")}/page/${slug}`;
+}
+
 export function pageSlugFromUrl(url: string, webUrl: string): string | null {
 	let target: URL;
 	let web: URL;

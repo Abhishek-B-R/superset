@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { pageSlugFromUrl } from "./pageLinks";
+import { pageSlugFromUrl, pageUrlForSlug } from "./pageLinks";
 
 const WEB = "https://app.superset.sh";
 
@@ -47,5 +47,25 @@ describe("pageSlugFromUrl", () => {
 	test("refuses anything that is not a url", () => {
 		expect(pageSlugFromUrl("not a url", WEB)).toBe(null);
 		expect(pageSlugFromUrl("", WEB)).toBe(null);
+	});
+});
+
+describe("pageUrlForSlug", () => {
+	test("builds the shared page url", () => {
+		expect(pageUrlForSlug("deploy-notes", WEB)).toBe(
+			`${WEB}/page/deploy-notes`,
+		);
+	});
+
+	test("does not double the separator when the base has a trailing slash", () => {
+		expect(pageUrlForSlug("deploy-notes", `${WEB}/`)).toBe(
+			`${WEB}/page/deploy-notes`,
+		);
+	});
+
+	test("round-trips with pageSlugFromUrl", () => {
+		expect(pageSlugFromUrl(pageUrlForSlug("deploy-notes", WEB), WEB)).toBe(
+			"deploy-notes",
+		);
 	});
 });

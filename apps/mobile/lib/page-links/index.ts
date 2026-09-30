@@ -1,1 +1,1 @@
-export { pageSlugFromUrl } from "./pageLinks";
+export { pageSlugFromUrl, pageUrlForSlug } from "./pageLinks";
