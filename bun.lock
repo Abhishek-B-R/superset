@@ -1168,7 +1168,7 @@
     },
     "packages/pty-daemon": {
       "name": "@superset/pty-daemon",
-      "version": "0.3.5",
+      "version": "0.3.6",
       "bin": {
         "pty-daemon": "./src/main.ts",
       },
