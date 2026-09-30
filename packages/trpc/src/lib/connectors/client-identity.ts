@@ -195,8 +195,6 @@ export async function resolveClientIdentity(
 	method: ConnectorMethod,
 	redirectUri: string,
 ): Promise<ClientIdentity> {
-	// A CIMD client id must be an https URL the server can fetch; a localhost
-	// API base can never satisfy that, so register a client instead.
 	const metadataUrl = clientMetadataUrl(connectorSlug);
 	if (
 		server.metadata.client_id_metadata_document_supported &&

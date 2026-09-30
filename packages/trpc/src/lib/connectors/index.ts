@@ -396,23 +396,13 @@ interface JsonRpcMessage {
 const isJsonRpcResponse = (message: JsonRpcMessage): boolean =>
 	message.result !== undefined || message.error !== undefined;
 
-/**
- * A streamable-HTTP MCP server answers either a plain JSON object or an SSE
- * body, and an SSE event may split its payload across several `data:` lines
- * (joined with a newline) and carry more than one event, some of which are
- * server-initiated notifications rather than our answer. Reassemble the events
- * and return the response whose id matches the request, ignoring comments,
- * keep-alives, and interleaved notifications.
- */
 function readJsonRpc(text: string, id: number): JsonRpcMessage {
 	const messages: JsonRpcMessage[] = [];
 	const consider = (candidate: string) => {
 		if (!candidate) return;
 		try {
 			messages.push(JSON.parse(candidate) as JsonRpcMessage);
-		} catch {
-			// Not JSON — an SSE comment or keep-alive; ignore it.
-		}
+		} catch {}
 	};
 
 	const trimmed = text.trim();
@@ -433,7 +423,9 @@ function readJsonRpc(text: string, id: number): JsonRpcMessage {
 	const match =
 		messages.find(
 			(message) =>
-				message.id !== undefined && String(message.id) === String(id),
+				isJsonRpcResponse(message) &&
+				message.id !== undefined &&
+				String(message.id) === String(id),
 		) ?? messages.filter(isJsonRpcResponse).at(-1);
 	if (!match)
 		throw new Error(`no JSON-RPC response in a ${text.length}-byte body`);
@@ -535,9 +527,7 @@ async function mcpIdentity(
 					},
 				},
 				`Connector "${slug}" identity`,
-			).catch(() => {
-				// Best-effort teardown; the grant's tokens are what actually persist.
-			});
+			).catch(() => {});
 	}
 }
 

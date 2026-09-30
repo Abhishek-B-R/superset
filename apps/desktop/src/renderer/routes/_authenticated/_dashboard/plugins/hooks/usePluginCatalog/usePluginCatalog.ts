@@ -62,8 +62,6 @@ export function usePluginCatalog() {
 
 	const query = cloudTrpc.plugins.list.useQuery(undefined, {
 		enabled: Boolean(userId),
-		// A connector's OAuth flow finishes in an external browser tab, so the
-		// list learns a plugin is connected when the window regains focus.
 		refetchOnWindowFocus: true,
 	});
 

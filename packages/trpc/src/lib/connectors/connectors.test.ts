@@ -206,9 +206,6 @@ describe("probeIdentity", () => {
 							protocolVersion: "2025-06-18",
 							serverInfo: { name: "Sentry MCP" },
 						};
-			// A body that exercises the parser: a leading server notification
-			// (must be ignored), then the real response whose JSON spans several
-			// SSE data: lines, then a keep-alive comment.
 			const payload = JSON.stringify(
 				{ jsonrpc: "2.0", id: body.id, result },
 				null,
@@ -218,13 +215,13 @@ describe("probeIdentity", () => {
 				.split("\n")
 				.map((line) => `data: ${line}`)
 				.join("\n");
-			const notification = `event: message\ndata: ${JSON.stringify({
+			const serverRequest = `event: message\ndata: ${JSON.stringify({
 				jsonrpc: "2.0",
-				method: "notifications/message",
-				params: { level: "info" },
+				id: String(body.id),
+				method: "roots/list",
 			})}`;
 			return new Response(
-				`${notification}\n\nevent: message\n${dataLines}\n\n: keep-alive\n\n`,
+				`${serverRequest}\n\nevent: message\n${dataLines}\n\n: keep-alive\n\n`,
 				{
 					status: 200,
 					headers: {
@@ -248,7 +245,6 @@ describe("probeIdentity", () => {
 			"[DELETE]",
 		]);
 		expect(calls[2]?.params?.name).toBe("execute_sentry_tool");
-		// The negotiated version rides along on every request after initialize.
 		expect(calls[1]?.protocolHeader).toBe("2025-06-18");
 		expect(calls[2]?.protocolHeader).toBe("2025-06-18");
 		expect(identity.account).toEqual({ id: "42", label: "h@tegon.ai" });
