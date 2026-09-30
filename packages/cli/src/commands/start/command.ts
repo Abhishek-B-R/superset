@@ -22,12 +22,19 @@ export default command({
 	options: {
 		daemon: boolean().desc("Run in background"),
 		autoUpdate: boolean().desc(
-			"Automatically update and restart this host hourly",
+			"Automatically update and restart this host hourly (requires --daemon)",
 		),
 		port: number().desc("Port to listen on"),
 		org: string().desc("Organization to register under (id, slug, or name)"),
 	},
 	run: async ({ ctx, options, signal }) => {
+		if (options.autoUpdate && !options.daemon) {
+			throw new CLIError(
+				"--auto-update requires --daemon because updates replace the host process.",
+				"Run superset start --daemon --auto-update.",
+			);
+		}
+
 		const orgs = await ctx.api.user.myOrganizations.query();
 		const organization = await resolveOrganization(
 			orgs,
