@@ -251,6 +251,76 @@ describe("probeIdentity", () => {
 		expect(identity.user).toEqual({ id: "42", label: "Harshith" });
 	});
 
+	test("granola_mcp asks the authorization server's userinfo endpoint", async () => {
+		const calls: { url: string; method: string; auth: string | null }[] = [];
+		globalThis.fetch = (async (url: string, init: RequestInit) => {
+			calls.push({
+				url,
+				method: init.method ?? "GET",
+				auth: new Headers(init.headers).get("Authorization"),
+			});
+			return new Response(
+				JSON.stringify({
+					sub: "user_01",
+					email: "h@tegon.ai",
+					name: "Harshith",
+				}),
+				{ status: 200, headers: { "Content-Type": "application/json" } },
+			);
+		}) as unknown as typeof fetch;
+
+		const identity = await probeIdentity(
+			"granola_mcp",
+			connectorMethod(requireConnector("granola_mcp")),
+			"mcp-test",
+		);
+
+		expect(calls).toEqual([
+			{
+				url: "https://mcp-auth.granola.ai/oauth2/userinfo",
+				method: "POST",
+				auth: "Bearer mcp-test",
+			},
+		]);
+		expect(identity.account).toEqual({ id: "user_01", label: "h@tegon.ai" });
+		expect(identity.user).toEqual({ id: "user_01", label: "Harshith" });
+	});
+
+	test("circleback_mcp reads the user behind the token, labelled by workspace", async () => {
+		const calls: { url: string; method: string; auth: string | null }[] = [];
+		globalThis.fetch = (async (url: string, init: RequestInit) => {
+			calls.push({
+				url,
+				method: init.method ?? "GET",
+				auth: new Headers(init.headers).get("Authorization"),
+			});
+			return new Response(
+				JSON.stringify({
+					id: 42,
+					email: "h@tegon.ai",
+					workspaces: [{ id: 7, name: "Tegon" }],
+				}),
+				{ status: 200, headers: { "Content-Type": "application/json" } },
+			);
+		}) as unknown as typeof fetch;
+
+		const identity = await probeIdentity(
+			"circleback_mcp",
+			connectorMethod(requireConnector("circleback_mcp")),
+			"cb-test",
+		);
+
+		expect(calls).toEqual([
+			{
+				url: "https://circleback.ai/api/user",
+				method: "GET",
+				auth: "Bearer cb-test",
+			},
+		]);
+		expect(identity.account).toEqual({ id: "42", label: "Tegon" });
+		expect(identity.user).toEqual({ id: "42", label: "h@tegon.ai" });
+	});
+
 	test("a url-less probe without a token response fails loudly", async () => {
 		await expect(
 			probeIdentity(

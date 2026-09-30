@@ -414,6 +414,7 @@ export const PLUGIN_CATALOG: readonly PluginCatalogEntry[] = [
 		version: "1.0.0",
 		description: "Search and use your meeting notes",
 		interface: { displayName: "Granola", category: "Productivity" },
+		auth: [{ type: "oauth2" }],
 		mcpServers: {
 			granola: { type: "http", url: "https://mcp.granola.ai/mcp" },
 		},
@@ -423,6 +424,7 @@ export const PLUGIN_CATALOG: readonly PluginCatalogEntry[] = [
 		version: "1.0.0",
 		description: "Meeting notes, action items, and transcripts",
 		interface: { displayName: "Circleback", category: "Productivity" },
+		auth: [{ type: "oauth2" }],
 		mcpServers: {
 			circleback: { type: "http", url: "https://circleback.ai/api/mcp" },
 		},
