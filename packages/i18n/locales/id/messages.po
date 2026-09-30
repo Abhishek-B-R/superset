@@ -16175,6 +16175,9 @@ msgstr "Subagen ini tidak lagi dilacak oleh host. Transkripnya tetap tersimpan d
 msgid "This terminal has no output to hand over yet."
 msgstr "Terminal ini belum punya keluaran untuk diserahkan."
 
+msgid "This terminal is also open on a smaller screen, so it's sized to fit"
+msgstr "Terminal ini juga terbuka di layar yang lebih kecil, jadi ukurannya disesuaikan"
+
 msgid "This thread has no comment to reply to."
 msgstr "Thread ini tidak punya komentar untuk dibalas."
 

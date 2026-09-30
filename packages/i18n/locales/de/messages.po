@@ -16175,6 +16175,9 @@ msgstr "Dieser Subagent wird vom Host nicht mehr verfolgt. Sein Protokoll bleibt
 msgid "This terminal has no output to hand over yet."
 msgstr "Dieses Terminal hat noch keine Ausgabe zum Übergeben."
 
+msgid "This terminal is also open on a smaller screen, so it's sized to fit"
+msgstr "Dieses Terminal ist auch auf einem kleineren Bildschirm geöffnet und daher an dessen Größe angepasst"
+
 msgid "This thread has no comment to reply to."
 msgstr "In diesem Thread gibt es keinen Kommentar zum Antworten."
 

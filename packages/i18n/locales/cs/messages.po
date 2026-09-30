@@ -16175,6 +16175,9 @@ msgstr "Tento subagent už není hostitelem sledován. Jeho přepis zůstává n
 msgid "This terminal has no output to hand over yet."
 msgstr "Tento terminál zatím nemá žádný výstup k předání."
 
+msgid "This terminal is also open on a smaller screen, so it's sized to fit"
+msgstr "Tento terminál je otevřený i na menší obrazovce, proto je přizpůsobený její velikosti"
+
 msgid "This thread has no comment to reply to."
 msgstr "V tomto vlákně není komentář, na který by šlo odpovědět."
 

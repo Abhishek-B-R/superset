@@ -16175,6 +16175,9 @@ msgstr "이 서브 에이전트는 더 이상 호스트에서 추적되지 않�
 msgid "This terminal has no output to hand over yet."
 msgstr "이 터미널에는 아직 넘길 출력이 없습니다."
 
+msgid "This terminal is also open on a smaller screen, so it's sized to fit"
+msgstr "이 터미널이 더 작은 화면에서도 열려 있어 그 크기에 맞춰졌습니다"
+
 msgid "This thread has no comment to reply to."
 msgstr "이 스레드에는 답글을 달 코멘트가 없습니다."
 

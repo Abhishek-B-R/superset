@@ -16175,6 +16175,9 @@ msgstr "Deze subagent wordt niet meer gevolgd door de host. Het transcript blijf
 msgid "This terminal has no output to hand over yet."
 msgstr "Deze terminal heeft nog geen uitvoer om over te dragen."
 
+msgid "This terminal is also open on a smaller screen, so it's sized to fit"
+msgstr "Deze terminal is ook open op een kleiner scherm en is daarom daarop afgestemd"
+
 msgid "This thread has no comment to reply to."
 msgstr "Deze thread heeft geen opmerking om op te reageren."
 

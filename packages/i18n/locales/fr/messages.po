@@ -16175,6 +16175,9 @@ msgstr "Cet sous-agent n'est plus suivi par l'hôte. Sa transcription reste sur 
 msgid "This terminal has no output to hand over yet."
 msgstr "Ce terminal n'a encore aucune sortie à transmettre."
 
+msgid "This terminal is also open on a smaller screen, so it's sized to fit"
+msgstr "Ce terminal est aussi ouvert sur un écran plus petit, il est donc ajusté à sa taille"
+
 msgid "This thread has no comment to reply to."
 msgstr "Ce fil ne contient aucun commentaire auquel répondre."
 

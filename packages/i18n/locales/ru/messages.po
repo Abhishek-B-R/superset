@@ -16175,6 +16175,9 @@ msgstr "Хост больше не отслеживает этого субаг�
 msgid "This terminal has no output to hand over yet."
 msgstr "В этом терминале пока нет вывода, который можно передать."
 
+msgid "This terminal is also open on a smaller screen, so it's sized to fit"
+msgstr "Этот терминал также открыт на экране меньшего размера, поэтому его размер подогнан под него"
+
 msgid "This thread has no comment to reply to."
 msgstr "В этой ветке нет комментария, на который можно ответить."
 

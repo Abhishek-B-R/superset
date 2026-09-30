@@ -16175,6 +16175,9 @@ msgstr "このサブエージェントはホストで追跡されなくなりま
 msgid "This terminal has no output to hand over yet."
 msgstr "このターミナルには引き継げる出力がまだありません。"
 
+msgid "This terminal is also open on a smaller screen, so it's sized to fit"
+msgstr "このターミナルは小さい画面でも開かれているため、その画面に合わせたサイズになっています"
+
 msgid "This thread has no comment to reply to."
 msgstr "このスレッドには返信できるコメントがありません。"
 

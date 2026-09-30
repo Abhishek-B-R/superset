@@ -16175,6 +16175,9 @@ msgstr "主机不再跟踪该子智能体。其记录仍保存在磁盘上的智
 msgid "This terminal has no output to hand over yet."
 msgstr "该终端还没有可交接的输出。"
 
+msgid "This terminal is also open on a smaller screen, so it's sized to fit"
+msgstr "此终端也在较小的屏幕上打开，因此已调整为适配该屏幕的大小"
+
 msgid "This thread has no comment to reply to."
 msgstr "这个讨论里没有可回复的评论。"
 

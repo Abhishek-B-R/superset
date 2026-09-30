@@ -16175,6 +16175,9 @@ msgstr "主機已不再追蹤此子代理程式。其逐字稿仍保留在磁碟
 msgid "This terminal has no output to hand over yet."
 msgstr "這個終端還沒有可交接的輸出。"
 
+msgid "This terminal is also open on a smaller screen, so it's sized to fit"
+msgstr "此終端機也在較小的螢幕上開啟，因此已調整為符合該螢幕的大小"
+
 msgid "This thread has no comment to reply to."
 msgstr "這個討論裡沒有可回覆的評論。"
 

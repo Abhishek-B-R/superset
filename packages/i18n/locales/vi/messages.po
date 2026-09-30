@@ -16175,6 +16175,9 @@ msgstr "Máy chủ không còn theo dõi agent con này. Bản ghi vẫn nằm t
 msgid "This terminal has no output to hand over yet."
 msgstr "Terminal này chưa có kết quả nào để bàn giao."
 
+msgid "This terminal is also open on a smaller screen, so it's sized to fit"
+msgstr "Terminal này cũng đang mở trên một màn hình nhỏ hơn nên đã được thu nhỏ cho vừa"
+
 msgid "This thread has no comment to reply to."
 msgstr "Luồng này không có bình luận nào để trả lời."
 
