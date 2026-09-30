@@ -6514,9 +6514,6 @@ msgstr "설치 정보를 가져오지 못했습니다. 다시 시도해 주세�
 msgid "Failed to force stop workspace run command"
 msgstr "워크스페이스 실행 명령을 강제 중지하지 못했습니다"
 
-msgid "Failed to generate a unique task slug"
-msgstr "고유한 작업 슬러그를 생성하지 못했습니다"
-
 msgid "Failed to generate API key"
 msgstr "API 키를 생성하지 못했습니다"
 

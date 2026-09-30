@@ -2,6 +2,7 @@ import { Trans, useLingui } from "@lingui/react/macro";
 import { Button } from "@superset/ui/button";
 import { ButtonGroup } from "@superset/ui/button-group";
 import { LuArrowRight, LuChevronRight, LuHash, LuLink } from "react-icons/lu";
+import { useTaskDisplayId } from "renderer/hooks/useTaskDisplayId";
 import { RecordIconButton } from "renderer/routes/_authenticated/_dashboard/components/RecordIconButton";
 import { RunInWorkspacePopoverV2 } from "../../../../../components/RunInWorkspacePopoverV2";
 import { TaskRecordMenu } from "./components/TaskRecordMenu";
@@ -10,6 +11,8 @@ interface TaskRecordTopBarProps {
 	task: {
 		id: string;
 		slug: string;
+		externalProvider: string | null;
+		externalKey: string | null;
 		title: string;
 		description: string | null;
 		branch: string | null;
@@ -29,6 +32,7 @@ export function TaskRecordTopBar({
 	onOpenExternal,
 	onDelete,
 }: TaskRecordTopBarProps) {
+	const taskDisplayId = useTaskDisplayId();
 	const { t } = useLingui();
 	return (
 		<div className="flex h-12 shrink-0 items-center gap-2 pl-4 text-[13px]">
@@ -40,7 +44,9 @@ export function TaskRecordTopBar({
 				<Trans>Tasks</Trans>
 			</button>
 			<LuChevronRight className="size-3 text-muted-foreground" />
-			<span className="min-w-0 truncate tabular-nums">{task.slug}</span>
+			<span className="min-w-0 truncate tabular-nums">
+				{taskDisplayId(task)}
+			</span>
 			<div className="drag h-full min-w-0 flex-1" />
 			<div className="flex h-full shrink-0 items-center justify-end gap-3 pr-4 @min-[900px]:w-[372px] @min-[900px]:border-l @min-[900px]:border-border">
 				<ButtonGroup>

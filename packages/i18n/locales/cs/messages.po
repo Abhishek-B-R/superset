@@ -6514,9 +6514,6 @@ msgstr "Nepodařilo se načíst podrobnosti instalace. Zkuste to prosím znovu."
 msgid "Failed to force stop workspace run command"
 msgstr "Nepodařilo se vynuceně zastavit spouštěcí příkaz pracovního prostoru"
 
-msgid "Failed to generate a unique task slug"
-msgstr "Nepodařilo se vygenerovat jedinečný slug úkolu"
-
 msgid "Failed to generate API key"
 msgstr "Nepodařilo se vygenerovat API klíč"
 

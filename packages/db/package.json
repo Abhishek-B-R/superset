@@ -32,6 +32,10 @@
 			"types": "./src/task-list-query.ts",
 			"default": "./src/task-list-query.ts"
 		},
+		"./task-numbers": {
+			"types": "./src/task-numbers.ts",
+			"default": "./src/task-numbers.ts"
+		},
 		"./utils": {
 			"types": "./src/utils/index.ts",
 			"default": "./src/utils/index.ts"

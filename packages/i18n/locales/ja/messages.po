@@ -6514,9 +6514,6 @@ msgstr "インストール情報を取得できませんでした。もう一度
 msgid "Failed to force stop workspace run command"
 msgstr "ワークスペース実行コマンドの強制停止に失敗しました"
 
-msgid "Failed to generate a unique task slug"
-msgstr "一意のタスクスラッグを生成できませんでした"
-
 msgid "Failed to generate API key"
 msgstr "APIキーの生成に失敗しました"
 

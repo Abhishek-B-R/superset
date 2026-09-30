@@ -14,6 +14,7 @@ import {
 	LuUnlink2,
 	LuUsers,
 } from "react-icons/lu";
+import { useTaskDisplayId } from "renderer/hooks/useTaskDisplayId";
 import { CloudTaskIcon } from "renderer/routes/_authenticated/_dashboard/components/CloudTaskIcon";
 import { CloudWorkspaceLabelDot } from "renderer/routes/_authenticated/_dashboard/components/CloudWorkspaceLabelDot";
 import { PullRequestLink } from "renderer/routes/_authenticated/_dashboard/components/PullRequestLink";
@@ -69,6 +70,7 @@ export function CloudWorkspaceTimelineEntry({
 	onOpenEnvironment,
 	onOpenPerson,
 }: CloudWorkspaceTimelineEntryProps) {
+	const taskDisplayId = useTaskDisplayId();
 	const actor = (
 		<TimelineActor actor={entry.actor} onOpenPerson={onOpenPerson} />
 	);
@@ -168,7 +170,7 @@ export function CloudWorkspaceTimelineEntry({
 					onClick={() => onOpenTask(entry.task.id)}
 				>
 					<span className="font-normal text-muted-foreground">
-						{entry.task.slug}
+						{taskDisplayId(entry.task)}
 					</span>{" "}
 					{entry.task.title}
 				</RecordInlineLink>
@@ -192,7 +194,7 @@ export function CloudWorkspaceTimelineEntry({
 					onClick={() => onOpenTask(entry.task.id)}
 				>
 					<span className="font-normal text-muted-foreground">
-						{entry.task.slug}
+						{taskDisplayId(entry.task)}
 					</span>{" "}
 					{entry.task.title}
 				</RecordInlineLink>

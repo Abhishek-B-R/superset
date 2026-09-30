@@ -6514,9 +6514,6 @@ msgstr "No se pudieron obtener los datos de la instalación. Inténtalo de nuevo
 msgid "Failed to force stop workspace run command"
 msgstr "No se pudo forzar la detención del comando de ejecución del espacio de trabajo"
 
-msgid "Failed to generate a unique task slug"
-msgstr "No se pudo generar un slug de tarea único"
-
 msgid "Failed to generate API key"
 msgstr "No se pudo generar la clave de API"
 

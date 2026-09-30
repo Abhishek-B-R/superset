@@ -79,6 +79,7 @@ mock.module("@/lib/automations/ingestAutomationEvent", () => ({
 
 mock.module("@superset/db/client", () => ({
 	db: { update: () => ({ set: () => ({ where: async () => undefined }) }) },
+	dbWs: {},
 }));
 
 const { processDelivery } = await import("./processDelivery");

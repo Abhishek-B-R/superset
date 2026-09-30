@@ -135,6 +135,8 @@ export const FEATURE_FLAGS = {
 	HIRING_BANNER: "hiring-banner",
 	/** Shows the "Star Superset on GitHub" sidebar card once a user crosses the workspace-count threshold. Lets us kill the nag instantly without a release if it reads as annoying. */
 	STAR_NAG_CARD: "star-nag-card",
+	/** Shows every task by its own slug. Off, unloaded, or offline show a Linear-synced task by its Linear identifier, as the sync used to write it into the slug. */
+	TASK_KEYS: "task-keys",
 	/**
 	 * Which trigger providers the Add Trigger menu offers. Payload is a JSON
 	 * array of provider kinds, e.g. `["github", "slack"]`; Scheduled is always

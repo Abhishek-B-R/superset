@@ -864,12 +864,6 @@ export const serverErrorMessages: Record<
 				message: "Too many support reports. Try again later.",
 			}),
 		),
-	"serverError.task.failedToGenerateAUniqueTask": () =>
-		i18n._(
-			msg({
-				message: "Failed to generate a unique task slug",
-			}),
-		),
 	"serverError.team.teamNotFoundInThisOrganization": () =>
 		i18n._(
 			msg({

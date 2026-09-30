@@ -2,7 +2,7 @@ import type {
 	EntityWebhookPayloadWithIssueData,
 	LinearWebhookPayload,
 } from "@linear/sdk/webhooks";
-import { db } from "@superset/db/client";
+import { db, dbWs } from "@superset/db/client";
 import type { SelectConnection } from "@superset/db/schema";
 import {
 	connections,
@@ -12,6 +12,7 @@ import {
 	users,
 	webhookEvents,
 } from "@superset/db/schema";
+import { reserveTaskNumber } from "@superset/db/task-numbers";
 import { accountConnections } from "@superset/trpc/connectors";
 import {
 	isLinearAuthError,
@@ -324,7 +325,7 @@ async function processIssueEvent(
 					eq(tasks.externalProvider, "linear"),
 					eq(tasks.externalId, issue.id),
 				),
-				columns: { externalUpdatedAt: true },
+				columns: { slug: true, externalUpdatedAt: true },
 			}),
 		]);
 
@@ -380,7 +381,6 @@ async function processIssueEvent(
 		const branchName = await fetchIssueBranchName(connection, issue.id);
 
 		const taskData = {
-			slug: issue.identifier,
 			title: issue.title,
 			description: issue.description ?? null,
 			statusId: taskStatus.id,
@@ -414,25 +414,32 @@ async function processIssueEvent(
 			lastSyncedAt: new Date(),
 		};
 
-		await db
-			.insert(tasks)
-			.values({
-				...taskData,
-				organizationId: connection.organizationId,
-				creatorId: connection.connectedByUserId,
-				createdAt: new Date(issue.createdAt),
-			})
-			.onConflictDoUpdate({
-				target: [
-					tasks.organizationId,
-					tasks.externalProvider,
-					tasks.externalId,
-				],
-				set: { ...taskData, syncError: null },
-				// The read above can go stale before this runs, and two deliveries
-				// for one issue can race here.
-				setWhere: sql`${tasks.externalUpdatedAt} IS NULL OR ${tasks.externalUpdatedAt} < excluded.external_updated_at`,
-			});
+		await dbWs.transaction(async (tx) => {
+			const identity = existing
+				? { slug: existing.slug }
+				: await reserveTaskNumber(tx, connection.organizationId);
+
+			await tx
+				.insert(tasks)
+				.values({
+					...taskData,
+					...identity,
+					organizationId: connection.organizationId,
+					creatorId: connection.connectedByUserId,
+					createdAt: new Date(issue.createdAt),
+				})
+				.onConflictDoUpdate({
+					target: [
+						tasks.organizationId,
+						tasks.externalProvider,
+						tasks.externalId,
+					],
+					set: { ...taskData, syncError: null },
+					// The read above can go stale before this runs, and two deliveries
+					// for one issue can race here.
+					setWhere: sql`${tasks.externalUpdatedAt} IS NULL OR ${tasks.externalUpdatedAt} < excluded.external_updated_at`,
+				});
+		});
 	} else if (payload.action === "remove") {
 		await db
 			.update(tasks)

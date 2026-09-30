@@ -87,7 +87,16 @@ export function ProjectRecordScreen({
 			return task
 				? {
 						...record,
-						tasks: [{ ...task, status: null, assignee: null }, ...record.tasks],
+						tasks: [
+							{
+								...task,
+								externalProvider: null,
+								externalKey: null,
+								status: null,
+								assignee: null,
+							},
+							...record.tasks,
+						],
 					}
 				: record;
 		}),

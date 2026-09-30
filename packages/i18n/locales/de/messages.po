@@ -6514,9 +6514,6 @@ msgstr "Installationsdetails konnten nicht geladen werden. Bitte versuche es ern
 msgid "Failed to force stop workspace run command"
 msgstr "Der Run-Befehl des Arbeitsbereichs konnte nicht zwangsweise gestoppt werden"
 
-msgid "Failed to generate a unique task slug"
-msgstr "Es konnte kein eindeutiger Aufgaben-Slug erzeugt werden"
-
 msgid "Failed to generate API key"
 msgstr "API-Schlüssel konnte nicht erzeugt werden"
 

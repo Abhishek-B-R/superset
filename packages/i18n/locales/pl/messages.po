@@ -6514,9 +6514,6 @@ msgstr "Nie udało się pobrać szczegółów instalacji. Spróbuj ponownie."
 msgid "Failed to force stop workspace run command"
 msgstr "Nie udało się wymusić zatrzymania polecenia uruchamiania obszaru roboczego"
 
-msgid "Failed to generate a unique task slug"
-msgstr "Nie udało się wygenerować unikalnego sluga zadania"
-
 msgid "Failed to generate API key"
 msgstr "Nie udało się wygenerować klucza API"
 

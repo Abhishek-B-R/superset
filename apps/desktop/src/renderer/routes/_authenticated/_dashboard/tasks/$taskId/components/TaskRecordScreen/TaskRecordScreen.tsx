@@ -7,6 +7,7 @@ import { useActiveOrganizationId } from "renderer/hooks/useActiveOrganizationId"
 import { useCloudWorkspaces } from "renderer/hooks/useCloudWorkspaces";
 import { useCopyToClipboard } from "renderer/hooks/useCopyToClipboard";
 import { useNow } from "renderer/hooks/useNow";
+import { useTaskDisplayId } from "renderer/hooks/useTaskDisplayId";
 import { authClient } from "renderer/lib/auth-client";
 import { cloudTrpc } from "renderer/lib/cloud-trpc";
 import { electronTrpc } from "renderer/lib/electron-trpc";
@@ -41,6 +42,7 @@ export function TaskRecordScreen({
 	onBack,
 	onOpenAssignee,
 }: TaskRecordScreenProps) {
+	const taskDisplayId = useTaskDisplayId();
 	const { t } = useLingui();
 	const navigate = useNavigate();
 	const tick = useNow(NOW_TICK_MS);
@@ -296,7 +298,7 @@ export function TaskRecordScreen({
 				}
 				onCopyLink={() => copyShareLink(`tasks/${task.slug}`)}
 				onCopyId={() =>
-					toast.promise(copyToClipboard(task.slug), {
+					toast.promise(copyToClipboard(taskDisplayId(task)), {
 						success: t({ message: "Task ID copied" }),
 						error: (error) => errorMessage(error),
 					})

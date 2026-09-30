@@ -7,6 +7,7 @@ import {
 } from "@superset/ui/command";
 import { toast } from "@superset/ui/sonner";
 import { useDeferredValue, useMemo } from "react";
+import { useTaskDisplayId } from "renderer/hooks/useTaskDisplayId";
 import { cloudTrpc } from "renderer/lib/cloud-trpc";
 import {
 	StatusIcon,
@@ -42,6 +43,7 @@ interface LinkTaskFrameProps {
 }
 
 export function LinkTaskFrame({ workspaceId }: LinkTaskFrameProps) {
+	const taskDisplayId = useTaskDisplayId();
 	const { t } = useLingui();
 	const query = useCommandPaletteQuery();
 	const deferredQuery = useDeferredValue(query);
@@ -56,6 +58,8 @@ export function LinkTaskFrame({ workspaceId }: LinkTaskFrameProps) {
 			(taskPage?.items ?? []).map(({ task }) => ({
 				id: task.id,
 				slug: task.slug,
+				externalProvider: task.externalProvider,
+				externalKey: task.externalKey,
 				title: task.title,
 				description: task.description,
 				labels: task.labels,
@@ -148,7 +152,7 @@ export function LinkTaskFrame({ workspaceId }: LinkTaskFrameProps) {
 						return (
 							<RawCommandItem
 								key={task.id}
-								value={`${task.slug} ${task.title}`}
+								value={`${task.slug} ${taskDisplayId(task)} ${task.title}`}
 								onSelect={() => handleSelect(task.id, task.slug)}
 								className="group items-start gap-3 rounded-md px-2.5 py-2"
 							>
@@ -168,7 +172,7 @@ export function LinkTaskFrame({ workspaceId }: LinkTaskFrameProps) {
 										{task.title}
 									</span>
 									<span className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
-										<span className="font-mono">{task.slug}</span>
+										<span className="font-mono">{taskDisplayId(task)}</span>
 										{status ? (
 											<>
 												<span aria-hidden>·</span>

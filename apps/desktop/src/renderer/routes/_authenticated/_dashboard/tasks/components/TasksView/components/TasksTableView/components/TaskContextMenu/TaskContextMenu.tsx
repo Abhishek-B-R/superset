@@ -17,6 +17,7 @@ import {
 	HiOutlineUserCircle,
 } from "react-icons/hi2";
 import { useCopyToClipboard } from "renderer/hooks/useCopyToClipboard";
+import { useTaskDisplayId } from "renderer/hooks/useTaskDisplayId";
 import { cloudTrpc } from "renderer/lib/cloud-trpc";
 import { useOptimisticActions } from "renderer/routes/_authenticated/hooks/useOptimisticActions";
 import type { TaskWithStatus } from "../../../../hooks/useTasksTable";
@@ -38,6 +39,7 @@ export function TaskContextMenu({
 	task,
 	onDelete,
 }: TaskContextMenuProps) {
+	const taskDisplayId = useTaskDisplayId();
 	const { tasks: taskActions } = useOptimisticActions();
 	const [open, setOpen] = useState(false);
 
@@ -76,7 +78,7 @@ export function TaskContextMenu({
 	const { copyToClipboard } = useCopyToClipboard();
 
 	const handleCopyId = () => {
-		copyToClipboard(task.slug);
+		copyToClipboard(taskDisplayId(task));
 	};
 
 	const handleCopyTitle = () => {

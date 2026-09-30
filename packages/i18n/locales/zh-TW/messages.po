@@ -6514,9 +6514,6 @@ msgstr "獲取安裝詳情失敗。請重試。"
 msgid "Failed to force stop workspace run command"
 msgstr "強制停止工作區執行命令失敗"
 
-msgid "Failed to generate a unique task slug"
-msgstr "無法生成唯一的任務slug"
-
 msgid "Failed to generate API key"
 msgstr "生成API金鑰失敗"
 

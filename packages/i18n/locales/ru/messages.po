@@ -6514,9 +6514,6 @@ msgstr "Не удалось получить данные установки. П
 msgid "Failed to force stop workspace run command"
 msgstr "Не удалось принудительно остановить команду запуска рабочей области"
 
-msgid "Failed to generate a unique task slug"
-msgstr "Не удалось сгенерировать уникальный slug задачи"
-
 msgid "Failed to generate API key"
 msgstr "Не удалось создать ключ API"
 

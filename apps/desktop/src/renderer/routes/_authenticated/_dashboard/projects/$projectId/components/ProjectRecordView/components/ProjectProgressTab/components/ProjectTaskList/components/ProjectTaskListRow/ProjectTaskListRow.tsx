@@ -1,4 +1,5 @@
 import { AvatarStack } from "@superset/ui/atoms/AvatarStack";
+import { useTaskDisplayId } from "renderer/hooks/useTaskDisplayId";
 import { CloudTaskIcon } from "renderer/routes/_authenticated/_dashboard/components/CloudTaskIcon";
 import type { ProjectRecord } from "../../../../../../../../types";
 
@@ -8,6 +9,7 @@ interface ProjectTaskListRowProps {
 }
 
 export function ProjectTaskListRow({ task, onOpen }: ProjectTaskListRowProps) {
+	const taskDisplayId = useTaskDisplayId();
 	return (
 		<tr
 			onClick={onOpen}
@@ -20,7 +22,7 @@ export function ProjectTaskListRow({ task, onOpen }: ProjectTaskListRowProps) {
 			</td>
 			<td className="w-0 pr-4 whitespace-nowrap">
 				<span className="block max-w-56 truncate text-xs text-muted-foreground tabular-nums">
-					{task.slug}
+					{taskDisplayId(task)}
 				</span>
 			</td>
 			<td className="w-full max-w-0 pr-3">

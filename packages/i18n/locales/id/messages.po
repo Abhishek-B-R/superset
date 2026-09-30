@@ -6514,9 +6514,6 @@ msgstr "Gagal mengambil detail instalasi. Silakan coba lagi."
 msgid "Failed to force stop workspace run command"
 msgstr "Gagal memaksa berhenti perintah run workspace"
 
-msgid "Failed to generate a unique task slug"
-msgstr "Gagal membuat slug tugas yang unik"
-
 msgid "Failed to generate API key"
 msgstr "Gagal membuat kunci API"
 

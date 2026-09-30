@@ -1,6 +1,8 @@
 import type { LinearClient } from "@linear/sdk";
 import { buildConflictUpdateColumns, db } from "@superset/db";
+import { dbWs } from "@superset/db/client";
 import { members, taskStatuses, tasks, users } from "@superset/db/schema";
+import { assignTaskNumbers } from "@superset/db/task-numbers";
 import { getLinearClient } from "@superset/trpc/integrations/linear";
 import { and, eq, inArray, isNull } from "drizzle-orm";
 import chunk from "lodash.chunk";
@@ -150,46 +152,74 @@ async function performInitialSync(
 				statusByExternalId,
 			),
 		)
-		.filter((task) => task !== null);
+		.filter((task) => task !== null)
+		.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
 
 	const batches = chunk(taskValues, BATCH_SIZE);
 
 	for (const batch of batches) {
-		await db
-			.insert(tasks)
-			.values(batch)
-			.onConflictDoUpdate({
-				target: [
-					tasks.organizationId,
-					tasks.externalProvider,
-					tasks.externalId,
-				],
-				set: {
-					...buildConflictUpdateColumns(tasks, [
-						"slug",
-						"title",
-						"description",
-						"statusId",
-						"priority",
-						"assigneeId",
-						"assigneeExternalId",
-						"assigneeDisplayName",
-						"assigneeAvatarUrl",
-						"estimate",
-						"dueDate",
-						"branch",
-						"startedAt",
-						"completedAt",
-						"externalKey",
-						"externalUrl",
-						"externalProjectId",
-						"externalProjectName",
-						"externalCycleId",
-						"externalCycleName",
-						"lastSyncedAt",
-					]),
-					syncError: null,
-				},
+		await dbWs.transaction(async (tx) => {
+			const existing = await tx
+				.select({ externalId: tasks.externalId, slug: tasks.slug })
+				.from(tasks)
+				.where(
+					and(
+						eq(tasks.organizationId, organizationId),
+						eq(tasks.externalProvider, "linear"),
+						inArray(
+							tasks.externalId,
+							batch.map((task) => task.externalId),
+						),
+					),
+				);
+			const slugByExternalId = new Map(
+				existing.map((row) => [row.externalId, row.slug]),
+			);
+			const known = batch.flatMap((task) => {
+				const slug = slugByExternalId.get(task.externalId);
+				return slug ? [{ ...task, slug }] : [];
 			});
+			const fresh = await assignTaskNumbers(
+				tx,
+				organizationId,
+				batch.filter((task) => !slugByExternalId.has(task.externalId)),
+			);
+
+			await tx
+				.insert(tasks)
+				.values([...known, ...fresh])
+				.onConflictDoUpdate({
+					target: [
+						tasks.organizationId,
+						tasks.externalProvider,
+						tasks.externalId,
+					],
+					set: {
+						...buildConflictUpdateColumns(tasks, [
+							"title",
+							"description",
+							"statusId",
+							"priority",
+							"assigneeId",
+							"assigneeExternalId",
+							"assigneeDisplayName",
+							"assigneeAvatarUrl",
+							"estimate",
+							"dueDate",
+							"branch",
+							"startedAt",
+							"completedAt",
+							"externalKey",
+							"externalUrl",
+							"externalProjectId",
+							"externalProjectName",
+							"externalCycleId",
+							"externalCycleName",
+							"lastSyncedAt",
+						]),
+						syncError: null,
+					},
+				});
+		});
 	}
 }

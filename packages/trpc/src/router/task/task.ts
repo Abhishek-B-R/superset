@@ -9,13 +9,10 @@ import {
 	taskColumns,
 	taskCreatedAtSortKey,
 } from "@superset/db/task-list-query";
+import { reserveTaskNumber } from "@superset/db/task-numbers";
 import { getCurrentTxid } from "@superset/db/utils";
-import {
-	generateBaseTaskSlug,
-	generateUniqueTaskSlug,
-} from "@superset/shared/task-slug";
 import { TRPCError, type TRPCRouterRecord } from "@trpc/server";
-import { and, asc, desc, eq, ilike, isNull, lt, or } from "drizzle-orm";
+import { and, asc, desc, eq, isNull, lt, or } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 import { z } from "zod";
 import { anchorAttachments } from "../../lib/attachments";
@@ -26,7 +23,7 @@ import {
 } from "../../lib/document-files";
 import { syncTask } from "../../lib/integrations/sync";
 import { setTaskLabels } from "../../lib/labels";
-import { protectedProcedure, type TRPCContext, userError } from "../../trpc";
+import { protectedProcedure, type TRPCContext } from "../../trpc";
 import { verifyOrgMembership } from "../integration/utils";
 import { requireActiveOrgMembership } from "../utils/active-org";
 import {
@@ -47,20 +44,8 @@ import {
 } from "./schema";
 import { taskStatusesRouter } from "./statuses";
 
-const TASK_SLUG_CONSTRAINT = "tasks_org_slug_unique";
-const TASK_SLUG_RETRY_LIMIT = 5;
-
 type DbWsTransaction = Parameters<Parameters<typeof dbWs.transaction>[0]>[0];
 type Executor = typeof db | DbWsTransaction;
-
-function isConstraintError(error: unknown, constraint: string): boolean {
-	if (!error || typeof error !== "object") {
-		return false;
-	}
-
-	const maybeError = error as { code?: string; constraint?: string };
-	return maybeError.code === "23505" && maybeError.constraint === constraint;
-}
 
 async function getTaskAccess(
 	executor: Executor,
@@ -205,119 +190,89 @@ async function createTask(
 ) {
 	const organizationId = await requireActiveOrgMembership(ctx);
 
-	for (let attempt = 0; attempt < TASK_SLUG_RETRY_LIMIT; attempt += 1) {
-		try {
-			const result = await dbWs.transaction(async (tx) => {
-				const statusId = input.statusId
-					? await getScopedStatusId(
-							tx,
-							organizationId,
-							input.statusId,
-							"Status must belong to the active organization",
-						)
-					: await seedDefaultStatuses(organizationId, tx);
+	const result = await dbWs.transaction(async (tx) => {
+		const statusId = input.statusId
+			? await getScopedStatusId(
+					tx,
+					organizationId,
+					input.statusId,
+					"Status must belong to the active organization",
+				)
+			: await seedDefaultStatuses(organizationId, tx);
 
-				const assigneeId = input.assigneeId
-					? await getScopedAssigneeId(
-							tx,
-							organizationId,
-							input.assigneeId,
-							"Assignee must belong to the active organization",
-						)
-					: null;
+		const assigneeId = input.assigneeId
+			? await getScopedAssigneeId(
+					tx,
+					organizationId,
+					input.assigneeId,
+					"Assignee must belong to the active organization",
+				)
+			: null;
 
-				const baseSlug = generateBaseTaskSlug(input.title);
-				const existingSlugs = await tx
-					.select({ slug: tasks.slug })
-					.from(tasks)
-					.where(
-						and(
-							eq(tasks.organizationId, organizationId),
-							ilike(tasks.slug, `${baseSlug}%`),
-						),
-					);
-				const slug = generateUniqueTaskSlug(
-					baseSlug,
-					existingSlugs.map((task) => task.slug),
-				);
+		const { teamId, number, slug } = await reserveTaskNumber(
+			tx,
+			organizationId,
+		);
 
-				const taskId = crypto.randomUUID();
-				const [task] = await tx
-					.insert(tasks)
-					.values({
-						id: taskId,
-						slug,
-						title: input.title,
-						description: input.description
-							? toStoredDocument(input.description, {
-									kind: "tasks",
-									id: taskId,
-								})
-							: null,
-						statusId,
-						priority: input.priority ?? "none",
-						organizationId,
-						creatorId: ctx.session.user.id,
-						assigneeId,
-						estimate: input.estimate ?? null,
-						dueDate: input.dueDate ?? null,
-					})
-					.returning({ id: tasks.id });
-				if (task && input.labels?.length) {
-					await setTaskLabels(tx, {
-						organizationId,
-						taskId: task.id,
-						names: input.labels,
-					});
-				}
-				const [created] = task
-					? await tx
-							.select(taskColumns)
-							.from(tasks)
-							.where(eq(tasks.id, task.id))
-					: [];
-
-				const txid = await getCurrentTxid(tx);
-
-				return { task: created, txid };
+		const taskId = crypto.randomUUID();
+		const [task] = await tx
+			.insert(tasks)
+			.values({
+				id: taskId,
+				slug,
+				teamId,
+				number,
+				title: input.title,
+				description: input.description
+					? toStoredDocument(input.description, {
+							kind: "tasks",
+							id: taskId,
+						})
+					: null,
+				statusId,
+				priority: input.priority ?? "none",
+				organizationId,
+				creatorId: ctx.session.user.id,
+				assigneeId,
+				estimate: input.estimate ?? null,
+				dueDate: input.dueDate ?? null,
+			})
+			.returning({ id: tasks.id });
+		if (task && input.labels?.length) {
+			await setTaskLabels(tx, {
+				organizationId,
+				taskId: task.id,
+				names: input.labels,
 			});
+		}
+		const [created] = task
+			? await tx.select(taskColumns).from(tasks).where(eq(tasks.id, task.id))
+			: [];
 
-			if (result.task) {
-				const { id, organizationId, description } = result.task;
-				syncTask(id);
-				if (description) {
-					await anchorAttachments({
-						parentKind: "issue",
-						parentId: id,
-						organizationId,
-						fileIds: referencedFileIds(description, { kind: "tasks", id }),
-					}).catch((error) => {
-						console.error(
-							`[task] could not keep the description's files for ${id}`,
-							error,
-						);
-					});
-				}
-			}
+		const txid = await getCurrentTxid(tx);
 
-			return result;
-		} catch (error) {
-			if (
-				isConstraintError(error, TASK_SLUG_CONSTRAINT) &&
-				attempt < TASK_SLUG_RETRY_LIMIT - 1
-			) {
-				continue;
-			}
+		return { task: created, txid };
+	});
 
-			throw error;
+	if (result.task) {
+		const { id, organizationId, description } = result.task;
+		syncTask(id);
+		if (description) {
+			await anchorAttachments({
+				parentKind: "issue",
+				parentId: id,
+				organizationId,
+				fileIds: referencedFileIds(description, { kind: "tasks", id }),
+			}).catch((error) => {
+				console.error(
+					`[task] could not keep the description's files for ${id}`,
+					error,
+				);
+			});
 		}
 	}
 
-	throw userError({
-		code: "CONFLICT",
-		message: "Failed to generate a unique task slug",
-		i18nKey: "serverError.task.failedToGenerateAUniqueTask",
-	});
+	return result;
 }
 
 function selectTaskListRows() {

@@ -48,6 +48,8 @@ export const mentionRouter = {
 					.select({
 						id: tasks.id,
 						slug: tasks.slug,
+						externalProvider: tasks.externalProvider,
+						externalKey: tasks.externalKey,
 						title: tasks.title,
 						status: {
 							type: taskStatuses.type,

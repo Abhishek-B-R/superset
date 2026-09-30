@@ -6514,9 +6514,6 @@ msgstr "Kurulum ayrıntıları alınamadı. Lütfen yeniden deneyin."
 msgid "Failed to force stop workspace run command"
 msgstr "Çalışma alanı çalıştırma komutu zorla durdurulamadı"
 
-msgid "Failed to generate a unique task slug"
-msgstr "Benzersiz bir görev slug'ı üretilemedi"
-
 msgid "Failed to generate API key"
 msgstr "API anahtarı oluşturulamadı"
 

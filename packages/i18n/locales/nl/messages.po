@@ -6514,9 +6514,6 @@ msgstr "Ophalen van installatiegegevens mislukt. Probeer het opnieuw."
 msgid "Failed to force stop workspace run command"
 msgstr "Geforceerd stoppen van het run-commando mislukt"
 
-msgid "Failed to generate a unique task slug"
-msgstr "Kan geen unieke taak-slug genereren"
-
 msgid "Failed to generate API key"
 msgstr "Genereren van API-sleutel mislukt"
 

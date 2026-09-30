@@ -13,6 +13,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@superset/ui/tooltip";
 import Fuse from "fuse.js";
 import type { ReactNode } from "react";
 import { useId, useMemo, useState } from "react";
+import { useTaskDisplayId } from "renderer/hooks/useTaskDisplayId";
 import { cloudTrpc } from "renderer/lib/cloud-trpc";
 import {
 	StatusIcon,
@@ -43,6 +44,7 @@ export function IssueLinkCommand({
 	tooltipLabel,
 	onSelect,
 }: IssueLinkCommandProps) {
+	const taskDisplayId = useTaskDisplayId();
 	const { t } = useLingui();
 	const [open, setOpen] = useState(false);
 	const [searchQuery, setSearchQuery] = useState("");
@@ -61,6 +63,8 @@ export function IssueLinkCommand({
 			(taskPage?.items ?? []).map(({ task }) => ({
 				id: task.id,
 				slug: task.slug,
+				externalProvider: task.externalProvider,
+				externalKey: task.externalKey,
 				title: task.title,
 				statusId: task.statusId,
 				priority: task.priority,
@@ -250,7 +254,9 @@ export function IssueLinkCommand({
 													{task.title}
 												</span>
 												<span className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
-													<span className="font-mono">{task.slug}</span>
+													<span className="font-mono">
+														{taskDisplayId(task)}
+													</span>
 													{status ? (
 														<>
 															<span aria-hidden>·</span>
