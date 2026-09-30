@@ -13,7 +13,8 @@ export interface AutomationLastRun {
 	status: SelectAutomationRun["status"];
 	/** createdAt as epoch ms; NaN-free (unparseable rows are dropped). */
 	at: number;
-	v2WorkspaceId: string | null;
+	/** The run's host or cloud workspace; both open at the same route. */
+	workspaceId: string | null;
 	chatSessionId: string | null;
 	terminalSessionId: string | null;
 }
@@ -39,7 +40,7 @@ export function useFailedAutomations(): FailedAutomations {
 			lastRunById.set(run.automationId, {
 				status: run.status,
 				at,
-				v2WorkspaceId: run.v2WorkspaceId ?? null,
+				workspaceId: run.v2WorkspaceId ?? run.cloudWorkspaceId ?? null,
 				chatSessionId: run.chatSessionId ?? null,
 				terminalSessionId: run.terminalSessionId ?? null,
 			});

@@ -24,7 +24,7 @@ export default command({
 		if (repositories.length === 0) {
 			throw new CLIError(
 				"No repositories connected to this organization",
-				"Install the Superset GitHub App under Settings → Integrations",
+				"Run: superset integrations github connect",
 			);
 		}
 		return repositories

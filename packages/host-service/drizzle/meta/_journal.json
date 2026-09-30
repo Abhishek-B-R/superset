@@ -264,8 +264,15 @@
     {
       "idx": 37,
       "version": "6",
-      "when": 1790624747309,
-      "tag": "0037_binding_account_profile",
+      "when": 1790492072422,
+      "tag": "0037_project_soft_delete",
+      "breakpoints": true
+    },
+    {
+      "idx": 38,
+      "version": "6",
+      "when": 1790729369363,
+      "tag": "0038_binding_account_profile",
       "breakpoints": true
     }
   ]

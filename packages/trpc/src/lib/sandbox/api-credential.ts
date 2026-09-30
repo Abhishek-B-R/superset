@@ -28,6 +28,7 @@ export const SANDBOX_ALLOWED_PROCEDURES: ReadonlySet<string> = new Set([
 	"cloudWorkspace.create",
 	"cloudWorkspace.access",
 	"cloudWorkspace.hostTicket",
+	"cloudWorkspace.setDescription",
 	"environment.list",
 	"environment.secrets.list",
 	"page.assets.upload",
