@@ -1,21 +1,20 @@
-import { useLingui } from "@lingui/react/macro";
 import type { RendererContext } from "@superset/panes";
-import { FEATURE_FLAGS } from "@superset/shared/constants";
-import { alert } from "@superset/ui/atoms/Alert";
 import { useWorkspaceClient, workspaceTrpc } from "@superset/workspace-client";
-import { useFeatureFlagEnabled } from "posthog-js/react";
 import { useCallback, useEffect } from "react";
+import { FileSaveConflictDialog } from "renderer/components/FileSaveConflictDialog";
 import { MarkdownResourceProvider } from "renderer/components/MarkdownRenderer/providers/MarkdownResourceProvider";
 import type { LinkAction } from "renderer/lib/clickPolicy";
-import { getBaseName } from "renderer/lib/pathBasename";
 import { getPathDirectory } from "shared/absolute-paths";
+import { useStore } from "zustand";
 import {
 	decodeBase64,
 	useSharedFileDocument,
 } from "../../../../state/fileDocumentStore";
+import { fileAutoSave } from "../../../../state/fileDocumentStore/fileAutoSave";
 import type { FilePaneData, PaneViewerData } from "../../../../types";
 import { runUrlLinkAction } from "../../utils/runTerminalLinkAction";
 import { ErrorState } from "./components/ErrorState";
+import { ExternalChangeBanner } from "./components/ExternalChangeBanner";
 import { LoadingState } from "./components/LoadingState";
 import { OrphanedBanner } from "./components/OrphanedBanner";
 import { SaveErrorBanner } from "./components/SaveErrorBanner";
@@ -27,15 +26,24 @@ interface FilePaneProps {
 }
 
 export function FilePane({ context, workspaceId }: FilePaneProps) {
-	const { t } = useLingui();
-	const isPagesEnabled = useFeatureFlagEnabled(FEATURE_FLAGS.PAGES) ?? false;
 	const data = context.pane.data as FilePaneData;
 	const { filePath } = data;
+	const isActiveTab = useStore(
+		context.store,
+		(state) => state.activeTabId === context.tab.id,
+	);
 
 	const document = useSharedFileDocument({
 		workspaceId,
 		absolutePath: filePath,
 	});
+
+	useEffect(
+		() => () => {
+			if (context.isActive) fileAutoSave.onFocusChange(document);
+		},
+		[context.isActive, document],
+	);
 
 	// Images a markdown file points at load through the workspace
 	// filesystem, so they work for cloud sandboxes and never put a raw path
@@ -76,38 +84,6 @@ export function FilePane({ context, workspaceId }: FilePaneProps) {
 		}
 	}, [document.dirty, context.pane.pinned, context.actions]);
 
-	const hasConflict = document.conflict !== null;
-	useEffect(() => {
-		if (!hasConflict) return;
-		const name = getBaseName(filePath);
-		alert({
-			title: t({
-				message: `Do you want to save the changes you made to ${name}?`,
-			}),
-			description: t({
-				message: "Your changes will be lost if you don't save them.",
-			}),
-			actions: [
-				{
-					label: t({ message: "Save" }),
-					onClick: () => document.resolveConflict("overwrite"),
-				},
-				{
-					label: t({
-						message: "Don't Save",
-					}),
-					variant: "secondary",
-					onClick: () => document.resolveConflict("reload"),
-				},
-				{
-					label: t({ message: "Cancel" }),
-					variant: "ghost",
-					onClick: () => document.resolveConflict("keep"),
-				},
-			],
-		});
-	}, [hasConflict, document, filePath, t]);
-
 	const handleChangeView = useCallback(
 		(viewId: string) => {
 			context.actions.updateData({
@@ -131,9 +107,9 @@ export function FilePane({ context, workspaceId }: FilePaneProps) {
 
 	const handleOpenUrl = useCallback(
 		(url: string, action: LinkAction) => {
-			runUrlLinkAction({ store: context.store, isPagesEnabled }, url, action);
+			runUrlLinkAction({ store: context.store }, url, action);
 		},
-		[context.store, isPagesEnabled],
+		[context.store],
 	);
 
 	const handlePositionRevealed = useCallback(() => {
@@ -180,7 +156,34 @@ export function FilePane({ context, workspaceId }: FilePaneProps) {
 	const ViewRenderer = activeView.Renderer;
 
 	return (
-		<div className="flex h-full w-full flex-col">
+		<div
+			className="flex h-full w-full flex-col"
+			onBlurCapture={(event) => {
+				if (!event.currentTarget.contains(event.relatedTarget as Node)) {
+					fileAutoSave.onFocusChange(document);
+				}
+			}}
+		>
+			<FileSaveConflictDialog
+				open={document.conflict !== null && context.isActive && isActiveTab}
+				filePath={filePath}
+				localContent={
+					document.content.kind === "text" ? document.content.value : ""
+				}
+				diskContent={document.conflict?.diskContent ?? null}
+				isSaving={document.pendingSave}
+				onOpenChange={(open) => {
+					if (!open) void document.resolveConflict("keep");
+				}}
+				onKeepEditing={() => void document.resolveConflict("keep")}
+				onReloadFromDisk={() => void document.resolveConflict("reload")}
+				onOverwrite={() => void document.resolveConflict("overwrite")}
+			/>
+			{document.hasExternalChange && !document.orphaned && (
+				<ExternalChangeBanner
+					onCompare={() => void document.compareWithDisk()}
+				/>
+			)}
 			{document.orphaned && (
 				<OrphanedBanner
 					dirty={document.dirty}

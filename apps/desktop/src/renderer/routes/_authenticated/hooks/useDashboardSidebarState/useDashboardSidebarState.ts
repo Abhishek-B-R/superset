@@ -394,20 +394,27 @@ export function useDashboardSidebarState() {
 			if (existing) return existing;
 			const parsed = parseSidebarFolderKey(sectionId);
 			if (!parsed) return null;
+			const hostOrder = tagFolderContext.tagSettings.find(
+				(setting) =>
+					setting.projectId === parsed.projectId &&
+					normalizeWorkspaceTag(setting.tag) === parsed.tag,
+			)?.tabOrder;
 			collections.v2SidebarSections.insert({
 				sectionId,
 				projectId: parsed.projectId,
 				name: parsed.tag,
 				tag: parsed.tag,
 				createdAt: new Date(),
-				tabOrder: getNextTabOrder(
-					getProjectTopLevelItems(
-						collections,
-						hostWorkspaces,
-						tagFolderContext,
-						laneProjectIdForScope(parsed.projectId),
+				tabOrder:
+					hostOrder ??
+					getNextTabOrder(
+						getProjectTopLevelItems(
+							collections,
+							hostWorkspaces,
+							tagFolderContext,
+							laneProjectIdForScope(parsed.projectId),
+						),
 					),
-				),
 				isCollapsed: false,
 				color: null,
 			});
@@ -964,33 +971,6 @@ export function useDashboardSidebarState() {
 		[collections, hostWorkspaces, tagFolderContext],
 	);
 
-	// A row without local state (an auto-included main) gets one, as pinning does.
-	const setWorkspaceSuppressedPullRequest = useCallback(
-		(
-			workspaceId: string,
-			projectId: string | null,
-			pullRequestUrl: string | null,
-		) => {
-			if (!collections.v2WorkspaceLocalState.get(workspaceId)) {
-				if (pullRequestUrl === null) return;
-				if (projectId !== null) {
-					ensureSidebarProjectRecord(collections, projectId);
-				}
-				ensureSidebarWorkspaceRecord(
-					collections,
-					hostWorkspaces,
-					tagFolderContext,
-					workspaceId,
-					projectId,
-				);
-			}
-			collections.v2WorkspaceLocalState.update(workspaceId, (draft) => {
-				draft.sidebarState.suppressedPullRequestUrl = pullRequestUrl;
-			});
-		},
-		[collections, hostWorkspaces, tagFolderContext],
-	);
-
 	const reorderPinnedWorkspaces = useCallback(
 		(
 			orderedPins: Array<{ workspaceId: string; projectId: string | null }>,
@@ -1086,7 +1066,6 @@ export function useDashboardSidebarState() {
 		renameSection,
 		setSectionColor,
 		setWorkspacePinned,
-		setWorkspaceSuppressedPullRequest,
 		toggleProjectCollapsed,
 		toggleSectionCollapsed,
 	};

@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "b5ea38fd-2107-430e-94ee-d256620cc68d",
+  "id": "13d58caa-30c2-44c8-a2c0-6fb6d13a01d3",
   "prevId": "1cb7970e-1036-48bc-a9b8-72d93b11443b",
   "tables": {
     "host_agent_configs": {
@@ -612,13 +612,6 @@
           "notNull": false,
           "autoincrement": false
         },
-        "session_home": {
-          "name": "session_home",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
         "definition_id": {
           "name": "definition_id",
           "type": "text",
@@ -663,6 +656,13 @@
         },
         "resumed_into_terminal_id": {
           "name": "resumed_into_terminal_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "transcript_path": {
+          "name": "transcript_path",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
