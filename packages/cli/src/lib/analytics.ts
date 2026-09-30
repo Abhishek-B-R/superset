@@ -9,21 +9,18 @@ const REPORTED_COMMANDS_PATH = join(
 	"reported-commands.json",
 );
 
-interface ReportedCommands {
-	day: string;
-	commands: string[];
-}
-
 export function isFirstReportToday(
 	command: string,
 	path = REPORTED_COMMANDS_PATH,
 ): boolean {
 	const day = new Date().toISOString().slice(0, 10);
-	let reported: Partial<ReportedCommands> = {};
+	let commands: string[] = [];
 	try {
-		reported = JSON.parse(readFileSync(path, "utf-8"));
+		const reported = JSON.parse(readFileSync(path, "utf-8"));
+		if (reported?.day === day && Array.isArray(reported.commands)) {
+			commands = reported.commands;
+		}
 	} catch {}
-	const commands = reported.day === day ? (reported.commands ?? []) : [];
 	if (commands.includes(command)) return false;
 	try {
 		writeFileSync(

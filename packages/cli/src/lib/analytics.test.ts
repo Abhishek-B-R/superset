@@ -6,7 +6,7 @@ import {
 	setSystemTime,
 	test,
 } from "bun:test";
-import { mkdtempSync, rmSync } from "node:fs";
+import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { isFirstReportToday } from "./analytics";
@@ -46,6 +46,18 @@ describe("isFirstReportToday", () => {
 		setSystemTime(new Date("2026-09-30T00:00:01Z"));
 		expect(report("status")).toBe(true);
 		expect(report("status")).toBe(false);
+	});
+
+	test("starts over when the file holds something unexpected", () => {
+		for (const contents of [
+			"null",
+			"not json",
+			'{"day":"2026-09-29","commands":"status"}',
+		]) {
+			writeFileSync(reportedPath, contents);
+			expect(report("status")).toBe(true);
+			expect(report("status")).toBe(false);
+		}
 	});
 
 	test("allows every call when the file cannot be written", () => {
