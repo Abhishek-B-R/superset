@@ -1,7 +1,7 @@
 import { cn } from "@superset/ui/utils";
 import type { IconType } from "react-icons";
 import { FaGithub } from "react-icons/fa";
-import { LuBookOpen, LuDrama, LuPuzzle } from "react-icons/lu";
+import { LuBookOpen, LuDrama, LuPuzzle, LuWallet } from "react-icons/lu";
 import {
 	SiGmail,
 	SiGooglechrome,
@@ -66,6 +66,7 @@ const PLUGIN_ICONS: Record<
 	"google-docs": { icon: SiGoogledocs, color: "#4285F4" },
 	"google-sheets": { icon: SiGooglesheets, color: "#0F9D58" },
 	vercel: { icon: SiVercel, scale: "size-1/2" },
+	ynab: { icon: LuWallet },
 };
 
 interface PluginIconProps {

@@ -426,6 +426,47 @@
 					}
 				}
 			]
+		},
+		"ynab": {
+			"displayName": "YNAB",
+			"icon": "ynab",
+			"category": "Productivity",
+			"scope": "user",
+			"methods": [
+				{
+					"type": "api_key",
+					"label": "Personal Access Token",
+					"credential_input": "api_key",
+					"inputs": [
+						{
+							"name": "api_key",
+							"label": "YNAB Personal Access Token",
+							"placeholder": "64-character token",
+							"description": "YNAB > Account Settings > Developer Settings > New Token",
+							"required": true,
+							"secret": true
+						}
+					],
+					"identity": {
+						"url": "https://api.ynab.com/v1/user",
+						"method": "GET",
+						"headers": {
+							"Authorization": "Bearer ${config.access_token}"
+						},
+						"account": {
+							"id": "$.data.user.id"
+						},
+						"user": {
+							"id": "$.data.user.id"
+						}
+					},
+					"bind": {
+						"headers": {
+							"Authorization": "Bearer ${config.access_token}"
+						}
+					}
+				}
+			]
 		}
 	}
 }

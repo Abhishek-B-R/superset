@@ -6,7 +6,7 @@ export const DEFAULT_MARKETPLACE = "superset";
 export const DEFAULT_MARKETPLACE_REPO = "superset-sh/superset";
 export const DEFAULT_MARKETPLACE_REF = "main";
 
-export const SUPERSET_HOSTED_PLUGINS = ["gmail", "slack"] as const;
+export const SUPERSET_HOSTED_PLUGINS = ["gmail", "slack", "ynab"] as const;
 export type SupersetHostedPlugin = (typeof SUPERSET_HOSTED_PLUGINS)[number];
 
 export function isSupersetHosted(name: string): boolean {
