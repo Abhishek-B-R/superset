@@ -1,0 +1,1023 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>One panel, many agents: how Zed hosts Claude, Codex &amp; friends</title>
+    <style>
+      :root {
+        --sp-measure: 74ch;
+      }
+      body {
+        padding: 2.5rem clamp(1.25rem, 4vw, 3.5rem) 5rem;
+      }
+      main {
+        max-width: 1080px;
+        margin: 0 auto;
+      }
+      .kicker {
+        font-family: var(--sp-font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--sp-muted);
+        margin-bottom: 0.5rem;
+      }
+      h1 { margin-bottom: 0.35rem; }
+      .subtitle {
+        color: var(--sp-muted);
+        max-width: var(--sp-measure);
+        margin-top: 0;
+      }
+      .meta {
+        font-family: var(--sp-font-mono);
+        font-size: 0.72rem;
+        color: var(--sp-muted);
+        border-top: 1px solid var(--sp-border);
+        border-bottom: 1px solid var(--sp-border);
+        padding: 0.5rem 0;
+        margin: 1.25rem 0 2rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem 1.6rem;
+      }
+      section { margin-top: 3.25rem; }
+      section > p, section > ul, section > ol { max-width: var(--sp-measure); }
+      h2 {
+        border-bottom: 1px solid var(--sp-border);
+        padding-bottom: 0.4rem;
+      }
+      h2 .num {
+        font-family: var(--sp-font-mono);
+        font-size: 0.8em;
+        color: var(--sp-muted);
+        margin-right: 0.5em;
+      }
+      code { font-size: 0.86em; }
+      pre {
+        overflow-x: auto;
+        max-width: 100%;
+      }
+      table { font-size: 0.85rem; }
+      .scroll { overflow-x: auto; margin: 1.25rem 0; }
+      .toc {
+        background: var(--sp-surface);
+        border: 1px solid var(--sp-border);
+        border-radius: var(--sp-radius);
+        padding: 1rem 1.25rem;
+        max-width: var(--sp-measure);
+      }
+      .toc ol { margin: 0.25rem 0 0; padding-left: 1.2rem; }
+      .toc li { margin: 0.2rem 0; }
+
+      /* ---------- diagram primitives ---------- */
+      .diagram {
+        border: 1px solid var(--sp-border);
+        border-radius: var(--sp-radius);
+        background: var(--sp-surface);
+        padding: 1.25rem;
+        margin: 1.5rem 0;
+        overflow-x: auto;
+      }
+      .diagram-caption {
+        font-size: 0.78rem;
+        color: var(--sp-muted);
+        margin-top: 0.9rem;
+        max-width: var(--sp-measure);
+      }
+      .box {
+        border: 1px solid var(--sp-border);
+        border-radius: var(--sp-radius);
+        background: var(--sp-bg);
+        padding: 0.55rem 0.8rem;
+        font-size: 0.8rem;
+        line-height: 1.35;
+      }
+      .box .t { font-weight: 600; display: block; }
+      .box .d {
+        color: var(--sp-muted);
+        font-family: var(--sp-font-mono);
+        font-size: 0.68rem;
+        display: block;
+        margin-top: 0.15rem;
+      }
+      .box.accent-1 { border-left: 3px solid var(--sp-chart-1); }
+      .box.accent-2 { border-left: 3px solid var(--sp-chart-2); }
+      .box.accent-3 { border-left: 3px solid var(--sp-chart-3); }
+      .box.accent-4 { border-left: 3px solid var(--sp-chart-4); }
+      .box.accent-5 { border-left: 3px solid var(--sp-chart-5); }
+      .box.ext { border-style: dashed; }
+      .arrow {
+        text-align: center;
+        color: var(--sp-muted);
+        font-size: 0.75rem;
+        font-family: var(--sp-font-mono);
+        padding: 0.25rem 0;
+      }
+
+      /* big-picture diagram */
+      .bigpic { min-width: 760px; }
+      .bigpic .row-top {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0.4rem;
+        max-width: 500px;
+        margin: 0 auto;
+      }
+      .bigpic .branches {
+        display: grid;
+        grid-template-columns: 1fr 1.4fr;
+        gap: 1.5rem;
+        margin-top: 0.4rem;
+      }
+      .bigpic .branch { display: grid; gap: 0.4rem; align-content: start; }
+      .branch-label {
+        font-family: var(--sp-font-mono);
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--sp-muted);
+        text-align: center;
+        padding-bottom: 0.15rem;
+      }
+      .agent-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.4rem;
+      }
+
+      /* sequence diagram */
+      .seq { min-width: 680px; font-size: 0.8rem; }
+      .seq-head, .seq-row {
+        display: grid;
+        grid-template-columns: 1fr 200px 1fr;
+        align-items: center;
+        gap: 0.6rem;
+      }
+      .seq-head {
+        font-weight: 600;
+        border-bottom: 1px solid var(--sp-border);
+        padding-bottom: 0.5rem;
+        margin-bottom: 0.5rem;
+        text-align: center;
+      }
+      .seq-row { padding: 0.28rem 0; }
+      .seq-row .msg {
+        font-family: var(--sp-font-mono);
+        font-size: 0.72rem;
+        text-align: center;
+        color: var(--sp-text);
+        background: var(--sp-bg);
+        border: 1px solid var(--sp-border);
+        border-radius: var(--sp-radius);
+        padding: 0.25rem 0.4rem;
+        white-space: nowrap;
+      }
+      .seq-row .note { color: var(--sp-muted); font-size: 0.76rem; }
+      .seq-row .note.right { text-align: left; }
+      .seq-row .note.left { text-align: right; }
+      .seq-row.to-agent .msg { border-color: var(--sp-chart-1); }
+      .seq-row.to-zed .msg { border-color: var(--sp-chart-3); }
+      .seq-row .dir {
+        display: block;
+        font-size: 0.66rem;
+        color: var(--sp-muted);
+        margin-top: 0.1rem;
+      }
+      .seq-phase {
+        font-family: var(--sp-font-mono);
+        font-size: 0.68rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--sp-muted);
+        border-top: 1px dashed var(--sp-border);
+        padding-top: 0.55rem;
+        margin-top: 0.55rem;
+      }
+
+      .callout {
+        border: 1px solid var(--sp-border);
+        border-left: 3px solid var(--sp-accent);
+        border-radius: var(--sp-radius);
+        background: var(--sp-surface);
+        padding: 0.8rem 1rem;
+        max-width: var(--sp-measure);
+        margin: 1.25rem 0;
+        font-size: 0.92rem;
+      }
+      .callout .t { font-weight: 600; display: block; margin-bottom: 0.2rem; }
+      .file {
+        font-family: var(--sp-font-mono);
+        font-size: 0.72rem;
+        color: var(--sp-muted);
+      }
+      .cols-2 {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1rem;
+        margin: 1.25rem 0;
+      }
+      .panel {
+        border: 1px solid var(--sp-border);
+        border-radius: var(--sp-radius);
+        background: var(--sp-surface);
+        padding: 0.9rem 1.1rem;
+        font-size: 0.9rem;
+      }
+      .panel h4 { margin: 0 0 0.4rem; font-size: 0.95rem; }
+      .panel ul { margin: 0; padding-left: 1.1rem; }
+      .panel li { margin: 0.25rem 0; }
+      .yes { color: var(--sp-text); }
+      .no { color: var(--sp-muted); }
+      td, th { white-space: normal; }
+      .matrix td:nth-child(3), .matrix td:nth-child(4),
+      .matrix th:nth-child(3), .matrix th:nth-child(4) { text-align: center; white-space: nowrap; }
+    </style>
+  </head>
+  <body class="auto">
+    <main>
+      <p class="kicker">Architecture notes · open-source deep dive</p>
+      <h1>One panel, many agents</h1>
+      <p class="subtitle">
+        How Zed presents a single common UI for Claude Code, Codex, Gemini CLI, Cursor, its own
+        native agent, and anything else that speaks the Agent Client Protocol — and how each layer
+        keeps agent-specific code from leaking upward. Read from a fresh clone of the Zed source.
+      </p>
+      <div class="meta">
+        <span>source: github.com/zed-industries/zed</span>
+        <span>Zed 1.23.0 · commit 1a28cff (shallow clone)</span>
+        <span>read on 2026-09-27</span>
+      </div>
+
+      <nav class="toc">
+        <strong>Contents</strong>
+        <ol>
+          <li><a href="#bigpicture">The shape: two objects carry everything</a></li>
+          <li><a href="#wireformat">The core trick: the protocol is the internal API</a></li>
+          <li><a href="#trait">AgentConnection: capabilities as values, not variants</a></li>
+          <li><a href="#variability">How per-agent differences render generically</a></li>
+          <li><a href="#matrix">The honest capability matrix</a></li>
+          <li><a href="#inventory">Where agents come from: registry + settings, zero built-ins</a></li>
+          <li><a href="#turn">One prompt turn over ACP, on the wire</a></li>
+          <li><a href="#integration">Deep integration: buffers, terminals, permissions</a></li>
+          <li><a href="#native">The native agent &amp; the model-provider stack</a></li>
+          <li><a href="#takeaways">Design takeaways</a></li>
+          <li><a href="#superset">Proposal: a Superset web chat over any running Claude/Codex session</a></li>
+        </ol>
+      </nav>
+
+      <section id="bigpicture">
+        <h2><span class="num">1</span>The shape: two objects carry everything</h2>
+        <p>
+          The whole design rests on two objects. <code>Rc&lt;dyn AgentConnection&gt;</code>
+          <em>is the agent</em> — whichever one. <code>Entity&lt;AcpThread&gt;</code>
+          <em>is the conversation</em> — a flat timeline of user messages, assistant messages,
+          thoughts, tool calls, plans, and permission prompts. The Agent Panel is written entirely
+          against those two types; it holds no enum of known agents and no per-agent view code.
+        </p>
+
+        <div class="diagram">
+          <div class="bigpic">
+            <div class="row-top">
+              <div class="box accent-4">
+                <span class="t">Agent Panel · ConversationView · ThreadView</span>
+                <span class="d">crates/agent_ui — zero references to claude/codex/gemini/cursor ids</span>
+              </div>
+              <div class="arrow">↓ renders entries of ↓</div>
+              <div class="box accent-4">
+                <span class="t">AcpThread — the one conversation model</span>
+                <span class="d">crates/acp_thread — fed only by handle_session_update(acp::SessionUpdate)</span>
+              </div>
+              <div class="arrow">↓ Rc&lt;dyn AgentConnection&gt; ↓</div>
+            </div>
+            <div class="branches">
+              <div class="branch">
+                <div class="branch-label">NativeAgentConnection · in-process</div>
+                <div class="box accent-1">
+                  <span class="t">Zed's own agent loop</span>
+                  <span class="d">crates/agent — Thread::run_turn_internal</span>
+                </div>
+                <div class="arrow">↓ LanguageModelRegistry ↓</div>
+                <div class="box accent-1">
+                  <span class="t">Anthropic API (key) or cloud.zed.dev (account)</span>
+                  <span class="d">plus OpenAI, Google, Bedrock, Ollama providers…</span>
+                </div>
+              </div>
+              <div class="branch">
+                <div class="branch-label">AcpConnection · one child process per agent</div>
+                <div class="box accent-3">
+                  <span class="t">JSON-RPC 2.0 over stdio · ACP v1</span>
+                  <span class="d">crates/agent_servers — agent-client-protocol =2.2.0</span>
+                </div>
+                <div class="arrow">↓ spawn ↓</div>
+                <div class="agent-grid">
+                  <div class="box accent-3 ext"><span class="t">Claude Code</span><span class="d">"claude-acp" · own subscription auth</span></div>
+                  <div class="box accent-3 ext"><span class="t">Codex</span><span class="d">"codex-acp"</span></div>
+                  <div class="box accent-3 ext"><span class="t">Gemini CLI</span><span class="d">"gemini"</span></div>
+                  <div class="box accent-3 ext"><span class="t">Cursor</span><span class="d">"cursor"</span></div>
+                  <div class="box accent-3 ext"><span class="t">Registry agents</span><span class="d">opencode, droid, auggie, …</span></div>
+                  <div class="box accent-3 ext"><span class="t">Your agent</span><span class="d">any command speaking ACP on stdio</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p class="diagram-caption">
+            Both connection types drive the same <code>AcpThread</code>, so every feature —
+            streaming, tool cards, diffs, embedded terminals, permission buttons, token meters —
+            is built once and works for all agents.
+          </p>
+        </div>
+      </section>
+
+      <section id="wireformat">
+        <h2><span class="num">2</span>The core trick: the protocol is the internal API</h2>
+        <p>
+          <code>AcpThread</code> accepts exactly one input type: <code>acp::SessionUpdate</code> —
+          the wire message external agents send over stdio (message chunks, thought chunks, tool
+          calls, plan updates, usage updates, mode changes). Zed's <strong>native agent doesn't get
+          a private path into the UI</strong>; it synthesizes the same wire messages and pushes
+          them through the same handler. It is a client of its own protocol:
+        </p>
+        <pre><code>// crates/agent/src/agent.rs — the NATIVE agent publishing its slash commands
+session.acp_thread.update(cx, |thread, cx| {
+    thread.handle_session_update(
+        acp::SessionUpdate::AvailableCommandsUpdate(
+            acp::AvailableCommandsUpdate::new(available_commands.clone()),
+        ),
+        cx,
+    )
+});</code></pre>
+        <p>
+          This is what makes "one UI, many agents" cheap: there is exactly one timeline renderer
+          because there is exactly one input type. Anything the native agent wants to display, it
+          must be able to express in ACP terms — which keeps the protocol honest, because Zed's own
+          agent is its most demanding consumer.
+        </p>
+      </section>
+
+      <section id="trait">
+        <h2><span class="num">3</span>AgentConnection: capabilities as values, not variants</h2>
+        <p>
+          The trait in <code>crates/acp_thread/src/connection.rs</code> has a small mandatory core
+          and a long optional tail. Trimmed:
+        </p>
+        <pre><code>pub trait AgentConnection {
+    // mandatory
+    fn agent_id(&amp;self) -&gt; AgentId;
+    fn new_session(self: Rc&lt;Self&gt;, project, work_dirs, cx) -&gt; Task&lt;Result&lt;Entity&lt;AcpThread&gt;&gt;&gt;;
+    fn prompt(&amp;self, params: acp::PromptRequest, cx) -&gt; Task&lt;Result&lt;acp::PromptResponse&gt;&gt;;
+    fn cancel(&amp;self, session_id, cx);
+    fn auth_methods(&amp;self) -&gt; &amp;[acp::AuthMethod];
+    fn authenticate(&amp;self, method, cx) -&gt; Task&lt;Result&lt;()&gt;&gt;;
+
+    // capability probes (defaults: false / Err)
+    fn supports_load_session(&amp;self) -&gt; bool { false }
+    fn supports_resume_session(&amp;self) -&gt; bool { false }
+    fn supports_logout(&amp;self) -&gt; bool { false }
+    // …load_session, resume_session, close_session, logout…
+
+    // optional capabilities (defaults: None)
+    fn model_selector(&amp;self, session_id) -&gt; Option&lt;Rc&lt;dyn AgentModelSelector&gt;&gt; { None }
+    fn session_modes(&amp;self, session_id, cx) -&gt; Option&lt;Rc&lt;dyn AgentSessionModes&gt;&gt; { None }
+    fn session_config_options(&amp;self, session_id, cx) -&gt; Option&lt;Rc&lt;dyn AgentSessionConfigOptions&gt;&gt; { None }
+    fn session_list(&amp;self, cx) -&gt; Option&lt;Rc&lt;dyn AgentSessionList&gt;&gt; { None }
+    fn truncate(&amp;self, session_id, cx) -&gt; Option&lt;Rc&lt;dyn AgentSessionTruncate&gt;&gt; { None }
+    fn retry(&amp;self, session_id, cx) -&gt; Option&lt;Rc&lt;dyn AgentSessionRetry&gt;&gt; { None }
+    fn set_title(&amp;self, session_id, cx) -&gt; Option&lt;Rc&lt;dyn AgentSessionSetTitle&gt;&gt; { None }
+
+    fn into_any(self: Rc&lt;Self&gt;) -&gt; Rc&lt;dyn Any&gt;;   // the downcast pressure valve
+}</code></pre>
+        <p>Three complementary idioms express "what can this agent do", and the choice is deliberate:</p>
+        <ul>
+          <li>
+            <strong><code>Option&lt;Rc&lt;dyn Trait&gt;&gt;</code> getters</strong> for
+            session-scoped features — "does this agent+session have a model selector <em>right
+            now</em>?" The UI calls the getter and renders the control only when it gets
+            <code>Some</code>.
+          </li>
+          <li>
+            <strong><code>supports_*() → bool</code> probes</strong> for questions the panel must
+            ask <em>before</em> a session exists (can I reload history? can I sign out?).
+          </li>
+          <li>
+            <strong>Data-driven lists</strong> — <code>auth_methods()</code> and
+            <code>config_options()</code> return plain vectors the UI renders verbatim; there is no
+            enum of known auth flows or known settings.
+          </li>
+        </ul>
+        <p>
+          Crucially, on the external side <strong>every one of these answers comes from the ACP
+          handshake, not from code</strong>. <code>AcpConnection</code> derives them from the
+          capability struct the agent returned at <code>initialize</code>:
+        </p>
+        <pre><code>// crates/agent_servers/src/acp.rs — capabilities are protocol data
+fn supports_load_session(&amp;self) -&gt; bool { self.agent_capabilities.load_session }
+fn supports_resume_session(&amp;self) -&gt; bool {
+    self.agent_capabilities.session_capabilities.resume.is_some()
+}
+fn supports_logout(&amp;self) -&gt; bool { self.agent_capabilities.auth.logout.is_some() }</code></pre>
+        <p>
+          For native-only features that make no sense in the protocol (tool-permission profiles,
+          skills), the UI uses <code>connection.downcast::&lt;NativeAgentConnection&gt;()</code>
+          rather than adding native-only trait methods — a pressure valve that keeps the trait from
+          accreting.
+        </p>
+      </section>
+
+      <section id="variability">
+        <h2><span class="num">4</span>How per-agent differences render generically</h2>
+        <p>
+          The interesting question is never "can the panel show a message" — it's how it shows a
+          <em>model picker</em> for five agents with five different model systems, or Claude Code's
+          plan/accept-edits modes, without knowing any of them.
+        </p>
+
+        <h3>The single branch that decides the toolbar</h3>
+        <p>
+          There is exactly one place the composer toolbar's shape is decided, and it branches on
+          capability presence, not agent identity:
+        </p>
+        <pre><code>// crates/agent_ui/src/conversation_view.rs
+// Config options take precedence over legacy mode/model selectors
+if let Some(config_options) = connection.session_config_options(&amp;session_id, cx) {
+    config_options_view = Some(ConfigOptionsView::new(config_options, …));
+    model_selector = None;
+    mode_selector  = None;
+} else {
+    model_selector = connection.model_selector(&amp;session_id).map(ModelSelectorPopover::new);
+    mode_selector  = connection.session_modes(&amp;session_id, cx).map(ModeSelector::new);
+}</code></pre>
+        <ul>
+          <li>
+            <strong>Native agent</strong> → a real <code>AgentModelSelector</code> backed by the
+            <code>LanguageModelRegistry</code> (every provider's models, favorites, grouping), plus
+            the native-only profile selector via downcast.
+          </li>
+          <li>
+            <strong>Claude Code / Codex / Cursor</strong> → the server returns
+            <code>configOptions</code> in <code>session/new</code>, and the "model picker" is just a
+            <code>Select</code> option whose <code>category == Model</code>. Zed renders a
+            searchable picker for any Select and a switch for any Boolean — it never knows what the
+            options mean.
+          </li>
+          <li>
+            <strong>Category metadata restores ergonomics</strong>: because an option carries
+            <code>category: Model | Mode | ThoughtLevel | ModelConfig</code>, Zed attaches its real
+            keybindings (toggle model selector, cycle modes, thinking-effort menu) to options
+            declared by agents that have never heard of Zed's keymap.
+          </li>
+        </ul>
+
+        <h3>Modes, slash commands, auth — same pattern</h3>
+        <ul>
+          <li>
+            <strong>Modes</strong> (plan / accept-edits): the session returns
+            <code>{ current_mode_id, available_modes }</code>; the picker renders
+            <code>mode.name</code> with <code>mode.description</code> as an aside. Changing it sends
+            <code>session/set_mode</code> with optimistic local state and rollback on error; the
+            agent can also push <code>CurrentModeUpdate</code> mid-turn (Claude Code does when you
+            shift-tab in another client).
+          </li>
+          <li>
+            <strong>Slash commands</strong>: agents stream
+            <code>AvailableCommandsUpdate</code>; the composer's <code>/</code>-completion menu is
+            populated from it verbatim. The native agent publishes <code>/compact</code> and every
+            MCP prompt through the identical message.
+          </li>
+          <li>
+            <strong>Auth</strong>: when a request fails with <code>AuthRequired</code>, the panel
+            renders one button per entry in <code>auth_methods()</code> — descriptions as tooltips,
+            nothing hardcoded. A terminal-type method spawns the agent's own CLI login
+            (<code>claude /login</code>) inside a Zed terminal, and the thread auto-retries when it
+            completes.
+          </li>
+          <li>
+            <strong>@-mentions degrade by capability</strong>: if the agent advertised
+            <code>embedded_context</code>, mention content is inlined as an ACP embedded resource;
+            otherwise it's sent as a <code>zed://…</code> resource link the agent can read back
+            through <code>fs/read_text_file</code>. The same flags prune the @-menu itself and gate
+            image paste.
+          </li>
+        </ul>
+
+        <div class="callout">
+          <span class="t">Where the per-agent code actually lives</span>
+          <code>grep</code> for the four agent-id constants (<code>claude-acp</code>,
+          <code>codex-acp</code>, <code>gemini</code>, <code>cursor</code>) finds production
+          references in exactly <em>two files</em>, both in <code>agent_servers</code> — and every
+          reference is an env var or a protocol stopgap: blanking <code>ANTHROPIC_API_KEY</code> for
+          Claude Code (so it bills the user's subscription, never a stray shell key), passing
+          <code>CODEX_API_KEY</code> through for Codex, injecting <code>SURFACE=zed</code> and
+          resolving a Gemini key from Zed's keychain, synthesizing a terminal-login auth method for
+          Gemini until Google ships official ones, and a <code>parameterizedModelPicker</code>
+          capability flag for Cursor. The UI layer branches only on native-vs-not, and only for copy
+          and icons.
+        </div>
+      </section>
+
+      <section id="matrix">
+        <h2><span class="num">5</span>The honest capability matrix</h2>
+        <p>
+          The abstraction doesn't pretend the agents are equal. The trait's
+          <code>Option</code>/<code>supports_*</code> design makes the gaps explicit — and the UI
+          degrades feature-by-feature instead of breaking:
+        </p>
+        <div class="scroll">
+          <table class="matrix">
+            <thead>
+              <tr>
+                <th>UI feature</th>
+                <th>Mechanism</th>
+                <th>Native</th>
+                <th>External (ACP)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Send / cancel / streamed timeline / tool cards / usage</td><td><code>prompt</code>, <code>cancel</code>, <code>SessionUpdate</code></td><td class="yes">✓</td><td class="yes">✓</td></tr>
+              <tr><td>Tool permission prompts</td><td><code>session/request_permission</code>, response held on a oneshot</td><td class="yes">✓ rich</td><td class="yes">✓</td></tr>
+              <tr><td>Model picker</td><td><code>model_selector()</code> / config option with <code>category: Model</code></td><td class="yes">✓ registry</td><td class="yes">✓ config opts</td></tr>
+              <tr><td>Mode picker (plan, accept-edits…)</td><td><code>session_modes()</code> + <code>session/set_mode</code></td><td class="no">—</td><td class="yes">✓ if advertised</td></tr>
+              <tr><td>Boolean toggles / thinking effort</td><td><code>session_config_options()</code></td><td class="no">— (profiles)</td><td class="yes">✓ if advertised</td></tr>
+              <tr><td>Slash commands</td><td><code>AvailableCommandsUpdate</code></td><td class="yes">✓</td><td class="yes">✓</td></tr>
+              <tr><td>Auth buttons / terminal login / sign out</td><td><code>auth_methods()</code>, <code>authenticate</code>, <code>auth.logout</code> cap</td><td class="no">n/a</td><td class="yes">✓</td></tr>
+              <tr><td>Thread history list + delete</td><td><code>session_list()</code> — local DB vs <code>session/list</code> cap</td><td class="yes">✓</td><td class="yes">✓ if advertised</td></tr>
+              <tr><td>Reopen with full history</td><td><code>load_session</code> ← <code>loadSession</code> cap</td><td class="yes">✓</td><td class="yes">✓ if advertised</td></tr>
+              <tr><td>Reopen without replay</td><td><code>resume_session</code> ← <code>session.resume</code> cap</td><td class="no">—</td><td class="yes">✓ if advertised</td></tr>
+              <tr><td>Edit &amp; resend a past message (rewind)</td><td><code>truncate()</code> + client message ids</td><td class="yes">✓</td><td class="no">—</td></tr>
+              <tr><td>Retry turn / rename thread from Zed</td><td><code>retry()</code>, <code>set_title()</code></td><td class="yes">✓</td><td class="no">—</td></tr>
+              <tr><td>Tool profiles (write/ask/minimal), skills</td><td>downcast to <code>NativeAgentConnection</code></td><td class="yes">✓</td><td class="no">—</td></tr>
+              <tr><td>Pre-session elicitations (forms/URLs)</td><td><code>request_elicitations()</code></td><td class="no">—</td><td class="yes">✓</td></tr>
+              <tr><td>Version badge + update nudge</td><td><code>agent_version()</code>, registry watch</td><td class="no">—</td><td class="yes">✓</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>
+          Session history is unified <em>by importing, not by abstracting the store</em>: one local
+          table holds rows for all agents with <code>agent_id</code> as a column; external agents'
+          <code>session/list</code> is a sync source, paged and deduped in. Opening an old thread
+          picks <code>load_session</code> if supported, falls back to <code>resume_session</code>
+          (flagged in the UI as "resumed without history"), and errors politely otherwise.
+        </p>
+      </section>
+
+      <section id="inventory">
+        <h2><span class="num">6</span>Where agents come from: registry + settings, zero built-ins</h2>
+        <p>
+          There is no built-in agent enum. Claude Code, Codex, Gemini, and Cursor are ordinary
+          entries in a <strong>remote registry</strong> —
+          <code>cdn.agentclientprotocol.com/registry/v1/latest/registry.json</code>, fetched hourly
+          and cached locally. Each entry declares a version and a distribution: a platform-keyed
+          binary archive (sha256-verified) and/or an npm package.
+        </p>
+        <ul>
+          <li>
+            "Installing" an agent writes one settings line:
+            <code>{"agent_servers": {"claude-acp": {"type": "registry"}}}</code>. Removing it
+            deletes the key.
+          </li>
+          <li>
+            For npm distributions, Zed installs with its <em>own managed Node runtime</em> under a
+            ceiling-range pin (<code>pkg@0.0.0 - &lt;registry version&gt;</code>), resolves the
+            package's <code>bin</code>, and spawns <code>node &lt;adapter.js&gt;</code>. Binary
+            distributions are downloaded, hash-verified, and content-addressed.
+          </li>
+          <li>
+            A fully custom agent is two settings lines — any <code>command</code> + args that
+            speaks ACP on stdio: <code>{"type": "custom", "command": "node",
+            "args": ["~/my-agent/index.js", "--acp"]}</code>.
+          </li>
+          <li>
+            Version bumps in the registry signal live connections to reconnect; the panel shows
+            install progress and update nudges through the same store.
+          </li>
+        </ul>
+        <p>
+          Net effect: <strong>adding a coding agent to Zed is a data change, not a release</strong>.
+          The agent picker menu is simply "native agent" plus whatever the settings map contains,
+          sorted by display name.
+        </p>
+      </section>
+
+      <section id="turn">
+        <h2><span class="num">7</span>One prompt turn over ACP, on the wire</h2>
+        <p>
+          Every external agent — Claude Code included — is a child process speaking newline-delimited
+          JSON-RPC 2.0 on stdio (<code>agent-client-protocol</code> v2.2.0, protocol v1). Both
+          directions are tee'd into a 2,000-message ring that powers the built-in protocol
+          inspector (<code>dev: open acp logs</code>).
+        </p>
+        <div class="diagram">
+          <div class="seq">
+            <div class="seq-head">
+              <div>Zed (client)</div>
+              <div></div>
+              <div>Agent child process (Claude Code, Codex, …)</div>
+            </div>
+
+            <div class="seq-phase">Boot (once per connection)</div>
+            <div class="seq-row to-agent">
+              <div class="note left">registry check → install if needed → spawn</div>
+              <div class="msg">initialize →<span class="dir">protocol v1 + client caps + clientInfo</span></div>
+              <div class="note right">replies: agent caps, auth methods, session caps</div>
+            </div>
+            <div class="seq-row to-agent">
+              <div class="note left">only on AuthRequired: agent's own CLI login in a Zed terminal</div>
+              <div class="msg">authenticate →</div>
+              <div class="note right"></div>
+            </div>
+            <div class="seq-row to-agent">
+              <div class="note left">cwd + Zed's configured MCP servers forwarded</div>
+              <div class="msg">session/new →</div>
+              <div class="note right">returns sessionId, modes, config options</div>
+            </div>
+
+            <div class="seq-phase">Turn</div>
+            <div class="seq-row to-agent">
+              <div class="note left">optimistic UI entry + git checkpoint first</div>
+              <div class="msg">session/prompt →<span class="dir">content blocks incl. @-mentions</span></div>
+              <div class="note right">agent runs its own model loop</div>
+            </div>
+            <div class="seq-row to-zed">
+              <div class="note left">streamed into the shared timeline</div>
+              <div class="msg">← session/update ×N<span class="dir">chunks · thoughts · tool calls · plan · usage · mode</span></div>
+              <div class="note right">notification stream during the turn</div>
+            </div>
+            <div class="seq-row to-zed">
+              <div class="note left">buttons in the tool card; JSON-RPC response held open until the click</div>
+              <div class="msg">← session/request_permission</div>
+              <div class="note right">blocks the agent's tool</div>
+            </div>
+            <div class="seq-row to-zed">
+              <div class="note left">served from open buffers, snapshot cached</div>
+              <div class="msg">← fs/read_text_file</div>
+              <div class="note right"></div>
+            </div>
+            <div class="seq-row to-zed">
+              <div class="note left">diffed vs. snapshot → buffer transaction → format → save</div>
+              <div class="msg">← fs/write_text_file</div>
+              <div class="note right">edits land in the editor, not on disk directly</div>
+            </div>
+            <div class="seq-row to-zed">
+              <div class="note left">real terminal entity embedded in the tool card</div>
+              <div class="msg">← terminal/create · output · wait_for_exit</div>
+              <div class="note right"></div>
+            </div>
+            <div class="seq-row to-zed">
+              <div class="note left">agent cursor cleared, checkpoint finalized</div>
+              <div class="msg">← PromptResponse { stopReason }</div>
+              <div class="note right">turn over</div>
+            </div>
+
+            <div class="seq-phase">Interrupt</div>
+            <div class="seq-row to-agent">
+              <div class="note left">user hits stop</div>
+              <div class="msg">session/cancel →</div>
+              <div class="note right">abort errors suppressed → Cancelled</div>
+            </div>
+          </div>
+          <p class="diagram-caption">
+            Blue-bordered messages flow Zed → agent (requests), green-bordered flow agent → Zed. If
+            the process dies mid-turn, Zed drains stderr for 250ms and surfaces the agent's last
+            words as the error in every open session.
+          </p>
+        </div>
+        <p>
+          A handful of quirk-normalizers keep the common UI clean: optimistically-added user
+          messages are deduped against agents that echo them back; Gemini's abort-on-cancel error is
+          converted to a clean cancelled stop; mode/config changes apply optimistically and roll
+          back on error so pickers never lag a click.
+        </p>
+      </section>
+
+      <section id="integration">
+        <h2><span class="num">8</span>Deep integration: buffers, terminals, permissions</h2>
+        <p>
+          What makes external agents feel native isn't the timeline — it's that Zed advertises
+          <em>client capabilities</em> at the handshake and then serves them from the editor's own
+          machinery:
+        </p>
+        <ul>
+          <li>
+            <strong>File access goes through buffers, not the filesystem.</strong>
+            <code>fs/read_text_file</code> reads the open buffer (unsaved edits included) and caches
+            the snapshot it handed out; <code>fs/write_text_file</code> computes a minimal diff
+            against that snapshot and applies it as a single anchored buffer transaction tagged as
+            an agent edit — one undo step, attributable hunks in the review UI, format-on-save, then
+            save. Unsaved user work is never clobbered.
+          </li>
+          <li>
+            <strong>Follow-the-agent.</strong> Tool calls carry file locations; Zed resolves them to
+            buffer anchors and moves an agent cursor the editor can follow. Subagent sessions
+            deliberately don't hijack your viewport.
+          </li>
+          <li>
+            <strong>Real terminals.</strong> <code>terminal/create</code> mounts an actual Zed
+            terminal entity inline in the tool card — live output, kill, exit status over the
+            protocol.
+          </li>
+          <li>
+            <strong>Permissions block on the wire.</strong> The JSON-RPC response to
+            <code>session/request_permission</code> stays open on a oneshot channel until the user
+            clicks; cancellation works in both directions.
+          </li>
+          <li>
+            <strong>Checkpoints for everyone.</strong> Every user message snapshots a git
+            checkpoint before the prompt is sent, so any agent's turn — native or external — can be
+            rewound, working tree and conversation together.
+          </li>
+        </ul>
+      </section>
+
+      <section id="native">
+        <h2><span class="num">9</span>The native agent &amp; the model-provider stack</h2>
+        <p>
+          The native agent is the one implementation that talks to model APIs itself. Its loop
+          (<code>Thread::run_turn_internal</code>) re-reads model, profile, and tool set every
+          iteration, streams a completion, executes tool calls, feeds results back, and ends the
+          turn when a response contains no tool calls — with auto-compaction past a token
+          threshold, backoff retries, refusal-fallback to another model, and streaming
+          <code>edit_file</code> edits that apply to the live buffer while the model is still
+          emitting them.
+        </p>
+        <p>
+          Under it sits a four-crate provider stack (<code>anthropic</code> wire client →
+          <code>language_model_core</code> types → <code>language_model</code> registry →
+          <code>language_models</code> concrete providers), all normalized to one streamed event
+          enum:
+        </p>
+        <pre><code>pub enum LanguageModelCompletionEvent {
+    Queued { position: usize },   // cloud only
+    Started,                      // cloud only
+    Stop(StopReason),             // EndTurn | MaxTokens | ToolUse | Refusal
+    Text(String),
+    Thinking { text, signature },
+    ToolUse(LanguageModelToolUse),        // streamed live via repaired partial JSON
+    StartMessage { message_id },
+    UsageUpdate(TokenUsage),
+    Compaction(CompactionUpdate),
+    /* … */
+}</code></pre>
+        <ul>
+          <li>
+            <strong>Direct Anthropic</strong>: <code>POST /v1/messages</code> with
+            <code>X-Api-Key</code> (env var or OS keychain, scoped to the API URL), SSE streaming,
+            model list fetched from <code>/v1/models</code> with defaults picked by prefix ranking —
+            no hardcoded model list. Prompt caching is automatic (5-minute tail plus 1-hour
+            breakpoints on the last tool and system block); concurrency is a 16-permit semaphore per
+            model app-wide.
+          </li>
+          <li>
+            <strong>Hosted zed.dev</strong>: the client builds the <em>exact same</em> Anthropic
+            request JSON and ships it as an opaque <code>provider_request</code> blob to
+            <code>cloud.zed.dev/completions</code> with a Zed-account token — the cloud is a thin
+            auth/metering pass-through, so direct-key and hosted behavior share one conversion
+            codepath. Its NDJSON stream adds queue-position and started status events.
+          </li>
+          <li>
+            <strong>Safety is layered and fail-closed</strong>: profiles (tool visibility) ×
+            regex allow/deny/confirm permissions with unbypassable hardcoded rules (<code>rm -rf
+            /</code> variants, path traversal) × workspace trust × optional OS sandboxing. Inputs
+            that defeat analysis — shell substitutions, invalid user regexes — deny rather than
+            allow.
+          </li>
+          <li>
+            <strong>Rules files</strong>: first match per worktree from <code>.rules</code>,
+            <code>.cursorrules</code>, <code>.windsurfrules</code>, <code>.clinerules</code>,
+            <code>.github/copilot-instructions.md</code>, <code>AGENT.md</code>,
+            <code>AGENTS.md</code>, <code>CLAUDE.md</code>, <code>GEMINI.md</code>; personal
+            <code>~/.config/zed/AGENTS.md</code> renders first so projects can override it.
+          </li>
+        </ul>
+      </section>
+
+      <section id="takeaways">
+        <h2><span class="num">10</span>Design takeaways</h2>
+        <ul>
+          <li>
+            <strong>Make the protocol the internal API.</strong> The native agent synthesizes the
+            same <code>SessionUpdate</code> messages external agents send, so there is one timeline
+            renderer and zero drift between "our agent" and "their agents". Your own agent should be
+            the protocol's most demanding client.
+          </li>
+          <li>
+            <strong>Capabilities as values, not variants.</strong>
+            <code>Option&lt;Rc&lt;dyn Trait&gt;&gt;</code> getters, <code>supports_*</code> probes,
+            and verbatim-rendered lists — all derived from the handshake. Feature gaps degrade
+            per-control instead of per-agent, and adding an agent is a settings entry.
+          </li>
+          <li>
+            <strong>Quarantine identity.</strong> Four agent-id constants, referenced in two files,
+            only for env vars and protocol stopgaps — each annotated with the upstream issue that
+            will delete it. The UI never branches on which agent it's hosting.
+          </li>
+          <li>
+            <strong>Generic mechanisms + category metadata.</strong> A model picker Zed has never
+            seen still gets Zed's keybindings because the config option says
+            <code>category: Model</code> — semantics travel with the data.
+          </li>
+          <li>
+            <strong>Editor-mediated file access.</strong> Snapshot-diffed buffer transactions make
+            any agent's edits reviewable, one-step-undoable, and safe against clobbering unsaved
+            work. The filesystem is never the API.
+          </li>
+          <li>
+            <strong>Registry-driven distribution.</strong> A CDN JSON plus one generic spawner
+            (managed Node, sha256-verified binaries, ceiling-range pins) replaced all per-agent
+            integration code. Shipping a new agent is a data change.
+          </li>
+          <li>
+            <strong>Downcast as the pressure valve.</strong> Native-only features (profiles,
+            skills, rewind) reach the concrete type explicitly instead of polluting the shared
+            trait — which also makes the roadmap legible: the features external agents lack are
+            exactly the trait defaults <code>AcpConnection</code> hasn't overridden yet.
+          </li>
+        </ul>
+        <p class="file">
+          Compiled from a shallow clone read on 2026-09-27 (Zed 1.23.0, commit 1a28cff). Key files:
+          crates/acp_thread/src/{connection.rs,acp_thread.rs}, crates/agent_servers/src/{acp.rs,custom.rs},
+          crates/agent/src/agent.rs, crates/agent_ui/src/conversation_view.rs,
+          crates/project/src/agent_{registry,server}_store.rs, crates/anthropic, crates/language_model*.
+        </p>
+      </section>
+
+      <section id="superset">
+        <h2><span class="num">11</span>Proposal: a Superset web chat over any running Claude/Codex session</h2>
+        <p>
+          The question: can we build a browser chat UI (Vercel AI SDK) that reaches, over a URL,
+          any Claude Code or Codex session running in a Superset workspace — using ACP as the
+          protocol? <strong>Yes, and every piece is already proven.</strong> Zed demonstrates the
+          protocol works; the transport is trivially swappable (newline-delimited JSON-RPC doesn't
+          care if it flows over stdio or a WebSocket); and the official adapters support attaching
+          to existing sessions. Verified against the live ACP registry and the published adapter:
+        </p>
+        <ul>
+          <li>
+            The registry serves <code>@agentclientprotocol/claude-agent-acp@0.84.0</code> (built on
+            the Claude Agent SDK) and <code>@agentclientprotocol/codex-acp@2.0.0</code> — the same
+            packages Zed spawns.
+          </li>
+          <li>
+            The Claude adapter's published code advertises <code>loadSession: true</code> and
+            implements <code>listSessions</code> and resume — internally mapped to the Claude Agent
+            SDK's <code>resume</code>/<code>forkSession</code> options over the on-disk session
+            transcripts in <code>~/.claude/projects/</code>.
+          </li>
+        </ul>
+
+        <div class="callout">
+          <span class="t">The one catch: you attach to a session, not a process</span>
+          A Claude/Codex session running in a Superset terminal owns its stdio — nothing else can
+          share it. What ACP gives you instead is <em>resume by session id</em>: the gateway spawns
+          its <strong>own</strong> adapter process in the same workspace and calls
+          <code>session/load</code>, which replays the full history from the shared on-disk
+          transcript and continues the same conversation. That's the same session, same context,
+          same files — a different process. Prompting the same session concurrently from the
+          terminal <em>and</em> the web can fork its history, so the UX should be "take over" (or
+          read-only mirror while the terminal is mid-turn), not simultaneous driving.
+        </div>
+
+        <h3>Architecture</h3>
+        <div class="diagram">
+          <div class="bigpic" style="min-width: 700px">
+            <div class="row-top" style="max-width: 560px">
+              <div class="box accent-4">
+                <span class="t">Browser — chat UI (Next.js + AI SDK useChat)</span>
+                <span class="d">renders text / reasoning / tool parts + custom data parts (plan, permission)</span>
+              </div>
+              <div class="arrow">↕ AI SDK UI-message stream (SSE or WebSocket) · https://…/workspace/:id/chat?session=…</div>
+              <div class="box accent-2">
+                <span class="t">ACP Gateway — small bun/node service in the workspace host</span>
+                <span class="d">ACP client (like Zed's AcpConnection) · owns adapter processes keyed by (workspace, session) · translates both directions · answers/relays permission RPCs</span>
+              </div>
+              <div class="arrow">↕ ndjson JSON-RPC 2.0 over stdio (unchanged ACP)</div>
+              <div class="box accent-3 ext">
+                <span class="t">npx @agentclientprotocol/claude-agent-acp · or codex-acp</span>
+                <span class="d">initialize → session/load(sessionId) or session/new(cwd=workspace)</span>
+              </div>
+              <div class="arrow">↓ Claude Agent SDK (own tools, own auth) ↓</div>
+              <div class="box accent-3 ext">
+                <span class="t">Claude Code engine → Anthropic API</span>
+                <span class="d">user's existing login on the host — no new credentials</span>
+              </div>
+            </div>
+            <div class="branches" style="grid-template-columns: 1fr 1fr; margin-top: 1rem">
+              <div class="box accent-1">
+                <span class="t">Shared: workspace filesystem</span>
+                <span class="d">terminal session and gateway adapter see the same checkout</span>
+              </div>
+              <div class="box accent-1">
+                <span class="t">Shared: session transcripts</span>
+                <span class="d">~/.claude/projects/… — what session/list enumerates and session/load replays</span>
+              </div>
+            </div>
+          </div>
+          <p class="diagram-caption">
+            The gateway plays Zed's role: it is the ACP <em>client</em>. Superset already has the
+            two hard parts — a host process next to every workspace, and authenticated URLs to
+            reach it — so the new code is just the translator in the middle.
+          </p>
+        </div>
+
+        <h3>The translation layer, message by message</h3>
+        <p>
+          The impedance mismatch is small because both sides already model the same things. The AI
+          SDK's stream protocol has first-class parts for text, reasoning, and tool calls; ACP's
+          <code>session/update</code> is a stream of exactly those:
+        </p>
+        <div class="scroll">
+          <table>
+            <thead>
+              <tr><th>ACP (from adapter)</th><th>AI SDK stream part (to browser)</th><th>Notes</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>agent_message_chunk</code></td><td><code>text-delta</code></td><td>straight passthrough</td></tr>
+              <tr><td><code>agent_thought_chunk</code></td><td><code>reasoning-delta</code></td><td>renders as collapsible thinking</td></tr>
+              <tr><td><code>tool_call</code> / <code>tool_call_update</code></td><td><code>tool-input-*</code> → <code>tool-output-available</code></td><td>dynamic tools; kind/status/locations ride along as metadata</td></tr>
+              <tr><td><code>plan</code></td><td><code>data-plan</code> (custom part)</td><td>checklist component in the UI</td></tr>
+              <tr><td><code>usage_update</code>, session title</td><td>message metadata</td><td>token meter, tab title</td></tr>
+              <tr><td><code>PromptResponse.stopReason</code></td><td><code>finish</code></td><td>ends the useChat request</td></tr>
+              <tr><td><code>session/request_permission</code> <em>(RPC, blocks)</em></td><td><code>data-permission</code> part + reply endpoint</td><td>see below — the only genuinely new plumbing</td></tr>
+              <tr><td><code>fs/*</code>, <code>terminal/*</code> client caps</td><td>—</td><td>don't advertise them: the adapter falls back to Claude Code's own Read/Edit/Bash, which run fine headless in the workspace</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>And the reverse direction is just two calls:</p>
+        <ul>
+          <li><code>POST /chat</code> (useChat submit) → <code>session/prompt</code> with the last user message as content blocks; abort → <code>session/cancel</code>.</li>
+          <li><code>POST /permission {requestId, optionId}</code> → resolves the pending JSON-RPC response the adapter is blocked on — the exact oneshot-channel pattern Zed uses, held in the gateway instead of the panel.</li>
+        </ul>
+
+        <h3>One message, end to end</h3>
+        <div class="diagram">
+          <div class="seq" style="min-width: 640px">
+            <div class="seq-head">
+              <div>Browser (useChat)</div>
+              <div>Gateway</div>
+              <div>Adapter (claude-agent-acp)</div>
+            </div>
+            <div class="seq-row to-agent">
+              <div class="note left">open /workspace/:id/chat</div>
+              <div class="msg">spawn → initialize → session/list</div>
+              <div class="note right">enumerates sessions from disk</div>
+            </div>
+            <div class="seq-row to-agent">
+              <div class="note left">user picks the terminal's session</div>
+              <div class="msg">session/load(sessionId)</div>
+              <div class="note right">history replays → chat hydrates with the full transcript</div>
+            </div>
+            <div class="seq-row to-agent">
+              <div class="note left">user types; useChat POSTs</div>
+              <div class="msg">session/prompt →</div>
+              <div class="note right">turn starts in the same context</div>
+            </div>
+            <div class="seq-row to-zed">
+              <div class="note left">SSE parts stream into the chat</div>
+              <div class="msg">← session/update ×N → stream parts</div>
+              <div class="note right">text · thinking · tool calls · plan</div>
+            </div>
+            <div class="seq-row to-zed">
+              <div class="note left">buttons render; click POSTs the option; gateway unblocks the RPC</div>
+              <div class="msg">← request_permission ⇄ data-permission</div>
+              <div class="note right">tool waits mid-flight</div>
+            </div>
+            <div class="seq-row to-zed">
+              <div class="note left">useChat request completes</div>
+              <div class="msg">← stopReason → finish</div>
+              <div class="note right">transcript on disk updated — visible to a later terminal resume</div>
+            </div>
+          </div>
+          <p class="diagram-caption">
+            Because Codex's adapter speaks the same protocol, the identical gateway serves both —
+            picking the agent is picking which npm package to spawn, exactly as in Zed.
+          </p>
+        </div>
+
+        <h3>Scope, honestly</h3>
+        <ul>
+          <li>
+            <strong>Gateway</strong>: ~300–400 lines — process spawn + ndjson framing, the
+            update→part translator, a pending-permission map, session registry. No protocol
+            invention; the <code>agent-client-protocol</code> schema package (or plain JSON) covers
+            the types.
+          </li>
+          <li>
+            <strong>Web</strong>: a stock <code>useChat</code> page plus renderers for the tool,
+            plan, and permission parts. History hydration comes free from
+            <code>session/load</code>'s replay.
+          </li>
+          <li>
+            <strong>Auth &amp; placement</strong>: the gateway belongs beside the workspace (where
+            Superset's host-service already runs), behind Superset's existing session auth — the
+            adapter inherits the host's Claude login, so no credentials ever reach the browser.
+          </li>
+          <li>
+            <strong>Risks</strong>: concurrent terminal+web prompting can fork a session's history
+            (design for take-over, not co-driving); permission UX must fail closed if the browser
+            disconnects mid-request (gateway answers "reject" on timeout); adapter versions move
+            fast — pin with a ceiling range the way Zed does.
+          </li>
+        </ul>
+      </section>
+    </main>
+  </body>
+</html>

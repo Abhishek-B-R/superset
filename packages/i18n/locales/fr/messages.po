@@ -1353,6 +1353,9 @@ msgstr "Distinctions"
 msgid "Acme Inc."
 msgstr "Acme Inc."
 
+msgid "ACP Chat"
+msgstr "Chat ACP"
+
 msgid "Acquisition"
 msgstr "Acquisition"
 
@@ -2206,6 +2209,12 @@ msgstr "Au moins une équipe identifiable, la nôtre comprise, passe toutes les 
 
 msgid "at once"
 msgstr "en parallèle"
+
+msgid "Attach"
+msgstr "Attacher"
+
+msgid "Attach to a running agent"
+msgstr "Se connecter à un agent en cours d’exécution"
 
 msgid "Attached"
 msgstr "Attachée"
@@ -9791,6 +9800,9 @@ msgstr "Aucun relecteur assigné pour l'instant."
 msgid "No reviews"
 msgstr "Aucune revue"
 
+msgid "No running Claude or Codex sessions in this workspace. Start one in a terminal, or begin a new session below."
+msgstr "Aucune session Claude ou Codex en cours dans cet espace de travail. Démarrez-en une dans un terminal, ou commencez une nouvelle session ci-dessous."
+
 msgid "No runs yet"
 msgstr "Aucune exécution pour l'instant"
 
@@ -10399,6 +10411,9 @@ msgstr "Ouvrir dans {0}"
 
 msgid "Open in {app}"
 msgstr "Ouvrir dans {app}"
+
+msgid "Open in ACP chat"
+msgstr "Ouvrir dans le chat ACP"
 
 msgid "Open in any IDE"
 msgstr "Ouvrir dans n'importe quel IDE"

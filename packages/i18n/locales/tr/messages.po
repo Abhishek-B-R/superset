@@ -1353,6 +1353,9 @@ msgstr "Başarımlar"
 msgid "Acme Inc."
 msgstr "Acme Inc."
 
+msgid "ACP Chat"
+msgstr "ACP Sohbeti"
+
 msgid "Acquisition"
 msgstr "Edinme"
 
@@ -2206,6 +2209,12 @@ msgstr "Adını verebileceğimiz en az bir takım, bizimki de dahil, tam bir çe
 
 msgid "at once"
 msgstr "aynı anda"
+
+msgid "Attach"
+msgstr "Bağlan"
+
+msgid "Attach to a running agent"
+msgstr "Çalışan bir aracıya bağlan"
 
 msgid "Attached"
 msgstr "Bağlı"
@@ -9791,6 +9800,9 @@ msgstr "Henüz inceleyici atanmadı."
 msgid "No reviews"
 msgstr "İnceleme yok"
 
+msgid "No running Claude or Codex sessions in this workspace. Start one in a terminal, or begin a new session below."
+msgstr "Bu çalışma alanında çalışan Claude veya Codex oturumu yok. Bir terminalde başlatın veya aşağıdan yeni bir oturum başlatın."
+
 msgid "No runs yet"
 msgstr "Henüz çalıştırma yok"
 
@@ -10399,6 +10411,9 @@ msgstr "{0} ile aç"
 
 msgid "Open in {app}"
 msgstr "{app} ile aç"
+
+msgid "Open in ACP chat"
+msgstr "ACP sohbetinde aç"
 
 msgid "Open in any IDE"
 msgstr "Herhangi bir IDE'de açın"

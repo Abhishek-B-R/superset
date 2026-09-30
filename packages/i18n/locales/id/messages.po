@@ -1353,6 +1353,9 @@ msgstr "Pencapaian"
 msgid "Acme Inc."
 msgstr "Acme Inc."
 
+msgid "ACP Chat"
+msgstr "Obrolan ACP"
+
 msgid "Acquisition"
 msgstr "Akuisisi"
 
@@ -2206,6 +2209,12 @@ msgstr "Setidaknya satu tim yang bisa kami sebut namanya, termasuk tim kami, mel
 
 msgid "at once"
 msgstr "sekaligus"
+
+msgid "Attach"
+msgstr "Sambungkan"
+
+msgid "Attach to a running agent"
+msgstr "Sambungkan ke agen yang sedang berjalan"
 
 msgid "Attached"
 msgstr "Terhubung"
@@ -9791,6 +9800,9 @@ msgstr "Belum ada reviewer yang ditugaskan."
 msgid "No reviews"
 msgstr "Tanpa review"
 
+msgid "No running Claude or Codex sessions in this workspace. Start one in a terminal, or begin a new session below."
+msgstr "Tidak ada sesi Claude atau Codex yang berjalan di ruang kerja ini. Mulai satu di terminal, atau mulai sesi baru di bawah."
+
 msgid "No runs yet"
 msgstr "Belum ada run"
 
@@ -10399,6 +10411,9 @@ msgstr "Buka di {0}"
 
 msgid "Open in {app}"
 msgstr "Buka di {app}"
+
+msgid "Open in ACP chat"
+msgstr "Buka di obrolan ACP"
 
 msgid "Open in any IDE"
 msgstr "Buka di IDE mana pun"

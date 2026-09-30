@@ -1353,6 +1353,9 @@ msgstr "업적"
 msgid "Acme Inc."
 msgstr "Acme Inc."
 
+msgid "ACP Chat"
+msgstr "ACP 채팅"
+
 msgid "Acquisition"
 msgstr "획득"
 
@@ -2206,6 +2209,12 @@ msgstr "우리를 포함해 이름을 댈 수 있는 팀 중 최소 한 곳이 �
 
 msgid "at once"
 msgstr "동시"
+
+msgid "Attach"
+msgstr "연결"
+
+msgid "Attach to a running agent"
+msgstr "실행 중인 에이전트에 연결"
 
 msgid "Attached"
 msgstr "연결됨"
@@ -9791,6 +9800,9 @@ msgstr "아직 지정된 리뷰어가 없습니다."
 msgid "No reviews"
 msgstr "리뷰 없음"
 
+msgid "No running Claude or Codex sessions in this workspace. Start one in a terminal, or begin a new session below."
+msgstr "이 워크스페이스에 실행 중인 Claude 또는 Codex 세션이 없습니다. 터미널에서 시작하거나 아래에서 새 세션을 시작하세요."
+
 msgid "No runs yet"
 msgstr "아직 실행 기록이 없습니다"
 
@@ -10399,6 +10411,9 @@ msgstr "{0}에서 열기"
 
 msgid "Open in {app}"
 msgstr "{app}에서 열기"
+
+msgid "Open in ACP chat"
+msgstr "ACP 채팅에서 열기"
 
 msgid "Open in any IDE"
 msgstr "어떤 IDE에서든 열기"

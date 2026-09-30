@@ -1353,6 +1353,9 @@ msgstr "成就"
 msgid "Acme Inc."
 msgstr "Acme Inc."
 
+msgid "ACP Chat"
+msgstr "ACP 聊天"
+
 msgid "Acquisition"
 msgstr "獲客"
 
@@ -2206,6 +2209,12 @@ msgstr "至少有一支叫得出名字的團隊（包括我們自己）連續一
 
 msgid "at once"
 msgstr "同時"
+
+msgid "Attach"
+msgstr "連接"
+
+msgid "Attach to a running agent"
+msgstr "連接到執行中的代理"
 
 msgid "Attached"
 msgstr "已附加"
@@ -9791,6 +9800,9 @@ msgstr "還沒有指派審查者。"
 msgid "No reviews"
 msgstr "沒有審查"
 
+msgid "No running Claude or Codex sessions in this workspace. Start one in a terminal, or begin a new session below."
+msgstr "此工作區中沒有執行中的 Claude 或 Codex 工作階段。請在終端機中啟動一個，或在下方開始新的工作階段。"
+
 msgid "No runs yet"
 msgstr "還沒有執行過"
 
@@ -10399,6 +10411,9 @@ msgstr "在{0}中開啟"
 
 msgid "Open in {app}"
 msgstr "在{app}中開啟"
+
+msgid "Open in ACP chat"
+msgstr "在 ACP 聊天中開啟"
 
 msgid "Open in any IDE"
 msgstr "在任意IDE中開啟"

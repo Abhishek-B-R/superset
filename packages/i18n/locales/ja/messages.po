@@ -1353,6 +1353,9 @@ msgstr "実績"
 msgid "Acme Inc."
 msgstr "Acme Inc."
 
+msgid "ACP Chat"
+msgstr "ACP チャット"
+
 msgid "Acquisition"
 msgstr "獲得"
 
@@ -2206,6 +2209,12 @@ msgstr "名前を挙げられるチームが少なくとも1つ、当社を含�
 
 msgid "at once"
 msgstr "同時"
+
+msgid "Attach"
+msgstr "接続"
+
+msgid "Attach to a running agent"
+msgstr "実行中のエージェントに接続"
 
 msgid "Attached"
 msgstr "接続中"
@@ -9791,6 +9800,9 @@ msgstr "レビュアーはまだ割り当てられていません。"
 msgid "No reviews"
 msgstr "レビューなし"
 
+msgid "No running Claude or Codex sessions in this workspace. Start one in a terminal, or begin a new session below."
+msgstr "このワークスペースで実行中の Claude または Codex セッションはありません。ターミナルで開始するか、下から新しいセッションを開始してください。"
+
 msgid "No runs yet"
 msgstr "実行はまだありません"
 
@@ -10399,6 +10411,9 @@ msgstr "{0}で開く"
 
 msgid "Open in {app}"
 msgstr "{app}で開く"
+
+msgid "Open in ACP chat"
+msgstr "ACP チャットで開く"
 
 msgid "Open in any IDE"
 msgstr "どのIDEでも開ける"

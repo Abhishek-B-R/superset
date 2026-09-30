@@ -33,6 +33,7 @@ import {
 	LuPower,
 } from "react-icons/lu";
 import { useWorkspaceHostTarget } from "renderer/hooks/host-service/useWorkspaceHostUrl";
+import { env } from "renderer/env.renderer";
 import { useHotkeyDisplay } from "renderer/hotkeys";
 import { FileIcon } from "renderer/lib/fileIcons";
 import { getBaseName } from "renderer/lib/pathBasename";
@@ -54,6 +55,7 @@ import {
 	useSharedFileDocument,
 } from "../../state/fileDocumentStore";
 import {
+	type AcpChatPaneData,
 	type BrowserPaneData,
 	type ChatV3PaneData,
 	type CommentPaneData,
@@ -74,7 +76,9 @@ import { openSubagentPaneInStore } from "../../utils/openSubagentPaneInStore";
 import { useAgentSessionLauncher } from "../useAgentSessionLauncher";
 import type { OpenReviewDiff } from "../useReviewCommentNavigation";
 import type { TerminalLauncher } from "../useV2TerminalLauncher";
+import { AcpChatPane } from "./components/AcpChatPane";
 import { BrowserPane, BrowserPaneToolbar } from "./components/BrowserPane";
+import { AcpChatToggle } from "./components/TerminalPane/components/AcpChatToggle";
 import { ChatV3Pane } from "./components/ChatV3Pane";
 import { CommentPane } from "./components/CommentPane";
 import { CommentPaneHeaderExtras } from "./components/CommentPane/components/CommentPaneHeaderExtras";
@@ -163,6 +167,9 @@ export function usePaneRegistry({
 	const { workspace } = useWorkspace();
 	const workspaceId = workspace.id;
 	const isChatV3Enabled = useFeatureFlagEnabled(FEATURE_FLAGS.CHAT_V3) ?? false;
+	const isAcpChatEnabled =
+		(useFeatureFlagEnabled(FEATURE_FLAGS.ACP_CHAT) ?? false) ||
+		env.NODE_ENV === "development";
 	const host = useWorkspaceHostTarget(workspaceId);
 	const desktopUrl =
 		host.status === "ready" && host.kind === "sandbox" ? host.desktopUrl : null;
@@ -434,6 +441,25 @@ export function usePaneRegistry({
 							launcher={launcher}
 							workspaceId={workspaceId}
 						/>
+						{isAcpChatEnabled && (
+							<AcpChatToggle
+								workspaceId={workspaceId}
+								terminalId={(ctx.pane.data as TerminalPaneData).terminalId}
+								onOpen={(harness, agentSessionId) =>
+									store.getState().addTab({
+										panes: [
+											{
+												kind: "acp-chat",
+												data: {
+													sessionId: null,
+													attach: { harness, agentSessionId },
+												} as AcpChatPaneData,
+											},
+										],
+									})
+								}
+							/>
+						)}
 						<V2NotificationStatusIndicator
 							sources={getV2NotificationSourcesForPane(ctx.pane)}
 						/>
@@ -741,6 +767,42 @@ export function usePaneRegistry({
 						},
 					}
 				: {}),
+			...(isAcpChatEnabled
+				? {
+						"acp-chat": {
+							getIcon: () => <MessageSquare className="size-3.5" />,
+							getTitle: () =>
+								t({
+									message: "ACP Chat",
+								}),
+							renderPane: (ctx: RendererContext<PaneViewerData>) => {
+								const data = ctx.pane.data as AcpChatPaneData;
+								return (
+									<AcpChatPane
+										workspaceId={workspaceId}
+										sessionId={data.sessionId}
+										attach={data.attach}
+										onDataChange={(next) => ctx.actions.updateData(next)}
+									/>
+								);
+							},
+							contextMenuActions: (
+								_ctx: RendererContext<PaneViewerData>,
+								defaults: ContextMenuActionConfig<PaneViewerData>[],
+							) =>
+								defaults.map((d) =>
+									d.key === "close-pane"
+										? {
+												...d,
+												label: t({
+													message: "Close Chat",
+												}),
+											}
+										: d,
+								),
+						},
+					}
+				: {}),
 			comment: {
 				getIcon: (ctx: RendererContext<PaneViewerData>) => {
 					const data = ctx.pane.data as CommentPaneData;
@@ -888,6 +950,7 @@ export function usePaneRegistry({
 			store,
 			workspaceId,
 			isChatV3Enabled,
+			isAcpChatEnabled,
 			clearWorkspaceRunTerminal,
 			clearShortcut,
 			scrollToBottomShortcut,

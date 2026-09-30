@@ -80,6 +80,21 @@ export interface ChatV3PaneData {
 	sessionId: string | null;
 }
 
+/**
+ * A chat session bridged to a Claude/Codex agent over the Agent Client
+ * Protocol. `sessionId` is the chat-runtime session (null until created).
+ * `attach`, when present and no session exists yet, makes the pane resume the
+ * given agent session on mount — this is how the terminal header's "open in
+ * ACP chat" button hands off a running agent.
+ */
+export interface AcpChatPaneData {
+	sessionId: string | null;
+	attach?: {
+		harness: string;
+		agentSessionId: string;
+	};
+}
+
 export interface DesktopPaneData {
 	kind: "desktop";
 }
@@ -120,6 +135,7 @@ export type PaneViewerData =
 	| FilePaneData
 	| TerminalPaneData
 	| ChatV3PaneData
+	| AcpChatPaneData
 	| BrowserPaneData
 	| DevtoolsPaneData
 	| DiffPaneData

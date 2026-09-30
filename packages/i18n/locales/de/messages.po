@@ -1353,6 +1353,9 @@ msgstr "Auszeichnungen"
 msgid "Acme Inc."
 msgstr "Acme Inc."
 
+msgid "ACP Chat"
+msgstr "ACP-Chat"
+
 msgid "Acquisition"
 msgstr "Akquise"
 
@@ -2206,6 +2209,12 @@ msgstr "Mindestens ein Team, das wir benennen können, unseres eingeschlossen, b
 
 msgid "at once"
 msgstr "gleichzeitig"
+
+msgid "Attach"
+msgstr "Verbinden"
+
+msgid "Attach to a running agent"
+msgstr "Mit einem laufenden Agenten verbinden"
 
 msgid "Attached"
 msgstr "Verbunden"
@@ -9791,6 +9800,9 @@ msgstr "Noch keine Reviewer zugewiesen."
 msgid "No reviews"
 msgstr "Keine Reviews"
 
+msgid "No running Claude or Codex sessions in this workspace. Start one in a terminal, or begin a new session below."
+msgstr "In diesem Workspace laufen keine Claude- oder Codex-Sitzungen. Starte eine im Terminal oder beginne unten eine neue Sitzung."
+
 msgid "No runs yet"
 msgstr "Noch keine Läufe"
 
@@ -10399,6 +10411,9 @@ msgstr "In {0} öffnen"
 
 msgid "Open in {app}"
 msgstr "In {app} öffnen"
+
+msgid "Open in ACP chat"
+msgstr "Im ACP-Chat öffnen"
 
 msgid "Open in any IDE"
 msgstr "In jeder IDE öffnen"

@@ -1353,6 +1353,9 @@ msgstr "Thành tích"
 msgid "Acme Inc."
 msgstr "Acme Inc."
 
+msgid "ACP Chat"
+msgstr "Trò chuyện ACP"
+
 msgid "Acquisition"
 msgstr "Thu hút"
 
@@ -2206,6 +2209,12 @@ msgstr "Ít nhất một đội mà chúng tôi có thể nêu tên, kể cả �
 
 msgid "at once"
 msgstr "cùng lúc"
+
+msgid "Attach"
+msgstr "Kết nối"
+
+msgid "Attach to a running agent"
+msgstr "Kết nối với một tác nhân đang chạy"
 
 msgid "Attached"
 msgstr "Đã gắn"
@@ -9791,6 +9800,9 @@ msgstr "Chưa gán người review nào."
 msgid "No reviews"
 msgstr "Chưa có review"
 
+msgid "No running Claude or Codex sessions in this workspace. Start one in a terminal, or begin a new session below."
+msgstr "Không có phiên Claude hoặc Codex nào đang chạy trong không gian làm việc này. Hãy khởi động một phiên trong terminal, hoặc bắt đầu phiên mới bên dưới."
+
 msgid "No runs yet"
 msgstr "Chưa có lần chạy nào"
 
@@ -10399,6 +10411,9 @@ msgstr "Mở trong {0}"
 
 msgid "Open in {app}"
 msgstr "Mở trong {app}"
+
+msgid "Open in ACP chat"
+msgstr "Mở trong trò chuyện ACP"
 
 msgid "Open in any IDE"
 msgstr "Mở trong mọi IDE"

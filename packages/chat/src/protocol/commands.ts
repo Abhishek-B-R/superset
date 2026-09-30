@@ -13,6 +13,7 @@ export const createSessionInputSchema = z.object({
 	harness: z.string().min(1),
 	modeId: z.string().optional(),
 	modelId: z.string().optional(),
+	resume: z.object({ harnessSessionId: z.string().min(1) }).optional(),
 });
 export type CreateSessionInput = z.infer<typeof createSessionInputSchema>;
 

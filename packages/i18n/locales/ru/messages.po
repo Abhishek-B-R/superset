@@ -1353,6 +1353,9 @@ msgstr "Достижения"
 msgid "Acme Inc."
 msgstr "Acme Inc."
 
+msgid "ACP Chat"
+msgstr "Чат ACP"
+
 msgid "Acquisition"
 msgstr "Привлечение"
 
@@ -2206,6 +2209,12 @@ msgstr "Хотя бы одна команда, которую мы можем н
 
 msgid "at once"
 msgstr "одновременно"
+
+msgid "Attach"
+msgstr "Подключить"
+
+msgid "Attach to a running agent"
+msgstr "Подключиться к запущенному агенту"
 
 msgid "Attached"
 msgstr "Подключена"
@@ -9791,6 +9800,9 @@ msgstr "Ревьюеры пока не назначены."
 msgid "No reviews"
 msgstr "Без ревью"
 
+msgid "No running Claude or Codex sessions in this workspace. Start one in a terminal, or begin a new session below."
+msgstr "В этом рабочем пространстве нет запущенных сессий Claude или Codex. Запустите её в терминале или начните новую сессию ниже."
+
 msgid "No runs yet"
 msgstr "Запусков пока нет"
 
@@ -10399,6 +10411,9 @@ msgstr "Открыть в {0}"
 
 msgid "Open in {app}"
 msgstr "Открыть в {app}"
+
+msgid "Open in ACP chat"
+msgstr "Открыть в ACP-чате"
 
 msgid "Open in any IDE"
 msgstr "Открывайте в любой IDE"

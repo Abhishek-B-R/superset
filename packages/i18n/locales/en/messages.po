@@ -1353,6 +1353,9 @@ msgstr "Achievements"
 msgid "Acme Inc."
 msgstr "Acme Inc."
 
+msgid "ACP Chat"
+msgstr "ACP Chat"
+
 msgid "Acquisition"
 msgstr "Acquisition"
 
@@ -2206,6 +2209,12 @@ msgstr "At least one team we can name, ours included, passes every F4 gate for a
 
 msgid "at once"
 msgstr "at once"
+
+msgid "Attach"
+msgstr "Attach"
+
+msgid "Attach to a running agent"
+msgstr "Attach to a running agent"
 
 msgid "Attached"
 msgstr "Attached"
@@ -9791,6 +9800,9 @@ msgstr "No reviewers assigned yet."
 msgid "No reviews"
 msgstr "No reviews"
 
+msgid "No running Claude or Codex sessions in this workspace. Start one in a terminal, or begin a new session below."
+msgstr "No running Claude or Codex sessions in this workspace. Start one in a terminal, or begin a new session below."
+
 msgid "No runs yet"
 msgstr "No runs yet"
 
@@ -10399,6 +10411,9 @@ msgstr "Open in {0}"
 
 msgid "Open in {app}"
 msgstr "Open in {app}"
+
+msgid "Open in ACP chat"
+msgstr "Open in ACP chat"
 
 msgid "Open in any IDE"
 msgstr "Open in any IDE"

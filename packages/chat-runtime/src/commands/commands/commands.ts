@@ -102,6 +102,7 @@ export function createCommands(options: CommandsOptions): ChatCommands {
 						cwd: parsed.cwd,
 						modeId: parsed.modeId,
 						modelId: parsed.modelId,
+						resume: parsed.resume,
 					});
 				} catch (error) {
 					options.journal.discard(sessionId);

@@ -1353,6 +1353,9 @@ msgstr "Logros"
 msgid "Acme Inc."
 msgstr "Acme Inc."
 
+msgid "ACP Chat"
+msgstr "Chat ACP"
+
 msgid "Acquisition"
 msgstr "Adquisición"
 
@@ -2206,6 +2209,12 @@ msgstr "Al menos un equipo al que podamos nombrar, incluido el nuestro, supera t
 
 msgid "at once"
 msgstr "a la vez"
+
+msgid "Attach"
+msgstr "Conectar"
+
+msgid "Attach to a running agent"
+msgstr "Conectar a un agente en ejecución"
 
 msgid "Attached"
 msgstr "Conectada"
@@ -9791,6 +9800,9 @@ msgstr "Aún no hay revisores asignados."
 msgid "No reviews"
 msgstr "Sin revisiones"
 
+msgid "No running Claude or Codex sessions in this workspace. Start one in a terminal, or begin a new session below."
+msgstr "No hay sesiones de Claude o Codex en ejecución en este espacio de trabajo. Inicia una en una terminal o comienza una nueva sesión abajo."
+
 msgid "No runs yet"
 msgstr "Aún no hay ejecuciones"
 
@@ -10399,6 +10411,9 @@ msgstr "Abrir en {0}"
 
 msgid "Open in {app}"
 msgstr "Abrir en {app}"
+
+msgid "Open in ACP chat"
+msgstr "Abrir en el chat ACP"
 
 msgid "Open in any IDE"
 msgstr "Abrir en cualquier IDE"
