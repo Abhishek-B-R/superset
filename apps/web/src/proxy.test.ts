@@ -89,6 +89,13 @@ describe("proxy: unauthenticated API requests return JSON 401, never a sign-in r
 		expect(res.status).toBe(200);
 	});
 
+	it("does not extend that exemption to other .well-known routes", async () => {
+		const res = await callProxy("https://app.superset.sh/.well-known/secrets");
+
+		expect(res.status).toBe(307);
+		expect(res.headers.get("location")).toContain("/sign-in");
+	});
+
 	it("leaves public API routes (e.g. /api/auth/desktop) reachable unauthenticated", async () => {
 		// P1 (cubic) + coderabbit: /api/auth/desktop is the public desktop-OAuth
 		// start; require a successful pass-through (200), so a 5xx would fail.
@@ -112,10 +119,14 @@ describe("proxy: unauthenticated API requests return JSON 401, never a sign-in r
 describe("proxy: matcher", () => {
 	const pageMatcher = new RegExp(`^${config.matcher[0]}$`);
 
-	it("skips the middleware for .well-known, so Apple's fetch costs no session lookup", () => {
+	it("skips the middleware for the association file, so Apple's fetch costs no session lookup", () => {
 		expect(pageMatcher.test("/.well-known/apple-app-site-association")).toBe(
 			false,
 		);
+	});
+
+	it("still matches other .well-known routes, so none inherits the bypass", () => {
+		expect(pageMatcher.test("/.well-known/secrets")).toBe(true);
 	});
 
 	it("still matches ordinary page routes", () => {
