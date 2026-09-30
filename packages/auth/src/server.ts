@@ -319,6 +319,7 @@ export const auth = betterAuth({
 		github: {
 			clientId: env.GH_CLIENT_ID,
 			clientSecret: env.GH_CLIENT_SECRET,
+			prompt: "select_account",
 		},
 		google: {
 			clientId: env.GOOGLE_CLIENT_ID,
