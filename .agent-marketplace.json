@@ -86,6 +86,16 @@
 			"category": "productivity",
 			"source": "./plugins/circleback",
 			"version": "1.0.0"
+		},
+		{
+			"name": "ynab",
+			"description": "Track money in YNAB: accounts, categories, budgets, and transactions.",
+			"author": {
+				"name": "Superset"
+			},
+			"category": "productivity",
+			"source": "./plugins/ynab",
+			"version": "1.0.0"
 		}
 	],
 	"featured": ["github", "linear"],

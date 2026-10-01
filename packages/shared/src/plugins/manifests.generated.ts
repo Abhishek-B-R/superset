@@ -355,6 +355,39 @@ export const FIRST_PARTY_MANIFESTS = {
 			}
 		]
 	} as const,
+	"ynab": {
+		"$schema": "https://superset.sh/schemas/plugin/1.0.0.json",
+		"name": "ynab",
+		"version": "1.0.0",
+		"description": "Track money in YNAB: accounts, categories, budgets, and transactions.",
+		"author": {
+			"name": "Superset",
+			"url": "https://superset.sh"
+		},
+		"homepage": "https://docs.superset.sh",
+		"repository": "https://github.com/superset-sh/superset",
+		"license": "MIT",
+		"keywords": [
+			"ynab",
+			"budget",
+			"finance",
+			"money",
+			"transactions"
+		],
+		"extensions": {
+			"superset": {
+				"interface": {
+					"displayName": "YNAB",
+					"category": "Productivity",
+					"icon": "ynab"
+				},
+				"connector": {
+					"slug": "ynab"
+				}
+			}
+		},
+		"skills": []
+	} as const,
 } as const;
 
 export type FirstPartyPluginName = keyof typeof FIRST_PARTY_MANIFESTS;
