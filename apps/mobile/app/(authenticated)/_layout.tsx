@@ -5,6 +5,8 @@ import { Platform } from "react-native";
 import { usePrimeRelayUrl } from "@/hooks/usePrimeRelayUrl";
 import { useSession } from "@/lib/auth/client";
 
+export const unstable_settings = { anchor: "(home)" };
+
 // iPad shows a form sheet as a fixed-size centered card, so a partial detent
 // only shrinks the card and clips what is inside it.
 const sheetDetents = (phoneDetents: number[]) =>
