@@ -164,7 +164,6 @@ export function DashboardSidebarHeader({
 		to: "/v2-workspace/$workspaceId",
 		fuzzy: true,
 	});
-	const onV2WorkspaceRoute = v2WorkspaceMatch !== false;
 	const showsAppTopBar = useShowsAppTopBar();
 	// Pre-select the viewed workspace's project in the new-workspace modal.
 	const { workspaces: hostWorkspaces } = useHostWorkspaces();
@@ -296,19 +295,14 @@ export function DashboardSidebarHeader({
 		return (
 			<div className="flex flex-col">
 				{/* The page's header row continues across the rail, and the macOS
-				    window buttons sit in it. On the v2 workspace route that row is
-				    the pane tab bar. */}
+				    window buttons sit in it. */}
 				{!showsAppTopBar && (
 					<div
 						// w +1px: overlaps the container's border-r so the sidebar's
-						// vertical border starts below the row, not inside it. The tab
-						// bar fill is its bg-muted/45|35-over-background flattened to an
-						// opaque color so it can paint over that border pixel.
+						// vertical border starts below the row, not inside it.
 						className={cn(
-							"drag w-[calc(100%+1px)] shrink-0",
-							onV2WorkspaceRoute
-								? "h-10 bg-[color-mix(in_oklab,var(--muted)_45%,var(--background))] dark:bg-[color-mix(in_oklab,var(--muted)_35%,var(--background))]"
-								: cn("h-12", WINDOW_CHROME_BAND_CLASS),
+							"drag h-12 w-[calc(100%+1px)] shrink-0",
+							WINDOW_CHROME_BAND_CLASS,
 						)}
 					>
 						{!isMac && (
