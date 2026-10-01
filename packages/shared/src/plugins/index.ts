@@ -451,6 +451,15 @@ export const PLUGIN_CATALOG: readonly PluginCatalogEntry[] = [
 			},
 		},
 	},
+	{
+		name: "ynab",
+		version: "1.0.0",
+		description:
+			"Track money in YNAB: accounts, categories, budgets, and transactions",
+		interface: { displayName: "YNAB", category: "Productivity" },
+		auth: [{ type: "api_key", label: "Personal Access Token" }],
+		mcpServers: {},
+	},
 ];
 
 export const SUPERSET_API_URL = "https://api.superset.sh";
