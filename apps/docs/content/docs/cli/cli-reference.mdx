@@ -1951,6 +1951,131 @@ superset settings theme set system --system-light light --system-dark monokai
 
 ---
 
+### completion
+
+Shell completion for bash and zsh, generated from the installed version's
+command tree, so it never drifts from what the binary accepts.
+
+<Command
+	name="superset completion <shell>"
+	args={[
+		{ name: "shell", required: true, description: "`bash` or `zsh`." },
+	]}
+>
+Prints the script to stdout, byte for byte, in every output mode: `--json`,
+`--quiet` and agent environments do not wrap it. The script completes command
+names at every level and walks through an alias already typed
+(`superset ws cr<Tab>`), each command's flags and their aliases, enum values
+for flags (`--priority=u<Tab>` included) and arguments, and the global
+options.
+
+```bash
+# This shell session
+source <(superset completion zsh)
+eval "$(superset completion bash)"   # bash 3.2 (macOS's /bin/bash) cannot source a process substitution
+
+# Every session: put the line above in ~/.zshrc or ~/.bashrc, or for zsh
+# install the script on fpath so compinit autoloads it
+superset completion zsh > ~/.zfunc/_superset   # with fpath=(~/.zfunc $fpath) before compinit
+```
+</Command>
+
+### schema
+
+<Command name="superset schema">
+Prints every command, option and argument as JSON, for tooling that must not
+parse `--help`. Commands hidden from this run (internal-only, or unavailable
+in a cloud workspace) are left out, as they are from `--help`. Commands and
+options are sorted and absent fields are omitted, so the output of two
+versions diffs cleanly.
+
+```bash
+superset schema | jq '.commands[] | select(.path == ["terminals"]) | .commands[].path'
+```
+
+<CommandReturns>
+<JsonOutput>
+```ts
+{
+  name: "superset";
+  version: string;
+  globalOptions: SchemaOption[];
+  commands: SchemaCommand[];
+}
+
+// SchemaCommand
+{
+  path: string[];            // e.g. ["terminals", "read"]
+  description?: string;
+  aliases?: string[];
+  options: SchemaOption[];
+  args: SchemaArg[];
+  commands: SchemaCommand[]; // empty for a leaf command
+}
+
+// SchemaOption
+{
+  name: string;              // flag name without the dashes
+  aliases: string[];
+  type: "string" | "number" | "boolean";
+  required: boolean;
+  description?: string;
+  default?: unknown;
+  enum?: string[];
+  variadic?: true;
+  int?: true;
+  min?: number;
+  max?: number;
+  env?: string;              // environment variable that can supply the value
+}
+
+// SchemaArg
+{
+  name: string;
+  required: boolean;
+  description?: string;
+  enum?: string[];
+  variadic?: true;
+}
+```
+</JsonOutput>
+</CommandReturns>
+</Command>
+
+### config
+
+Inspect the CLI's local config file: `config.json` under `~/.superset`, or
+under `$SUPERSET_HOME_DIR` when that is set.
+
+<Command name="superset config check">
+Validates the file before a hand edit or a bad restore surfaces as a
+confusing auth failure: JSON syntax, the shape of `auth`, `apiKey` and
+`organizationId`, an expired token, and keys this version does not read.
+An error exits 1; a warning does not. A missing file is not an error, it
+only means nobody has logged in yet.
+
+```bash
+superset config check
+superset config check --json
+```
+
+<CommandReturns>
+<JsonOutput>
+```ts
+{
+  path: string;
+  exists: boolean;
+  valid: boolean;     // false when any issue is an error
+  loggedIn: boolean;  // the file holds a usable credential
+  issues: { severity: "error" | "warning"; message: string }[];
+}
+```
+</JsonOutput>
+</CommandReturns>
+</Command>
+
+---
+
 ## Output modes
 
 **JSON mode** (`--json`): raw payloads. Lists print arrays, get/create/update
