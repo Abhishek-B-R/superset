@@ -16119,6 +16119,12 @@ msgstr "Dit duurt langer dan gewoonlijk. De werkruimte is mogelijk al klaar — 
 msgid "This issue link is invalid."
 msgstr "Deze link naar een issue is ongeldig."
 
+msgid "This Linear workspace is already connected by {owner}. Ask them to disconnect first."
+msgstr "Deze Linear-werkruimte is al gekoppeld door {owner}. Vraag hen om eerst los te koppelen."
+
+msgid "This Linear workspace is already connected by another Superset organization."
+msgstr "Deze Linear-werkruimte is al gekoppeld door een andere Superset-organisatie."
+
 msgid "This looks like a binary file. Opening it as text may show garbled output or freeze the editor for large files."
 msgstr "Dit lijkt een binair bestand. Als tekst openen kan onleesbare uitvoer geven of de editor bij grote bestanden laten vastlopen."
 

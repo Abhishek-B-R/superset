@@ -16119,6 +16119,12 @@ msgstr "Está tardando más de lo normal. Puede que el espacio de trabajo ya est
 msgid "This issue link is invalid."
 msgstr "Este enlace de issue no es válido."
 
+msgid "This Linear workspace is already connected by {owner}. Ask them to disconnect first."
+msgstr "Este espacio de trabajo de Linear ya está conectado por {owner}. Pídele que lo desconecte primero."
+
+msgid "This Linear workspace is already connected by another Superset organization."
+msgstr "Este espacio de trabajo de Linear ya está conectado por otra organización de Superset."
+
 msgid "This looks like a binary file. Opening it as text may show garbled output or freeze the editor for large files."
 msgstr "Esto parece un archivo binario. Abrirlo como texto puede mostrar caracteres ilegibles o congelar el editor si es grande."
 

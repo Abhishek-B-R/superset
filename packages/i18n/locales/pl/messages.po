@@ -16119,6 +16119,12 @@ msgstr "Trwa to dłużej niż zwykle. Obszar roboczy może już być gotowy — 
 msgid "This issue link is invalid."
 msgstr "Ten link do zgłoszenia jest nieprawidłowy."
 
+msgid "This Linear workspace is already connected by {owner}. Ask them to disconnect first."
+msgstr "Ten obszar roboczy Lineara jest już połączony przez {owner}. Poproś o rozłączenie."
+
+msgid "This Linear workspace is already connected by another Superset organization."
+msgstr "Ten obszar roboczy Lineara jest już połączony z inną organizacją Superset."
+
 msgid "This looks like a binary file. Opening it as text may show garbled output or freeze the editor for large files."
 msgstr "To wygląda na plik binarny. Otwarcie go jako tekst może pokazać śmieci albo zawiesić edytor przy dużych plikach."
 

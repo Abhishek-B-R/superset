@@ -16119,6 +16119,12 @@ msgstr "Ini lebih lama dari biasanya. Workspace-nya mungkin sudah siap — memua
 msgid "This issue link is invalid."
 msgstr "Tautan issue ini tidak valid."
 
+msgid "This Linear workspace is already connected by {owner}. Ask them to disconnect first."
+msgstr "Workspace Linear ini sudah terhubung oleh {owner}. Minta mereka memutuskannya dulu."
+
+msgid "This Linear workspace is already connected by another Superset organization."
+msgstr "Workspace Linear ini sudah terhubung oleh organisasi Superset lain."
+
 msgid "This looks like a binary file. Opening it as text may show garbled output or freeze the editor for large files."
 msgstr "Ini tampak seperti file biner. Membukanya sebagai teks bisa menampilkan output kacau atau membekukan editor untuk file besar."
 

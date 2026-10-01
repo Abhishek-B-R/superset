@@ -16119,6 +16119,12 @@ msgstr "Việc này lâu hơn bình thường. Workspace có thể đã sẵn s�
 msgid "This issue link is invalid."
 msgstr "Liên kết issue này không hợp lệ."
 
+msgid "This Linear workspace is already connected by {owner}. Ask them to disconnect first."
+msgstr "Workspace Linear này đã được {owner} kết nối. Hãy nhờ họ ngắt kết nối trước."
+
+msgid "This Linear workspace is already connected by another Superset organization."
+msgstr "Workspace Linear này đã được một tổ chức Superset khác kết nối."
+
 msgid "This looks like a binary file. Opening it as text may show garbled output or freeze the editor for large files."
 msgstr "Đây có vẻ là tệp nhị phân. Mở dưới dạng văn bản có thể hiện ra ký tự lỗi hoặc làm treo trình soạn thảo với tệp lớn."
 

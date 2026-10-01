@@ -16119,6 +16119,12 @@ msgstr "這比平時耗時更久。工作區可能已經就緒 — 重新載入�
 msgid "This issue link is invalid."
 msgstr "此議題連結無效。"
 
+msgid "This Linear workspace is already connected by {owner}. Ask them to disconnect first."
+msgstr "這個Linear工作區已被{owner}連線。請讓對方先斷開連線。"
+
+msgid "This Linear workspace is already connected by another Superset organization."
+msgstr "這個Linear工作區已被另一個Superset組織連線。"
+
 msgid "This looks like a binary file. Opening it as text may show garbled output or freeze the editor for large files."
 msgstr "這看起來是二進位檔案。以文字方式開啟可能顯示亂碼，檔案較大時還可能讓編輯器卡死。"
 

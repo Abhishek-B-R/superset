@@ -16119,6 +16119,12 @@ msgstr "Trvá to déle než obvykle. Pracovní prostor už možná je připraven
 msgid "This issue link is invalid."
 msgstr "Tento odkaz na issue je neplatný."
 
+msgid "This Linear workspace is already connected by {owner}. Ask them to disconnect first."
+msgstr "Tento Linear workspace už připojil {owner}. Požádejte je, ať ho nejdřív odpojí."
+
+msgid "This Linear workspace is already connected by another Superset organization."
+msgstr "Tento Linear workspace už připojila jiná organizace Superset."
+
 msgid "This looks like a binary file. Opening it as text may show garbled output or freeze the editor for large files."
 msgstr "Vypadá to na binární soubor. Otevření jako text může zobrazit nesmyslný výstup nebo u velkých souborů zamrznout editor."
 

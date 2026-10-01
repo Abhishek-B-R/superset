@@ -16119,6 +16119,12 @@ msgstr "Это занимает больше времени, чем обычно
 msgid "This issue link is invalid."
 msgstr "Эта ссылка на задачу недействительна."
 
+msgid "This Linear workspace is already connected by {owner}. Ask them to disconnect first."
+msgstr "Это рабочее пространство Linear уже подключено пользователем {owner}. Попросите отключить его."
+
+msgid "This Linear workspace is already connected by another Superset organization."
+msgstr "Это рабочее пространство Linear уже подключено другой организацией Superset."
+
 msgid "This looks like a binary file. Opening it as text may show garbled output or freeze the editor for large files."
 msgstr "Похоже, это бинарный файл. Открытие его как текста может показать мусор или подвесить редактор на больших файлах."
 
@@ -16126,7 +16132,7 @@ msgid "This Mac"
 msgstr "Этот Mac"
 
 msgid "This Microsoft tenant is already connected by {detail}. Ask them to disconnect first."
-msgstr "Этот тенант Microsoft уже подключён {detail}. Попросите отключить его."
+msgstr "Этот тенант Microsoft уже подключён пользователем {detail}. Попросите отключить его."
 
 msgid "This Microsoft tenant is already connected by another Superset organization."
 msgstr "Этот тенант Microsoft уже подключён другой организацией Superset."
@@ -16219,7 +16225,7 @@ msgid "This screen doesn't exist"
 msgstr "Такого экрана нет"
 
 msgid "This Slack workspace is already connected by {owner}. Ask them to disconnect first."
-msgstr "Это рабочее пространство Slack уже подключено {owner}. Попросите отключить его."
+msgstr "Это рабочее пространство Slack уже подключено пользователем {owner}. Попросите отключить его."
 
 msgid "This Slack workspace is already connected by another Superset organization."
 msgstr "Это рабочее пространство Slack уже подключено другой организацией Superset."
