@@ -914,6 +914,9 @@ msgstr "{months}bln"
 msgid "{months}mo ago"
 msgstr "{months}bln lalu"
 
+msgid "{myFailedCount} of your automations failed their last run"
+msgstr "{myFailedCount} otomatisasi Anda gagal pada run terakhirnya"
+
 #. js-lingui-explicit-id
 msgid "serverError.plugins.marketplaceBuiltinRemove"
 msgstr "{name} bawaan dan tidak dapat dihapus"
@@ -2546,11 +2549,17 @@ msgstr "Judul otomatisasi"
 msgid "Automations"
 msgstr "Otomatisasi"
 
+msgid "Automations ({myFailedCount} failing)"
+msgstr "Otomatisasi ({myFailedCount} gagal)"
+
 msgid "Automations & event triggers"
 msgstr "Otomatisasi & pemicu event"
 
 msgid "Automations require the Pro plan."
 msgstr "Otomatisasi memerlukan paket Pro."
+
+msgid "Automations, {myFailedCount} failing"
+msgstr "Otomatisasi, {myFailedCount} gagal"
 
 msgid "Autonomous"
 msgstr "Otonom"

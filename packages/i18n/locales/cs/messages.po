@@ -914,6 +914,9 @@ msgstr "{months} měs."
 msgid "{months}mo ago"
 msgstr "před {months} měs."
 
+msgid "{myFailedCount} of your automations failed their last run"
+msgstr "Vaše automatizace s neúspěšným posledním během: {myFailedCount}"
+
 #. js-lingui-explicit-id
 msgid "serverError.plugins.marketplaceBuiltinRemove"
 msgstr "{name} je vestavěný a nelze jej odebrat"
@@ -2546,11 +2549,17 @@ msgstr "Název automatizace"
 msgid "Automations"
 msgstr "Automatizace"
 
+msgid "Automations ({myFailedCount} failing)"
+msgstr "Automatizace (neúspěšné: {myFailedCount})"
+
 msgid "Automations & event triggers"
 msgstr "Automatizace a spouštěče událostí"
 
 msgid "Automations require the Pro plan."
 msgstr "Automatizace vyžadují tarif Pro."
+
+msgid "Automations, {myFailedCount} failing"
+msgstr "Automatizace, neúspěšné: {myFailedCount}"
 
 msgid "Autonomous"
 msgstr "Autonomní"

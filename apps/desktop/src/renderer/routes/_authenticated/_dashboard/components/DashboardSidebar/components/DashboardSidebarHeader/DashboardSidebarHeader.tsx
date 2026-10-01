@@ -55,6 +55,7 @@ import {
 	WINDOW_CONTROLS_ROW_HEIGHT,
 	WINDOW_CONTROLS_ROW_TOP,
 } from "renderer/routes/_authenticated/_dashboard/components/WindowChrome";
+import { useFailedAutomations } from "renderer/routes/_authenticated/_dashboard/hooks/useFailedAutomations";
 import { useShowsAppTopBar } from "renderer/routes/_authenticated/_dashboard/hooks/useShowsAppTopBar";
 import {
 	pullRequestsSearchFromFilters,
@@ -188,6 +189,7 @@ export function DashboardSidebarHeader({
 		(useFeatureFlagEnabled(FEATURE_FLAGS.PLUGINS) ?? false) ||
 		env.NODE_ENV === "development";
 	const cloudUtils = cloudTrpc.useUtils();
+	const { myFailedCount } = useFailedAutomations();
 
 	const {
 		tab: lastTab,
@@ -442,21 +444,37 @@ export function DashboardSidebarHeader({
 							<button
 								type="button"
 								onClick={handleAutomationsClick}
-								aria-label={t({
-									message: "Automations",
-								})}
+								aria-label={
+									myFailedCount > 0
+										? t({
+												message: `Automations, ${myFailedCount} failing`,
+											})
+										: t({
+												message: "Automations",
+											})
+								}
 								className={cn(
-									"flex size-7 items-center justify-center rounded-md transition-colors",
+									"relative flex size-7 items-center justify-center rounded-md transition-colors",
 									isAutomationsOpen
 										? "bg-fill-selected text-muted-foreground"
 										: "text-muted-foreground hover:bg-fill-hover",
 								)}
 							>
 								<LuClock className="size-3.5" strokeWidth={1.5} />
+								{myFailedCount > 0 && (
+									<span
+										aria-hidden="true"
+										className="absolute right-1 top-1 size-1.5 rounded-full bg-red-500"
+									/>
+								)}
 							</button>
 						</TooltipTrigger>
 						<TooltipContent side="right">
-							<Trans>Automations</Trans>
+							{myFailedCount > 0 ? (
+								<Trans>Automations ({myFailedCount} failing)</Trans>
+							) : (
+								<Trans>Automations</Trans>
+							)}
 						</TooltipContent>
 					</Tooltip>
 
@@ -786,6 +804,16 @@ export function DashboardSidebarHeader({
 				<span className="flex-1 text-left">
 					<Trans>Automations</Trans>
 				</span>
+				{myFailedCount > 0 && (
+					<span
+						title={t({
+							message: `${myFailedCount} of your automations failed their last run`,
+						})}
+						className="flex h-4 min-w-4 shrink-0 items-center justify-center rounded-full bg-red-500/15 px-1 text-[10px] font-medium tabular-nums text-red-600 dark:text-red-400"
+					>
+						{myFailedCount > 9 ? "9+" : myFailedCount}
+					</span>
+				)}
 			</button>
 
 			<button
