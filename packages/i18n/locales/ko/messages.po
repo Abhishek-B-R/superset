@@ -247,6 +247,10 @@ msgstr "{0, plural, one {도구 호출 #건} other {도구 호출 #건}}"
 msgid "{0, plural, one {# workspace} other {# workspaces}}"
 msgstr "{0, plural, one {워크스페이스 #개} other {워크스페이스 #개}}"
 
+#. placeholder {0}: tail.hidden
+msgid "{0, plural, one {+# more line} other {+# more lines}}"
+msgstr "{0, plural, other {+#줄 더}}"
+
 #. placeholder {0}: shown?.count ?? 0
 msgid "{0, plural, one {A running agent still uses the previous account — the switch only reaches new launches.} other {# running agents still use the previous account — the switch only reaches new launches.}}"
 msgstr "{0, plural, one {실행 중인 에이전트 #개가 아직 이전 계정을 사용하고 있습니다. 전환은 새 실행에만 적용됩니다.} other {실행 중인 에이전트 #개가 아직 이전 계정을 사용하고 있습니다. 전환은 새 실행에만 적용됩니다.}}"
@@ -350,6 +354,10 @@ msgstr "{0}와 {1}이(가) 터미널 공룡이 되어 결판을 냅니다. 승�
 #. placeholder {0}: formatTokens(belowGap > 0n ? belowGap : 0n)
 msgid "{0} behind you"
 msgstr "{0} 차이로 뒤"
+
+#. placeholder {0}: workspace.name
+msgid "{0} branch"
+msgstr "{0} 분기"
 
 #. placeholder {0}: params?.agent
 msgid "{0} cannot be signed in this way yet."
@@ -1392,6 +1400,9 @@ msgstr "프로덕션 변경의 과반이 사람이 차이를 읽지 않은 채 �
 msgid "A new version of Superset is required to continue. Please update to the latest version."
 msgstr "계속하려면 새 버전의 Superset이 필요합니다. 최신 버전으로 업데이트해 주세요."
 
+msgid "A new workspace off this branch, with the conversation handed to a fresh agent"
+msgstr "이 브랜치에서 새 워크스페이스를 만들고 대화를 새 에이전트에 넘깁니다"
+
 msgid "A process is still running in this tab"
 msgstr "이 탭에서 프로세스가 아직 실행 중입니다"
 
@@ -2358,6 +2369,9 @@ msgstr "데스크톱 앱에서 에이전트에게 게시를 요청하세요."
 msgid "Ask for this to be removed"
 msgstr "삭제 요청"
 
+msgid "Ask the agent, @mention files, run /commands"
+msgstr "에이전트에게 요청하고, @로 파일을 언급하고, /명령을 실행하세요"
+
 msgid "Ask the agent…"
 msgstr "에이전트에게 물어보세요…"
 
@@ -2402,6 +2416,9 @@ msgstr "파일 첨부"
 
 msgid "Attached"
 msgstr "연결됨"
+
+msgid "Attaching to the running session…"
+msgstr "실행 중인 세션에 연결 중…"
 
 msgid "attachment"
 msgstr "첨부 파일"
@@ -2822,6 +2839,12 @@ msgstr "이 기기에서 새 워크스페이스를 만들 때의 브랜치 동�
 msgid "Branch copied"
 msgstr "브랜치 복사됨"
 
+msgid "Branch in a new worktree"
+msgstr "새 worktree에서 분기"
+
+msgid "Branch in this workspace"
+msgstr "이 워크스페이스에서 분기"
+
 msgid "branch name"
 msgstr "브랜치 이름"
 
@@ -2845,6 +2868,9 @@ msgstr "브랜치 접두사"
 
 msgid "Branch renamed to {newName}"
 msgstr "브랜치 이름을 {newName}(으)로 변경했습니다"
+
+msgid "Branch this conversation"
+msgstr "여기서 대화 분기"
 
 #. placeholder {0}: workspace.branch
 msgid "Branch: {0}"
@@ -4369,6 +4395,9 @@ msgstr "로그 복사"
 msgid "Copy Markdown"
 msgstr "Markdown 복사"
 
+msgid "Copy message"
+msgstr "메시지 복사"
+
 msgid "Copy on select"
 msgstr "선택 시 복사"
 
@@ -4650,6 +4679,12 @@ msgstr "자격 증명을 확인하지 못했습니다: {reason}"
 msgid "Couldn't ask the workspace for a description"
 msgstr "워크스페이스에 설명을 요청하지 못했습니다"
 
+msgid "Couldn't branch into a new worktree"
+msgstr "새 worktree로 분기할 수 없습니다"
+
+msgid "Couldn't branch the conversation"
+msgstr "대화를 분기할 수 없습니다"
+
 msgid "Couldn't confirm star status — check that the GitHub CLI (`gh`) is installed, signed in, and that you have a network connection"
 msgstr "스타 상태를 확인하지 못했습니다 — GitHub CLI(`gh`)가 설치되어 로그인되어 있는지, 네트워크에 연결되어 있는지 확인하세요"
 
@@ -4747,6 +4782,9 @@ msgstr "이 호스트에서 사용량 기록을 읽지 못했습니다."
 msgid "Couldn't remove the local sign-in"
 msgstr "로컬 로그인 정보를 제거하지 못했습니다"
 
+msgid "Couldn't reopen the agent in a terminal"
+msgstr "터미널에서 에이전트를 다시 열 수 없습니다"
+
 msgid "Couldn't restart terminals"
 msgstr "터미널을 다시 시작하지 못했습니다"
 
@@ -4807,6 +4845,12 @@ msgstr "이 페이지에서 디자인 모드를 시작할 수 없습니다"
 
 msgid "Couldn't start workspace"
 msgstr "워크스페이스를 시작하지 못했습니다"
+
+msgid "Couldn't stop the agent's terminal"
+msgstr "에이전트의 터미널을 중지할 수 없습니다"
+
+msgid "Couldn't stop the chat"
+msgstr "채팅을 중지할 수 없습니다"
 
 msgid "Couldn't unstage changes"
 msgstr "스테이징을 해제하지 못했습니다"
@@ -7633,6 +7677,9 @@ msgstr "숨기기"
 msgid "Hide checks"
 msgstr "검사 숨기기"
 
+msgid "Hide detail"
+msgstr "세부 정보 숨기기"
+
 msgid "Hide details"
 msgstr "상세 정보 숨기기"
 
@@ -9314,9 +9361,6 @@ msgstr "메시 그라데이션"
 msgid "Message in channel"
 msgstr "채널 내 메시지"
 
-msgid "Message the agent"
-msgstr "에이전트에게 메시지 보내기"
-
 msgid "Message..."
 msgstr "메시지..."
 
@@ -10102,6 +10146,9 @@ msgstr "일치 항목 없음"
 
 msgid "No matches"
 msgstr "일치 항목 없음"
+
+msgid "No matching files"
+msgstr "일치하는 파일 없음"
 
 msgid "No matching org members."
 msgstr "일치하는 조직 멤버가 없습니다."
@@ -11188,6 +11235,12 @@ msgstr "폴더 열기"
 
 msgid "Opening pages"
 msgstr "페이지 열기"
+
+msgid "Opening the chat…"
+msgstr "채팅을 여는 중…"
+
+msgid "Opening the conversation…"
+msgstr "대화를 여는 중…"
 
 msgid "Opening worktree..."
 msgstr "worktree를 여는 중..."
@@ -13084,6 +13137,9 @@ msgstr "자동화 재개"
 msgid "Resuming {0}…"
 msgstr "{0}을(를) 재개하는 중…"
 
+msgid "Resuming the conversation…"
+msgstr "대화를 이어가는 중…"
+
 msgid "Retained MRR"
 msgstr "유지된 MRR"
 
@@ -14218,6 +14274,9 @@ msgstr "닫힌 항목 표시"
 msgid "Show CPU and memory usage in the top bar"
 msgstr "상단 바에 CPU와 메모리 사용량을 표시합니다"
 
+msgid "Show detail"
+msgstr "세부 정보 표시"
+
 msgid "Show details"
 msgstr "상세 정보 보기"
 
@@ -14821,6 +14880,9 @@ msgstr "이 터미널의 최근 컨텍스트를 넘겨받아 새 에이전트 �
 msgid "Start a new agent session each run"
 msgstr "실행할 때마다 새 에이전트 세션 시작"
 
+msgid "Start a new chat"
+msgstr "새 채팅 시작"
+
 msgid "Start a session"
 msgstr "세션 시작"
 
@@ -14890,6 +14952,9 @@ msgstr "{agentLabel} 시작 중"
 
 msgid "Starting cloud workspace"
 msgstr "클라우드 워크스페이스 시작 중"
+
+msgid "Starting the agent…"
+msgstr "에이전트를 시작하는 중…"
 
 msgid "Starting up. This should only take a moment."
 msgstr "시작 중이에요. 잠시만 기다려 주세요."
@@ -15645,6 +15710,9 @@ msgstr "감사합니다. 접수되었습니다"
 msgid "That {plugin} sign-in link expired. Try connecting again."
 msgstr "해당 {plugin} 로그인 링크가 만료되었습니다. 다시 연결해 보세요."
 
+msgid "That agent session has no conversation to open yet — it was started but never prompted."
+msgstr "이 에이전트 세션에는 아직 열 대화가 없습니다. 시작되었지만 한 번도 요청을 받지 않았습니다."
+
 msgid "That endpoint could not be resolved."
 msgstr "해당 엔드포인트를 확인할 수 없습니다."
 
@@ -15671,6 +15739,9 @@ msgstr "활성 조직"
 
 msgid "The address is unreachable"
 msgstr "이 주소에 연결할 수 없습니다"
+
+msgid "The agent copies the conversation; the branch opens here"
+msgstr "에이전트가 대화를 복사하고 분기는 여기서 열립니다"
 
 msgid "The agent owns a task from ticket to diff. The human reviews the result, not the keystrokes. Attention shifts from writing code to specifying work and judging it. One engineer runs several agents at once in isolated workspaces."
 msgstr "에이전트가 티켓부터 차이까지 작업을 맡습니다. 사람은 키 입력이 아니라 결과를 리뷰합니다. 관심은 코드를 쓰는 데서 일을 명세하고 판단하는 데로 옮겨 갑니다. 엔지니어 한 명이 격리된 워크스페이스에서 여러 에이전트를 동시에 돌립니다."
@@ -16017,6 +16088,12 @@ msgstr "이 {plugin} 계정은 이미 다른 Superset 조직에 연결되어 있
 msgid "This action is irreversible."
 msgstr "이 동작은 되돌릴 수 없습니다."
 
+msgid "This agent can't be opened as a chat."
+msgstr "이 에이전트는 채팅으로 열 수 없습니다."
+
+msgid "This agent can't branch a conversation"
+msgstr "이 에이전트는 대화를 분기할 수 없습니다"
+
 msgid "This agent can't run in a cloud workspace"
 msgstr "이 에이전트는 클라우드 워크스페이스에서 실행할 수 없습니다"
 
@@ -16041,6 +16118,9 @@ msgstr "이 자동화는 다른 조직에 있습니다"
 
 msgid "This cannot be undone."
 msgstr "되돌릴 수 없습니다."
+
+msgid "This chat's agent has stopped and can't be resumed."
+msgstr "이 채팅의 에이전트가 중지되어 이어갈 수 없습니다."
 
 msgid "This closes every terminal session — in this workspace and any others — and can't be undone. If they're only briefly stuck, waiting usually brings them back."
 msgstr "이 워크스페이스를 포함한 모든 워크스페이스의 터미널 세션이 닫히며 되돌릴 수 없습니다. 잠깐 멈춘 것뿐이라면 기다리는 것만으로 대개 복구됩니다."
@@ -16321,6 +16401,9 @@ msgstr "스테이징된 변경 사항을 모두 스테이징 해제하고 되돌
 
 msgid "This workspace"
 msgstr "이 워크스페이스"
+
+msgid "This workspace has no project to branch from"
+msgstr "이 워크스페이스에는 분기할 프로젝트가 없습니다"
 
 msgid "This workspace may have been removed, or you no longer have access to it."
 msgstr "이 워크스페이스가 제거되었거나 더 이상 접근 권한이 없을 수 있습니다."
@@ -17637,6 +17720,14 @@ msgstr "티켓에서 바로 작업"
 msgid "Work with your agents across your favorite tools"
 msgstr "즐겨 쓰는 도구 전반에서 에이전트와 함께 작업하세요"
 
+#. placeholder {0}: Math.floor(seconds / 60)
+#. placeholder {1}: seconds % 60
+msgid "Worked for {0}m {1}s"
+msgstr "{0}분 {1}초 동안 작업함"
+
+msgid "Worked for {seconds}s"
+msgstr "{seconds}초 동안 작업함"
+
 msgid "Worked for 39s"
 msgstr "39초 동안 작업"
 
@@ -17652,6 +17743,14 @@ msgstr "작업 중"
 msgctxt "agent status"
 msgid "Working"
 msgstr "작업 중"
+
+#. placeholder {0}: Math.floor(seconds / 60)
+#. placeholder {1}: seconds % 60
+msgid "Working for {0}m {1}s"
+msgstr "{0}분 {1}초 동안 작업 중"
+
+msgid "Working for {seconds}s"
+msgstr "{seconds}초 동안 작업 중"
 
 msgid "Works when environments are clean. Environments are rarely clean."
 msgstr "환경이 깨끗할 때는 됩니다. 환경이 깨끗한 경우는 드뭅니다."

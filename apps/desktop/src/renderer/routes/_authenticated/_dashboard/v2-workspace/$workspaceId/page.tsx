@@ -49,6 +49,7 @@ import { useDiffPaneTarget } from "./hooks/useDiffPaneTarget";
 import { usePaneRegistry } from "./hooks/usePaneRegistry";
 import { renderBrowserTabIcon } from "./hooks/usePaneRegistry/components/BrowserPane";
 import { usePullRequestPaneIntentOpener } from "./hooks/usePullRequestPaneIntentOpener";
+import { useRunPendingChatHandoff } from "./hooks/useRunPendingChatHandoff";
 import { useRunWorkspaceCreationPresets } from "./hooks/useRunWorkspaceCreationPresets";
 import { useShellInteractionPassthrough } from "./hooks/useShellInteractionPassthrough";
 import { useSlotElement } from "./hooks/useSlotElement";
@@ -292,6 +293,11 @@ function V2WorkspaceContent() {
 	const { createNewAgentSession, focusAgentTerminal } = useAgentSessionLauncher(
 		{ workspaceId, store },
 	);
+	useRunPendingChatHandoff({
+		workspaceId,
+		isLayoutReady,
+		createNewAgentSession,
+	});
 
 	const quickOpenOpen = useQuickOpenStore(
 		(s) => s.open && s.target?.workspaceId === workspaceId,

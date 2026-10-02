@@ -247,6 +247,10 @@ msgstr "{0, plural, one {# tool-aanroep} other {# tool-aanroepen}}"
 msgid "{0, plural, one {# workspace} other {# workspaces}}"
 msgstr "{0, plural, one {# werkruimte} other {# werkruimtes}}"
 
+#. placeholder {0}: tail.hidden
+msgid "{0, plural, one {+# more line} other {+# more lines}}"
+msgstr "{0, plural, one {+# regel meer} other {+# regels meer}}"
+
 #. placeholder {0}: shown?.count ?? 0
 msgid "{0, plural, one {A running agent still uses the previous account — the switch only reaches new launches.} other {# running agents still use the previous account — the switch only reaches new launches.}}"
 msgstr "{0, plural, one {Eén draaiende agent gebruikt nog het vorige account — de wissel geldt alleen voor nieuwe starts.} other {# draaiende agents gebruiken nog het vorige account — de wissel geldt alleen voor nieuwe starts.}}"
@@ -350,6 +354,10 @@ msgstr "{0} en {1} beslechten het als terminaldinosaurussen. De statistieken bep
 #. placeholder {0}: formatTokens(belowGap > 0n ? belowGap : 0n)
 msgid "{0} behind you"
 msgstr "{0} achter je"
+
+#. placeholder {0}: workspace.name
+msgid "{0} branch"
+msgstr "{0} aftakking"
 
 #. placeholder {0}: params?.agent
 msgid "{0} cannot be signed in this way yet."
@@ -1392,6 +1400,9 @@ msgstr "Een meerderheid van de productiewijzigingen merget zonder dat een mens d
 msgid "A new version of Superset is required to continue. Please update to the latest version."
 msgstr "Er is een nieuwe versie van Superset nodig om verder te gaan. Werk bij naar de nieuwste versie."
 
+msgid "A new workspace off this branch, with the conversation handed to a fresh agent"
+msgstr "Een nieuwe workspace vanaf deze branch, met het gesprek overgedragen aan een nieuwe agent"
+
 msgid "A process is still running in this tab"
 msgstr "Er draait nog een proces in dit tabblad"
 
@@ -2358,6 +2369,9 @@ msgstr "Vraag een agent om er een te publiceren vanuit de desktop-app."
 msgid "Ask for this to be removed"
 msgstr "Vraag om verwijdering"
 
+msgid "Ask the agent, @mention files, run /commands"
+msgstr "Vraag de agent, @vermeld bestanden, gebruik /commando's"
+
 msgid "Ask the agent…"
 msgstr "Vraag het de agent…"
 
@@ -2402,6 +2416,9 @@ msgstr "Bestanden bijvoegen"
 
 msgid "Attached"
 msgstr "Gekoppeld"
+
+msgid "Attaching to the running session…"
+msgstr "Verbinden met de actieve sessie…"
 
 msgid "attachment"
 msgstr "bijlage"
@@ -2822,6 +2839,12 @@ msgstr "Branchgedrag voor nieuwe werkruimtes op dit apparaat. Projecten kunnen d
 msgid "Branch copied"
 msgstr "Branch gekopieerd"
 
+msgid "Branch in a new worktree"
+msgstr "Afsplitsen in een nieuwe worktree"
+
+msgid "Branch in this workspace"
+msgstr "Afsplitsen in deze workspace"
+
 msgid "branch name"
 msgstr "branchnaam"
 
@@ -2845,6 +2868,9 @@ msgstr "Branchvoorvoegsel"
 
 msgid "Branch renamed to {newName}"
 msgstr "Branch hernoemd naar {newName}"
+
+msgid "Branch this conversation"
+msgstr "Gesprek hier afsplitsen"
 
 #. placeholder {0}: workspace.branch
 msgid "Branch: {0}"
@@ -4369,6 +4395,9 @@ msgstr "Log kopiëren"
 msgid "Copy Markdown"
 msgstr "Markdown kopiëren"
 
+msgid "Copy message"
+msgstr "Bericht kopiëren"
+
 msgid "Copy on select"
 msgstr "Kopiëren bij selectie"
 
@@ -4650,6 +4679,12 @@ msgstr "Kon de inloggegevens niet verifiëren: {reason}"
 msgid "Couldn't ask the workspace for a description"
 msgstr "Kon de workspace niet om een beschrijving vragen"
 
+msgid "Couldn't branch into a new worktree"
+msgstr "Kon niet afsplitsen naar een nieuwe worktree"
+
+msgid "Couldn't branch the conversation"
+msgstr "Kon het gesprek niet afsplitsen"
+
 msgid "Couldn't confirm star status — check that the GitHub CLI (`gh`) is installed, signed in, and that you have a network connection"
 msgstr "Kan de sterstatus niet bevestigen — controleer of de GitHub-CLI (`gh`) is geïnstalleerd, of je bent ingelogd en of je een netwerkverbinding hebt"
 
@@ -4747,6 +4782,9 @@ msgstr "Kan de gebruiksgeschiedenis van deze host niet lezen."
 msgid "Couldn't remove the local sign-in"
 msgstr "Kan de lokale login niet verwijderen"
 
+msgid "Couldn't reopen the agent in a terminal"
+msgstr "Kon de agent niet opnieuw in een terminal openen"
+
 msgid "Couldn't restart terminals"
 msgstr "Kan terminals niet herstarten"
 
@@ -4807,6 +4845,12 @@ msgstr "Kan de designmodus niet starten op deze pagina"
 
 msgid "Couldn't start workspace"
 msgstr "Kan werkruimte niet starten"
+
+msgid "Couldn't stop the agent's terminal"
+msgstr "Kon de terminal van de agent niet stoppen"
+
+msgid "Couldn't stop the chat"
+msgstr "Kon de chat niet stoppen"
 
 msgid "Couldn't unstage changes"
 msgstr "Kan wijzigingen niet unstagen"
@@ -7633,6 +7677,9 @@ msgstr "Verbergen"
 msgid "Hide checks"
 msgstr "Checks verbergen"
 
+msgid "Hide detail"
+msgstr "Details verbergen"
+
 msgid "Hide details"
 msgstr "Details verbergen"
 
@@ -9314,9 +9361,6 @@ msgstr "Mesh Gradient"
 msgid "Message in channel"
 msgstr "Bericht in kanaal"
 
-msgid "Message the agent"
-msgstr "Bericht aan de agent"
-
 msgid "Message..."
 msgstr "Bericht..."
 
@@ -10102,6 +10146,9 @@ msgstr "Geen overeenkomst"
 
 msgid "No matches"
 msgstr "Geen overeenkomsten"
+
+msgid "No matching files"
+msgstr "Geen overeenkomende bestanden"
 
 msgid "No matching org members."
 msgstr "Geen overeenkomende leden in de organisatie."
@@ -11188,6 +11235,12 @@ msgstr "Mappen openen"
 
 msgid "Opening pages"
 msgstr "Pagina's openen"
+
+msgid "Opening the chat…"
+msgstr "Chat openen…"
+
+msgid "Opening the conversation…"
+msgstr "Gesprek wordt geopend…"
 
 msgid "Opening worktree..."
 msgstr "Worktree openen..."
@@ -13084,6 +13137,9 @@ msgstr "Automatisering hervatten"
 msgid "Resuming {0}…"
 msgstr "{0} hervatten…"
 
+msgid "Resuming the conversation…"
+msgstr "Gesprek wordt hervat…"
+
 msgid "Retained MRR"
 msgstr "Behouden MRR"
 
@@ -14218,6 +14274,9 @@ msgstr "Gesloten tonen"
 msgid "Show CPU and memory usage in the top bar"
 msgstr "Toon CPU- en geheugengebruik in de bovenbalk"
 
+msgid "Show detail"
+msgstr "Details tonen"
+
 msgid "Show details"
 msgstr "Details tonen"
 
@@ -14821,6 +14880,9 @@ msgstr "Start een nieuwe agentsessie met de recente context van deze terminal. D
 msgid "Start a new agent session each run"
 msgstr "Start bij elke run een nieuwe agentsessie"
 
+msgid "Start a new chat"
+msgstr "Nieuwe chat starten"
+
 msgid "Start a session"
 msgstr "Sessie starten"
 
@@ -14890,6 +14952,9 @@ msgstr "{agentLabel} starten"
 
 msgid "Starting cloud workspace"
 msgstr "Cloudwerkruimte starten"
+
+msgid "Starting the agent…"
+msgstr "Agent starten…"
 
 msgid "Starting up. This should only take a moment."
 msgstr "Bezig met starten. Dit duurt maar even."
@@ -15645,6 +15710,9 @@ msgstr "Bedankt, we hebben het ontvangen"
 msgid "That {plugin} sign-in link expired. Try connecting again."
 msgstr "Die aanmeldlink voor {plugin} is verlopen. Probeer opnieuw verbinding te maken."
 
+msgid "That agent session has no conversation to open yet — it was started but never prompted."
+msgstr "Die agentsessie heeft nog geen gesprek om te openen — hij is gestart maar nooit aangestuurd."
+
 msgid "That endpoint could not be resolved."
 msgstr "Dat endpoint kon niet worden omgezet."
 
@@ -15671,6 +15739,9 @@ msgstr "de actieve organisatie"
 
 msgid "The address is unreachable"
 msgstr "Het adres is onbereikbaar"
+
+msgid "The agent copies the conversation; the branch opens here"
+msgstr "De agent kopieert het gesprek; de aftakking opent hier"
 
 msgid "The agent owns a task from ticket to diff. The human reviews the result, not the keystrokes. Attention shifts from writing code to specifying work and judging it. One engineer runs several agents at once in isolated workspaces."
 msgstr "De agent bezit een taak van ticket tot diff. De mens reviewt het resultaat, niet de toetsaanslagen. De aandacht verschuift van code schrijven naar werk specificeren en beoordelen. Eén engineer laat meerdere agents tegelijk draaien in geïsoleerde werkruimtes."
@@ -16017,6 +16088,12 @@ msgstr "Dit {plugin}-account is al verbonden door een andere Superset-organisati
 msgid "This action is irreversible."
 msgstr "Deze actie kan niet worden teruggedraaid."
 
+msgid "This agent can't be opened as a chat."
+msgstr "Deze agent kan niet als chat worden geopend."
+
+msgid "This agent can't branch a conversation"
+msgstr "Deze agent kan een gesprek niet afsplitsen"
+
 msgid "This agent can't run in a cloud workspace"
 msgstr "Deze agent kan niet in een cloudwerkruimte draaien"
 
@@ -16041,6 +16118,9 @@ msgstr "Deze automatisering staat in een andere organisatie"
 
 msgid "This cannot be undone."
 msgstr "Dit kan niet ongedaan worden gemaakt."
+
+msgid "This chat's agent has stopped and can't be resumed."
+msgstr "De agent van deze chat is gestopt en kan niet worden hervat."
 
 msgid "This closes every terminal session — in this workspace and any others — and can't be undone. If they're only briefly stuck, waiting usually brings them back."
 msgstr "Hiermee worden alle terminalsessies gesloten — in deze werkruimte en in alle andere — en dat kan niet ongedaan worden gemaakt. Zitten ze maar even vast, dan helpt wachten meestal."
@@ -16321,6 +16401,9 @@ msgstr "Hiermee worden alle gestagede wijzigingen ge-unstaged en teruggedraaid. 
 
 msgid "This workspace"
 msgstr "Deze werkruimte"
+
+msgid "This workspace has no project to branch from"
+msgstr "Deze workspace heeft geen project om vanaf af te splitsen"
 
 msgid "This workspace may have been removed, or you no longer have access to it."
 msgstr "Deze werkruimte is mogelijk verwijderd, of je hebt er geen toegang meer toe."
@@ -17637,6 +17720,14 @@ msgstr "Werken vanuit tickets"
 msgid "Work with your agents across your favorite tools"
 msgstr "Werk met je agents in je favoriete tools"
 
+#. placeholder {0}: Math.floor(seconds / 60)
+#. placeholder {1}: seconds % 60
+msgid "Worked for {0}m {1}s"
+msgstr "{0} min {1} s gewerkt"
+
+msgid "Worked for {seconds}s"
+msgstr "{seconds} s gewerkt"
+
 msgid "Worked for 39s"
 msgstr "39s gewerkt"
 
@@ -17652,6 +17743,14 @@ msgstr "Bezig"
 msgctxt "agent status"
 msgid "Working"
 msgstr "Bezig"
+
+#. placeholder {0}: Math.floor(seconds / 60)
+#. placeholder {1}: seconds % 60
+msgid "Working for {0}m {1}s"
+msgstr "Bezig sinds {0} min {1} s"
+
+msgid "Working for {seconds}s"
+msgstr "Bezig sinds {seconds} s"
 
 msgid "Works when environments are clean. Environments are rarely clean."
 msgstr "Werkt als omgevingen schoon zijn. Omgevingen zijn zelden schoon."

@@ -247,6 +247,10 @@ msgstr "{0, plural, one {# wywołanie narzędzia} few {# wywołania narzędzia} 
 msgid "{0, plural, one {# workspace} other {# workspaces}}"
 msgstr "{0, plural, one {# obszar roboczy} few {# obszary robocze} many {# obszarów roboczych} other {# obszaru roboczego}}"
 
+#. placeholder {0}: tail.hidden
+msgid "{0, plural, one {+# more line} other {+# more lines}}"
+msgstr "{0, plural, one {+# wiersz więcej} few {+# wiersze więcej} other {+# wierszy więcej}}"
+
 #. placeholder {0}: shown?.count ?? 0
 msgid "{0, plural, one {A running agent still uses the previous account — the switch only reaches new launches.} other {# running agents still use the previous account — the switch only reaches new launches.}}"
 msgstr "{0, plural, one {# działający agent nadal korzysta z poprzedniego konta — zmiana obejmuje tylko nowe uruchomienia.} few {# działających agentów nadal korzysta z poprzedniego konta — zmiana obejmuje tylko nowe uruchomienia.} many {# działających agentów nadal korzysta z poprzedniego konta — zmiana obejmuje tylko nowe uruchomienia.} other {# działającego agenta nadal korzysta z poprzedniego konta — zmiana obejmuje tylko nowe uruchomienia.}}"
@@ -350,6 +354,10 @@ msgstr "{0} i {1} rozstrzygają to jako terminalowe dinozaury. O zwycięzcy decy
 #. placeholder {0}: formatTokens(belowGap > 0n ? belowGap : 0n)
 msgid "{0} behind you"
 msgstr "{0} za tobą"
+
+#. placeholder {0}: workspace.name
+msgid "{0} branch"
+msgstr "gałąź {0}"
 
 #. placeholder {0}: params?.agent
 msgid "{0} cannot be signed in this way yet."
@@ -1392,6 +1400,9 @@ msgstr "Większość zmian produkcyjnych scala się bez czytania diffa przez cz�
 msgid "A new version of Superset is required to continue. Please update to the latest version."
 msgstr "Do kontynuowania wymagana jest nowa wersja Superset. Zaktualizuj do najnowszej wersji."
 
+msgid "A new workspace off this branch, with the conversation handed to a fresh agent"
+msgstr "Nowy obszar roboczy z tej gałęzi, z rozmową przekazaną nowemu agentowi"
+
 msgid "A process is still running in this tab"
 msgstr "W tej karcie wciąż działa proces"
 
@@ -2358,6 +2369,9 @@ msgstr "Poproś agenta, aby opublikował jakąś z aplikacji na komputer."
 msgid "Ask for this to be removed"
 msgstr "Poproś o usunięcie"
 
+msgid "Ask the agent, @mention files, run /commands"
+msgstr "Zapytaj agenta, @wspomnij pliki, użyj /poleceń"
+
 msgid "Ask the agent…"
 msgstr "Zapytaj agenta…"
 
@@ -2402,6 +2416,9 @@ msgstr "Załącz pliki"
 
 msgid "Attached"
 msgstr "Podłączona"
+
+msgid "Attaching to the running session…"
+msgstr "Łączenie z działającą sesją…"
 
 msgid "attachment"
 msgstr "załącznik"
@@ -2822,6 +2839,12 @@ msgstr "Zachowanie gałęzi dla nowych obszarów roboczych na tym urządzeniu. P
 msgid "Branch copied"
 msgstr "Skopiowano gałąź"
 
+msgid "Branch in a new worktree"
+msgstr "Rozgałęź w nowym worktree"
+
+msgid "Branch in this workspace"
+msgstr "Rozgałęź w tym obszarze roboczym"
+
 msgid "branch name"
 msgstr "nazwa gałęzi"
 
@@ -2845,6 +2868,9 @@ msgstr "Prefiks gałęzi"
 
 msgid "Branch renamed to {newName}"
 msgstr "Nazwę gałęzi zmieniono na {newName}"
+
+msgid "Branch this conversation"
+msgstr "Rozgałęź rozmowę tutaj"
 
 #. placeholder {0}: workspace.branch
 msgid "Branch: {0}"
@@ -4369,6 +4395,9 @@ msgstr "Kopiuj log"
 msgid "Copy Markdown"
 msgstr "Kopiuj Markdown"
 
+msgid "Copy message"
+msgstr "Kopiuj wiadomość"
+
 msgid "Copy on select"
 msgstr "Kopiuj przy zaznaczeniu"
 
@@ -4650,6 +4679,12 @@ msgstr "Nie udało się zweryfikować poświadczeń: {reason}"
 msgid "Couldn't ask the workspace for a description"
 msgstr "Nie udało się poprosić obszaru roboczego o opis"
 
+msgid "Couldn't branch into a new worktree"
+msgstr "Nie udało się rozgałęzić do nowego worktree"
+
+msgid "Couldn't branch the conversation"
+msgstr "Nie udało się rozgałęzić rozmowy"
+
 msgid "Couldn't confirm star status — check that the GitHub CLI (`gh`) is installed, signed in, and that you have a network connection"
 msgstr "Nie udało się potwierdzić statusu gwiazdki — sprawdź, czy GitHub CLI (`gh`) jest zainstalowane, zalogowane i czy masz połączenie z siecią"
 
@@ -4747,6 +4782,9 @@ msgstr "Nie udało się odczytać historii zużycia z tego hosta."
 msgid "Couldn't remove the local sign-in"
 msgstr "Nie udało się usunąć lokalnego logowania"
 
+msgid "Couldn't reopen the agent in a terminal"
+msgstr "Nie udało się ponownie otworzyć agenta w terminalu"
+
 msgid "Couldn't restart terminals"
 msgstr "Nie udało się zrestartować terminali"
 
@@ -4807,6 +4845,12 @@ msgstr "Nie udało się uruchomić trybu Design na tej stronie"
 
 msgid "Couldn't start workspace"
 msgstr "Nie udało się uruchomić obszaru roboczego"
+
+msgid "Couldn't stop the agent's terminal"
+msgstr "Nie udało się zatrzymać terminala agenta"
+
+msgid "Couldn't stop the chat"
+msgstr "Nie udało się zatrzymać czatu"
 
 msgid "Couldn't unstage changes"
 msgstr "Nie udało się usunąć zmian z indeksu"
@@ -7633,6 +7677,9 @@ msgstr "Ukryj"
 msgid "Hide checks"
 msgstr "Ukryj kontrole"
 
+msgid "Hide detail"
+msgstr "Ukryj szczegóły"
+
 msgid "Hide details"
 msgstr "Ukryj szczegóły"
 
@@ -9314,9 +9361,6 @@ msgstr "Mesh Gradient"
 msgid "Message in channel"
 msgstr "Wiadomość na kanale"
 
-msgid "Message the agent"
-msgstr "Napisz do agenta"
-
 msgid "Message..."
 msgstr "Wiadomość..."
 
@@ -10102,6 +10146,9 @@ msgstr "Brak dopasowania"
 
 msgid "No matches"
 msgstr "Brak dopasowań"
+
+msgid "No matching files"
+msgstr "Brak pasujących plików"
 
 msgid "No matching org members."
 msgstr "Brak pasujących członków organizacji."
@@ -11188,6 +11235,12 @@ msgstr "Otwieranie folderów"
 
 msgid "Opening pages"
 msgstr "Otwieranie stron"
+
+msgid "Opening the chat…"
+msgstr "Otwieranie czatu…"
+
+msgid "Opening the conversation…"
+msgstr "Otwieranie rozmowy…"
 
 msgid "Opening worktree..."
 msgstr "Otwieranie worktree..."
@@ -13084,6 +13137,9 @@ msgstr "Wznów automatyzację"
 msgid "Resuming {0}…"
 msgstr "Wznawianie {0}…"
 
+msgid "Resuming the conversation…"
+msgstr "Wznawianie rozmowy…"
+
 msgid "Retained MRR"
 msgstr "Zachowany MRR"
 
@@ -14218,6 +14274,9 @@ msgstr "Pokaż zamknięte"
 msgid "Show CPU and memory usage in the top bar"
 msgstr "Pokazuj zużycie CPU i pamięci na górnym pasku"
 
+msgid "Show detail"
+msgstr "Pokaż szczegóły"
+
 msgid "Show details"
 msgstr "Pokaż szczegóły"
 
@@ -14821,6 +14880,9 @@ msgstr "Uruchamia nową sesję agenta z ostatnim kontekstem tego terminala. Źr�
 msgid "Start a new agent session each run"
 msgstr "Rozpocznij nową sesję agenta przy każdym uruchomieniu"
 
+msgid "Start a new chat"
+msgstr "Rozpocznij nowy czat"
+
 msgid "Start a session"
 msgstr "Uruchom sesję"
 
@@ -14890,6 +14952,9 @@ msgstr "Uruchamianie {agentLabel}"
 
 msgid "Starting cloud workspace"
 msgstr "Uruchamianie obszaru roboczego w chmurze"
+
+msgid "Starting the agent…"
+msgstr "Uruchamianie agenta…"
 
 msgid "Starting up. This should only take a moment."
 msgstr "Uruchamianie. To powinno zająć tylko chwilę."
@@ -15645,6 +15710,9 @@ msgstr "Dzięki, mamy to"
 msgid "That {plugin} sign-in link expired. Try connecting again."
 msgstr "Ten link logowania do {plugin} wygasł. Spróbuj połączyć się ponownie."
 
+msgid "That agent session has no conversation to open yet — it was started but never prompted."
+msgstr "Ta sesja agenta nie ma jeszcze rozmowy do otwarcia — została uruchomiona, ale nigdy nie dostała polecenia."
+
 msgid "That endpoint could not be resolved."
 msgstr "Nie udało się rozpoznać tego punktu końcowego."
 
@@ -15671,6 +15739,9 @@ msgstr "aktywnej organizacji"
 
 msgid "The address is unreachable"
 msgstr "Adres jest nieosiągalny"
+
+msgid "The agent copies the conversation; the branch opens here"
+msgstr "Agent kopiuje rozmowę; gałąź otworzy się tutaj"
 
 msgid "The agent owns a task from ticket to diff. The human reviews the result, not the keystrokes. Attention shifts from writing code to specifying work and judging it. One engineer runs several agents at once in isolated workspaces."
 msgstr "Agent prowadzi zadanie od zgłoszenia do diffa. Człowiek przegląda wynik, a nie naciśnięcia klawiszy. Uwaga przenosi się z pisania kodu na opisywanie pracy i jej ocenę. Jeden inżynier prowadzi kilku agentów naraz w izolowanych obszarach roboczych."
@@ -16017,6 +16088,12 @@ msgstr "To konto {plugin} jest już połączone z inną organizacją Superset."
 msgid "This action is irreversible."
 msgstr "Tej operacji nie można cofnąć."
 
+msgid "This agent can't be opened as a chat."
+msgstr "Tego agenta nie można otworzyć jako czatu."
+
+msgid "This agent can't branch a conversation"
+msgstr "Ten agent nie może rozgałęzić rozmowy"
+
 msgid "This agent can't run in a cloud workspace"
 msgstr "Ten agent nie może działać w obszarze roboczym w chmurze"
 
@@ -16041,6 +16118,9 @@ msgstr "Ta automatyzacja znajduje się w innej organizacji"
 
 msgid "This cannot be undone."
 msgstr "Tej operacji nie można cofnąć."
+
+msgid "This chat's agent has stopped and can't be resumed."
+msgstr "Agent tego czatu został zatrzymany i nie można go wznowić."
 
 msgid "This closes every terminal session — in this workspace and any others — and can't be undone. If they're only briefly stuck, waiting usually brings them back."
 msgstr "Zamknie to każdą sesję terminala — w tym obszarze roboczym i we wszystkich innych — i nie da się tego cofnąć. Jeśli zacięły się tylko na chwilę, zwykle wystarczy poczekać."
@@ -16321,6 +16401,9 @@ msgstr "Usunie to z indeksu i cofnie wszystkie zaindeksowane zmiany. Zaindeksowa
 
 msgid "This workspace"
 msgstr "Ten obszar roboczy"
+
+msgid "This workspace has no project to branch from"
+msgstr "Ten obszar roboczy nie ma projektu, z którego można się rozgałęzić"
 
 msgid "This workspace may have been removed, or you no longer have access to it."
 msgstr "Ten obszar roboczy mógł zostać usunięty albo nie masz już do niego dostępu."
@@ -17637,6 +17720,14 @@ msgstr "Praca z ticketów"
 msgid "Work with your agents across your favorite tools"
 msgstr "Pracuj z agentami w swoich ulubionych narzędziach"
 
+#. placeholder {0}: Math.floor(seconds / 60)
+#. placeholder {1}: seconds % 60
+msgid "Worked for {0}m {1}s"
+msgstr "Pracował {0} min {1} s"
+
+msgid "Worked for {seconds}s"
+msgstr "Pracował {seconds} s"
+
 msgid "Worked for 39s"
 msgstr "Pracował 39 s"
 
@@ -17652,6 +17743,14 @@ msgstr "Pracuje"
 msgctxt "agent status"
 msgid "Working"
 msgstr "Pracuje"
+
+#. placeholder {0}: Math.floor(seconds / 60)
+#. placeholder {1}: seconds % 60
+msgid "Working for {0}m {1}s"
+msgstr "Pracuje od {0} min {1} s"
+
+msgid "Working for {seconds}s"
+msgstr "Pracuje od {seconds} s"
 
 msgid "Works when environments are clean. Environments are rarely clean."
 msgstr "Działa, gdy środowiska są czyste. Środowiska rzadko są czyste."

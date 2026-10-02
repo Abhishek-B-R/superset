@@ -224,6 +224,15 @@ export const workspaceLocalStateSchema = z.object({
 	// page drains this queue once on first open (see
 	// useRunWorkspaceCreationPresets) and clears it before running.
 	pendingCreationPresetIds: z.array(z.string()).default([]),
+	// A chat branched into this worktree from another one. An agent keys its
+	// sessions to a project directory, so the branch cannot be resumed here:
+	// the new chat is started with the conversation as its first message. The
+	// v2 workspace page drains this once on first open (see
+	// useRunPendingChatHandoff) and clears it before running.
+	pendingChatHandoff: z
+		.object({ agentId: z.string(), prompt: z.string() })
+		.nullable()
+		.default(null),
 });
 
 // Defaults for fields heal can synthesize. Identity fields (workspaceId,
@@ -256,6 +265,7 @@ const WORKSPACE_LOCAL_STATE_OPTIONAL_DEFAULTS = {
 		v1PaneId: string | null;
 	}>,
 	pendingCreationPresetIds: [] as string[],
+	pendingChatHandoff: null as { agentId: string; prompt: string } | null,
 };
 
 /**
@@ -553,6 +563,9 @@ export function healWorkspaceLocalState(raw: unknown): WorkspaceLocalStateRow {
 		pendingCreationPresetIds:
 			r.pendingCreationPresetIds ??
 			WORKSPACE_LOCAL_STATE_OPTIONAL_DEFAULTS.pendingCreationPresetIds,
+		pendingChatHandoff:
+			r.pendingChatHandoff ??
+			WORKSPACE_LOCAL_STATE_OPTIONAL_DEFAULTS.pendingChatHandoff,
 		sidebarState: {
 			...SIDEBAR_STATE_DEFAULTS,
 			...sidebar,

@@ -218,6 +218,14 @@ export const FEATURE_FLAGS = {
 	 * sees it, so a new build ships with it dark and no release widens it.
 	 */
 	MOBILE_LIVE_ACTIVITY: "mobile-live-activity",
+	/**
+	 * Shows the ACP chat pane: a chat UI that attaches to a Claude/Codex
+	 * session in the workspace over the Agent Client Protocol. UI-only: the
+	 * flag decides who sees the pane, not what the host can do. Off, unloaded,
+	 * or offline all mean "no pane" — flips take effect live. Audience is a
+	 * release condition on the flag, so widening never needs a release.
+	 */
+	ACP_CHAT: "acp-chat",
 } as const;
 
 /**
