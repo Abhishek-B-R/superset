@@ -10,6 +10,7 @@ import { useWorkspaceHostTarget } from "renderer/hooks/host-service/useWorkspace
 import { useV2UserPreferences } from "renderer/hooks/useV2UserPreferences";
 import { useHotkey } from "renderer/hotkeys";
 import { electronTrpc } from "renderer/lib/electron-trpc";
+import { reportRendererError } from "renderer/lib/report-renderer-error";
 import { RightSidebarToggle } from "renderer/routes/_authenticated/_dashboard/components/RightSidebarToggle";
 import { StateScreenShell } from "renderer/routes/_authenticated/_dashboard/components/StateScreenShell";
 import { WindowChrome } from "renderer/routes/_authenticated/_dashboard/components/WindowChrome";
@@ -48,6 +49,7 @@ import { useDiffPaneTarget } from "./hooks/useDiffPaneTarget";
 import { usePaneRegistry } from "./hooks/usePaneRegistry";
 import { renderBrowserTabIcon } from "./hooks/usePaneRegistry/components/BrowserPane";
 import { usePullRequestPaneIntentOpener } from "./hooks/usePullRequestPaneIntentOpener";
+import { useRunPendingChatHandoff } from "./hooks/useRunPendingChatHandoff";
 import { useRunWorkspaceCreationPresets } from "./hooks/useRunWorkspaceCreationPresets";
 import { useShellInteractionPassthrough } from "./hooks/useShellInteractionPassthrough";
 import { useSlotElement } from "./hooks/useSlotElement";
@@ -291,6 +293,11 @@ function V2WorkspaceContent() {
 	const { createNewAgentSession, focusAgentTerminal } = useAgentSessionLauncher(
 		{ workspaceId, store },
 	);
+	useRunPendingChatHandoff({
+		workspaceId,
+		isLayoutReady,
+		createNewAgentSession,
+	});
 
 	const quickOpenOpen = useQuickOpenStore(
 		(s) => s.open && s.target?.workspaceId === workspaceId,
@@ -379,20 +386,6 @@ function V2WorkspaceContent() {
 		/>
 	);
 
-	const shipControls = (
-		<>
-			{isLayoutReady && (
-				<ChangesControl
-					workspaceId={workspaceId}
-					isChangesOpen={isChangesPaneOpen}
-					onToggleChanges={toggleChangesPane}
-					onOpenPullRequest={openPullRequestPane}
-				/>
-			)}
-			<V2WorkspaceOpenInButton workspaceId={workspaceId} />
-		</>
-	);
-
 	return (
 		<FileDocumentStoreProvider store={store}>
 			<WorkspaceGitStatusProvider workspaceId={workspaceId}>
@@ -406,6 +399,7 @@ function V2WorkspaceContent() {
 							registry={paneRegistry}
 							paneActions={defaultPaneActions}
 							contextMenuActions={defaultContextMenuActions}
+							onPaneError={reportRendererError}
 							renderTabIcon={renderBrowserTabIcon}
 							renderTabAccessory={(tab) => (
 								<V2NotificationStatusIndicator
@@ -446,6 +440,19 @@ function V2WorkspaceContent() {
 											store={store}
 										/>
 									)}
+									{isLayoutReady && (
+										<ChangesControl
+											workspaceId={workspaceId}
+											isChangesOpen={isChangesPaneOpen}
+											onToggleChanges={toggleChangesPane}
+											onOpenPullRequest={openPullRequestPane}
+										/>
+									)}
+									{/* Open-in must not depend on the right sidebar being open,
+									    so it lives here rather than in the sidebar's top strip
+									    (#7167). Without an @container ancestor its branch label
+									    stays hidden, which keeps it compact for the tab bar. */}
+									<V2WorkspaceOpenInButton workspaceId={workspaceId} />
 									<RightSidebarToggle />
 									{!isMac && !sidebarOpen && <WindowControlsInset />}
 								</div>
@@ -480,7 +487,6 @@ function V2WorkspaceContent() {
 						>
 							<WorkspaceSidebar
 								workspaceId={workspaceId}
-								shipControls={shipControls}
 								runButton={workspaceRunButton}
 								pagesMenu={pagesMenu}
 								onSelectFile={openFilePaneFromTreeClick}

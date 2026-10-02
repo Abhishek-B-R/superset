@@ -144,6 +144,8 @@ jobs:
           BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
           GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
           GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          GOOGLE_TEMP_CLIENT_ID: ${{ secrets.GOOGLE_TEMP_CLIENT_ID }}
+          GOOGLE_TEMP_CLIENT_SECRET: ${{ secrets.GOOGLE_TEMP_CLIENT_SECRET }}
           GH_CLIENT_ID: ${{ secrets.GH_CLIENT_ID }}
           GH_CLIENT_SECRET: ${{ secrets.GH_CLIENT_SECRET }}
           NEXT_PUBLIC_SENTRY_DSN_API: ${{ secrets.NEXT_PUBLIC_SENTRY_DSN_API }}
@@ -218,6 +220,8 @@ jobs:
             --env BETTER_AUTH_SECRET=$BETTER_AUTH_SECRET \
             --env GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID \
             --env GOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_SECRET \
+            --env GOOGLE_TEMP_CLIENT_ID=$GOOGLE_TEMP_CLIENT_ID \
+            --env GOOGLE_TEMP_CLIENT_SECRET=$GOOGLE_TEMP_CLIENT_SECRET \
             --env GH_CLIENT_ID=$GH_CLIENT_ID \
             --env GH_CLIENT_SECRET=$GH_CLIENT_SECRET \
             --env NEXT_PUBLIC_SENTRY_DSN_API=$NEXT_PUBLIC_SENTRY_DSN_API \
@@ -339,6 +343,7 @@ jobs:
           NEXT_PUBLIC_ADMIN_URL: https://${{ env.ADMIN_ALIAS }}
           NEXT_PUBLIC_DOCS_URL: https://${{ env.DOCS_ALIAS }}
           NEXT_PUBLIC_RELAY_URL: ${{ secrets.RELAY_URL }}
+          NEXT_PUBLIC_REALTIME_URL: ${{ secrets.REALTIME_URL }}
           USERCONTENT_URL: ${{ secrets.USERCONTENT_URL }}
           STATIC_URL: ${{ secrets.STATIC_URL }}
           BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
@@ -374,6 +379,7 @@ jobs:
             --env NEXT_PUBLIC_ADMIN_URL=$NEXT_PUBLIC_ADMIN_URL \
             --env NEXT_PUBLIC_DOCS_URL=$NEXT_PUBLIC_DOCS_URL \
             --env NEXT_PUBLIC_RELAY_URL=$NEXT_PUBLIC_RELAY_URL \
+            --env NEXT_PUBLIC_REALTIME_URL=$NEXT_PUBLIC_REALTIME_URL \
             --env USERCONTENT_URL=$USERCONTENT_URL \
             --env STATIC_URL=$STATIC_URL \
             --env NEXT_PUBLIC_COOKIE_DOMAIN=$NEXT_PUBLIC_COOKIE_DOMAIN \

@@ -64,7 +64,8 @@ interface CloudWorkspaceRecordViewProps {
 	onCopyLink: () => void;
 	onCopyId: () => void;
 	onSaveAsEnvironment?: () => void;
-	onDelete: () => void;
+	onArchive: () => void;
+	onUnarchive: () => void;
 }
 
 export function CloudWorkspaceRecordView({
@@ -107,7 +108,8 @@ export function CloudWorkspaceRecordView({
 	onCopyLink,
 	onCopyId,
 	onSaveAsEnvironment,
-	onDelete,
+	onArchive,
+	onUnarchive,
 }: CloudWorkspaceRecordViewProps) {
 	return (
 		<RecordLayout
@@ -128,15 +130,15 @@ export function CloudWorkspaceRecordView({
 					onSetVisibility={onSetVisibility}
 				/>
 			}
-			sideHeader={
+			sideActions={
 				<CloudWorkspaceRecordActions
 					archivedAt={workspace.deletedAt}
-					now={now}
 					onOpenWorkspace={onOpenWorkspace}
 					onCopyLink={onCopyLink}
 					onCopyId={onCopyId}
 					onSaveAsEnvironment={onSaveAsEnvironment}
-					onDelete={onDelete}
+					onArchive={onArchive}
+					onUnarchive={onUnarchive}
 				/>
 			}
 			side={
