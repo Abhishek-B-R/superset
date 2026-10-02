@@ -4,8 +4,9 @@
 	"private": true,
 	"type": "module",
 	"scripts": {
-		"dev": "wrangler dev",
 		"deploy": "wrangler deploy",
+		"dev": "wrangler dev",
+		"test:integration": "bun scripts/storage-integration.ts",
 		"typecheck": "tsc --noEmit --emitDeclarationOnly false"
 	},
 	"dependencies": {
@@ -17,6 +18,7 @@
 	"devDependencies": {
 		"@cloudflare/workers-types": "5.20260801.1",
 		"@superset/typescript": "workspace:*",
+		"jose": "6.2.2",
 		"typescript": "6.0.3",
 		"wrangler": "4.118.0"
 	}

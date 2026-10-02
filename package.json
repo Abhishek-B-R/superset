@@ -58,7 +58,8 @@
 		"db:generate:desktop": "bun run --cwd packages/local-db generate",
 		"db:seed-shared-environments": "bun run --cwd packages/sandbox seed",
 		"sandbox:release": "bun run --cwd packages/sandbox release",
-		"sandbox:measure": "bun run --cwd packages/sandbox measure"
+		"sandbox:measure": "bun run --cwd packages/sandbox measure",
+		"check:durable-objects": "bun scripts/check-durable-objects.ts"
 	},
 	"type": "module",
 	"workspaces": [
