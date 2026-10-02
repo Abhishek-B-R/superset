@@ -388,6 +388,56 @@ export const FIRST_PARTY_MANIFESTS = {
 		},
 		"skills": []
 	} as const,
+	"stripe": {
+		"$schema": "https://superset.sh/schemas/plugin/1.0.0.json",
+		"name": "stripe",
+		"version": "1.0.0",
+		"description": "Work with payments in Stripe: trace charges and subscriptions, read billing data, and search Stripe's docs.",
+		"author": {
+			"name": "Superset",
+			"url": "https://superset.sh"
+		},
+		"homepage": "https://docs.superset.sh",
+		"repository": "https://github.com/superset-sh/superset",
+		"license": "MIT",
+		"keywords": [
+			"stripe",
+			"payments",
+			"billing",
+			"subscriptions",
+			"invoices"
+		],
+		"extensions": {
+			"superset": {
+				"interface": {
+					"displayName": "Stripe",
+					"category": "Data & APIs",
+					"icon": "stripe"
+				},
+				"connector": {
+					"slug": "stripe"
+				},
+				"mcp": {
+					"type": "streamable-http",
+					"url": "https://mcp.stripe.com"
+				}
+			}
+		},
+		"skills": [
+			{
+				"name": "build-a-stripe-integration",
+				"description": "Write Stripe code against what the API does today — plan the product shape, confirm every parameter from Stripe's own docs and schemas, and keep the agent in a sandbox. Use when adding checkout, billing, subscriptions, invoicing, or webhooks to a codebase, or when debugging Stripe integration code that compiles but behaves wrong."
+			},
+			{
+				"name": "refund-and-dispute",
+				"description": "Move money back to a customer in Stripe, or respond to a dispute, with the checks that belong in front of an irreversible write — read the charge first, fix the exact amount, and clear Stripe's human confirmation step. Use when the user asks to refund a payment, cancel and refund a subscription, or handle a chargeback or dispute."
+			},
+			{
+				"name": "trace-a-payment",
+				"description": "Answer a question about money that already moved in Stripe — why a charge failed, what a customer was billed, where an invoice or payout stands — by reading the object chain instead of guessing from a dashboard total. Use when the user pastes a Stripe id, asks why a payment failed, asks what a customer is paying, or wants revenue, invoice, or subscription state."
+			}
+		]
+	} as const,
 } as const;
 
 export type FirstPartyPluginName = keyof typeof FIRST_PARTY_MANIFESTS;

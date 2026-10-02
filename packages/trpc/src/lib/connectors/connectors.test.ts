@@ -262,6 +262,88 @@ describe("probeIdentity", () => {
 		expect(identity.user).toEqual({ id: "42", label: "Harshith" });
 	});
 
+	test("stripe reads the account behind the token as text content", async () => {
+		const account = {
+			id: "acct_1Example",
+			object: "account",
+			email: "h@tegon.ai",
+			settings: { dashboard: { display_name: "Tegon" } },
+		};
+		const calls: { method?: string; name?: string }[] = [];
+		globalThis.fetch = (async (_url: string, init: RequestInit) => {
+			const body = init.body
+				? (JSON.parse(String(init.body)) as {
+						id?: number;
+						method?: string;
+						params?: { name?: string };
+					})
+				: {};
+			calls.push({ method: body.method, name: body.params?.name });
+			if (init.method === "DELETE") return new Response(null, { status: 204 });
+			if (body.id === undefined) return new Response(null, { status: 202 });
+			const result =
+				body.method === "tools/call"
+					? { content: [{ type: "text", text: JSON.stringify(account) }] }
+					: { protocolVersion: "2025-06-18" };
+			return new Response(
+				JSON.stringify({ jsonrpc: "2.0", id: body.id, result }),
+				{
+					status: 200,
+					headers: { "Content-Type": "application/json" },
+				},
+			);
+		}) as unknown as typeof fetch;
+
+		const identity = await probeIdentity(
+			"stripe",
+			connectorMethod(requireConnector("stripe")),
+			"stripe-test",
+		);
+
+		expect(calls[2]).toEqual({
+			method: "tools/call",
+			name: "get_stripe_account_info",
+		});
+		expect(identity.account).toEqual({ id: "acct_1Example", label: "Tegon" });
+		expect(identity.user).toEqual({ id: "acct_1Example", label: "h@tegon.ai" });
+	});
+
+	test("stripe survives an account with no dashboard display name", async () => {
+		globalThis.fetch = (async (_url: string, init: RequestInit) => {
+			const body = init.body
+				? (JSON.parse(String(init.body)) as { id?: number; method?: string })
+				: {};
+			if (init.method === "DELETE") return new Response(null, { status: 204 });
+			if (body.id === undefined) return new Response(null, { status: 202 });
+			const result =
+				body.method === "tools/call"
+					? {
+							structuredContent: {
+								id: "acct_1Bare",
+								object: "account",
+								settings: {},
+							},
+						}
+					: { protocolVersion: "2025-06-18" };
+			return new Response(
+				JSON.stringify({ jsonrpc: "2.0", id: body.id, result }),
+				{
+					status: 200,
+					headers: { "Content-Type": "application/json" },
+				},
+			);
+		}) as unknown as typeof fetch;
+
+		const identity = await probeIdentity(
+			"stripe",
+			connectorMethod(requireConnector("stripe")),
+			"stripe-test",
+		);
+
+		expect(identity.account).toEqual({ id: "acct_1Bare", label: null });
+		expect(identity.user).toEqual({ id: "acct_1Bare", label: null });
+	});
+
 	test("granola_mcp asks the authorization server's userinfo endpoint", async () => {
 		const calls = respond({
 			sub: "user_01",

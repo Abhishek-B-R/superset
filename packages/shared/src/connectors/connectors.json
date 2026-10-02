@@ -606,6 +606,39 @@
 					}
 				}
 			]
+		},
+		"stripe": {
+			"displayName": "Stripe",
+			"icon": "stripe",
+			"category": "Data & APIs",
+			"scope": "user",
+			"methods": [
+				{
+					"type": "oauth2",
+					"label": "OAuth 2.0",
+					"client": "dynamic",
+					"authorization_url": "https://mcp.stripe.com",
+					"scopes": ["mcp"],
+					"identity": {
+						"mcp": "https://mcp.stripe.com",
+						"tool": "get_stripe_account_info",
+						"arguments": {},
+						"account": {
+							"id": "$.id",
+							"label": "$.settings.dashboard.display_name"
+						},
+						"user": {
+							"id": "$.id",
+							"label": "$.email"
+						}
+					},
+					"bind": {
+						"headers": {
+							"Authorization": "Bearer ${config.access_token}"
+						}
+					}
+				}
+			]
 		}
 	}
 }

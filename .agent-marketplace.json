@@ -96,6 +96,16 @@
 			"category": "productivity",
 			"source": "./plugins/ynab",
 			"version": "1.0.0"
+		},
+		{
+			"name": "stripe",
+			"description": "Work with payments in Stripe: trace charges and subscriptions, read billing data, and search Stripe's docs.",
+			"author": {
+				"name": "Superset"
+			},
+			"category": "development",
+			"source": "./plugins/stripe",
+			"version": "1.0.0"
 		}
 	],
 	"featured": ["github", "linear"],
